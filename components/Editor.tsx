@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import MonacoEditor, { useMonaco } from "@monaco-editor/react";
 
 // @ts-ignore
-import file from '!raw-loader!./editor-library.d.ts'
+import sdkTypeDefs from '!raw-loader!./editor-library.d.ts'
 
-const defaultAdapter = `
+const defaultModule = `
 export function setup(context: Context) {
     context.register({
         id: 'my-adapter',
@@ -14,8 +14,14 @@ export function setup(context: Context) {
 }
 `
 
-const Editor = () => {
+interface EditorProps {
+  onValidated: (code: string) => void;
+}
+
+const Editor: React.FC<EditorProps> = ({ onValidated }) => {
+  const code = useRef(defaultModule)
   const monaco = useMonaco()
+
   useEffect(() => {
     if (monaco) {
       // validation settings
@@ -41,19 +47,27 @@ const Editor = () => {
       })
 
       var sdkUri = 'ts:filename/sdk.d.ts';
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(file, sdkUri)
+      monaco.languages.typescript.javascriptDefaults.addExtraLib(sdkTypeDefs, sdkUri)
       // When resolving definitions and references, the editor will try to use created models.
       // Creating a model for the library allows "peek definition/references" commands to work with the library.
-      monaco.editor.createModel(file, 'typescript', monaco.Uri.parse(sdkUri))
+      monaco.editor.createModel(sdkTypeDefs, 'typescript', monaco.Uri.parse(sdkUri))
     }
   }, [monaco])
 
   return (
     <div>
       <MonacoEditor
-        height="90vh"
+        height="60vh"
         defaultLanguage="typescript"
-        defaultValue={defaultAdapter}
+        defaultValue={defaultModule}
+        onChange={(newCode?: string) => {
+          code.current = newCode || ''
+        }}
+        onValidate={(markers: any[]) => {
+          if (markers.length === 0) {
+            onValidated(code.current)
+          }
+        }}
       />
     </div>
   )
