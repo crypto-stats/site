@@ -4,6 +4,7 @@
     "module": "esnext",
     "jsx": "preserve",
     "lib": ["dom", "es2017"],
+    "baseUrl": ".",
     "moduleResolution": "node",
     "allowJs": true,
     "noEmit": true,
