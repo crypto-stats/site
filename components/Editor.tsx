@@ -4,7 +4,10 @@ import MonacoEditor, { useMonaco } from "@monaco-editor/react";
 // @ts-ignore
 import sdkTypeDefs from '!raw-loader!./editor-library.d.ts'
 
-const defaultModule = `
+const defaultModule = `export const name = 'My Adapter';
+export const version = '0.1.0';
+export const license = 'MIT';
+
 export function setup(context: Context) {
     context.register({
         id: 'my-adapter',

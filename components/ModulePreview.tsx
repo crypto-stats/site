@@ -1,15 +1,20 @@
 import React from 'react'
-import { List } from '@cryptostats/sdk' // TODO: get Adapter from package
+import { List, Adapter, Module } from '@cryptostats/sdk'
 import QueryForm from './QueryForm'
 
-interface ListPreviewProps {
+interface ModulePreviewProps {
+  module: Module;
   list: List;
 }
 
-const ListPreview: React.FC<ListPreviewProps> = ({ list }) => {
+const ModulePreview: React.FC<ModulePreviewProps> = ({ module, list }) => {
   return (
     <div>
-      {list.adapters.map((adapter: any) => (
+      <div>Name: {module.name}</div>
+      <div>Version: {module.version}</div>
+      <div>License: {module.license}</div>
+      
+      {list.adapters.map((adapter: Adapter) => (
         <div key={adapter.id}>
           <div>{adapter.id}</div>
           <div>Metadata</div>
@@ -26,4 +31,4 @@ const ListPreview: React.FC<ListPreviewProps> = ({ list }) => {
   )
 }
 
-export default ListPreview
+export default ModulePreview

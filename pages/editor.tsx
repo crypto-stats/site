@@ -1,28 +1,31 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import Editor from 'components/Editor'
-import { CryptoStatsSDK, List } from '@cryptostats/sdk'
-import ListPreview from 'components/ListPreview'
+import { CryptoStatsSDK, List, Module } from '@cryptostats/sdk'
+import ModulePreview from 'components/ModulePreview'
 import { compileTsToJs } from 'utils/ts-compiler'
 
 const EditorPage = () => {
-  const [list, setList] = useState<List | null>(null)
+  const list = useRef<List | null>(null)
+  const [module, setModule] = useState<Module | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   const evaluate = async (code: string, isTS?: boolean) => {
     const sdk = new CryptoStatsSDK()
-    const list = sdk.getList('test')
+    const _list = sdk.getList('test')
+    console.log('eval')
     try {
       let _code = code
       if (isTS) {
         _code = await compileTsToJs(code)
       }
-      list.addAdaptersWithCode(_code)
-      setList(list)
+      const _module = _list.addAdaptersWithCode(_code)
+      setModule(_module)
+      list.current = _list;
       setError(null)
-      console.log(list)
+      console.log(_module, _list)
     } catch (e) {
       setError(e.message)
-      setList(null)
+      setModule(null)
     }
   }
 
@@ -30,7 +33,7 @@ const EditorPage = () => {
     <div>
       <Editor onValidated={(code: string) => evaluate(code, true)} />
       {error && <div>Error: {error}</div>}
-      {list && <ListPreview list={list} />}
+      {module && list.current && <ModulePreview list={list.current} module={module} />}
     </div>
   )
 }

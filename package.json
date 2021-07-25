@@ -6,7 +6,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@cryptostats/sdk": "^0.0.10",
+    "@cryptostats/sdk": "^0.0.12",
     "@monaco-editor/react": "^4.2.1",
     "monaco-editor": "^0.26.1",
     "next": "latest",
