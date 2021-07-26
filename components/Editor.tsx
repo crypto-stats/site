@@ -3,30 +3,21 @@ import MonacoEditor, { useMonaco } from "@monaco-editor/react";
 
 // @ts-ignore
 import sdkTypeDefs from '!raw-loader!./editor-library.d.ts'
-
-const defaultModule = `export const name = 'My Adapter';
-export const version = '0.1.0';
-export const license = 'MIT';
-
-export function setup(context: Context) {
-    context.register({
-        id: 'my-adapter',
-        queries: {},
-        metadata: {},
-    })
-}
-`
+// @ts-ignore
+import sampleModule from '!raw-loader!./sample-module.txt'
 
 interface EditorProps {
   onValidated: (code: string) => void;
 }
 
 const Editor: React.FC<EditorProps> = ({ onValidated }) => {
-  const code = useRef(defaultModule)
+  const code = useRef(sampleModule)
   const monaco = useMonaco()
 
   useEffect(() => {
     if (monaco) {
+      monaco.languages.typescript.javascriptDefaults.s
+
       // validation settings
       monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
         noSemanticValidation: false,
@@ -62,7 +53,11 @@ const Editor: React.FC<EditorProps> = ({ onValidated }) => {
       <MonacoEditor
         height="60vh"
         defaultLanguage="typescript"
-        defaultValue={defaultModule}
+        defaultValue={sampleModule}
+        options={{
+          tabSize: 2,
+          insertSpaces: true,
+        }}
         onChange={(newCode?: string) => {
           code.current = newCode || ''
         }}

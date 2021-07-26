@@ -1,6 +1,19 @@
 import React from 'react'
+import styled from 'styled-components'
 import { List, Adapter, Module } from '@cryptostats/sdk'
+import Attribute from './Attribute'
 import QueryForm from './QueryForm'
+
+const ModuleCard = styled.div`
+  background: #e5e5e5;
+  margin: 4px;
+  padding: 4px;
+`
+const AdapterCard = styled.div`
+  background: #e0e0e0;
+  margin: 4px;
+  padding: 4px;
+`
 
 interface ModulePreviewProps {
   module: Module;
@@ -9,25 +22,25 @@ interface ModulePreviewProps {
 
 const ModulePreview: React.FC<ModulePreviewProps> = ({ module, list }) => {
   return (
-    <div>
-      <div>Name: {module.name}</div>
-      <div>Version: {module.version}</div>
-      <div>License: {module.license}</div>
+    <ModuleCard>
+      <Attribute name="Name">{module.name}</Attribute>
+      <Attribute name="Version">{module.version}</Attribute>
+      <Attribute name="License">{module.license}</Attribute>
       
       {list.adapters.map((adapter: Adapter) => (
-        <div key={adapter.id}>
+        <AdapterCard key={adapter.id}>
           <div>{adapter.id}</div>
-          <div>Metadata</div>
-          <pre>{JSON.stringify(adapter.metadata, null, 2)}</pre>
-          <div>Queries</div>
-          <div>
+          <Attribute name="Metadata">
+            <pre>{JSON.stringify(adapter.metadata, null, 2)}</pre>
+          </Attribute>
+          <Attribute name="Queries">
             {Object.entries(adapter.queries).map(([id, fn]: [string, any]) => (
               <QueryForm id={id} fn={fn} key={id} />
             ))}
-          </div>
-        </div>
+          </Attribute>
+        </AdapterCard>
       ))}
-    </div>
+    </ModuleCard>
   )
 }
 

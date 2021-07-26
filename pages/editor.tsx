@@ -12,7 +12,6 @@ const EditorPage = () => {
   const evaluate = async (code: string, isTS?: boolean) => {
     const sdk = new CryptoStatsSDK()
     const _list = sdk.getList('test')
-    console.log('eval')
     try {
       let _code = code
       if (isTS) {

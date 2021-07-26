@@ -1,0 +1,43 @@
+export const name = 'Sample Optimism Module';
+export const version = '0.1.0';
+export const license = 'MIT';
+
+export function setup(sdk: Context) {
+  const getOptimismFee = async (date: string): Promise<number> => {
+    const startOfDayBlock = await sdk.chainData.getBlockNumber(date, 'optimism');
+    const nextDayDate = sdk.date.offsetDaysFormatted(date, 1);
+    const endOfDayBlock = await sdk.chainData.getBlockNumber(nextDayDate, 'optimism');
+
+    const data = await sdk.graph.query(
+      'dmihal/optimism-fees',
+      `query txFees($startOfDay: Int!, $endOfDay: Int!){
+        startOfDay: fee(id: "1", block: {number: $startOfDay}) {
+          totalFees
+        }
+        endOfDay: fee(id: "1", block: {number: $endOfDay}) {
+          totalFees
+        }
+      }`,
+      {
+        startOfDay: startOfDayBlock,
+        endOfDay: endOfDayBlock,
+      },
+      'txFees'
+    );
+
+    const ethPrice = await sdk.coinGecko.getHistoricalPrice('ethereum', date);
+    const feesInETH = parseFloat(data.endOfDay.totalFees) - parseFloat(data.startOfDay.totalFees);
+
+    return feesInETH * ethPrice;
+  }
+
+  sdk.register({
+    id: 'optimism-sample',
+    queries: {
+      fees: getOptimismFee,
+    },
+    metadata: {
+      name: 'Sample Optimism Adapter',
+    },
+  })
+}
