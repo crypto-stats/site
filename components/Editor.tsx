@@ -1,10 +1,24 @@
 import React, { useEffect, useRef } from 'react'
-import MonacoEditor, { useMonaco } from "@monaco-editor/react";
+import MonacoEditor, { useMonaco } from '@monaco-editor/react'
+import styled from 'styled-components'
 
 // @ts-ignore
 import sdkTypeDefs from '!raw-loader!./editor-library.d.ts'
 // @ts-ignore
 import sampleModule from '!raw-loader!./sample-module.txt'
+
+const OuterContainer = styled.div`
+  position: relative;
+  flex: 1;
+`
+
+const InnerContainer = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+`
 
 interface EditorProps {
   onValidated: (code: string) => void;
@@ -12,12 +26,12 @@ interface EditorProps {
 
 const Editor: React.FC<EditorProps> = ({ onValidated }) => {
   const code = useRef(sampleModule)
+  const ref = useRef<HTMLDivElement | null>(null)
+  const editorRef = useRef<any>(null)
   const monaco = useMonaco()
 
   useEffect(() => {
     if (monaco) {
-      monaco.languages.typescript.javascriptDefaults.s
-
       // validation settings
       monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
         noSemanticValidation: false,
@@ -49,25 +63,30 @@ const Editor: React.FC<EditorProps> = ({ onValidated }) => {
   }, [monaco])
 
   return (
-    <div>
-      <MonacoEditor
-        height="60vh"
-        defaultLanguage="typescript"
-        defaultValue={sampleModule}
-        options={{
-          tabSize: 2,
-          insertSpaces: true,
-        }}
-        onChange={(newCode?: string) => {
-          code.current = newCode || ''
-        }}
-        onValidate={(markers: any[]) => {
-          if (markers.length === 0) {
-            onValidated(code.current)
-          }
-        }}
-      />
-    </div>
+    <OuterContainer>
+      <InnerContainer>
+        <MonacoEditor
+          defaultLanguage="typescript"
+          defaultValue={sampleModule}
+          options={{
+            tabSize: 2,
+            insertSpaces: true,
+          }}
+          onMount={(editor: any) => {
+            editorRef.current = editor
+            window.editor = editor
+          }}
+          onChange={(newCode?: string) => {
+            code.current = newCode || ''
+          }}
+          onValidate={(markers: any[]) => {
+            if (markers.length === 0) {
+              onValidated(code.current)
+            }
+          }}
+        />
+      </InnerContainer>
+    </OuterContainer>
   )
 }
 

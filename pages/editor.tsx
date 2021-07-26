@@ -1,10 +1,26 @@
 import React, { useState, useRef } from 'react'
-import Editor from 'components/Editor'
+import { NextPage } from 'next'
+import styled from 'styled-components'
 import { CryptoStatsSDK, List, Module } from '@cryptostats/sdk'
+import Editor from 'components/Editor'
+import Layout from 'components/Layout'
 import ModulePreview from 'components/ModulePreview'
 import { compileTsToJs } from 'utils/ts-compiler'
 
-const EditorPage = () => {
+const ErrorBar = styled.div`
+  background: red;
+  color: white;
+  padding: 8px;
+`
+
+const ModuleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 200px;
+  overflow: auto;
+`
+
+const EditorPage: NextPage = () => {
   const list = useRef<List | null>(null)
   const [module, setModule] = useState<Module | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -29,11 +45,15 @@ const EditorPage = () => {
   }
 
   return (
-    <div>
+    <Layout>
       <Editor onValidated={(code: string) => evaluate(code, true)} />
-      {error && <div>Error: {error}</div>}
-      {module && list.current && <ModulePreview list={list.current} module={module} />}
-    </div>
+      {error && <ErrorBar>Error: {error}</ErrorBar>}
+      {module && list.current && (
+        <ModuleContainer>
+          <ModulePreview list={list.current} module={module} />
+        </ModuleContainer>
+      )}
+    </Layout>
   )
 }
 
