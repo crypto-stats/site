@@ -31,6 +31,21 @@ export const useAdapter = (id: string) => {
     return _id;
   }
 
+  const publish = async (code: string) => {
+    const req = await fetch('/api/upload-adapter', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        code,
+        language: 'typescript',
+      })
+    })
+    const response = await req.json()
+    console.log(response)
+  }
+
   useEffect(() => {
     if (id === 'new') {
       return setDefaultCode(sampleModule)
@@ -40,5 +55,5 @@ export const useAdapter = (id: string) => {
     setDefaultCode(existingStorage[id]?.code || null)
   }, [id])
 
-  return { save, code: defaultCode }
+  return { save, publish, code: defaultCode }
 }

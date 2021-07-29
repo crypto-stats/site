@@ -28,7 +28,7 @@ const EditorPage: NextPage = () => {
   const parsedCode = useRef<string | null>(null)
   const [module, setModule] = useState<Module | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const { save, code: initialCode } = useAdapter(router.query.id)
+  const { save, publish, code: initialCode } = useAdapter(router.query.id)
 
   const evaluate = async (code: string, isTS?: boolean) => {
     parsedCode.current = null
@@ -58,6 +58,10 @@ const EditorPage: NextPage = () => {
     }
   }
 
+  const publishToIPFS = async () => {
+    await publish(parsedCode.current!)
+  }
+
   const canSave = module && parsedCode.current && parsedCode.current !== initialCode;
 
   return (
@@ -65,6 +69,9 @@ const EditorPage: NextPage = () => {
       <div>
         <button disabled={!canSave} onClick={saveToBrowser}>
           Save in Browser
+        </button>
+        <button disabled={!canSave} onClick={publishToIPFS}>
+          Publish to IPFS
         </button>
       </div>
 
