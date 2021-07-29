@@ -4,8 +4,6 @@ import styled from 'styled-components'
 
 // @ts-ignore
 import sdkTypeDefs from '!raw-loader!./editor-library.d.ts'
-// @ts-ignore
-import sampleModule from '!raw-loader!./sample-module.txt'
 
 const OuterContainer = styled.div`
   position: relative;
@@ -22,10 +20,11 @@ const InnerContainer = styled.div`
 
 interface EditorProps {
   onValidated: (code: string) => void;
+  defaultValue: string;
 }
 
-const Editor: React.FC<EditorProps> = ({ onValidated }) => {
-  const code = useRef(sampleModule)
+const Editor: React.FC<EditorProps> = ({ onValidated, defaultValue }) => {
+  const code = useRef(defaultValue)
   const ref = useRef<HTMLDivElement | null>(null)
   const editorRef = useRef<any>(null)
   const monaco = useMonaco()
@@ -59,6 +58,8 @@ const Editor: React.FC<EditorProps> = ({ onValidated }) => {
       // When resolving definitions and references, the editor will try to use created models.
       // Creating a model for the library allows "peek definition/references" commands to work with the library.
       monaco.editor.createModel(sdkTypeDefs, 'typescript', monaco.Uri.parse(sdkUri))
+
+      return () => monaco.editor.getModels().forEach(model => model.dispose())
     }
   }, [monaco])
 
@@ -67,7 +68,7 @@ const Editor: React.FC<EditorProps> = ({ onValidated }) => {
       <InnerContainer>
         <MonacoEditor
           defaultLanguage="typescript"
-          defaultValue={sampleModule}
+          defaultValue={defaultValue}
           options={{
             tabSize: 2,
             insertSpaces: true,
