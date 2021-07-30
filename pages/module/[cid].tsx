@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import Link from 'next/link'
+import CodeViewer from 'components/CodeViewer'
 import Layout from 'components/Layout'
 import { useFile } from 'hooks/ipfs'
 
@@ -16,28 +16,16 @@ function getSourceCID(file?: string | null) {
 }
 
 const ModulePage: NextPage = () => {
-  const [showSource, setShowSource] = useState(true)
   const router = useRouter()
   const { file, loading } = useFile(router.query.cid)
   const sourceCID = getSourceCID(file)
   const { file: sourceFile, loading: sourceLoading } = useFile(sourceCID)
 
-  const code = sourceCID && showSource ? sourceFile : file
-
   return (
     <Layout>
-      {loading || sourceLoading ? "Loading" : code ? (
-        <pre>{code}</pre>
+      {loading || sourceLoading ? "Loading" : file ? (
+        <CodeViewer js={file} ts={sourceFile} />
       ) : "Not found"}
-
-      {sourceCID && (
-        <div>
-          Showing {showSource ? 'TS source. ' : 'compiled JS. '}
-          <button onClick={() => setShowSource(!showSource)}>
-            Show {showSource ? 'compiled JS' : 'TS source'}
-          </button>
-        </div>
-      )}
     </Layout>
   )
 }
