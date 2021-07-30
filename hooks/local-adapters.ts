@@ -18,20 +18,22 @@ const randomId = () => Math.floor(Math.random() * 1000000).toString(16)
 
 export const useAdapter = (id: string) => {
   const [defaultCode, setDefaultCode] = useState<string | null>(null)
+  const [cid, setCID] = useState<string | null>(null)
   
-  const save = (code: string, name: string) => {
+  const save = (code: string, name: string, cid?: string) => {
     const _id = id === 'new' ? randomId() : id
     const existingStorage = JSON.parse(window.localStorage.getItem(storageKey) || '{}')
     window.localStorage.setItem(storageKey, JSON.stringify({
       ...existingStorage,
-      [_id]: { code, name },
+      [_id]: { code, name, cid: cid || null },
     }))
     setDefaultCode(code)
+    setCID(cid || null)
 
     return _id;
   }
 
-  const publish = async (code: string) => {
+  const publish = async (code: string, name: string) => {
     const req = await fetch('/api/upload-adapter', {
       method: 'POST',
       headers: {
@@ -42,8 +44,11 @@ export const useAdapter = (id: string) => {
         language: 'typescript',
       })
     })
+
     const response = await req.json()
-    console.log(response)
+
+    save(code, name, response.codeCID)
+    return response
   }
 
   useEffect(() => {
@@ -53,7 +58,8 @@ export const useAdapter = (id: string) => {
 
     const existingStorage = JSON.parse(window.localStorage.getItem(storageKey) || '{}')
     setDefaultCode(existingStorage[id]?.code || null)
+    setCID(existingStorage[id]?.cid || null)
   }, [id])
 
-  return { save, publish, code: defaultCode }
+  return { save, publish, code: defaultCode, cid }
 }
