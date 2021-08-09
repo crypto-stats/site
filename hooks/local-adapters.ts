@@ -16,6 +16,17 @@ export const useAdapterList = () => {
 
 const randomId = () => Math.floor(Math.random() * 1000000).toString(16)
 
+export const newModule = (code: string, cid?: string | null) => {
+  const id = randomId()
+  const existingStorage = JSON.parse(window.localStorage.getItem(storageKey) || '{}')
+  window.localStorage.setItem(storageKey, JSON.stringify({
+    ...existingStorage,
+    [id]: { code, name, cid: cid || null },
+  }))
+
+  return id
+}
+
 export const useAdapter = (id: string) => {
   const [defaultCode, setDefaultCode] = useState<string | null>(null)
   const [cid, setCID] = useState<string | null>(null)

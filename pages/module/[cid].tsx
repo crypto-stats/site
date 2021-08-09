@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import CodeViewer from 'components/CodeViewer'
 import Layout from 'components/Layout'
 import { useFile } from 'hooks/ipfs'
+import { newModule } from 'hooks/local-adapters'
 
 function getSourceCID(file?: string | null) {
   if (!file) {
@@ -21,10 +22,21 @@ const ModulePage: NextPage = () => {
   const sourceCID = getSourceCID(file)
   const { file: sourceFile, loading: sourceLoading } = useFile(sourceCID)
 
+  const clone = () => {
+    const id = newModule(sourceFile || file, sourceFile ? sourceCID : router.query.cid)
+    router.push(`/editor/${id}`)
+  }
+
   return (
     <Layout>
       {loading || sourceLoading ? "Loading" : file ? (
-        <CodeViewer js={file} ts={sourceFile} />
+        <div>
+          <div>
+            <button onClick={clone}>Edit/Clone</button>
+          </div>
+
+          <CodeViewer js={file} ts={sourceFile} />
+        </div>
       ) : "Not found"}
     </Layout>
   )
