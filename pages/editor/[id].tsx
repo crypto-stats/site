@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { useRouter } from 'next/router'
+import Modal from 'react-modal'
 import { NextPage } from 'next'
 import Link from 'next/link';
 import styled from 'styled-components'
@@ -7,6 +8,7 @@ import { CryptoStatsSDK, List, Module } from '@cryptostats/sdk'
 import Editor from 'components/Editor'
 import Layout from 'components/Layout'
 import ModulePreview from 'components/ModulePreview'
+import ImageSelector from 'components/ImageSelector'
 import { useAdapter } from 'hooks/local-adapters'
 import { compileTsToJs } from 'utils/ts-compiler'
 
@@ -23,6 +25,16 @@ const ModuleContainer = styled.div`
   overflow: auto;
 `
 
+const Toolbar = styled.div`
+  display: flex;
+`
+
+const Spacer = styled.div`
+  flex: 1;
+`
+
+Modal.setAppElement('#__next');
+
 const EditorPage: NextPage = () => {
   const router = useRouter()
   const list = useRef<List | null>(null)
@@ -30,6 +42,7 @@ const EditorPage: NextPage = () => {
   const [module, setModule] = useState<Module | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [publishing, setPublishing] = useState(false)
+  const [showModal, setShowModal] = useState(false)
   const { save, publish, cid, code: initialCode } = useAdapter(router.query.id)
 
   const evaluate = async (code: string, isTS?: boolean) => {
@@ -71,7 +84,7 @@ const EditorPage: NextPage = () => {
 
   return (
     <Layout>
-      <div>
+      <Toolbar>
         <button disabled={!canSave} onClick={saveToBrowser}>
           Save in Browser
         </button>
@@ -83,7 +96,11 @@ const EditorPage: NextPage = () => {
             <a>Last published to IPFS as {cid.substr(0,6)}...{cid.substr(-4)}</a>
           </Link>
         )}
-      </div>
+
+        <Spacer />
+
+        <button onClick={() => setShowModal(true)}>Images</button>
+      </Toolbar>
 
       {initialCode && (
         <Editor onValidated={(code: string) => evaluate(code, true)} defaultValue={initialCode} />
@@ -94,6 +111,14 @@ const EditorPage: NextPage = () => {
           <ModulePreview list={list.current} module={module} />
         </ModuleContainer>
       )}
+
+      <Modal
+        isOpen={showModal}
+        onRequestClose={() => setShowModal(false)}
+        contentLabel="Insert Image"
+      >
+        <ImageSelector close={() => setShowModal(false)} />
+      </Modal>
     </Layout>
   )
 }
