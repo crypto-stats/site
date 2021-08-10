@@ -14,7 +14,7 @@ const Value = styled.div`
   color: #222222;
 `;
 
-const Attribute: React.FC = ({ name, children }) => {
+const Attribute: React.FC<{ name: string }> = ({ name, children }) => {
   return (
     <AttributeContainer>
       <Name>{name}</Name>

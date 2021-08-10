@@ -43,7 +43,7 @@ const EditorPage: NextPage = () => {
   const [error, setError] = useState<string | null>(null)
   const [publishing, setPublishing] = useState(false)
   const [showModal, setShowModal] = useState(false)
-  const { save, publish, cid, code: initialCode } = useAdapter(router.query.id)
+  const { save, publish, cid, code: initialCode } = useAdapter(router.query.id?.toString())
 
   const evaluate = async (code: string, isTS?: boolean) => {
     parsedCode.current = null
@@ -67,7 +67,7 @@ const EditorPage: NextPage = () => {
   }
 
   const saveToBrowser = () => {
-    const newId = save(parsedCode.current!, module.name)
+    const newId = save(parsedCode.current!, module!.name!)
     if (router.query.id === 'new') {
       router.replace(`/editor/${newId}`)
     }
@@ -75,7 +75,7 @@ const EditorPage: NextPage = () => {
 
   const publishToIPFS = async () => {
     setPublishing(true)
-    await publish(parsedCode.current!, module.name)
+    await publish(parsedCode.current!, module!.name!)
     setPublishing(false)
   }
 

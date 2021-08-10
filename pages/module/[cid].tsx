@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import CodeViewer from 'components/CodeViewer'
@@ -18,12 +18,12 @@ function getSourceCID(file?: string | null) {
 
 const ModulePage: NextPage = () => {
   const router = useRouter()
-  const { file, loading } = useFile(router.query.cid)
+  const { file, loading } = useFile(router.query.cid?.toString())
   const sourceCID = getSourceCID(file)
   const { file: sourceFile, loading: sourceLoading } = useFile(sourceCID)
 
   const clone = () => {
-    const id = newModule(sourceFile || file, sourceFile ? sourceCID : router.query.cid)
+    const id = newModule(sourceFile || file!, sourceFile ? sourceCID : router.query.cid!.toString())
     router.push(`/editor/${id}`)
   }
 

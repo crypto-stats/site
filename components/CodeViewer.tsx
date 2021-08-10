@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter'
 import js from 'react-syntax-highlighter/dist/cjs/languages/hljs/javascript'
 import ts from 'react-syntax-highlighter/dist/cjs/languages/hljs/typescript'
+// @ts-ignore
 import theme from 'react-syntax-highlighter/dist/cjs/styles/hljs/stackoverflow-dark'
 
 SyntaxHighlighter.registerLanguage('javascript', js);

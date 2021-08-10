@@ -25,7 +25,6 @@ interface EditorProps {
 
 const Editor: React.FC<EditorProps> = ({ onValidated, defaultValue }) => {
   const code = useRef(defaultValue)
-  const ref = useRef<HTMLDivElement | null>(null)
   const editorRef = useRef<any>(null)
   const monaco = useMonaco()
 
@@ -75,7 +74,6 @@ const Editor: React.FC<EditorProps> = ({ onValidated, defaultValue }) => {
           }}
           onMount={(editor: any) => {
             editorRef.current = editor
-            window.editor = editor
           }}
           onChange={(newCode?: string) => {
             code.current = newCode || ''
