@@ -27,7 +27,7 @@ export const newModule = (code: string, cid?: string | null) => {
   return id
 }
 
-export const useAdapter = (id: string) => {
+export const useAdapter = (id?: string) => {
   const [defaultCode, setDefaultCode] = useState<string | null>(null)
   const [cid, setCID] = useState<string | null>(null)
   
@@ -36,12 +36,12 @@ export const useAdapter = (id: string) => {
     const existingStorage = JSON.parse(window.localStorage.getItem(storageKey) || '{}')
     window.localStorage.setItem(storageKey, JSON.stringify({
       ...existingStorage,
-      [_id]: { code, name, cid: cid || null },
+      [_id!]: { code, name, cid: cid || null },
     }))
     setDefaultCode(code)
     setCID(cid || null)
 
-    return _id;
+    return _id!;
   }
 
   const publish = async (code: string, name: string) => {
@@ -63,6 +63,10 @@ export const useAdapter = (id: string) => {
   }
 
   useEffect(() => {
+    if (!id) {
+      return
+    }
+
     if (id === 'new') {
       return setDefaultCode(sampleModule)
     }

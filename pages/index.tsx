@@ -22,11 +22,6 @@ const Container = styled.div`
   line-height: 28px;
 `
 
-const Title = styled.h1`
-  color: red;
-  font-size: 50px;
-`
-
 export default function Home() {
   return (
     <Container>
