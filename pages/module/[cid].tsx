@@ -1,20 +1,12 @@
 import React from 'react'
-import { NextPage } from 'next'
+import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next'
 import { useRouter } from 'next/router'
 import CodeViewer from 'components/CodeViewer'
 import Layout from 'components/Layout'
 import { useFile } from 'hooks/ipfs'
 import { newModule } from 'hooks/local-adapters'
-
-function getSourceCID(file?: string | null) {
-  if (!file) {
-    return null
-  }
-
-  const result = /exports\.sourceFile = '([\w\d]{46})';/.exec(file)
-
-  return result ? result[1] : null
-}
+import { getSourceCID } from 'utils/adapters'
+import { getTextFileFromIPFS } from 'utils/ipfs'
 
 const ModulePage: NextPage = () => {
   const router = useRouter()
@@ -43,3 +35,28 @@ const ModulePage: NextPage = () => {
 }
 
 export default ModulePage
+
+export const getStaticProps: GetStaticProps<any, { cid: string }> = async (ctx: GetStaticPropsContext) => {
+  const cid = ctx.params!.cid!.toString()
+  const mainFile = await getTextFileFromIPFS(cid)
+  const ipfsCache = [{ cid, text: mainFile }]
+
+  const sourceCID = getSourceCID(mainFile)
+  if (sourceCID) {
+    const sourceFile = await getTextFileFromIPFS(sourceCID)
+    ipfsCache.push({ cid: sourceCID, text: sourceFile })
+  }
+
+  return {
+    props: {
+      ipfsCache
+    },
+  }
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  }
+}
