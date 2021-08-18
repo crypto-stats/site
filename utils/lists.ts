@@ -31,3 +31,24 @@ export async function getListNames() {
 
   return Array.from(allLists)
 }
+
+export async function getModulesForList(list: string) {
+  if (!process.env.PINATA_KEY || !process.env.PINATA_SECRET) {
+    throw new Error('Pinata key missing')
+  }
+
+  const pinata = pinataSDK(process.env.PINATA_KEY, process.env.PINATA_SECRET)
+
+  const pinnedItems = await pinata.pinList({
+    metadata: {
+      keyvalues: {
+        list: {
+          value: `(?:^${list}$)|(?:^(?:[^,\n]*,)*${list},(?:[^,\n]*,)*[^,\n]*$)|(?:^(?:[^,\n]*,)*${list}$)`,
+          op: 'regexp',
+        }
+      }
+    }
+  });
+
+  return pinnedItems.rows.map((row) => row.ipfs_pin_hash)
+}

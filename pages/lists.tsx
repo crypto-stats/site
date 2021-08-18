@@ -1,18 +1,28 @@
 import { NextPage, GetStaticProps } from 'next'
+import Link from 'next/link';
 import Layout from 'components/Layout'
-import { getListNames } from 'utils/lists'
+import { getListNames, getModulesForList } from 'utils/lists'
 
 interface AdaptersPageProps {
-  lists: string[]
+  lists: { name: string; modules: string[] }[]
 }
 
 const AdaptersPage: NextPage<AdaptersPageProps> = ({ lists }) => {
   return (
     <Layout>
       <ul>
-        {lists.map((list: string) => (
-          <li key={list}>
-            {list}
+        {lists.map(list => (
+          <li key={list.name}>
+            <div>{list.name}</div>
+            <ul>
+              {list.modules.map(_module => (
+                <li key={_module}>
+                  <Link href={`/module/${_module}`}>
+                    <a>{_module}</a>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </li>
         ))}
       </ul>
@@ -24,11 +34,17 @@ export default AdaptersPage
 
 
 export const getStaticProps: GetStaticProps<AdaptersPageProps> = async () => {
-  const lists = await getListNames()
+  const listNames = await getListNames()
+
+  const lists = await Promise.all(listNames.map(async (name: string) => ({
+    name: name,
+    modules: await getModulesForList(name),
+  })))
 
   return {
     props: {
       lists
     },
+    revalidate: 60,
   }
 }

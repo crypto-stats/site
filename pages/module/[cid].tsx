@@ -51,6 +51,7 @@ export const getStaticProps: GetStaticProps<any, { cid: string }> = async (ctx: 
     props: {
       ipfsCache
     },
+    revalidate: 60,
   }
 }
 
