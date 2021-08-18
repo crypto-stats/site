@@ -14,7 +14,13 @@ async function saveToIPFS(file: string, name: string): Promise<string> {
   const pinata = pinataSDK(process.env.PINATA_KEY, process.env.PINATA_SECRET)
   fs.writeFileSync(filePath, file);
   const response = await pinata.pinFromFS(filePath, {
-    pinataMetadata: { name },
+    pinataMetadata: {
+      name,
+      // @ts-ignore
+      keyvalues: {
+        type: 'module',
+      },
+    },
   });
 
   return response.IpfsHash;
