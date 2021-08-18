@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { useImages } from 'hooks/images'
 import copy from 'copy-to-clipboard';
 import FileUploadButton from './FileUploadButton'
+import { IPFS_GATEWAY } from 'utils/ipfs'
 
 const Cards = styled.ul`
   display: flex;
@@ -24,17 +25,13 @@ const Thumbnail = styled.div`
 `
 
 const ImagePreviewContainer = styled.div`
-  max-height: 100px;
+  height: 100px;
   position: relative;
   text-align: center;
   margin: 10px 0;
+  background-position: center;
+  background-repeat: no-repeat;
 `
-
-const ImagePreview = styled.img`
-  max-height: 100%;
-  max-width: 100%;
-`
-
 
 const Code = styled.div`
   font-family: monospace;
@@ -70,9 +67,9 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ close }) => {
       <div>
         <button onClick={() => setSelectedImage(null)}>Back</button>
 
-        <ImagePreviewContainer>
-          <ImagePreview src={`https://ipfs.io/ipfs/${selectedImage.cid}`} />
-        </ImagePreviewContainer>
+        <ImagePreviewContainer
+          style={{ backgroundImage: `url('${IPFS_GATEWAY}/ipfs/${selectedImage.cid}')` }}
+        />
 
         <div>Attach an image stored on IPFS to an adapter by using the getDataURILoader function</div>
 
@@ -116,7 +113,7 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ close }) => {
       <Cards>
         {images.map((image: any) => (
           <Card key={image.cid} onClick={() => setSelectedImage(image)}>
-            <Thumbnail style={{ backgroundImage: `url('https://ipfs.io/ipfs/${image.cid}')` }} />
+            <Thumbnail style={{ backgroundImage: `url('${IPFS_GATEWAY}/ipfs/${image.cid}')` }} />
             {image.filename}
           </Card>
         ))}
