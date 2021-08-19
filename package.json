@@ -6,7 +6,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@cryptostats/sdk": "^0.0.20",
+    "@cryptostats/sdk": "^0.0.27",
     "@monaco-editor/react": "^4.2.1",
     "@pinata/sdk": "^1.1.23",
     "@types/react-modal": "^3.12.1",

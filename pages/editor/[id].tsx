@@ -47,7 +47,9 @@ const EditorPage: NextPage = () => {
 
   const evaluate = async (code: string, isTS?: boolean) => {
     parsedCode.current = null
-    const sdk = new CryptoStatsSDK()
+    const sdk = new CryptoStatsSDK({
+      moralisKey: process.env.NEXT_PUBLIC_MORALIS_KEY,
+    })
     const _list = sdk.getList('test')
     try {
       let _code = code

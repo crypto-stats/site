@@ -1,4 +1,5 @@
 declare class CoinGecko {
+    getCurrentPrice(name: string, currency?: string): Promise<any>;
     getHistoricalPrice(name: string, date: string): Promise<any>;
     getHistoricalMarketData(name: string, date: string): Promise<{
         price: any;
@@ -42,6 +43,20 @@ declare class IPFS {
     getDataURILoader(cid: string, mimeType: string): () => Promise<string>;
 }
 
+declare class Ethers {
+    // TODO: get actual types from Ethers.js
+    utils: any;
+    BigNumber: any;
+    FixedNumber: any;
+
+    addProvider(name: string, url: string, { archive, }?: {
+        archive?: boolean;
+    }): void;
+    getContract(address: string, abi: any, network?: string): any;
+    getERC20Contract(address: string, network?: string): any;
+    getProvider(network: string): any;
+}
+
 declare interface RegistrationData {
   id: string;
   queries: {
@@ -57,5 +72,6 @@ declare class Context {
   readonly graph: Graph;
   readonly http: HTTP;
   readonly ipfs: IPFS;
+  readonly ethers: Ethers;
   register(registration: RegistrationData): void;
 }
