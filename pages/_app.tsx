@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import type { AppProps } from 'next/app'
+import Head from 'next/head'
 import { createGlobalStyle } from 'styled-components'
 import { runOnce } from 'hooks/lib'
 import { setCache } from 'hooks/ipfs'
@@ -11,6 +12,7 @@ const GlobalStyle = createGlobalStyle`
     display: flex;
     flex-direction: column;
     flex: 1;
+    font-family: 'Rubik', sans-serif;
   }
 `
 
@@ -25,6 +27,12 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
 
   return (
     <Fragment>
+      <Head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet" />
+      </Head>
+
       <GlobalStyle />
       <Component {...pageProps} />
     </Fragment>

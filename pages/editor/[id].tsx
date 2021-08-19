@@ -5,6 +5,7 @@ import { NextPage } from 'next'
 import Link from 'next/link';
 import styled from 'styled-components'
 import { CryptoStatsSDK, List, Module } from '@cryptostats/sdk'
+import Button from 'components/Button'
 import Editor from 'components/Editor'
 import Layout from 'components/Layout'
 import ModulePreview from 'components/ModulePreview'
@@ -21,8 +22,11 @@ const ErrorBar = styled.div`
 const ModuleContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 200px;
   overflow: auto;
+
+  @media (max-width: 700px) {
+    height: 200px;
+  }
 `
 
 const Toolbar = styled.div`
@@ -31,6 +35,21 @@ const Toolbar = styled.div`
 
 const Spacer = styled.div`
   flex: 1;
+`
+
+const MainSection = styled.div`
+  display: flex;
+  flex: 1;
+
+  @media (max-width: 700px) {
+    flex-direction: column;
+  }
+`
+
+const EditorAndError = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 `
 
 Modal.setAppElement('#__next');
@@ -87,12 +106,12 @@ const EditorPage: NextPage = () => {
   return (
     <Layout>
       <Toolbar>
-        <button disabled={!canSave} onClick={saveToBrowser}>
+        <Button disabled={!canSave} onClick={saveToBrowser}>
           Save in Browser
-        </button>
-        <button disabled={!canPublish || publishing} onClick={publishToIPFS}>
+        </Button>
+        <Button disabled={!canPublish || publishing} onClick={publishToIPFS}>
           Publish to IPFS
-        </button>
+        </Button>
         {cid && (
           <Link href={`/module/${cid}`}>
             <a>Last published to IPFS as {cid.substr(0,6)}...{cid.substr(-4)}</a>
@@ -101,18 +120,22 @@ const EditorPage: NextPage = () => {
 
         <Spacer />
 
-        <button onClick={() => setShowModal(true)}>Images</button>
+        <Button onClick={() => setShowModal(true)}>Images</Button>
       </Toolbar>
 
-      {initialCode && (
-        <Editor onValidated={(code: string) => evaluate(code, true)} defaultValue={initialCode} />
-      )}
-      {error && <ErrorBar>Error: {error}</ErrorBar>}
-      {module && list.current && (
-        <ModuleContainer>
-          <ModulePreview list={list.current} module={module} />
-        </ModuleContainer>
-      )}
+      <MainSection>
+        <EditorAndError>
+          {initialCode && (
+            <Editor onValidated={(code: string) => evaluate(code, true)} defaultValue={initialCode} />
+          )}
+          {error && <ErrorBar>Error: {error}</ErrorBar>}
+        </EditorAndError>
+        {module && list.current && (
+          <ModuleContainer>
+            <ModulePreview list={list.current} module={module} />
+          </ModuleContainer>
+        )}
+      </MainSection>
 
       <Modal
         isOpen={showModal}

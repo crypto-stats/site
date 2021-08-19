@@ -11,6 +11,7 @@ const OuterContainer = styled.div`
 `
 
 const InnerContainer = styled.div`
+  overflow: hidden;
   position: absolute;
   top: 0;
   bottom: 0;
