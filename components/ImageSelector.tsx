@@ -31,6 +31,7 @@ const ImagePreviewContainer = styled.div`
   margin: 10px 0;
   background-position: center;
   background-repeat: no-repeat;
+  background-size: contain;
 `
 
 const Code = styled.div`

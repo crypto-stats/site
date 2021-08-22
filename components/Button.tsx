@@ -16,11 +16,12 @@ const ButtonElement = styled.button`
 
 interface ButtonProps {
   onClick?: () => void;
+  disabled?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ children, onClick }) => {
+const Button: React.FC<ButtonProps> = ({ children, onClick, disabled }) => {
   return (
-    <ButtonElement onClick={onClick}>
+    <ButtonElement onClick={onClick} disabled={disabled}>
       {children}
     </ButtonElement>
   )

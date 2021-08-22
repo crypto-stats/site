@@ -22,6 +22,7 @@ const Query: React.FC<QueryProps> = ({ id, fn }) => {
     setRunning(true)
     try {
       setResult(null)
+      setError(null)
       const newResult = await fn.apply(null, values)
       setResult(newResult)
     } catch (e) {
