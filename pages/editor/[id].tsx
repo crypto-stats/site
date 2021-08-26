@@ -63,9 +63,11 @@ const EditorPage: NextPage = () => {
   const [publishing, setPublishing] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const { save, publish, cid, code: initialCode } = useAdapter(router.query.id?.toString())
+  const saveableCode = useRef(initialCode)
 
   const evaluate = async (code: string, isTS?: boolean) => {
     parsedCode.current = null
+    saveableCode.current = code
     const sdk = new CryptoStatsSDK({
       moralisKey: process.env.NEXT_PUBLIC_MORALIS_KEY,
     })
@@ -88,7 +90,7 @@ const EditorPage: NextPage = () => {
   }
 
   const saveToBrowser = () => {
-    const newId = save(parsedCode.current!, module!.name!)
+    const newId = save(saveableCode.current!, module!.name!)
     if (router.query.id === 'new') {
       router.replace(`/editor/${newId}`)
     }
@@ -100,7 +102,7 @@ const EditorPage: NextPage = () => {
     setPublishing(false)
   }
 
-  const canSave = module && parsedCode.current && parsedCode.current !== initialCode
+  const canSave = module && saveableCode.current && saveableCode.current !== initialCode
   const canPublish = module && parsedCode.current
 
   return (
