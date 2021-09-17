@@ -1,12 +1,14 @@
 {
+  "name": "cryptostats-site",
   "private": true,
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "generate-editor-context": "yarn api-extractor run --local"
   },
   "dependencies": {
-    "@cryptostats/sdk": "^0.0.27",
+    "@cryptostats/sdk": "^0.0.31",
     "@monaco-editor/react": "^4.2.1",
     "@pinata/sdk": "^1.1.23",
     "@types/react-modal": "^3.12.1",
@@ -23,6 +25,7 @@
     "typescript": "^4.3.5"
   },
   "devDependencies": {
+    "@microsoft/api-extractor": "^7.18.9",
     "@types/node": "15.0.0",
     "@types/react": "17.0.4",
     "@types/react-dom": "17.0.3",

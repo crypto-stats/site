@@ -3,7 +3,7 @@ import MonacoEditor, { useMonaco } from '@monaco-editor/react'
 import styled from 'styled-components'
 
 // @ts-ignore
-import sdkTypeDefs from '!raw-loader!./editor-library.d.ts'
+import sdkTypeDefs from '!raw-loader!generated/cryptostats-sdk.d.ts'
 
 const OuterContainer = styled.div`
   position: relative;
