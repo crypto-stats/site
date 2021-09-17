@@ -137,7 +137,6 @@ const EditorPage: NextPage = () => {
             <Editor
               onValidated={(code: string) => evaluate(code, true)}
               onChange={(code: string) => {
-                console.log('cng')
                 saveableCode.current = code
                 rerender()
               }}

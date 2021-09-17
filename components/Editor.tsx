@@ -79,7 +79,7 @@ const Editor: React.FC<EditorProps> = ({ onValidated, onChange, defaultValue }) 
           }}
           onChange={(newCode?: string) => {
             code.current = newCode || ''
-            if (onChange) {
+            if (onChange && newCode) {
               onChange(newCode)
             }
           }}
