@@ -21,10 +21,11 @@ const InnerContainer = styled.div`
 
 interface EditorProps {
   onValidated: (code: string) => void;
+  onChange?: (code: string) => void;
   defaultValue: string;
 }
 
-const Editor: React.FC<EditorProps> = ({ onValidated, defaultValue }) => {
+const Editor: React.FC<EditorProps> = ({ onValidated, onChange, defaultValue }) => {
   const code = useRef(defaultValue)
   const editorRef = useRef<any>(null)
   const monaco = useMonaco()
@@ -78,6 +79,9 @@ const Editor: React.FC<EditorProps> = ({ onValidated, defaultValue }) => {
           }}
           onChange={(newCode?: string) => {
             code.current = newCode || ''
+            if (onChange) {
+              onChange(newCode)
+            }
           }}
           onValidate={(markers: any[]) => {
             if (markers.length === 0) {

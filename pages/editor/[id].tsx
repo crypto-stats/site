@@ -67,6 +67,10 @@ const EditorPage: NextPage = () => {
   const { save, publish, cid, code: initialCode } = useAdapter(router.query.id?.toString())
   const saveableCode = useRef(initialCode)
 
+  // Hacky way to re-render
+  const [_rerenderCnt, _rerender] = useState(1)
+  const rerender = () => _rerender(_rerenderCnt + 1)
+
   const evaluate = async (code: string, isTS?: boolean) => {
     parsedCode.current = null
     saveableCode.current = code
@@ -104,7 +108,7 @@ const EditorPage: NextPage = () => {
     setPublishing(false)
   }
 
-  const canSave = module && saveableCode.current && saveableCode.current !== initialCode
+  const canSave = module?.name && saveableCode.current && saveableCode.current !== initialCode
   const canPublish = module && parsedCode.current
 
   return (
@@ -130,7 +134,15 @@ const EditorPage: NextPage = () => {
       <MainSection>
         <EditorAndError>
           {initialCode && (
-            <Editor onValidated={(code: string) => evaluate(code, true)} defaultValue={initialCode} />
+            <Editor
+              onValidated={(code: string) => evaluate(code, true)}
+              onChange={(code: string) => {
+                console.log('cng')
+                saveableCode.current = code
+                rerender()
+              }}
+              defaultValue={initialCode}
+            />
           )}
           {error && <ErrorBar>Error: {error}</ErrorBar>}
         </EditorAndError>
