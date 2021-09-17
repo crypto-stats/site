@@ -23,9 +23,11 @@ const ModuleContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow: auto;
+  max-width: 50%;
 
   @media (max-width: 700px) {
     height: 200px;
+    max-width: unset;
   }
 `
 

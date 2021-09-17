@@ -41,9 +41,12 @@ const ModulePreview: React.FC<ModulePreviewProps> = ({ module, list }) => {
           <AdapterCard key={adapter.id}>
             {iconUri && <Icon src={iconUri} />}
             <div>{adapter.id}</div>
-            <Attribute name="Metadata">
-              <pre>{JSON.stringify(metadata, null, 2)}</pre>
-            </Attribute>
+            <h2>Metadata</h2>
+            {Object.entries(metadata).map(([key, val]) => (
+              <Attribute name={key}>
+                <pre>{JSON.stringify(val, null, 2)}</pre>
+              </Attribute>
+            ))}
             <Attribute name="Queries">
               {Object.entries(adapter.queries).map(([id, fn]: [string, any]) => (
                 <QueryForm id={id} fn={fn} key={id} />
