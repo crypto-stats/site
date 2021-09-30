@@ -101,7 +101,7 @@ declare class Context {
     private list;
     constructor({ coinGecko, chainData, date, graph, http, ipfs, ethers, plugins, list, }: ContextProps);
     register(registration: RegistrationData): void;
-    registerBundle(id: string): void;
+    registerBundle(id: string, metadata?: any): void;
 }
 
 declare interface ContextProps {
@@ -201,13 +201,19 @@ declare interface IPFSOptions {
 declare class List {
     readonly name: string;
     readonly adapters: Adapter[];
-    readonly bundles: string[];
+    readonly bundleIds: string[];
     private adaptersById;
     private sdk?;
     private adaptersFetched;
+    getBundle(id: string): Promise<{
+        [x: string]: any;
+    }>;
+    getBundles(): Promise<{
+        [x: string]: any;
+    }[]>;
     constructor(name: string, sdk?: BaseCryptoStatsSDK);
     addAdapter({ id, queries, metadata, bundle }: AdapterData): Adapter;
-    addBundle(id: string): void;
+    addBundle(id: string, metadata?: any): void;
     getAdapters(): Adapter[];
     getAdapter(id: string): Adapter;
     getIDs(): string[];

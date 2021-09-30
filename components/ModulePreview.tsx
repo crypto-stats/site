@@ -33,7 +33,8 @@ const ModulePreview: React.FC<ModulePreviewProps> = ({ module, list }) => {
       <Attribute name="License">{module.license}</Attribute>
       
       {list.adapters.map((adapter: Adapter) => {
-        const { icon, ...metadata } = adapter.metadata
+        // @ts-ignore
+        const { icon, ...metadata } = adapter.metadata.metadata
 
         const iconUri = icon?.cid ? `https://ipfs.io/ipfs/${icon.cid}` : icon
 
