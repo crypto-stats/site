@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, Fragment, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Modal from 'react-modal'
 import { NextPage } from 'next'
@@ -7,11 +7,11 @@ import styled from 'styled-components'
 import { CryptoStatsSDK, List, Module } from '@cryptostats/sdk'
 import Button from 'components/Button'
 import Editor from 'components/Editor'
-import Layout from 'components/Layout'
 import ModulePreview from 'components/ModulePreview'
 import ImageSelector from 'components/ImageSelector'
 import { useAdapter } from 'hooks/local-adapters'
 import { compileTsToJs } from 'utils/ts-compiler'
+import { ViewPort, Top, LeftResizable, Fill, RightResizable, CenterType, Bottom } from 'react-spaces';
 
 const ErrorBar = styled.div`
   background: red;
@@ -22,13 +22,8 @@ const ErrorBar = styled.div`
 const ModuleContainer = styled.div`
   display: flex;
   flex-direction: column;
-  overflow: auto;
-  max-width: 50%;
-
-  @media (max-width: 700px) {
-    height: 200px;
-    max-width: unset;
-  }
+  height: 100%;
+  width: 100%;
 `
 
 const Toolbar = styled.div`
@@ -39,19 +34,12 @@ const Spacer = styled.div`
   flex: 1;
 `
 
-const MainSection = styled.div`
-  display: flex;
-  flex: 1;
-
-  @media (max-width: 700px) {
-    flex-direction: column;
-  }
-`
-
-const EditorAndError = styled.div`
-  flex: 1;
+const CodeContainer = styled.div`
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
+  border: solid 1px gray;
 `
 
 Modal.setAppElement('#__next');
@@ -64,12 +52,17 @@ const EditorPage: NextPage = () => {
   const [error, setError] = useState<string | null>(null)
   const [publishing, setPublishing] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const [loaded, setLoaded] = useState(false)
   const { save, publish, cid, code: initialCode } = useAdapter(router.query.id?.toString())
   const saveableCode = useRef(initialCode)
 
   // Hacky way to re-render
   const [_rerenderCnt, _rerender] = useState(1)
   const rerender = () => _rerender(_rerenderCnt + 1)
+
+  useEffect(() => {
+    setLoaded(true)
+  }, [])
 
   const evaluate = async (code: string, isTS?: boolean) => {
     parsedCode.current = null
@@ -111,46 +104,67 @@ const EditorPage: NextPage = () => {
   const canSave = module?.name && saveableCode.current && saveableCode.current !== initialCode
   const canPublish = module && parsedCode.current
 
+  if (!loaded) {
+    return <div>Loading</div>
+  }
+
   return (
-    <Layout>
-      <Toolbar>
-        <Button disabled={!canSave} onClick={saveToBrowser}>
-          Save in Browser
-        </Button>
-        <Button disabled={!canPublish || publishing} onClick={publishToIPFS}>
-          Publish to IPFS
-        </Button>
-        {cid && (
-          <Link href={`/module/${cid}`}>
-            <a>Last published to IPFS as {cid.substr(0,6)}...{cid.substr(-4)}</a>
-          </Link>
-        )}
+    <Fragment>
+      <ViewPort>
+        <Top size={25} order={1} centerContent={CenterType.Vertical}>
+          <Toolbar>
+            <Button disabled={!canSave} onClick={saveToBrowser}>
+              Save in Browser
+            </Button>
+            <Button disabled={!canPublish || publishing} onClick={publishToIPFS}>
+              Publish to IPFS
+            </Button>
+            {cid && (
+              <Link href={`/module/${cid}`}>
+                <a>Last published to IPFS as {cid.substr(0,6)}...{cid.substr(-4)}</a>
+              </Link>
+            )}
 
-        <Spacer />
+            <Spacer />
 
-        <Button onClick={() => setShowModal(true)}>Images</Button>
-      </Toolbar>
+            <Button onClick={() => setShowModal(true)}>Images</Button>
+          </Toolbar>
+        </Top>
 
-      <MainSection>
-        <EditorAndError>
-          {initialCode && (
-            <Editor
-              onValidated={(code: string) => evaluate(code, true)}
-              onChange={(code: string) => {
-                saveableCode.current = code
-                rerender()
-              }}
-              defaultValue={initialCode}
-            />
-          )}
-          {error && <ErrorBar>Error: {error}</ErrorBar>}
-        </EditorAndError>
-        {module && list.current && (
-          <ModuleContainer>
-            <ModulePreview list={list.current} module={module} />
-          </ModuleContainer>
-        )}
-      </MainSection>
+        <Fill>
+          <LeftResizable size={200}>
+            Side
+          </LeftResizable>
+          <Fill>
+            <Fill>
+              <CodeContainer>
+                {initialCode && (
+                  <Editor
+                    onValidated={(code: string) => evaluate(code, true)}
+                    onChange={(code: string) => {
+                      saveableCode.current = code
+                      rerender()
+                    }}
+                    defaultValue={initialCode}
+                  />
+                )}
+              </CodeContainer>
+            </Fill>
+
+            <Bottom size={50}>
+              {error && <ErrorBar>Error: {error}</ErrorBar>}
+            </Bottom>
+          </Fill>
+
+          <RightResizable size={200}>
+            {module && list.current && (
+              <ModuleContainer>
+                <ModulePreview list={list.current} module={module} />
+              </ModuleContainer>
+            )}
+          </RightResizable>
+        </Fill>
+      </ViewPort>
 
       <Modal
         isOpen={showModal}
@@ -159,7 +173,7 @@ const EditorPage: NextPage = () => {
       >
         <ImageSelector close={() => setShowModal(false)} />
       </Modal>
-    </Layout>
+    </Fragment>
   )
 }
 
