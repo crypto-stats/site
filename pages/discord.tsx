@@ -5,7 +5,7 @@ export default function NullPage() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  res.setHeader("location", "https://discord.gg/JJP974c9")
+  res.setHeader("location", "https://discord.gg/UVWn8haPfj")
   res.statusCode = 302
   res.end()
   return { props: {} }
