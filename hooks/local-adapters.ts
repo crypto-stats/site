@@ -4,11 +4,21 @@ import sampleModule from '!raw-loader!../components/sample-module.txt'
 
 const storageKey = 'localAdapters'
 
+const getStorage = () => JSON.parse(window.localStorage.getItem(storageKey) || '{}')
+
+const getStorageItem = (id: string) => getStorage()[id] || null
+
+const setStorageItem = (id: string, value: any) => window.localStorage.setItem(storageKey, JSON.stringify({
+    ...getStorage(),
+    [id]: value,
+  }))
+
 export const useAdapterList = () => {
   const [list, setList] = useState<any[]>([])
   useEffect(() => {
-    const existingStorage = JSON.parse(window.localStorage.getItem(storageKey) || '{}')
-    const newList = Object.entries(existingStorage).map(([id, adapter]: [string, any]) => ({ ...adapter, id }))
+    const newList = Object.entries(getStorage())
+      .map(([id, adapter]: [string, any]) => ({ ...adapter, id }))
+
     setList(newList)
   }, []);
   return list
@@ -18,28 +28,18 @@ const randomId = () => Math.floor(Math.random() * 1000000).toString(16)
 
 export const newModule = (code: string, cid?: string | null) => {
   const id = randomId()
-  const existingStorage = JSON.parse(window.localStorage.getItem(storageKey) || '{}')
-  window.localStorage.setItem(storageKey, JSON.stringify({
-    ...existingStorage,
-    [id]: { code, name, cid: cid || null },
-  }))
-
+  setStorageItem(id, { code, name, cid: cid || null })
   return id
 }
 
 export const useAdapter = (id?: string) => {
-  const [defaultCode, setDefaultCode] = useState<string | null>(null)
-  const [cid, setCID] = useState<string | null>(null)
+  const update = useState({})[1]
   
   const save = (code: string, name: string, cid?: string) => {
-    const _id = id === 'new' ? randomId() : id
-    const existingStorage = JSON.parse(window.localStorage.getItem(storageKey) || '{}')
-    window.localStorage.setItem(storageKey, JSON.stringify({
-      ...existingStorage,
-      [_id!]: { code, name, cid: cid || null },
-    }))
-    setDefaultCode(code)
-    setCID(cid || null)
+    const _id = id || randomId()
+    const _adapter = { code, name, cid: cid || null }
+    setStorageItem(_id, _adapter)
+    update({})
 
     return _id!;
   }
@@ -62,19 +62,7 @@ export const useAdapter = (id?: string) => {
     return response
   }
 
-  useEffect(() => {
-    if (!id) {
-      return
-    }
+  const adapter = id ? getStorageItem(id) : null
 
-    if (id === 'new') {
-      return setDefaultCode(sampleModule)
-    }
-
-    const existingStorage = JSON.parse(window.localStorage.getItem(storageKey) || '{}')
-    setDefaultCode(existingStorage[id]?.code || null)
-    setCID(existingStorage[id]?.cid || null)
-  }, [id])
-
-  return { save, publish, code: defaultCode, cid }
+  return { save, publish, adapter }
 }

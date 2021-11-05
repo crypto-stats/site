@@ -6,7 +6,9 @@ import Link from 'next/link';
 import styled from 'styled-components'
 import { CryptoStatsSDK, List, Module } from '@cryptostats/sdk'
 import Button from 'components/Button'
+import Tab from 'components/Tab'
 import Editor from 'components/Editor'
+import FileList from 'components/FileList'
 import ModulePreview from 'components/ModulePreview'
 import ImageSelector from 'components/ImageSelector'
 import { useAdapter } from 'hooks/local-adapters'
@@ -40,6 +42,11 @@ const CodeContainer = styled.div`
   display: flex;
   flex-direction: column;
   border: solid 1px gray;
+`
+
+const Left = styled(LeftResizable)`
+  display: flex;
+  flex-direction: column;
 `
 
 Modal.setAppElement('#__next');
@@ -111,7 +118,7 @@ const EditorPage: NextPage = () => {
   return (
     <Fragment>
       <ViewPort>
-        <Top size={25} order={1} centerContent={CenterType.Vertical}>
+{/*        <Top size={25} order={1} centerContent={CenterType.Vertical}>
           <Toolbar>
             <Button disabled={!canSave} onClick={saveToBrowser}>
               Save in Browser
@@ -130,16 +137,24 @@ const EditorPage: NextPage = () => {
             <Button onClick={() => setShowModal(true)}>Images</Button>
           </Toolbar>
         </Top>
-
+*/}
         <Fill>
-          <LeftResizable size={200}>
-            Side
-          </LeftResizable>
+          <Left size={200}>
+            <FileList
+              selected={router.query.id?.toString()}
+              onSelected={(id: string) => router.push(`/editor/${id}`)}
+            />
+          </Left>
           <Fill>
+{/*            <Top size={30}>
+              <Tab onClose={() => null}>{module?.name || 'Adapter Editor'}</Tab>
+            </Top>*/}
+
             <Fill>
               <CodeContainer>
-                {initialCode && (
+                {router.query.id && initialCode && (
                   <Editor
+                    fileId={router.query.id.toString()}
                     onValidated={(code: string) => evaluate(code, true)}
                     onChange={(code: string) => {
                       saveableCode.current = code
@@ -151,28 +166,28 @@ const EditorPage: NextPage = () => {
               </CodeContainer>
             </Fill>
 
-            <Bottom size={50}>
+{/*            <Bottom size={50}>
               {error && <ErrorBar>Error: {error}</ErrorBar>}
-            </Bottom>
+            </Bottom>*/}
           </Fill>
 
-          <RightResizable size={200}>
+{/*          <RightResizable size={200}>
             {module && list.current && (
               <ModuleContainer>
                 <ModulePreview list={list.current} module={module} />
               </ModuleContainer>
             )}
-          </RightResizable>
+          </RightResizable>*/}
         </Fill>
       </ViewPort>
 
-      <Modal
+{/*      <Modal
         isOpen={showModal}
         onRequestClose={() => setShowModal(false)}
         contentLabel="Insert Image"
       >
         <ImageSelector close={() => setShowModal(false)} />
-      </Modal>
+      </Modal>*/}
     </Fragment>
   )
 }

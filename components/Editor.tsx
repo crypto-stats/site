@@ -23,11 +23,11 @@ interface EditorProps {
   onValidated: (code: string) => void;
   onChange?: (code: string) => void;
   defaultValue: string;
+  fileId: string;
 }
 
-const Editor: React.FC<EditorProps> = ({ onValidated, onChange, defaultValue }) => {
+const Editor: React.FC<EditorProps> = ({ onValidated, onChange, defaultValue, fileId }) => {
   const code = useRef(defaultValue)
-  const editorRef = useRef<any>(null)
   const monaco = useMonaco()
 
   useEffect(() => {
@@ -65,32 +65,29 @@ const Editor: React.FC<EditorProps> = ({ onValidated, onChange, defaultValue }) 
   }, [monaco])
 
   return (
-    <OuterContainer>
-      <InnerContainer>
-        <MonacoEditor
-          defaultLanguage="typescript"
-          defaultValue={defaultValue}
-          options={{
-            tabSize: 2,
-            insertSpaces: true,
-          }}
-          onMount={(editor: any) => {
-            editorRef.current = editor
-          }}
-          onChange={(newCode?: string) => {
-            code.current = newCode || ''
-            if (onChange && newCode) {
-              onChange(newCode)
-            }
-          }}
-          onValidate={(markers: any[]) => {
-            if (markers.length === 0) {
-              onValidated(code.current)
-            }
-          }}
-        />
-      </InnerContainer>
-    </OuterContainer>
+    <MonacoEditor
+      defaultLanguage="typescript"
+      defaultValue={defaultValue}
+      path={fileId}
+      options={{
+        tabSize: 2,
+        insertSpaces: true,
+      }}
+      onMount={(editor: any) => {
+        console.log('mount', editor, monaco)
+      }}
+      onChange={(newCode?: string) => {
+        code.current = newCode || ''
+        if (onChange && newCode) {
+          onChange(newCode)
+        }
+      }}
+      onValidate={(markers: any[]) => {
+        if (markers.length === 0) {
+          onValidated(code.current)
+        }
+      }}
+    />
   )
 }
 
