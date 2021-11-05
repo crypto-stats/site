@@ -8,27 +8,39 @@ const getStorage = () => JSON.parse(window.localStorage.getItem(storageKey) || '
 
 const getStorageItem = (id: string) => getStorage()[id] || null
 
-const setStorageItem = (id: string, value: any) => window.localStorage.setItem(storageKey, JSON.stringify({
+const setStorageItem = (id: string, value: any) => {
+  window.localStorage.setItem(storageKey, JSON.stringify({
     ...getStorage(),
     [id]: value,
   }))
+  updateAdapterLists()
+}
+
+const adapterListUpdaters: Function[] = []
+
+const updateAdapterLists = () => adapterListUpdaters.map(updater => updater())
 
 export const useAdapterList = () => {
-  const [list, setList] = useState<any[]>([])
-  useEffect(() => {
-    const newList = Object.entries(getStorage())
-      .map(([id, adapter]: [string, any]) => ({ ...adapter, id }))
+  const _update = useState({})[1]
+  const update = () => _update({})
 
-    setList(newList)
-  }, []);
+  useEffect(() => {
+    adapterListUpdaters.push(update)
+
+    return () => adapterListUpdaters.splice(adapterListUpdaters.indexOf(update), 1)
+  }, [])
+
+  const list = Object.entries(getStorage())
+    .map(([id, adapter]: [string, any]) => ({ ...adapter, id }))
+
   return list
 }
 
 const randomId = () => Math.floor(Math.random() * 1000000).toString(16)
 
-export const newModule = (code: string, cid?: string | null) => {
+export const newModule = (code: string = sampleModule, cid?: string | null) => {
   const id = randomId()
-  setStorageItem(id, { code, name, cid: cid || null })
+  setStorageItem(id, { code, name: 'New Module', cid: cid || null })
   return id
 }
 

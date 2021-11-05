@@ -5,13 +5,15 @@ import Editor from 'components/Editor'
 import { getListNames, getModulesForList } from 'utils/lists'
 import styled from 'styled-components'
 import FileList from 'components/FileList'
-import { useAdapter } from 'hooks/local-adapters'
+import { useAdapter, newModule } from 'hooks/local-adapters'
 import { ViewPort, Top, LeftResizable, Fill, RightResizable, CenterType, Bottom } from 'react-spaces';
 
 const Left = styled(LeftResizable)`
   display: flex;
   flex-direction: column;
 `
+
+const NewAdapterButton = styled.button``
 
 const EditorPage: NextPage = () => {
   const [fileName, setFileName] = useState(null);
@@ -31,7 +33,13 @@ const EditorPage: NextPage = () => {
       </Top>
       <Fill>
         <Left size={200}>
-          <FileList selected={fileName} onSelected={setFileName} />
+          <Fill>
+            <FileList selected={fileName} onSelected={setFileName} />
+          </Fill>
+
+          <Bottom size={30}>
+            <NewAdapterButton onClick={() => setFileName(newModule())}>New Adapter</NewAdapterButton>
+          </Bottom>
         </Left>
 
         <Fill>
