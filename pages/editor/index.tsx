@@ -13,6 +13,23 @@ const Left = styled(LeftResizable)`
   flex-direction: column;
 `
 
+const Header = styled(Top)`
+  background-image: url("/logo-white.svg");
+  background-color: #2f2f2f;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-bottom: solid 1px #4a4a4d;
+  display: flex;
+`
+
+const CloseButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+`
+
 const NewAdapterButton = styled.button``
 
 const EditorPage: NextPage = () => {
@@ -28,9 +45,9 @@ const EditorPage: NextPage = () => {
 
   return (
     <ViewPort>
-      <Top size={25} order={1} centerContent={CenterType.Vertical}>
-        Top
-      </Top>
+      <Header size={64} order={1}>
+        <CloseButton>Close</CloseButton>
+      </Header>
       <Fill>
         <Left size={200}>
           <Fill>
