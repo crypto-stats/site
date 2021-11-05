@@ -32,6 +32,27 @@ const CloseButton = styled.button`
 
 const NewAdapterButton = styled.button``
 
+const LeftFooter = styled(Bottom)`
+  border-top: solid 1px #444447;
+`
+
+const PrimaryFooter = styled(Bottom)`
+  border-top: solid 1px #444447;
+  display: flex;
+  justify-content: space-between;
+`
+
+const PublishButton = styled.button`
+  height: 35px;
+  margin: 0 0 0 32px;
+  padding: 9px 20px;
+  border-radius: 4px;
+  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.5);
+  color: white;
+  background: #0477f4;
+  border: none;
+`
+
 const EditorPage: NextPage = () => {
   const [fileName, setFileName] = useState(null);
   const { save, publish, adapter } = useAdapter(fileName)
@@ -44,7 +65,7 @@ const EditorPage: NextPage = () => {
   }
 
   return (
-    <ViewPort>
+    <ViewPort style={{ background: '#0f1011' }}>
       <Header size={64} order={1}>
         <CloseButton>Close</CloseButton>
       </Header>
@@ -57,6 +78,8 @@ const EditorPage: NextPage = () => {
           <Bottom size={30}>
             <NewAdapterButton onClick={() => setFileName(newModule())}>New Adapter</NewAdapterButton>
           </Bottom>
+
+          <LeftFooter order={1} size={55} style={{ borderTop: 'solid 1px #444447' }} />
         </Left>
 
         <Fill>
@@ -74,31 +97,34 @@ const EditorPage: NextPage = () => {
             />
           </Fill>
 
-          <Bottom size={50}>
-            Error
-          </Bottom>
-        </Fill>
+          <RightResizable size={200}>
+            <button
+              disabled={fileName === "script.js"}
+              onClick={() => setFileName("script.js")}
+            >
+              script.js
+            </button>
+            <button
+              disabled={fileName === "style.css"}
+              onClick={() => setFileName("style.css")}
+            >
+              style.css
+            </button>
+            <button
+              disabled={fileName === "index.html"}
+              onClick={() => setFileName("index.html")}
+            >
+              index.html
+            </button>
+          </RightResizable>
 
-        <RightResizable size={200}>
-          <button
-            disabled={fileName === "script.js"}
-            onClick={() => setFileName("script.js")}
-          >
-            script.js
-          </button>
-          <button
-            disabled={fileName === "style.css"}
-            onClick={() => setFileName("style.css")}
-          >
-            style.css
-          </button>
-          <button
-            disabled={fileName === "index.html"}
-            onClick={() => setFileName("index.html")}
-          >
-            index.html
-          </button>
-        </RightResizable>
+          <PrimaryFooter size={55}>
+            <div />
+            <div>
+              <PublishButton>Publish to IPFS</PublishButton>
+            </div>
+          </PrimaryFooter>
+        </Fill>
       </Fill>
     </ViewPort>
   )

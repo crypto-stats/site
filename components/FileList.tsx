@@ -9,6 +9,8 @@ const Container = styled.div`
 
 const Label = styled.div`
   padding: 8px 4px;
+  font-size: 14px;
+  color: #6b6b6b;
 `
 
 const List = styled.ul`
@@ -19,9 +21,16 @@ const List = styled.ul`
 const ListItem = styled.li<{ selected?: boolean }>`
   list-style: none;
   margin: 0;
+  font-size: 14px;
+  color: #c8c8c8;
+  padding: 12px;
+  height: 40px;
+  box-sizing: border-box;
 
   ${(props) => props.selected ? `
-    background: gray;
+    background: #7e90b43b;
+    color: white;
+    font-weight: bold;
   ` : ''}
 `
 
