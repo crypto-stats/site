@@ -7,11 +7,12 @@ const AttributeContainer = styled.div`
 
 const Name = styled.div`
   font-size: 12px;
-  color: #444444;
+  color: #7b7b7b;
 `
 
 const Value = styled.div`
-  color: #222222;
+  font-size: 16px;
+  color: #ffffff;
 `;
 
 const Attribute: React.FC<{ name: string }> = ({ name, children }) => {

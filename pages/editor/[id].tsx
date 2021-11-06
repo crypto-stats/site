@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { CryptoStatsSDK, List, Module } from '@cryptostats/sdk'
 import Button from 'components/Button'
 import Tab from 'components/Tab'
-import Editor from 'components/Editor'
+import Editor from 'components/CodeEditor'
 import FileList from 'components/FileList'
 import ModulePreview from 'components/ModulePreview'
 import ImageSelector from 'components/ImageSelector'
@@ -116,79 +116,69 @@ const EditorPage: NextPage = () => {
   }
 
   return (
-    <Fragment>
-      <ViewPort>
-{/*        <Top size={25} order={1} centerContent={CenterType.Vertical}>
-          <Toolbar>
-            <Button disabled={!canSave} onClick={saveToBrowser}>
-              Save in Browser
-            </Button>
-            <Button disabled={!canPublish || publishing} onClick={publishToIPFS}>
-              Publish to IPFS
-            </Button>
-            {cid && (
-              <Link href={`/module/${cid}`}>
-                <a>Last published to IPFS as {cid.substr(0,6)}...{cid.substr(-4)}</a>
-              </Link>
-            )}
+    <ViewPort>
+      <Top size={25} order={1} centerContent={CenterType.Vertical}>
+        <Toolbar>
+          <Button disabled={!canSave} onClick={saveToBrowser}>
+            Save in Browser
+          </Button>
+          <Button disabled={!canPublish || publishing} onClick={publishToIPFS}>
+            Publish to IPFS
+          </Button>
+          {cid && (
+            <Link href={`/module/${cid}`}>
+              <a>Last published to IPFS as {cid.substr(0,6)}...{cid.substr(-4)}</a>
+            </Link>
+          )}
 
-            <Spacer />
+          <Spacer />
 
-            <Button onClick={() => setShowModal(true)}>Images</Button>
-          </Toolbar>
-        </Top>
-*/}
+          <Button onClick={() => setShowModal(true)}>Images</Button>
+        </Toolbar>
+      </Top>
+
+      <Fill>
+        <Left size={200}>
+          <FileList
+            selected={router.query.id?.toString()}
+            onSelected={(id: string) => router.push(`/editor/${id}`)}
+          />
+        </Left>
         <Fill>
-          <Left size={200}>
-            <FileList
-              selected={router.query.id?.toString()}
-              onSelected={(id: string) => router.push(`/editor/${id}`)}
-            />
-          </Left>
+          <Top size={30}>
+            <Tab onClose={() => null}>{module?.name || 'Adapter Editor'}</Tab>
+          </Top>
+
           <Fill>
-{/*            <Top size={30}>
-              <Tab onClose={() => null}>{module?.name || 'Adapter Editor'}</Tab>
-            </Top>*/}
-
-            <Fill>
-              <CodeContainer>
-                {router.query.id && initialCode && (
-                  <Editor
-                    fileId={router.query.id.toString()}
-                    onValidated={(code: string) => evaluate(code, true)}
-                    onChange={(code: string) => {
-                      saveableCode.current = code
-                      rerender()
-                    }}
-                    defaultValue={initialCode}
-                  />
-                )}
-              </CodeContainer>
-            </Fill>
-
-{/*            <Bottom size={50}>
-              {error && <ErrorBar>Error: {error}</ErrorBar>}
-            </Bottom>*/}
+            <CodeContainer>
+              {router.query.id && initialCode && (
+                <Editor
+                  fileId={router.query.id.toString()}
+                  onValidated={(code: string) => evaluate(code, true)}
+                  onChange={(code: string) => {
+                    saveableCode.current = code
+                    rerender()
+                  }}
+                  defaultValue={initialCode}
+                />
+              )}
+            </CodeContainer>
           </Fill>
 
-{/*          <RightResizable size={200}>
-            {module && list.current && (
-              <ModuleContainer>
-                <ModulePreview list={list.current} module={module} />
-              </ModuleContainer>
-            )}
-          </RightResizable>*/}
+          <Bottom size={50}>
+            {error && <ErrorBar>Error: {error}</ErrorBar>}
+          </Bottom>
         </Fill>
-      </ViewPort>
 
-{/*      <Modal
-        isOpen={showModal}
-        onRequestClose={() => setShowModal(false)}
-        contentLabel="Insert Image"
-      >
-        <ImageSelector close={() => setShowModal(false)} />
-      </Modal>*/}
-    </Fragment>
+        <RightResizable size={200}>
+          {module && list.current && (
+            <ModuleContainer>
+              <ModulePreview list={list.current} module={module} />
+            </ModuleContainer>
+          )}
+        </RightResizable>
+      </Fill>
+    </ViewPort>
   )
 }
 
