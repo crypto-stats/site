@@ -64,8 +64,13 @@ const Editor: React.FC<EditorProps> = ({ onValidated, onChange, defaultValue, fi
     }
   }, [monaco])
 
+  useEffect(() => {
+    code.current = defaultValue
+  }, [fileId])
+
   return (
     <MonacoEditor
+      theme="vs-dark"
       defaultLanguage="typescript"
       defaultValue={defaultValue}
       path={fileId}
