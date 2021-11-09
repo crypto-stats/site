@@ -4,7 +4,9 @@ import sampleModule from '!raw-loader!../components/sample-module.txt'
 
 const storageKey = 'localAdapters'
 
-const getStorage = () => JSON.parse(window.localStorage.getItem(storageKey) || '{}')
+const getStorage = () => typeof window === 'undefined'
+  ? {}
+  : JSON.parse(window.localStorage.getItem(storageKey) || '{}')
 
 const getStorageItem = (id: string) => getStorage()[id] || null
 
