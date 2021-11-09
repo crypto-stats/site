@@ -55,16 +55,10 @@ const PublishButton = styled.button`
 
 const Editor: React.FC = () => {
   const [fileName, setFileName] = useState<string | null>(null)
+  const [started, setStarted] = useState(false)
   const [publishing, setPublishing] = useState(false)
   const { save, publish: publishToIPFS, adapter } = useAdapter(fileName)
   const { evaluate } = useCompiler()
-
-  useEffect(() => {
-    setFileName('8a0c')
-  }, [])
-  if (!fileName || !adapter) {
-    return null;
-  }
 
   const publish = async () => {
     setPublishing(true)
@@ -74,6 +68,13 @@ const Editor: React.FC = () => {
       console.warn(e)
     }
     setPublishing(false)
+  }
+
+  useEffect(() => {
+    setStarted(true)
+  }, [])
+  if (!started) {
+    return null
   }
 
   return (
@@ -100,12 +101,14 @@ const Editor: React.FC = () => {
           </Top>
 
           <Fill>
-            <CodeEditor
-              fileId={fileName}
-              defaultValue={adapter.code}
-              onChange={(code: string) => save(code, adapter.name)}
-              onValidated={(code: string) => evaluate(code, true)}
-            />
+            {fileName && adapter && (
+              <CodeEditor
+                fileId={fileName}
+                defaultValue={adapter.code}
+                onChange={(code: string) => save(code, adapter.name)}
+                onValidated={(code: string) => evaluate(code, true)}
+              />
+            )}
           </Fill>
 
           <RightResizable size={200}>

@@ -35,7 +35,7 @@ const ListItem = styled.li<{ selected?: boolean }>`
 `
 
 interface FileListProps {
-  selected?: string
+  selected?: string | null
   onSelected: (id: string) => void
 }
 
