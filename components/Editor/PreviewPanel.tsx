@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { Adapter } from '@cryptostats/sdk'
 import { useCompiler } from 'hooks/compiler'
@@ -30,7 +30,7 @@ const PreviewPanel: React.FC = () => {
       <Attribute name="License">{module.license}</Attribute>
 
       <div>
-        {list.adapters.map((adapter: Adapter) => (
+        {list && list.adapters.map((adapter: Adapter) => (
           <SubAdapterPreview
             key={adapter.id}
             subadapter={adapter}

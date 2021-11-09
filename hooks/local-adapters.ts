@@ -27,7 +27,7 @@ export const useAdapterList = () => {
   useEffect(() => {
     adapterListUpdaters.push(update)
 
-    return () => adapterListUpdaters.splice(adapterListUpdaters.indexOf(update), 1)
+    return () => void adapterListUpdaters.splice(adapterListUpdaters.indexOf(update), 1)
   }, [])
 
   const list = Object.entries(getStorage())
@@ -44,7 +44,7 @@ export const newModule = (code: string = sampleModule, cid?: string | null) => {
   return id
 }
 
-export const useAdapter = (id?: string) => {
+export const useAdapter = (id?: string | null) => {
   const update = useState({})[1]
   
   const save = (code: string, name: string, cid?: string) => {

@@ -1,3 +1,4 @@
+import { NextPage } from 'next'
 import Editor from 'components/Editor'
 import { CompilerProvider } from 'hooks/compiler'
 

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import Link from 'next/link'
 import CodeEditor from 'components/CodeEditor'
-import { getListNames, getModulesForList } from 'utils/lists'
 import styled from 'styled-components'
 import FileList from 'components/FileList'
 import { useAdapter, newModule } from 'hooks/local-adapters'
-import { ViewPort, Top, LeftResizable, Fill, RightResizable, CenterType, Bottom } from 'react-spaces'
+import { ViewPort, Top, LeftResizable, Fill, RightResizable, Bottom } from 'react-spaces'
 import { useCompiler } from 'hooks/compiler'
 import RightPanel from './RightPanel'
 
@@ -56,8 +54,9 @@ const PublishButton = styled.button`
 `
 
 const Editor: React.FC = () => {
-  const [fileName, setFileName] = useState(null);
-  const { save, publish, adapter } = useAdapter(fileName)
+  const [fileName, setFileName] = useState<string | null>(null)
+  const [publishing, setPublishing] = useState(false)
+  const { save, publish: publishToIPFS, adapter } = useAdapter(fileName)
   const { evaluate } = useCompiler()
 
   useEffect(() => {
@@ -65,6 +64,16 @@ const Editor: React.FC = () => {
   }, [])
   if (!fileName || !adapter) {
     return null;
+  }
+
+  const publish = async () => {
+    setPublishing(true)
+    try {
+      await publishToIPFS(adapter.code, adapter.name)
+    } catch (e) {
+      console.warn(e)
+    }
+    setPublishing(false)
   }
 
   return (
@@ -106,7 +115,7 @@ const Editor: React.FC = () => {
           <PrimaryFooter size={55}>
             <div />
             <div>
-              <PublishButton>Publish to IPFS</PublishButton>
+              <PublishButton disabled={publishing} onClick={publish}>Publish to IPFS</PublishButton>
             </div>
           </PrimaryFooter>
         </Fill>

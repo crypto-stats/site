@@ -1,23 +1,8 @@
 import React, { useEffect, useRef } from 'react'
 import MonacoEditor, { useMonaco } from '@monaco-editor/react'
-import styled from 'styled-components'
 
 // @ts-ignore
 import sdkTypeDefs from '!raw-loader!generated/cryptostats-sdk.d.ts'
-
-const OuterContainer = styled.div`
-  position: relative;
-  flex: 1;
-`
-
-const InnerContainer = styled.div`
-  overflow: hidden;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-`
 
 interface EditorProps {
   onValidated: (code: string) => void;
@@ -60,7 +45,7 @@ const Editor: React.FC<EditorProps> = ({ onValidated, onChange, defaultValue, fi
       // Creating a model for the library allows "peek definition/references" commands to work with the library.
       monaco.editor.createModel(sdkTypeDefs, 'typescript', monaco.Uri.parse(sdkUri))
 
-      return () => monaco.editor.getModels().forEach(model => model.dispose())
+      return () => monaco.editor.getModels().forEach((model: any) => model.dispose())
     }
   }, [monaco])
 

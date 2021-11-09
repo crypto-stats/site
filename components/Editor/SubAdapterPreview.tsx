@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Adapter } from '@cryptostats/sdk'
-import { useCompiler } from 'hooks/compiler'
 import Attribute from '../Attribute'
 
 const Container = styled.div`
@@ -22,9 +21,9 @@ const SubAdapterPreview: React.FC<SubAdapterPreviewProps> = ({ subadapter, openB
   const [open, setOpen] = useState(openByDefault)
 
   console.log(subadapter)
-  
-  const { name, ...metadata } = subadapter.metadata.metadata
 
+  // @ts-ignore
+  const { name, ...metadata } = subadapter.metadata.metadata
 
   if (!open) {
     return (
@@ -39,7 +38,7 @@ const SubAdapterPreview: React.FC<SubAdapterPreviewProps> = ({ subadapter, openB
       <div onClick={() => setOpen(false)}>{name || subadapter.id}</div>
 
       <div>
-        {Object.entries(metadata).map(([key, val]) => (
+        {Object.entries(metadata).map(([key, val]: [string, any]) => (
           <Attribute name={key} key={key}>
             {val.cid ? (
               <div>

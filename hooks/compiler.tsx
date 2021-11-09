@@ -57,7 +57,7 @@ export const useCompiler = () => {
 }
 
 export const CompilerProvider: React.FC = ({ children }) => {
-  const [state, setState] = useState(DEFAULT_STATE)
+  const [state, setState] = useState<CompilerState>(DEFAULT_STATE)
 
   return (
     <CompilerContext.Provider value={{ state, setState }}>{children}</CompilerContext.Provider>
