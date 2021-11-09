@@ -58,7 +58,7 @@ const Editor: React.FC = () => {
   const [started, setStarted] = useState(false)
   const [publishing, setPublishing] = useState(false)
   const { save, publish: publishToIPFS, adapter } = useAdapter(fileName)
-  const { evaluate } = useCompiler()
+  const { evaluate, module } = useCompiler()
 
   const publish = async () => {
     setPublishing(true)
@@ -69,6 +69,13 @@ const Editor: React.FC = () => {
     }
     setPublishing(false)
   }
+
+  useEffect(() => {
+    if (module && module.name !== adapter.name) {
+      const name = module.name?.length > 0 ? module.name : 'Unnamed Adapter'
+      save(adapter.code, name)
+    }
+  }, [module])
 
   useEffect(() => {
     setStarted(true)
