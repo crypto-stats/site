@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { ViewPort, Top, LeftResizable, Fill, RightResizable, Bottom } from 'react-spaces'
 import styled from 'styled-components'
+import Button from 'components/Button'
 import CodeEditor from 'components/CodeEditor'
 import FileList from 'components/FileList'
+import ImageSelector from 'components/ImageSelector'
+import Modal from 'components/Modal'
 import { useAdapter, newModule } from 'hooks/local-adapters'
 import { useCompiler } from 'hooks/compiler'
 import PrimaryFooter from './PrimaryFooter'
@@ -20,6 +23,7 @@ const Header = styled(Top)`
   background-repeat: no-repeat;
   border-bottom: solid 1px #4a4a4d;
   display: flex;
+  justify-content: space-between;
 `
 
 const CloseButton = styled.button`
@@ -45,6 +49,7 @@ const PrimaryFooterContainer = styled(Bottom)`
 const Editor: React.FC = () => {
   const [fileName, setFileName] = useState<string | null>(null)
   const [started, setStarted] = useState(false)
+  const [imageLibraryOpen, setImageLibraryOpen] = useState(false)
   const { save, adapter } = useAdapter(fileName)
   const { evaluate, module } = useCompiler()
 
@@ -66,6 +71,8 @@ const Editor: React.FC = () => {
     <ViewPort style={{ background: '#0f1011' }}>
       <Header size={64} order={1}>
         <CloseButton>Close</CloseButton>
+
+        <NewAdapterButton onClick={() => setFileName(newModule())}>New Adapter</NewAdapterButton>
       </Header>
       <Fill>
         <Left size={200}>
@@ -74,7 +81,7 @@ const Editor: React.FC = () => {
           </Fill>
 
           <Bottom size={30}>
-            <NewAdapterButton onClick={() => setFileName(newModule())}>New Adapter</NewAdapterButton>
+            <Button onClick={() => setImageLibraryOpen(true)}>Image Library</Button>
           </Bottom>
 
           <LeftFooter order={1} size={55} style={{ borderTop: 'solid 1px #444447' }} />
@@ -105,6 +112,18 @@ const Editor: React.FC = () => {
           </PrimaryFooterContainer>
         </Fill>
       </Fill>
+
+
+      <Modal
+        isOpen={imageLibraryOpen}
+        onClose={() => setImageLibraryOpen(false)}
+        title="Image Library"
+        buttons={[
+          { label: 'Return to Editor', onClick: () => setImageLibraryOpen(false) },
+        ]}
+      >
+        <ImageSelector close={() => setImageLibraryOpen(false)} />
+      </Modal>
     </ViewPort>
   )
 }
