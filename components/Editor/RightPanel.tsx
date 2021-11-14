@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { Fill, Top } from 'react-spaces'
 import PreviewPanel from './PreviewPanel'
+import TestPanel from './TestPanel'
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+const Container = styled(Fill)`
   color: #ffffff;
 `
 
@@ -31,24 +30,21 @@ const Tab = styled.li<{ selected?: boolean }>`
   `}
 `
 
-const Content = styled.div`
-  flex: 1;
-  overflow: auto;
-`
-
 const RightPanel = () => {
   const [tab, setTab] = useState('preview')
 
   return (
     <Container>
-      <Tabs>
-        <Tab selected={tab === 'preview'} onClick={() => setTab('preview')}>Preview</Tab>
-        <Tab selected={tab === 'test'} onClick={() => setTab('test')}>Test</Tab>
-      </Tabs>
+      <Top size={50}>
+        <Tabs>
+          <Tab selected={tab === 'preview'} onClick={() => setTab('preview')}>Preview</Tab>
+          <Tab selected={tab === 'test'} onClick={() => setTab('test')}>Test</Tab>
+        </Tabs>
+      </Top>
 
-      <Content>
-        {tab === 'preview' ? <PreviewPanel /> : 'Test'}
-      </Content>
+      <Fill scrollable={tab === 'preview'}>
+        {tab === 'preview' ? <PreviewPanel /> : <TestPanel />}
+      </Fill>
     </Container>
   );
 }

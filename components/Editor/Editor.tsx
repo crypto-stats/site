@@ -46,6 +46,13 @@ const PrimaryFooterContainer = styled(Bottom)`
   background: #2f2f2f;
 `
 
+const FillWithStyledResize = styled(Fill)`
+  > .spaces-resize-handle {
+    border-left: solid 2px #4a4a4d;
+    box-sizing: border-box;
+  }
+`
+
 const Editor: React.FC = () => {
   const [fileName, setFileName] = useState<string | null>(null)
   const [started, setStarted] = useState(false)
@@ -88,24 +95,28 @@ const Editor: React.FC = () => {
         </Left>
 
         <Fill>
-          <Top size={30}>
-            Top
-          </Top>
+          <FillWithStyledResize>
+            <Fill>
+              <Top size={30}>
+                Top
+              </Top>
 
-          <Fill>
-            {fileName && adapter && (
-              <CodeEditor
-                fileId={fileName}
-                defaultValue={adapter.code}
-                onChange={(code: string) => save(code, adapter.name)}
-                onValidated={(code: string) => evaluate(code, true)}
-              />
-            )}
-          </Fill>
+              <Fill>
+                {fileName && adapter && (
+                  <CodeEditor
+                    fileId={fileName}
+                    defaultValue={adapter.code}
+                    onChange={(code: string) => save(code, adapter.name)}
+                    onValidated={(code: string) => evaluate(code, true)}
+                  />
+                )}
+              </Fill>
+            </Fill>
 
-          <RightResizable size={200}>
-            <RightPanel />
-          </RightResizable>
+            <RightResizable size={200}>
+              <RightPanel />
+            </RightResizable>
+          </FillWithStyledResize>
 
           <PrimaryFooterContainer size={55}>
             <PrimaryFooter fileName={fileName} />

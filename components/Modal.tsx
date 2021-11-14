@@ -63,7 +63,13 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, buttons, children
 
       <Footer>
         {buttons.map(button => (
-          <Button onClick={button.onClick} disabled={button.disabled}>{button.label}</Button>
+          <Button
+            key={button.label}
+            onClick={button.onClick}
+            disabled={button.disabled}
+          >
+            {button.label}
+          </Button>
         ))}
       </Footer>
     </ReactModal>

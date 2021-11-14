@@ -7,10 +7,10 @@ interface QueryProps {
 
 const functionToParamNames = (fn: Function) => {
   const match = /\(((?:\w+, )*(?:\w+)?)\)/.exec(fn.toString())
-  return match ? match[1].split(',').map((name: string) => name.trim()) : [];
+  return match ? match[1].split(',').map((name: string) => name.trim()) : []
 }
 
-const Query: React.FC<QueryProps> = ({ id, fn }) => {
+const QueryForm: React.FC<QueryProps> = ({ id, fn }) => {
   const [values, setValues] = useState([...new Array(fn.length)].map(() => ''))
   const [running, setRunning] = useState(false)
   const [result, setResult] = useState<string | null>(null)
@@ -54,4 +54,4 @@ const Query: React.FC<QueryProps> = ({ id, fn }) => {
   )
 }
 
-export default Query
+export default QueryForm
