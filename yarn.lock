@@ -143,10 +143,10 @@
     "@babel/helper-validator-identifier" "^7.14.8"
     to-fast-properties "^2.0.0"
 
-"@cryptostats/sdk@^0.0.35":
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/@cryptostats/sdk/-/sdk-0.0.35.tgz#0dae68e50f0c71068a59508b6be35661d218a9c6"
-  integrity sha512-MmYE+i1M5cI1MX+c1J94o6FUh9+7u2T9ucVb4UysFIxFgPX0YBsABAK6ZH7cE6KHnM8QZQApa1x7xXgvRQyytg==
+"@cryptostats/sdk@^0.0.36":
+  version "0.0.36"
+  resolved "https://registry.yarnpkg.com/@cryptostats/sdk/-/sdk-0.0.36.tgz#9dbb5530dcc900c891064129654c7f99afac5f61"
+  integrity sha512-wfqNjPW8cQU24DCCTkMVtkAowvsgrEUc8FdBLymlSrWmhSyA3fxTpXky6Qw/VDjaM4K7UpNKPbGm7ZfW02rTLA==
   dependencies:
     date-fns "^2.22.1"
     ethers "^5.4.4"
@@ -1502,6 +1502,11 @@ css-color-keywords@^1.0.0:
   resolved "https://registry.yarnpkg.com/css-color-keywords/-/css-color-keywords-1.0.0.tgz#fea2616dc676b2962686b3af8dbdbe180b244e05"
   integrity sha1-/qJhbcZ2spYmhrOvjb2+GAskTgU=
 
+css-element-queries@^1.2.1:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/css-element-queries/-/css-element-queries-1.2.3.tgz#e14940b1fcd4bf0da60ea4145d05742d7172e516"
+  integrity sha512-QK9uovYmKTsV2GXWQiMOByVNrLn2qz6m3P7vWpOR4IdD6I3iXoDw5qtgJEN3Xq7gIbdHVKvzHjdAtcl+4Arc4Q==
+
 css-to-react-native@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/css-to-react-native/-/css-to-react-native-3.0.0.tgz#62dbe678072a824a689bcfee011fc96e02a7d756"
@@ -2753,11 +2758,6 @@ minimist@^1.2.0, minimist@^1.2.5:
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
   integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
 
-monaco-editor@^0.26.1:
-  version "0.26.1"
-  resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.26.1.tgz#62bb5f658bc95379f8abb64b147632bd1c019d73"
-  integrity sha512-mm45nUrBDk0DgZKgbD7+bhDOtcAFNGPJJRAdS6Su1kTGl6XEgC7U3xOmDUW/0RrLf+jlvCGaqLvD4p2VjwuwwQ==
-
 mongodb-connection-string-url@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/mongodb-connection-string-url/-/mongodb-connection-string-url-1.0.1.tgz#1509b44570851f5331f9ca7052b723789d63f8dc"
@@ -3469,6 +3469,14 @@ react-refresh@0.8.3:
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.8.3.tgz#721d4657672d400c5e3c75d063c4a85fb2d5d68f"
   integrity sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==
+
+react-spaces@^0.2.6:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/react-spaces/-/react-spaces-0.2.6.tgz#9069dd782dc252967dc20aa427f7fc0d033ee35e"
+  integrity sha512-NWBK2Wm4Rh1IxbmIBoLFSkHJ5NuCDhg7JLvqiq3olUxeUaE9sO777n9O4MTuPWTv8BSdjHXNAnMSBT2er967iA==
+  dependencies:
+    css-element-queries "^1.2.1"
+    prop-types "^15.7.2"
 
 react-syntax-highlighter@^15.4.4:
   version "15.4.4"
