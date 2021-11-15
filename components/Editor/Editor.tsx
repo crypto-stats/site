@@ -101,7 +101,7 @@ const Editor: React.FC = () => {
       </Header>
       <Fill>
         <Left size={200}>
-          <Fill>
+          <Fill scrollable={true}>
             <FileList selected={fileName} onSelected={setFileName} />
           </Fill>
 
