@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { CryptoStatsSDK, List, Module } from '@cryptostats/sdk'
+import { CryptoStatsSDK, List, Module, LOG_LEVEL } from '@cryptostats/sdk'
 import { compileTsToJs } from 'utils/ts-compiler'
 
 interface CompilerState {
@@ -29,16 +29,25 @@ const CompilerContext = React.createContext<{
   setState() { throw new Error('Not initialized') },
 })
 
+interface EvaluateParams {
+  code: string
+  isTS?: boolean
+  onLog?: (level: LOG_LEVEL, ...args: any[]) => void
+}
+
 export const useCompiler = () => {
   const { state, setState } = useContext(CompilerContext)
 
-  const evaluate = async (code: string, isTS?: boolean) => {
+  const evaluate = async ({ code, isTS, onLog }: EvaluateParams) => {
     setState({ ...DEFAULT_STATE, code, processing: true })
 
     const sdk = new CryptoStatsSDK({
       moralisKey: process.env.NEXT_PUBLIC_MORALIS_KEY,
+      onLog,
     })
+
     const list = sdk.getList('test')
+
     try {
       let compiledCode = null
       if (isTS) {

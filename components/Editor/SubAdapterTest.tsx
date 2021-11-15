@@ -38,6 +38,7 @@ const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDe
             key={queryName}
             id={queryName}
             fn={fn}
+            openByDefault={queries.length === 1}
           />
         ))}
       </div>

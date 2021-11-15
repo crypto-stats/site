@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { ViewPort, Top, LeftResizable, Fill, RightResizable, Bottom } from 'react-spaces'
+import { LOG_LEVEL } from '@cryptostats/sdk'
 import styled from 'styled-components'
 import Button from 'components/Button'
 import CodeEditor from 'components/CodeEditor'
@@ -8,6 +9,7 @@ import ImageSelector from 'components/ImageSelector'
 import Modal from 'components/Modal'
 import { useAdapter, newModule } from 'hooks/local-adapters'
 import { useCompiler } from 'hooks/compiler'
+import { useConsole } from 'hooks/console'
 import PrimaryFooter from './PrimaryFooter'
 import RightPanel from './RightPanel'
 
@@ -59,6 +61,7 @@ const Editor: React.FC = () => {
   const [imageLibraryOpen, setImageLibraryOpen] = useState(false)
   const { save, adapter } = useAdapter(fileName)
   const { evaluate, module } = useCompiler()
+  const { addLine } = useConsole()
 
   useEffect(() => {
     if (module && module.name !== adapter.name) {
@@ -107,7 +110,14 @@ const Editor: React.FC = () => {
                     fileId={fileName}
                     defaultValue={adapter.code}
                     onChange={(code: string) => save(code, adapter.name)}
-                    onValidated={(code: string) => evaluate(code, true)}
+                    onValidated={(code: string) => evaluate({
+                      code,
+                      isTS: true,
+                      onLog: (level: LOG_LEVEL, ...args: any[]) => addLine({
+                        level: level.toString(),
+                        value: args.join(' '),
+                      })
+                    })}
                   />
                 )}
               </Fill>

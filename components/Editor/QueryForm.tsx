@@ -1,8 +1,17 @@
 import React, { useState } from 'react'
+import styled from 'styled-components'
+
+const Container = styled.div`
+  background-color: #444;
+  padding: 12px 16px;
+`
+
+const TopBar = styled.div``
 
 interface QueryProps {
   id: string;
   fn: (...params: any[]) => Promise<any>;
+  openByDefault?: boolean
 }
 
 const functionToParamNames = (fn: Function) => {
@@ -10,7 +19,8 @@ const functionToParamNames = (fn: Function) => {
   return match ? match[1].split(',').map((name: string) => name.trim()) : []
 }
 
-const QueryForm: React.FC<QueryProps> = ({ id, fn }) => {
+const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault }) => {
+  const [open, setOpen] = useState(!!openByDefault)
   const [values, setValues] = useState([...new Array(fn.length)].map(() => ''))
   const [running, setRunning] = useState(false)
   const [result, setResult] = useState<string | null>(null)
@@ -32,25 +42,33 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn }) => {
   }
 
   return (
-    <div>
-      {id}
-      {' - '}
-      {[...new Array(fn.length)].map((_: any, index: number) => (
-        <input
-          key={index}
-          value={values[index]}
-          placeholder={functionNames[index]}
-          onChange={(e: any) => {
-            const newValues = [...values]
-            newValues[index] = e.target.value
-            setValues(newValues)
-          }}
-        />
-      ))}
-      <button onClick={execute} disabled={running}>Execute</button>
-      {result && <span>{result}</span>}
-      {error && <span>Error: {error}</span>}
-    </div>
+    <Container>
+      <TopBar onClick={() => setOpen(!open)}>{id}</TopBar>
+      {open && (
+        <div>
+          <div>Input</div>
+          <div>
+            {[...new Array(fn.length)].map((_: any, index: number) => (
+              <input
+                key={index}
+                value={values[index]}
+                placeholder={functionNames[index]}
+                disabled={running}
+                onChange={(e: any) => {
+                  const newValues = [...values]
+                  newValues[index] = e.target.value
+                  setValues(newValues)
+                }}
+              />
+            ))}
+          </div>
+          <button onClick={execute} disabled={running}>Run Query</button>
+          <div>Output</div>
+          {result && <pre>{result}</pre>}
+          {error && <div>Error: {error}</div>}
+        </div>
+      )}
+    </Container>
   )
 }
 
