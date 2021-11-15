@@ -19,10 +19,11 @@ export function setup(sdk: Context) {
         }
       }`,
       {
-        startOfDay: startOfDayBlock,
-        endOfDay: endOfDayBlock,
+        variables: {
+          startOfDay: startOfDayBlock,
+          endOfDay: endOfDayBlock,
+        },
       },
-      'txFees'
     );
 
     const ethPrice = await sdk.coinGecko.getHistoricalPrice('ethereum', date);
@@ -34,7 +35,7 @@ export function setup(sdk: Context) {
   sdk.register({
     id: 'optimism-sample',
     queries: {
-      fees: getOptimismFee,
+      oneDayTotalFees: getOptimismFee,
     },
     metadata: {
       name: 'Sample Optimism Adapter',
