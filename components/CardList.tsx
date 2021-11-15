@@ -12,6 +12,7 @@ const List = styled.ul`
 `
 
 const ListItem = styled.li`
+  margin: 12px 0;
   list-style: none;
 `
 
@@ -32,6 +33,25 @@ const Card = styled.a`
   }
 `
 
+const IconList = styled.ul`
+  margin: 4px 0;
+  padding: 0;
+  display: flex;
+`
+
+const IconListIcon = styled.li`
+  height: 44px;
+  width: 44px;
+  list-style: none;
+  background-size: 70%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: white;
+  box-shadow: 1px 2px 4px #0000003d;
+  border-radius: 22px;
+  margin-left: -8px;
+`
+
 const Content = styled.div`
   display: flex;
   flex-direction: column;
@@ -50,6 +70,7 @@ export interface Item {
   title: string
   description?: string
   metadata?: string[]
+  iconlist?: { path: string, title: string }[]
   link: string
 }
 
@@ -63,12 +84,24 @@ const CardList: React.FC<CardListProps> = ({ items }) => {
       <List>
         {items.map((item: Item) => {
           return (
-            <ListItem>
+            <ListItem key={item.title}>
               <Link href={item.link} passHref>
                 <Card>
                   <div />
                   <Content>
                     <h2>{item.title}</h2>
+
+                    {item.iconlist && (
+                      <IconList>
+                        {item.iconlist.map((icon: { path: string, title: string }, i: number) => (
+                          <IconListIcon
+                            key={i}
+                            style={{ backgroundImage: `url(${icon.path})` }}
+                          />
+                        ))}
+                      </IconList>
+                    )}
+
                     {item.description && <Description>{item.description}</Description>}
 
                     {item.metadata && (
