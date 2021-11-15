@@ -22,7 +22,7 @@ interface TabsProps {
   onClose?: () => void
 }
 
-const Tabs: React.FC<TabProps> = ({ current, onClose }) => {
+const Tabs: React.FC<TabsProps> = ({ current, onClose }) => {
   return (
     <TabRow>
       {current && (

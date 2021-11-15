@@ -16,7 +16,10 @@ const AdaptersPage: NextPage = () => {
       <ul>
         {adapters.map((adapter: any) => (
           <li key={adapter.id}>
-            <Link href={`/editor/${adapter.id}`}>
+            <Link href={{
+              pathname: '/editor',
+              query: { adapter: adapter.id },
+            }}>
               <a>{adapter.name}</a>
             </Link>
           </li>

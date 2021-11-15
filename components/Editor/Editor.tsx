@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { ViewPort, Top, LeftResizable, Fill, RightResizable, Bottom } from 'react-spaces'
+import { useRouter } from 'next/router'
 import { LOG_LEVEL } from '@cryptostats/sdk'
 import styled from 'styled-components'
 import Button from 'components/Button'
@@ -61,6 +62,7 @@ const FillWithStyledResize = styled(Fill)`
 `
 
 const Editor: React.FC = () => {
+  const router = useRouter()
   const [fileName, setFileName] = useState<string | null>(null)
   const [started, setStarted] = useState(false)
   const [imageLibraryOpen, setImageLibraryOpen] = useState(false)
@@ -76,6 +78,14 @@ const Editor: React.FC = () => {
   }, [module])
 
   useEffect(() => {
+    if (router.query.adapter) {
+      const { adapter, ...query } = router.query
+      setFileName(adapter as string)
+      router.replace({ pathname: '/editor', query })
+    }
+  }, [router.query])
+
+  useEffect(() => {
     setStarted(true)
   }, [])
   if (!started) {
@@ -85,7 +95,7 @@ const Editor: React.FC = () => {
   return (
     <ViewPort style={{ background: '#0f1011' }}>
       <Header size={64} order={1}>
-        <CloseButton>Close</CloseButton>
+        <CloseButton onClick={() => router.push('/adapters')}>Close</CloseButton>
 
         <NewAdapterButton onClick={() => setFileName(newModule())}>New Adapter</NewAdapterButton>
       </Header>
