@@ -1,13 +1,20 @@
 import { NextPage, GetStaticProps } from 'next'
-import Link from 'next/link';
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import { getListNames, getModulesForList } from 'utils/lists'
+import CardList from 'components/CardList'
 
 interface AdaptersPageProps {
   lists: { name: string; modules: string[] }[]
 }
 
 const DiscoverPage: NextPage<AdaptersPageProps> = ({ lists }) => {
+  const listItems = lists.map((list: { name: string, modules: string[] }) => ({
+    title: list.name,
+    description: 'Lorem ipsum',
+    metadata: [`${list.modules.length} adapters`],
+    link: `/discover/${list.name}`,
+  }))
+
   return (
     <TranquilLayout
       hero={
@@ -17,22 +24,9 @@ const DiscoverPage: NextPage<AdaptersPageProps> = ({ lists }) => {
         </div>
       }
     >
-      <ul>
-        {lists.map(list => (
-          <li key={list.name}>
-            <div>{list.name}</div>
-            <ul>
-              {list.modules.map(_module => (
-                <li key={_module}>
-                  <Link href={`/module/${_module}`}>
-                    <a>{_module}</a>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
+      <div>
+        <CardList items={listItems} />
+      </div>
     </TranquilLayout>
   )
 }
