@@ -12,6 +12,7 @@ import { useCompiler } from 'hooks/compiler'
 import { useConsole } from 'hooks/console'
 import PrimaryFooter from './PrimaryFooter'
 import RightPanel from './RightPanel'
+import Tabs from './Tabs'
 
 const Left = styled(LeftResizable)`
   display: flex;
@@ -37,6 +38,10 @@ const CloseButton = styled.button`
 `
 
 const NewAdapterButton = styled.button``
+
+const TabContainer = styled(Top)`
+  display: flex;
+`
 
 const LeftFooter = styled(Bottom)`
   border-top: solid 1px #444447;
@@ -64,7 +69,7 @@ const Editor: React.FC = () => {
   const { addLine } = useConsole()
 
   useEffect(() => {
-    if (module && module.name !== adapter.name) {
+    if (module && adapter && module.name !== adapter.name) {
       const name = module.name && module.name.length > 0 ? module.name : 'Unnamed Adapter'
       save(adapter.code, name)
     }
@@ -100,9 +105,9 @@ const Editor: React.FC = () => {
         <Fill>
           <FillWithStyledResize>
             <Fill>
-              <Top size={30}>
-                Top
-              </Top>
+              <TabContainer size={50}>
+                <Tabs current={adapter?.name} onClose={() => setFileName(null)} />
+              </TabContainer>
 
               <Fill>
                 {fileName && adapter && (
