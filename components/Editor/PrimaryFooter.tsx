@@ -89,7 +89,7 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName }) => {
         {cid ? (
           <div>
             <p>Your adapter has been published to IPFS! You may now share the following link:</p>
-            <p>https://cryptostats.community/module/${cid}</p>
+            <p>https://cryptostats.community/module/{cid}</p>
           </div>
         ) : (
           <div>

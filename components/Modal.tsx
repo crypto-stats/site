@@ -35,6 +35,7 @@ const Footer = styled.div`
 const Content = styled.div`
   max-height: 70vh;
   padding: 10px 30px;
+  overflow: auto;
 `
 
 ReactModal.setAppElement('#__next')

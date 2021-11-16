@@ -16,13 +16,13 @@ interface AdapterData {
   subadapters: SubAdapter[]
 }
 
-interface AdaptersPageProps {
+interface ListPageProps {
   listId: string,
   adapters: AdapterData[]
   subadapters: SubAdapter[]
 }
 
-const DiscoverPage: NextPage<AdaptersPageProps> = ({ adapters, subadapters, listId }) => {
+const DiscoverPage: NextPage<ListPageProps> = ({ adapters, subadapters, listId }) => {
   const listItems = adapters.map((adapter: AdapterData) => ({
     title: adapter.name,
     description: 'Lorem ipsum',
@@ -53,7 +53,7 @@ const DiscoverPage: NextPage<AdaptersPageProps> = ({ adapters, subadapters, list
 
 export default DiscoverPage
 
-export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string }> = async (ctx: GetStaticPropsContext) => {
+export const getStaticProps: GetStaticProps<ListPageProps, { listId: string }> = async (ctx: GetStaticPropsContext) => {
   const adapterCids = await getModulesForList(ctx.params!.listId as string)
   const sdk = new CryptoStatsSDK({})
 
