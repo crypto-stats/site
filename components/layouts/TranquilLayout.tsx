@@ -28,16 +28,47 @@ const Main = styled.main`
   flex-direction: column;
 `
 
+const TopContent = styled.div`
+  display: flex;
+  height: 200px;
+`
+
+const HeroContainer = styled.div`
+  flex: 1;
+`
+
+const Sidebar = styled.div`
+  width: 288px;
+  position: relative;
+`
+
+const SidebarInner = styled.div`
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+`
+
 interface TranquilLayoutProps {
   hero: React.ReactNode
+  sidebar?: React.ReactNode
 }
 
-const TranquilLayout: React.FC<TranquilLayoutProps> = ({ children, hero }) => {
+const TranquilLayout: React.FC<TranquilLayoutProps> = ({ children, hero, sidebar }) => {
   return (
     <LayoutContainer>
       <Top>
         <Header />
-        {hero}
+
+        <TopContent>
+          <HeroContainer>{hero}</HeroContainer>
+
+          {sidebar && (
+            <Sidebar>
+              <SidebarInner>{sidebar}</SidebarInner>
+            </Sidebar>
+          )}
+        </TopContent>
       </Top>
       
       <MainContainer>
