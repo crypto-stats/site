@@ -1,6 +1,8 @@
 import React from 'react'
-import Link from 'next/link';
+import Link from 'next/link'
 import styled from 'styled-components'
+import { useWeb3React } from '@web3-react/core'
+import ConnectionButton from './ConnectionButton'
 
 const Container = styled.header`
   display: flex;
@@ -30,6 +32,8 @@ const NavLink = styled.a`
 `
 
 const Header: React.FC = () => {
+  const { account } = useWeb3React()
+
   return (
     <Container>
       <Logo />
@@ -39,6 +43,7 @@ const Header: React.FC = () => {
         <Link href="/lists" passHref><NavLink>Lists</NavLink></Link>
         <Link href="/adapters" passHref><NavLink>Adapters</NavLink></Link>
         <NavLink href="https://forum.cryptostats.community/">Forum</NavLink>
+        <ConnectionButton>{account ? account.substr(0, 10) : 'Connect Wallet'}</ConnectionButton>
       </Nav>
     </Container>
   )

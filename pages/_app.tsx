@@ -1,4 +1,6 @@
 import React, { Fragment } from 'react'
+import { Web3ReactProvider } from '@web3-react/core'
+import { ethers } from 'ethers'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { createGlobalStyle } from 'styled-components'
@@ -34,7 +36,9 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
       </Head>
 
       <GlobalStyle />
-      <Component {...pageProps} />
+      <Web3ReactProvider getLibrary={(provider: any) => new ethers.providers.Web3Provider(provider)}>
+        <Component {...pageProps} />
+      </Web3ReactProvider>
     </Fragment>
   )
 }
