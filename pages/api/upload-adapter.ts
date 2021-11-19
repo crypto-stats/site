@@ -48,6 +48,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new Error('Module must export a name')
   }
 
+  if (req.body.previousVersion && req.body.previousVersion.length === 46) {
+    code += `\nexports.previousVersion = '${req.body.previousVersion}';\n`
+  }
+
   let sourceCID = null;
   if (sourceCode) {
     sourceCID = await saveToIPFS(sourceCode, `${moduleName} - Source`)

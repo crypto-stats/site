@@ -71,9 +71,9 @@ const Editor: React.FC = () => {
   const { addLine } = useConsole()
 
   useEffect(() => {
-    if (module && adapter && module.name !== adapter.name) {
+    if (module && adapter && (module.name !== adapter.name || module.version !== adapter.version)) {
       const name = module.name && module.name.length > 0 ? module.name : 'Unnamed Adapter'
-      save(adapter.code, name)
+      save(adapter.code, name, module.version || null)
     }
   }, [module])
 
@@ -124,7 +124,7 @@ const Editor: React.FC = () => {
                   <CodeEditor
                     fileId={fileName}
                     defaultValue={adapter.code}
-                    onChange={(code: string) => save(code, adapter.name)}
+                    onChange={(code: string) => save(code, adapter.name, adapter.version)}
                     onValidated={(code: string) => evaluate({
                       code,
                       isTS: true,

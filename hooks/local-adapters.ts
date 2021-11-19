@@ -4,6 +4,18 @@ import sampleModule from '!raw-loader!../components/sample-module.txt'
 
 const storageKey = 'localAdapters'
 
+interface Publication {
+  cid: string
+  version: string
+}
+
+interface Adapter {
+  code: string
+  name: string | null
+  version: string | null
+  publications: Publication[]
+}
+
 const getStorage = () => typeof window === 'undefined'
   ? {}
   : JSON.parse(window.localStorage.getItem(storageKey) || '{}')
@@ -40,25 +52,51 @@ export const useAdapterList = () => {
 
 const randomId = () => Math.floor(Math.random() * 1000000).toString(16)
 
-export const newModule = (code: string = sampleModule, cid?: string | null) => {
+export const newModule = (code: string = sampleModule, publications: Publication[] = []) => {
   const id = randomId()
-  setStorageItem(id, { code, name: 'New Module', cid: cid || null })
+
+  const adapter: Adapter = {
+    code,
+    name: 'New Module',
+    publications,
+    version: null,
+  }
+
+  setStorageItem(id, adapter)
   return id
 }
 
 export const useAdapter = (id?: string | null) => {
   const update = useState({})[1]
   
-  const save = (code: string, name: string, cid?: string) => {
-    const _id = id || randomId()
-    const _adapter = { code, name, cid: cid || null }
-    setStorageItem(_id, _adapter)
+  const save = (code: string, name: string | null, version: string | null) => {
+    if (!id) {
+      throw new Error('ID not set')
+    }
+
+    const adapter = getStorageItem(id)
+
+    const newAdapter: Adapter = { ...adapter, code, name, version }
+    setStorageItem(id, newAdapter)
     update({})
 
-    return _id!;
+    return id;
   }
 
-  const publish = async (code: string, name: string) => {
+  const publish = async (code: string, name: string, version: string) => {
+    if (!id) {
+      throw new Error('ID not set')
+    }
+
+    const adapter = getStorageItem(id)
+    const previousVersion = adapter?.publications && adapter.publications.length > 0
+      ? adapter.publications[adapter.publications.length - 1]
+      : null
+
+    if (previousVersion && version === previousVersion.version) {
+      throw new Error(`Version ${version} is already published`)
+    }
+
     const req = await fetch('/api/upload-adapter', {
       method: 'POST',
       headers: {
@@ -66,17 +104,27 @@ export const useAdapter = (id?: string | null) => {
       },
       body: JSON.stringify({
         code,
+        version,
+        previousVersion: previousVersion?.cid || null,
         language: 'typescript',
       })
     })
 
     const response = await req.json()
 
-    save(code, name, response.codeCID)
+    const newAdapter: Adapter = {
+      ...adapter,
+      code,
+      name,
+      publications: [...(adapter.publications || []), { cid: response.codeCID, version }]
+    }
+    setStorageItem(id, newAdapter)
+    update({})
+
     return response
   }
 
-  const adapter = id ? getStorageItem(id) : null
+  const adapter = id ? getStorageItem(id) as Adapter : null
 
   return { save, publish, adapter }
 }

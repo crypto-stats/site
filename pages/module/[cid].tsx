@@ -15,7 +15,7 @@ const ModulePage: NextPage = () => {
   const { file: sourceFile, loading: sourceLoading } = useFile(sourceCID)
 
   const clone = () => {
-    const id = newModule(sourceFile || file!, sourceFile ? sourceCID : router.query.cid!.toString())
+    const id = newModule(sourceFile || file!/*, sourceFile ? sourceCID : router.query.cid!.toString()*/)
     router.push(`/editor/${id}`)
   }
 

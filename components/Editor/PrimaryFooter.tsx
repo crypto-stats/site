@@ -44,7 +44,17 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName }) => {
   const publish = async () => {
     setPublishing(true)
     try {
-      const { codeCID } = await publishToIPFS(adapter.code, adapter.name)
+      if (!adapter) {
+        throw new Error('Adapter not set')
+      }
+      if (!adapter.name) {
+        throw new Error('Name not set')
+      }
+      if (!adapter.version) {
+        throw new Error('Version not set')
+      }
+
+      const { codeCID } = await publishToIPFS(adapter.code, adapter.name, adapter.version)
       setCID(codeCID)
     } catch (e) {
       console.warn(e)
@@ -52,16 +62,22 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName }) => {
     setPublishing(false)
   }
 
+  const lastPublication = adapter?.publications && adapter.publications.length > 0
+    ? adapter!.publications[adapter!.publications.length - 1]
+    : null
+  const hasUpdatedVersion = !lastPublication || adapter?.version !== lastPublication.version
+
   return (
     <Container>
       <Side />
       <Side>
         {adapter && (
           <Fragment>
-            {adapter.cid && (
-              <Link href={`/module/${adapter.cid}`} passHref>
+            {lastPublication && (
+              <Link href={`/module/${lastPublication.cid}`} passHref>
                 <IPFSLink>
-                  Last published to IPFS as {adapter.cid.substr(0,6)}...{adapter.cid.substr(-4)}
+                  Last published to IPFS as {lastPublication.cid.substr(0,6)}...{lastPublication.cid.substr(-4)}
+                  {' (v'}{lastPublication.version})
                 </IPFSLink>
               </Link>
             )}
@@ -73,9 +89,12 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName }) => {
 
       <Modal
         isOpen={showModal}
-        onClose={() => setShowModal(false)}
+        onClose={() => {
+          setShowModal(false)
+          setCID(null)
+        }}
         title={cid ? 'Adapter Successfully Published!' : 'Publish Your Adapter on IPFS'}
-        buttons={cid
+        buttons={cid || !hasUpdatedVersion
           ? [{ label: 'Return to Editor', onClick: () => {
             setShowModal(false)
             setCID(null)
@@ -91,10 +110,15 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName }) => {
             <p>Your adapter has been published to IPFS! You may now share the following link:</p>
             <p>https://cryptostats.community/module/{cid}</p>
           </div>
-        ) : (
+        ) : hasUpdatedVersion ? (
           <div>
             <p>Publish your adapter to IPFS to make it viewable by the community.</p>
             <p>Once your adapter is published, you may post it on the CryptoStats forum to request inclusion.</p>
+          </div>
+        ) : (
+          <div>
+            <p>This adapter has already been deployed with the current version ({adapter!.version}).</p>
+            <p>Update the version number to allow publishing to IPFS.</p>
           </div>
         )}
       </Modal>
