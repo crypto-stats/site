@@ -34,10 +34,8 @@ async function getName(address: string) {
   const name = Buffer.from(nameHex,'hex').toString()
   return name
 }
-// 0x691f34312c34b42e0349ca7ac7ea0b7a409887b3c963d87808c11eac3d5a0418e9be3223
-// 0x691f3431f285235da249c6648bad84b1181565560da963169026f501b599990dcbfa03ee
 
-export const useENSName = (address?: string | null, defaultName?: string) => {
+export const useENSName = (address?: string | null, defaultName?: string | null) => {
   const [name, setName] = useState<string | null>(null)
 
   useEffect(() => {

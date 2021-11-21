@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { CryptoStatsSDK } from '@cryptostats/sdk'
-import { ethers } from 'ethers'
 import { compileTsToJs } from 'utils/ts-compiler'
 import { saveToIPFS } from 'utils/ipfs-upload'
 
@@ -36,14 +35,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     code += `\nexports.sourceFile = '${sourceCID}';\n`
   }
 
-  if (req.body.signature) {
-    const signer = ethers.utils.verifyMessage(code, req.body.signature)
-    code += `\nexports.signer = '${signer}';\nexports.signature = '${req.body.signature}';\n`
-  }
-
-  const codeCID = await saveToIPFS(code, moduleName)
-
-  res.json({ success: true, codeCID, sourceCID })
+  res.json({ success: true, code })
 }
 
 export default handler

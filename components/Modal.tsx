@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import ReactModal from 'react-modal'
-import Button from './Button'
+import ButtonComponent from './Button'
 
 const ModalOverlay = styled.div`
   display: flex;
@@ -40,11 +40,17 @@ const Content = styled.div`
 
 ReactModal.setAppElement('#__next')
 
+export interface Button {
+  label: string
+  onClick: () => void
+  disabled?: boolean
+}
+
 interface ModalProps {
   isOpen: boolean
   onClose: () => void
   title: string
-  buttons: { label: string, onClick: () => void, disabled?: boolean }[]
+  buttons: Button[]
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, buttons, children }) => {
@@ -64,13 +70,13 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, buttons, children
 
       <Footer>
         {buttons.map(button => (
-          <Button
+          <ButtonComponent
             key={button.label}
             onClick={button.onClick}
             disabled={button.disabled}
           >
             {button.label}
-          </Button>
+          </ButtonComponent>
         ))}
       </Footer>
     </ReactModal>

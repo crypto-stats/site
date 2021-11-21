@@ -83,7 +83,7 @@ export const useAdapter = (id?: string | null) => {
     return id;
   }
 
-  const publish = async (code: string, name: string, version: string) => {
+  const publish = async ({ signature }: { signature?: string } = {}) => {
     if (!id) {
       throw new Error('ID not set')
     }
@@ -93,8 +93,8 @@ export const useAdapter = (id?: string | null) => {
       ? adapter.publications[adapter.publications.length - 1]
       : null
 
-    if (previousVersion && version === previousVersion.version) {
-      throw new Error(`Version ${version} is already published`)
+    if (previousVersion && adapter.version === previousVersion.version) {
+      throw new Error(`Version ${adapter.version} is already published`)
     }
 
     const req = await fetch('/api/upload-adapter', {
@@ -103,10 +103,11 @@ export const useAdapter = (id?: string | null) => {
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
-        code,
-        version,
+        code: adapter.code,
+        version: adapter.version,
         previousVersion: previousVersion?.cid || null,
         language: 'typescript',
+        signature,
       })
     })
 
@@ -114,9 +115,12 @@ export const useAdapter = (id?: string | null) => {
 
     const newAdapter: Adapter = {
       ...adapter,
-      code,
-      name,
-      publications: [...(adapter.publications || []), { cid: response.codeCID, version }]
+      code: adapter.code,
+      name: adapter.name,
+      publications: [
+        ...(adapter.publications || []),
+        { cid: response.codeCID, version: adapter.version, signature },
+      ],
     }
     setStorageItem(id, newAdapter)
     update({})
@@ -124,7 +128,38 @@ export const useAdapter = (id?: string | null) => {
     return response
   }
 
+  const prepare = async () => {
+    if (!id) {
+      throw new Error('ID not set')
+    }
+
+    const adapter = getStorageItem(id)
+    const previousVersion = adapter?.publications && adapter.publications.length > 0
+      ? adapter.publications[adapter.publications.length - 1]
+      : null
+
+    if (previousVersion && adapter.version === previousVersion.version) {
+      throw new Error(`Version ${adapter.version} is already published`)
+    }
+
+    const req = await fetch('/api/prepare-adapter', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        code: adapter.code,
+        version: adapter.version,
+        previousVersion: previousVersion?.cid || null,
+        language: 'typescript',
+      })
+    })
+
+    const response = await req.json()
+    return response.code
+  }
+
   const adapter = id ? getStorageItem(id) as Adapter : null
 
-  return { save, publish, adapter }
+  return { save, publish, adapter, prepare }
 }

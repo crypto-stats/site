@@ -2,7 +2,7 @@ import React, { useState, Fragment } from 'react'
 import Link from 'next/link'
 import styled from 'styled-components'
 import { useAdapter } from 'hooks/local-adapters'
-import Modal from 'components/Modal'
+import PublishModal from './PublishModal'
 
 const Container = styled.div`
   flex: 1;
@@ -36,36 +36,12 @@ interface PrimaryFooterProps {
 }
 
 const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName }) => {
-  const [publishing, setPublishing] = useState(false)
-  const [cid, setCID] = useState<null | string>(null)
   const [showModal, setShowModal] = useState(false)
-  const { publish: publishToIPFS, adapter } = useAdapter(fileName)
-
-  const publish = async () => {
-    setPublishing(true)
-    try {
-      if (!adapter) {
-        throw new Error('Adapter not set')
-      }
-      if (!adapter.name) {
-        throw new Error('Name not set')
-      }
-      if (!adapter.version) {
-        throw new Error('Version not set')
-      }
-
-      const { codeCID } = await publishToIPFS(adapter.code, adapter.name, adapter.version)
-      setCID(codeCID)
-    } catch (e) {
-      console.warn(e)
-    }
-    setPublishing(false)
-  }
+  const { adapter } = useAdapter(fileName)
 
   const lastPublication = adapter?.publications && adapter.publications.length > 0
     ? adapter!.publications[adapter!.publications.length - 1]
     : null
-  const hasUpdatedVersion = !lastPublication || adapter?.version !== lastPublication.version
 
   return (
     <Container>
@@ -87,41 +63,13 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName }) => {
         )}
       </Side>
 
-      <Modal
-        isOpen={showModal}
-        onClose={() => {
-          setShowModal(false)
-          setCID(null)
-        }}
-        title={cid ? 'Adapter Successfully Published!' : 'Publish Your Adapter on IPFS'}
-        buttons={cid || !hasUpdatedVersion
-          ? [{ label: 'Return to Editor', onClick: () => {
-            setShowModal(false)
-            setCID(null)
-          } }]
-          : [
-            { label: 'Return to Editor', onClick: () => setShowModal(false) },
-            { label: 'Publish', onClick: publish, disabled: publishing },
-          ]
-        }
-      >
-        {cid ? (
-          <div>
-            <p>Your adapter has been published to IPFS! You may now share the following link:</p>
-            <p>https://cryptostats.community/module/{cid}</p>
-          </div>
-        ) : hasUpdatedVersion ? (
-          <div>
-            <p>Publish your adapter to IPFS to make it viewable by the community.</p>
-            <p>Once your adapter is published, you may post it on the CryptoStats forum to request inclusion.</p>
-          </div>
-        ) : (
-          <div>
-            <p>This adapter has already been deployed with the current version ({adapter!.version}).</p>
-            <p>Update the version number to allow publishing to IPFS.</p>
-          </div>
-        )}
-      </Modal>
+      {fileName && (
+        <PublishModal
+          fileName={fileName}
+          show={showModal}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </Container>
   );
 }
