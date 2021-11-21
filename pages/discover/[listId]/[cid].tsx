@@ -1,5 +1,6 @@
 import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next'
 import styled from 'styled-components'
+import Link from 'next/link'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import { getListNames, getModulesForList } from 'utils/lists'
@@ -63,6 +64,8 @@ interface ModuleDetails {
   code: string
   sourceFileCid: string | null
   sourceCode: string | null
+  signer: string | null
+  previousVersion: string | null
 }
 
 interface AdaptersPageProps {
@@ -73,7 +76,7 @@ interface AdaptersPageProps {
   subadapters: SubAdapter[]
 }
 
-const AdapterPage: NextPage<AdaptersPageProps> = ({ /*listId,*/ cid, verified, moduleDetails, subadapters }) => {
+const AdapterPage: NextPage<AdaptersPageProps> = ({ listId, cid, verified, moduleDetails, subadapters }) => {
   return (
     <CompilerProvider>
       <TranquilLayout
@@ -93,8 +96,18 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({ /*listId,*/ cid, verified, m
             <div>
               <Attribute label="Version">{moduleDetails.version}</Attribute>
               <Attribute label="License">{moduleDetails.license}</Attribute>
+              {moduleDetails.signer && (
+                <Attribute label="Signed by">{moduleDetails.signer}</Attribute>
+              )}
               <Attribute label="IPFS CID">{cid}</Attribute>
               <Attribute label="IPFS CID (source)">{moduleDetails.sourceFileCid}</Attribute>
+              {moduleDetails.previousVersion && (
+                <Attribute label="Previous Version">
+                  <Link href={`/discover/${listId}/${moduleDetails.previousVersion}`}>
+                    <a>{moduleDetails.previousVersion}</a>
+                  </Link>
+                </Attribute>
+              )}
             </div>
           </DetailsBox>
         }
@@ -136,6 +149,8 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
     version: module.version,
     license: module.license,
     code: module.code!,
+    signer: module.signer,
+    previousVersion: module.previousVersion,
     sourceFileCid: module.sourceFile,
     sourceCode,
   }
