@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useAdapterList } from 'hooks/local-adapters'
+import { useAdapterList, AdapterWithID } from 'hooks/local-adapters'
 
 const Container = styled.div`
   display: flex;
@@ -26,6 +26,9 @@ const ListItem = styled.li<{ selected?: boolean }>`
   padding: 12px;
   height: 40px;
   box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   ${(props) => props.selected ? `
     background: #7e90b43b;
@@ -42,12 +45,16 @@ interface FileListProps {
 const FileList: React.FC<FileListProps> = ({ selected, onSelected }) => {
   const adapters = useAdapterList()
 
+  const sortedAdapters = adapters.sort(
+    (a: AdapterWithID, b: AdapterWithID) => (a.name || 'New').localeCompare(b.name || 'New')
+  )
+
   return (
     <Container>
       <Label>Saved in Browser</Label>
 
       <List>
-        {adapters.map((adapter: any) => (
+        {sortedAdapters.map((adapter: AdapterWithID) => (
           <ListItem
             selected={selected === adapter.id}
             key={adapter.id}

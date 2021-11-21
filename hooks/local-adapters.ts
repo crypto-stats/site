@@ -9,11 +9,15 @@ interface Publication {
   version: string
 }
 
-interface Adapter {
+export interface Adapter {
   code: string
   name: string | null
   version: string | null
   publications: Publication[]
+}
+
+export interface AdapterWithID extends Adapter {
+  id: string
 }
 
 const getStorage = () => typeof window === 'undefined'
@@ -34,7 +38,7 @@ const adapterListUpdaters: Function[] = []
 
 const updateAdapterLists = () => adapterListUpdaters.map(updater => updater())
 
-export const useAdapterList = () => {
+export const useAdapterList = (): AdapterWithID[] => {
   const _update = useState({})[1]
   const update = () => _update({})
 
