@@ -5,13 +5,13 @@ import Link from 'next/link'
 import { useWeb3React } from '@web3-react/core'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
 import TranquilLayout from 'components/layouts/TranquilLayout'
-import { getListNames, getModulesForList } from 'utils/lists'
+import { getListNames, getModulesForList } from 'utils/lists-chain'
 import AdapterPreviewList from 'components/AdapterPreviewList'
 import CodeViewer from 'components/CodeViewer'
 import VerifyForm from 'components/VerifyForm'
 import { CompilerProvider } from 'hooks/compiler'
 
-const Verified = styled.span`
+const VerifiedTick = styled.span`
   display: inline-block;
   background: #6060ff;
   height: 30px;
@@ -33,6 +33,21 @@ const DetailsBox = styled.div`
   box-shadow: 0 3px 4px 0 rgba(0, 36, 75, 0.07);
   border: solid 1px #ddd;
   background-color: #ffffff;
+`
+
+const Verified = styled.div`
+  font-weight: bold;
+  color: blue;
+
+  &:before {
+    content: '✓';
+    display: inline-block;
+
+  }
+`
+
+const Unverified = styled.div`
+  font-weight: bold;
 `
 
 const Column = styled.div`
@@ -96,7 +111,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
             <div>Adapter</div>
             <h1>
               {moduleDetails.name || cid}
-              {verified && <Verified />}
+              {_verified && <VerifiedTick />}
             </h1>
             <div>SubAdapters: {subadapters.length}</div>
           </div>
@@ -104,6 +119,8 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         sidebar={
           <Fragment>
             <DetailsBox>
+              {_verified ? <Verified>Verified adapter</Verified> : <Unverified>Unverified adapter</Unverified>}
+
               <div>Details</div>
               <div>
                 <Attribute label="Version">{moduleDetails.version}</Attribute>
