@@ -1,12 +1,15 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next'
 import styled from 'styled-components'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useWeb3React } from '@web3-react/core'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
 import TranquilLayout from 'components/layouts/TranquilLayout'
+import { useAdapterList, newModule } from 'hooks/local-adapters'
 import { getListNames, getModulesForList } from 'utils/lists-chain'
 import AdapterPreviewList from 'components/AdapterPreviewList'
+import Button from 'components/Button'
 import CodeViewer from 'components/CodeViewer'
 import VerifyForm from 'components/VerifyForm'
 import { CompilerProvider } from 'hooks/compiler'
@@ -100,6 +103,31 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
 }) => {
   const [_verified, setVerified] = useState(verified)
   const { account } = useWeb3React()
+  const router = useRouter()
+  const adapters = useAdapterList()
+
+  // NextJS page changes might not re-initialize component
+  useEffect(() => setVerified(verified), [cid])
+
+  const edit = () => {
+    for (const adapter of adapters) {
+      for (const publication of adapter.publications || []) {
+        if (publication.cid === cid) {
+          router.push({
+            pathname: '/editor',
+            query: { adapter: adapter.id },
+          })
+          return
+        }
+      }
+    }
+
+    const adapterId = newModule(moduleDetails.sourceCode || moduleDetails.code, [{ cid, version: moduleDetails.version || '0.0.0' }])
+    router.push({
+      pathname: '/editor',
+      query: { adapter: adapterId },
+    })
+  }
 
   const isAdmin = account && account.toLowerCase() === process.env.NEXT_PUBLIC_ADMIN_ACCOUNT?.toLowerCase()
 
@@ -139,6 +167,10 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
                 )}
               </div>
             </DetailsBox>
+
+            <div>
+              <Button onClick={edit}>Edit Adapter</Button>
+            </div>
 
             {isAdmin && listId !== 'adapter' && (
               <div>
