@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { ethers } from 'ethers'
 import { CryptoStatsSDK } from '@cryptostats/sdk'
 import { compileTsToJs } from 'utils/ts-compiler'
 import { saveToIPFS } from 'utils/ipfs-upload'
@@ -35,7 +36,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     code += `\nexports.sourceFile = '${sourceCID}';\n`
   }
 
-  res.json({ success: true, code })
+  const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(code))
+
+  res.json({ success: true, code, hash })
 }
 
 export default handler

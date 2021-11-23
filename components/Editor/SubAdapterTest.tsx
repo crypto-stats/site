@@ -16,7 +16,7 @@ const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDe
   const [open, setOpen] = useState(openByDefault)
 
   // @ts-ignore
-  const { name } = subadapter.metadata.metadata
+  const { name, subtitle } = subadapter.metadata.metadata
 
   if (!open) {
     return (
@@ -30,7 +30,10 @@ const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDe
 
   return (
     <Container>
-      <div onClick={() => setOpen(false)}>{name || subadapter.id}</div>
+      <div onClick={() => setOpen(false)}>
+        {name || subadapter.id}
+        {subtitle ? ` - ${subtitle}` : null}
+      </div>
 
       <div>
         {queries.map(([queryName, fn]: [string, (...params: any[]) => Promise<any>]) => (

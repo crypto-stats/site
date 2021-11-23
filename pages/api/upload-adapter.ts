@@ -37,7 +37,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (req.body.signature) {
-    const signer = ethers.utils.verifyMessage(code, req.body.signature)
+    const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(code))
+    const signer = ethers.utils.verifyMessage(hash, req.body.signature)
     code += `\nexports.signer = '${signer}';\nexports.signature = '${req.body.signature}';\n`
   }
 

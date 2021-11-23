@@ -132,7 +132,7 @@ export const useAdapter = (id?: string | null) => {
     return response
   }
 
-  const prepare = async () => {
+  const getSignableHash = async () => {
     if (!id) {
       throw new Error('ID not set')
     }
@@ -160,10 +160,10 @@ export const useAdapter = (id?: string | null) => {
     })
 
     const response = await req.json()
-    return response.code
+    return response.hash
   }
 
   const adapter = id ? getStorageItem(id) as Adapter : null
 
-  return { save, publish, adapter, prepare }
+  return { save, publish, adapter, getSignableHash }
 }

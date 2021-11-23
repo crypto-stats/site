@@ -16,7 +16,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) 
   const [state, setState] = useState('init')
   const [cid, setCID] = useState<null | string>(null)
   const [signatureData, setSignatureData] = useState<null | string>(null)
-  const { publish: publishToIPFS, adapter, prepare } = useAdapter(fileName)
+  const { publish: publishToIPFS, adapter, getSignableHash } = useAdapter(fileName)
   const { account, library } = useWeb3React()
   const accountName = useENSName(account, account)
 
@@ -42,7 +42,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) 
   }
   const prepareSignature = async () => {
     setState('sign')
-    const sigData = await prepare()
+    const sigData = await getSignableHash()
     setSignatureData(sigData)
   }
 
