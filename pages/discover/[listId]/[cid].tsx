@@ -1,11 +1,14 @@
+import React, { useState, Fragment } from 'react'
 import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next'
 import styled from 'styled-components'
 import Link from 'next/link'
+import { useWeb3React } from '@web3-react/core'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import { getListNames, getModulesForList } from 'utils/lists'
 import AdapterPreviewList from 'components/AdapterPreviewList'
 import CodeViewer from 'components/CodeViewer'
+import VerifyForm from 'components/VerifyForm'
 import { CompilerProvider } from 'hooks/compiler'
 
 const Verified = styled.span`
@@ -74,9 +77,17 @@ interface AdaptersPageProps {
   verified: boolean
   moduleDetails: ModuleDetails
   subadapters: SubAdapter[]
+  listModules: string[]
 }
 
-const AdapterPage: NextPage<AdaptersPageProps> = ({ listId, cid, verified, moduleDetails, subadapters }) => {
+const AdapterPage: NextPage<AdaptersPageProps> = ({
+  listId, cid, verified, moduleDetails, subadapters, listModules
+}) => {
+  const [_verified, setVerified] = useState(verified)
+  const { account } = useWeb3React()
+
+  const isAdmin = account && account.toLowerCase() === process.env.NEXT_PUBLIC_ADMIN_ACCOUNT?.toLowerCase()
+
   return (
     <CompilerProvider>
       <TranquilLayout
@@ -91,25 +102,39 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({ listId, cid, verified, modul
           </div>
         }
         sidebar={
-          <DetailsBox>
-            <div>Details</div>
-            <div>
-              <Attribute label="Version">{moduleDetails.version}</Attribute>
-              <Attribute label="License">{moduleDetails.license}</Attribute>
-              {moduleDetails.signer && (
-                <Attribute label="Signed by">{moduleDetails.signer}</Attribute>
-              )}
-              <Attribute label="IPFS CID">{cid}</Attribute>
-              <Attribute label="IPFS CID (source)">{moduleDetails.sourceFileCid}</Attribute>
-              {moduleDetails.previousVersion && (
-                <Attribute label="Previous Version">
-                  <Link href={`/discover/${listId}/${moduleDetails.previousVersion}`}>
-                    <a>{moduleDetails.previousVersion}</a>
-                  </Link>
-                </Attribute>
-              )}
-            </div>
-          </DetailsBox>
+          <Fragment>
+            <DetailsBox>
+              <div>Details</div>
+              <div>
+                <Attribute label="Version">{moduleDetails.version}</Attribute>
+                <Attribute label="License">{moduleDetails.license}</Attribute>
+                {moduleDetails.signer && (
+                  <Attribute label="Signed by">{moduleDetails.signer}</Attribute>
+                )}
+                <Attribute label="IPFS CID">{cid}</Attribute>
+                <Attribute label="IPFS CID (source)">{moduleDetails.sourceFileCid}</Attribute>
+                {moduleDetails.previousVersion && (
+                  <Attribute label="Previous Version">
+                    <Link href={`/discover/${listId}/${moduleDetails.previousVersion}`}>
+                      <a>{moduleDetails.previousVersion}</a>
+                    </Link>
+                  </Attribute>
+                )}
+              </div>
+            </DetailsBox>
+
+            {isAdmin && listId !== 'adapter' && (
+              <div>
+                <VerifyForm
+                  listId={listId}
+                  listModules={listModules}
+                  cid={cid}
+                  previousVersion={moduleDetails.previousVersion}
+                  onVerified={() => setVerified(true)}
+                />
+              </div>
+            )}
+          </Fragment>
         }
       >
         <h2>Sub-Adapters</h2>
@@ -162,6 +187,7 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
       verified,
       moduleDetails,
       subadapters,
+      listModules,
     },
     revalidate: 60,
   }
