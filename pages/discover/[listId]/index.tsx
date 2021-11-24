@@ -2,7 +2,7 @@ import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import CardList from 'components/CardList'
-import { getListNames, getModulesForList } from 'utils/lists'
+import { getListNames, getModulesForList } from 'utils/lists-chain'
 
 interface SubAdapter {
   id: string

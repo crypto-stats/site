@@ -1,19 +1,26 @@
 import { NextPage, GetStaticProps } from 'next'
 import TranquilLayout from 'components/layouts/TranquilLayout'
-import { getListNames, getModulesForList } from 'utils/lists'
+import { getListNames, getModulesForList } from 'utils/lists-chain'
 import CardList from 'components/CardList'
 
+interface List {
+  name: string
+  modules: string[]
+}
+
 interface AdaptersPageProps {
-  lists: { name: string; modules: string[] }[]
+  lists: List[]
 }
 
 const DiscoverPage: NextPage<AdaptersPageProps> = ({ lists }) => {
-  const listItems = lists.map((list: { name: string, modules: string[] }) => ({
-    title: list.name,
-    description: 'Lorem ipsum',
-    metadata: [`${list.modules.length} adapters`],
-    link: `/discover/${list.name}`,
-  }))
+  const listItems = lists
+    .sort((a: List, b: List) => b.modules.length - a.modules.length)
+    .map((list: { name: string, modules: string[] }) => ({
+      title: list.name,
+      description: 'Lorem ipsum',
+      metadata: [`${list.modules.length} adapters`],
+      link: `/discover/${list.name}`,
+    }))
 
   return (
     <TranquilLayout

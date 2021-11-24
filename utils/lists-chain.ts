@@ -10,7 +10,7 @@ async function query(query: string) {
   return json.data
 }
 
-export async function getListNames() {
+export async function getListNames(): Promise<string[]> {
   const response = await query(`{
     lists {
       id
@@ -19,7 +19,7 @@ export async function getListNames() {
   return response.lists.map((list: any) => list.id)
 }
 
-export async function getModulesForList(list: string) {
+export async function getModulesForList(list: string): Promise<any[]> {
   const response = await query(`{
     listAdapters(where: { list: "${list}"}) {
       adapter {

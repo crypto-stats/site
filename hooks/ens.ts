@@ -36,7 +36,7 @@ async function getName(address: string) {
 }
 
 export const useENSName = (address?: string | null, defaultName?: string | null) => {
-  const [name, setName] = useState<string | null>(null)
+  const [name, setName] = useState<string | null>(defaultName || address || null)
 
   useEffect(() => {
     if (address) {

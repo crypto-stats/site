@@ -40,7 +40,6 @@ const Header: React.FC = () => {
 
       <Nav>
         <Link href="/discover" passHref><NavLink>Discover</NavLink></Link>
-        <Link href="/lists" passHref><NavLink>Lists</NavLink></Link>
         <Link href="/adapters" passHref><NavLink>Adapters</NavLink></Link>
         <NavLink href="https://forum.cryptostats.community/">Forum</NavLink>
         <ConnectionButton>{account ? account.substr(0, 10) : 'Connect Wallet'}</ConnectionButton>
