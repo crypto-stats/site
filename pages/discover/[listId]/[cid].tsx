@@ -13,6 +13,7 @@ import Button from 'components/Button'
 import CodeViewer from 'components/CodeViewer'
 import VerifyForm from 'components/VerifyForm'
 import { CompilerProvider } from 'hooks/compiler'
+import { useENSName } from 'hooks/ens'
 
 const VerifiedTick = styled.span`
   display: inline-block;
@@ -105,6 +106,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
   const { account } = useWeb3React()
   const router = useRouter()
   const adapters = useAdapterList()
+  const signer = useENSName(moduleDetails.signer)
 
   // NextJS page changes might not re-initialize component
   useEffect(() => setVerified(verified), [cid])
@@ -153,8 +155,8 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
               <div>
                 <Attribute label="Version">{moduleDetails.version}</Attribute>
                 <Attribute label="License">{moduleDetails.license}</Attribute>
-                {moduleDetails.signer && (
-                  <Attribute label="Signed by">{moduleDetails.signer}</Attribute>
+                {signer && (
+                  <Attribute label="Signed by">{signer}</Attribute>
                 )}
                 <Attribute label="IPFS CID">{cid}</Attribute>
                 <Attribute label="IPFS CID (source)">{moduleDetails.sourceFileCid}</Attribute>
