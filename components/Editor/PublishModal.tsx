@@ -15,7 +15,7 @@ interface PublishModalProps {
 const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) => {
   const [state, setState] = useState('init')
   const [cid, setCID] = useState<null | string>(null)
-  const [signatureData, setSignatureData] = useState<null | string>(null)
+  const [hash, setHash] = useState<null | string>(null)
   const { publish: publishToIPFS, adapter, getSignableHash } = useAdapter(fileName)
   const { account, library } = useWeb3React()
   const accountName = useENSName(account, account)
@@ -42,14 +42,14 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) 
   }
   const prepareSignature = async () => {
     setState('sign')
-    const sigData = await getSignableHash()
-    setSignatureData(sigData)
+    const _hash = await getSignableHash()
+    setHash(_hash)
   }
 
   const sign = async () => {
-    const signature = await library.getSigner().signMessage(signatureData)
+    const signature = await library.getSigner().signMessage(hash)
 
-    const { codeCID } = await publishToIPFS({ signature })
+    const { codeCID } = await publishToIPFS({ signature, hash, signer: account })
     setCID(codeCID)
     setState('published')
   }
@@ -63,6 +63,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) 
     onClose()
     setState('init')
     setCID(null)
+    setHash(null)
   }
 
   const returnButton = { label: 'Return to Editor', onClick: close }
@@ -121,7 +122,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) 
               <ConnectionButton>Connect Wallet</ConnectionButton>
             </div>
           )
-        } else if (!signatureData) {
+        } else if (!hash) {
           content = <div>Loading...</div>
         } else {
           buttons = [

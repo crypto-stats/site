@@ -87,7 +87,7 @@ export const useAdapter = (id?: string | null) => {
     return id;
   }
 
-  const publish = async ({ signature }: { signature?: string } = {}) => {
+  const publish = async ({ signature, hash, signer }: { signature?: string, signer?: string | null, hash?: string | null } = {}) => {
     if (!id) {
       throw new Error('ID not set')
     }
@@ -112,10 +112,16 @@ export const useAdapter = (id?: string | null) => {
         previousVersion: previousVersion?.cid || null,
         language: 'typescript',
         signature,
+        hash,
+        signer,
       })
     })
 
     const response = await req.json()
+
+    if (!response.success) {
+      throw new Error(response.error)
+    }
 
     const newAdapter: Adapter = {
       ...adapter,

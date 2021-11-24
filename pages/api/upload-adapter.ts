@@ -3,11 +3,11 @@ import { CryptoStatsSDK } from '@cryptostats/sdk'
 import { ethers } from 'ethers'
 import { compileTsToJs } from 'utils/ts-compiler'
 import { saveToIPFS } from 'utils/ipfs-upload'
+import { handleErrors } from 'utils/api-endpoints'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {
-    res.status(400).send({ message: 'Only POST requests allowed' })
-    return
+    throw new Error('Only POST requests allowed')
   }
 
   let code = req.body.code
@@ -36,9 +36,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     code += `\nexports.sourceFile = '${sourceCID}';\n`
   }
 
-  if (req.body.signature) {
+  if (req.body.signature && req.body.hash && req.body.signer) {
     const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(code))
+    if (hash !== req.body.hash) {
+      throw new Error('Calculated hash does not match')
+    }
+
     const signer = ethers.utils.verifyMessage(hash, req.body.signature)
+    if (signer !== req.body.signer) {
+      throw new Error('Signer does not match')
+    }
+
     code += `\nexports.signer = '${signer}';\nexports.signature = '${req.body.signature}';\n`
   }
 
@@ -47,4 +55,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   res.json({ success: true, codeCID, sourceCID })
 }
 
-export default handler
+export default handleErrors(handler)
