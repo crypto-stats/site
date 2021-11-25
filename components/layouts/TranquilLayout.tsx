@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Header from '../Header'
 import Footer from '../Footer'
+import Breadcrumbs from './Breadcrumbs'
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -52,13 +53,16 @@ const SidebarInner = styled.div`
 interface TranquilLayoutProps {
   hero: React.ReactNode
   sidebar?: React.ReactNode
+  breadcrumbs?: { name: string; path: string }[]
 }
 
-const TranquilLayout: React.FC<TranquilLayoutProps> = ({ children, hero, sidebar }) => {
+const TranquilLayout: React.FC<TranquilLayoutProps> = ({ children, hero, sidebar, breadcrumbs }) => {
   return (
     <LayoutContainer>
       <Top>
         <Header />
+
+        {breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs} />}
 
         <TopContent>
           <HeroContainer>{hero}</HeroContainer>

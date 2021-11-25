@@ -134,9 +134,18 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
 
   const isAdmin = account && account.toLowerCase() === process.env.NEXT_PUBLIC_ADMIN_ACCOUNT?.toLowerCase()
 
+  const breadcrumbs = [
+    { name: 'Home', path: '/' },
+    { name: 'Discover', path: '/discover' },
+  ]
+  if (listId !== 'adapter') {
+    breadcrumbs.push({ name: listId, path: `/discover/${listId}` })
+  }
+
   return (
     <CompilerProvider>
       <TranquilLayout
+        breadcrumbs={breadcrumbs}
         hero={
           <div>
             <div>Adapter</div>

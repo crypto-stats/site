@@ -36,6 +36,7 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, subadapters, listId }
 
   return (
     <TranquilLayout
+      breadcrumbs={[{ name: 'Home', path: '/' }, { name: 'Discover', path: '/discover' }]}
       hero={
         <div>
           <h1>{listId}</h1>
