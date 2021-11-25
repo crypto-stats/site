@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import Footer from 'components/Footer'
 import Header from 'components/Header'
+import Description from 'components/home-sections/Description'
 import Hero from 'components/home-sections/Hero'
 
 const Container = styled.div`
@@ -19,9 +20,11 @@ export default function Home() {
     <Container>
       <Column>
         <Header />
-      </Column>
 
-      <Hero />
+        <Hero />
+
+        <Description />
+      </Column>
 
       <Footer />
     </Container>
