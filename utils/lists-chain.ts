@@ -29,3 +29,17 @@ export async function getModulesForList(list: string): Promise<any[]> {
   }`)
   return response.listAdapters.map((item: any) => item.adapter.id)
 }
+
+export async function getListsForAdapter(list: string): Promise<string[]> {
+  const response = await query(`  {
+    adapter(id: "${list}") {
+      lists {
+        list {
+          id
+        }
+      }
+    }
+  }
+`)
+  return response.adapter?.lists.map((list: any) => list.list.id) || []
+}

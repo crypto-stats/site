@@ -7,7 +7,7 @@ import { useWeb3React } from '@web3-react/core'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import { useAdapterList, newModule } from 'hooks/local-adapters'
-import { getListNames, getModulesForList } from 'utils/lists-chain'
+import { getListNames, getModulesForList, getListsForAdapter } from 'utils/lists-chain'
 import AdapterPreviewList from 'components/AdapterPreviewList'
 import Button from 'components/Button'
 import CodeViewer from 'components/CodeViewer'
@@ -97,10 +97,11 @@ interface AdaptersPageProps {
   moduleDetails: ModuleDetails
   subadapters: SubAdapter[]
   listModules: string[]
+  verifiedLists: string[]
 }
 
 const AdapterPage: NextPage<AdaptersPageProps> = ({
-  listId, cid, verified, moduleDetails, subadapters, listModules
+  listId, cid, verified, moduleDetails, subadapters, listModules, verifiedLists
 }) => {
   const [_verified, setVerified] = useState(verified)
   const { account } = useWeb3React()
@@ -158,6 +159,17 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
                 {signer && (
                   <Attribute label="Signed by">{signer}</Attribute>
                 )}
+                {verifiedLists.length > 0 && (
+                  <Attribute label="Collections">
+                    {verifiedLists.map((list: string) => (
+                      <div key={list}>
+                        <Link href={`/discover/${list}`}>
+                          <a>{list}</a>
+                        </Link>
+                      </div>
+                    ))}
+                  </Attribute>
+                )}
                 <Attribute label="IPFS CID">{cid}</Attribute>
                 <Attribute label="IPFS CID (source)">{moduleDetails.sourceFileCid}</Attribute>
                 {moduleDetails.previousVersion && (
@@ -209,6 +221,8 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
   const listModules = listId === 'adapter' ? [] : await getModulesForList(listId)
   const verified = listModules.indexOf(cid) !== -1
 
+  const verifiedLists = await getListsForAdapter(cid)
+
   const list = sdk.getList('test')
   const module = await list.fetchAdapterFromIPFS(cid)
 
@@ -239,6 +253,7 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
       moduleDetails,
       subadapters,
       listModules,
+      verifiedLists,
     },
     revalidate: 60,
   }
