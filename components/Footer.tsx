@@ -8,6 +8,7 @@ const Container = styled.header`
   background-color: #ffffff;
   border-top: solid 1px #ddd;
   justify-content: center;
+  width: 100%;
 `
 
 const Inner = styled.div`

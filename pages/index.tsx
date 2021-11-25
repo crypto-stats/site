@@ -1,32 +1,29 @@
 import styled from 'styled-components'
+import Footer from 'components/Footer'
+import Header from 'components/Header'
+import Hero from 'components/home-sections/Hero'
 
 const Container = styled.div`
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-image: url('/logo.svg');
-  background-color: #012042;
-  background-repeat: no-repeat;
-  background-position: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
-  padding-top: 120px;
-  color: white;
-  font-family: sans-serif;
-  text-align: center;
-  font-size: 20px;
-  line-height: 28px;
+`
+
+const Column = styled.div`
+  max-width: 1248px;
+  width: calc(100% - 12px);
 `
 
 export default function Home() {
   return (
     <Container>
-      One neutral source of truth for crypto metrics.<br />
-      Used by everyone, managed by the community.
+      <Column>
+        <Header />
+      </Column>
+
+      <Hero />
+
+      <Footer />
     </Container>
   )
 }
