@@ -4,6 +4,8 @@ import styled from 'styled-components'
 
 const BreadcrumbContainer = styled.ol`
   display: flex;
+  padding: 0;
+  margin: 4px 0;
 `
 
 const BreadcrumbItem = styled.li`
