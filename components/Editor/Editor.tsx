@@ -9,7 +9,7 @@ import CodeEditor from 'components/CodeEditor'
 import ConnectionButton from 'components/ConnectionButton'
 import FileList from 'components/FileList'
 import ImageSelector from 'components/ImageSelector'
-import Modal from 'components/Modal'
+import EditorModal from 'components/EditorModal'
 import { useAdapter, newModule } from 'hooks/local-adapters'
 import { useCompiler } from 'hooks/compiler'
 import { useConsole } from 'hooks/console'
@@ -35,6 +35,7 @@ const Header = styled(Top)`
 
 const HeaderRight = styled.div`
   display: flex;
+  align-items: center;
 `
 
 const CloseButton = styled.button`
@@ -45,7 +46,36 @@ const CloseButton = styled.button`
   color: white;
 `
 
-const NewAdapterButton = styled.button``
+const NewAdapterButton = styled.button`
+  height: 35px;
+  border: solid 1px;
+  background: transparent;
+  border: solid 1px #0477f4;
+  color: #0477f4;
+  margin: 0 10px;
+  padding: 0 10px;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background: #0477f430;
+  }
+`
+
+const WalletButton = styled(ConnectionButton)`
+  height: 35px;
+  border-radius: 5px;
+  border: solid 1px #7b7b7b;
+  background-color: #535353;
+  padding: 0 10px;
+  color: #eeeeee;
+  margin-right: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #404040;
+  }
+`
 
 const TabContainer = styled(Top)`
   display: flex;
@@ -108,7 +138,7 @@ const Editor: React.FC = () => {
 
         <HeaderRight>
           <NewAdapterButton onClick={() => setFileName(newModule())}>New Adapter</NewAdapterButton>
-          <ConnectionButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</ConnectionButton>
+          <WalletButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</WalletButton>
         </HeaderRight>
       </Header>
       <Fill>
@@ -162,7 +192,7 @@ const Editor: React.FC = () => {
       </Fill>
 
 
-      <Modal
+      <EditorModal
         isOpen={imageLibraryOpen}
         onClose={() => setImageLibraryOpen(false)}
         title="Image Library"
@@ -171,7 +201,7 @@ const Editor: React.FC = () => {
         ]}
       >
         <ImageSelector close={() => setImageLibraryOpen(false)} />
-      </Modal>
+      </EditorModal>
     </ViewPort>
   )
 }

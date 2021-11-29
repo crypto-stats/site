@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { useENSName } from 'hooks/ens'
 import ConnectionButton from 'components/ConnectionButton'
-import Modal, { Button } from 'components/Modal'
+import EditorModal, { Button } from 'components/EditorModal'
 import { useAdapter } from 'hooks/local-adapters'
 
 interface PublishModalProps {
@@ -151,14 +151,14 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) 
   }
 
   return (
-    <Modal
+    <EditorModal
       isOpen={show}
       onClose={close}
       title={title}
       buttons={buttons}
     >
       {content}
-    </Modal>
+    </EditorModal>
   )
 }
 

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import { useWeb3React } from '@web3-react/core'
 import ConnectionButton from './ConnectionButton'
+import { useENSName } from 'hooks/ens'
 
 const Container = styled.header`
   display: flex;
@@ -44,9 +45,42 @@ const NavLink = styled.a<{ active?: boolean }>`
   `}
 `
 
+const WalletButton = styled(ConnectionButton)`
+  border-radius: 4px;
+  border: solid 1px #d6eaff;
+  height: 35px;
+  background: transparent;
+  color: #002750;
+  padding: 0 20px;
+  align-self: center;
+
+  &:hover {
+    background: #f8fcff;
+  }
+`
+
+const AdapterButton = styled.a`
+  display: block;
+  align-self: center;
+  line-height: 35px;
+  border-radius: 4px;
+  background-color: #d6eaff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0477f4;
+  padding: 0 20px;
+  margin: 0 4px;
+
+  &:hover {
+    background: #c4e0fd;
+  }
+`
+
 const Header: React.FC = () => {
   const router = useRouter()
   const { account } = useWeb3React()
+  const name = useENSName(account)
 
   return (
     <Container>
@@ -58,7 +92,12 @@ const Header: React.FC = () => {
         </Link>
         <Link href="/adapters" passHref><NavLink>Adapters</NavLink></Link>
         <NavLink href="https://forum.cryptostats.community/">Forum</NavLink>
-        <ConnectionButton>{account ? account.substr(0, 10) : 'Connect Wallet'}</ConnectionButton>
+
+        <Link href="/editor" passHref>
+          <AdapterButton>Create Adapter</AdapterButton>
+        </Link>
+
+        <WalletButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</WalletButton>
       </Nav>
     </Container>
   )
