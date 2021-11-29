@@ -1,11 +1,16 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Positionable, Position } from './Positionable'
 
-const CardContainer = styled.div`
+const CardContainer = styled(Positionable)<{ position?: Position }>`
   border-radius: 10px;
   box-shadow: 0 10px 35px 16px rgba(0, 36, 75, 0.05), 0 2px 4px 0 rgba(0, 0, 0, 0.04);
   border: solid 1px #ddd;
   background-color: #fff;
+
+  ${({ position }) => position ? `
+    width: 70%;
+  ` : ''}
 `
 
 const CardHeader = styled.div`
@@ -34,9 +39,15 @@ const CardBody = styled.div`
   margin: 18px;
 `
 
-const HeroCard: React.FC<{ title: string, subtitle: string }> = ({ title, subtitle, children }) => {
+interface HeroCardProps {
+  title: string
+  subtitle: string
+  position?: Position
+}
+
+const HeroCard: React.FC<HeroCardProps> = ({ title, subtitle, children, position }) => {
   return (
-    <CardContainer>
+    <CardContainer position={position}>
       <CardHeader>
         {title}
         <SubtitleChip>{subtitle}</SubtitleChip>

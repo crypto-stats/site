@@ -15,6 +15,12 @@ const Column = styled.div`
   flex-direction: column;
 `
 
+const CardContainer = styled.div`
+  position: relative;
+  flex: 1 0 0;
+  height: 370px;
+`
+
 const Tagline = styled.div`
   font-size: 52px;
   font-weight: 700;
@@ -27,6 +33,11 @@ const CTA = styled.a`
   color: #ffffff;
   border-radius: 4px;
   background: #0477f4;
+  line-height: 54px;
+  display: block;
+  align-self: flex-start;
+  padding: 0 30px;
+  text-decoration: none;
 `
 
 const Hero: React.FC = () => {
@@ -44,8 +55,8 @@ const Hero: React.FC = () => {
         </Link>
       </Column>
 
-      <Column>
-        <HeroCard title="Uniswap fees" subtitle="Preview">
+      <CardContainer>
+        <HeroCard title="Uniswap fees" subtitle="Preview" position="TopRight">
           <div>Adapter Name</div>
           <div>Uniswap</div>
           <div>Data type</div>
@@ -53,7 +64,25 @@ const Hero: React.FC = () => {
           <div>Data</div>
           <div>24 hours fees: $12,000,000</div>
         </HeroCard>
-      </Column>
+        
+        <HeroCard title="Uniswap fees" subtitle="Preview" position="Center">
+          <div>Adapter Name</div>
+          <div>Uniswap</div>
+          <div>Data type</div>
+          <div>Fees</div>
+          <div>Data</div>
+          <div>24 hours fees: $12,000,000</div>
+        </HeroCard>
+
+        <HeroCard title="Uniswap fees" subtitle="Preview" position="BottomLeft">
+          <div>Adapter Name</div>
+          <div>Uniswap</div>
+          <div>Data type</div>
+          <div>Fees</div>
+          <div>Data</div>
+          <div>24 hours fees: $12,000,000</div>
+        </HeroCard>
+      </CardContainer>
     </Container>
   )
 }
