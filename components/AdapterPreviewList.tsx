@@ -18,6 +18,7 @@ const AdapterPreviewList: React.FC<AdapterPreviewListProps> = ({ staticDetails, 
     <div>
       {staticDetails.map((details: any, i: number) => (
         <AdapterPreview
+          key={details.id}
           details={details}
           adapter={list?.getAdapters()[i] || null}
         />

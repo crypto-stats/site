@@ -53,7 +53,7 @@ interface ModalProps {
   buttons: Button[]
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, buttons, children }) => {
+const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, buttons, children }) => {
   return (
     <ReactModal
       isOpen={isOpen}
@@ -83,4 +83,4 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, buttons, children
   )
 }
 
-export default Modal;
+export default EditorModal;

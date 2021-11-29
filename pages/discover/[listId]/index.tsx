@@ -1,7 +1,11 @@
+import React, { useState } from 'react'
 import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
 import TranquilLayout from 'components/layouts/TranquilLayout'
+import APIExplainer from 'components/APIExplainer'
+import Button from 'components/Button'
 import CardList from 'components/CardList'
+import SiteModal from 'components/SiteModal'
 import { getListNames, getModulesForList } from 'utils/lists-chain'
 
 interface SubAdapter {
@@ -23,6 +27,8 @@ interface ListPageProps {
 }
 
 const DiscoverPage: NextPage<ListPageProps> = ({ adapters, subadapters, listId }) => {
+  const [showDataModal, setShowDataModal] = useState(false)
+
   const listItems = adapters.map((adapter: AdapterData) => ({
     title: adapter.name,
     description: 'Lorem ipsum',
@@ -41,13 +47,24 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, subadapters, listId }
         <div>
           <h1>{listId}</h1>
           <p>The most valuable crypto metrics, currated and managed by the community</p>
-          <div>Adapters: {adapters.length} - SubAdapters: {subadapters.length}</div>
+          <div>
+            Adapters: {adapters.length} - SubAdapters: {subadapters.length}
+            <Button onClick={() => setShowDataModal(true)}>Use Collection Data</Button>
+          </div>
         </div>
       }
     >
       <div>
         <CardList items={listItems} />
       </div>
+
+      <SiteModal
+        title="Use this data on your website"
+        isOpen={showDataModal}
+        onClose={() => setShowDataModal(false)}
+      >
+        <APIExplainer listId={listId}/>
+      </SiteModal>
     </TranquilLayout>
   )
 }

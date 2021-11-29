@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import styled from 'styled-components'
 import { useWeb3React } from '@web3-react/core'
-import Modal from './Modal'
+import EditorModal from './EditorModal'
 
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
@@ -40,7 +40,7 @@ const ConnectionButton: React.FC<ConnectionButtonProps> = ({ children, className
         {children}
       </ButtonElement>
 
-      <Modal
+      <EditorModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         title="Connect Wallet"
@@ -59,7 +59,7 @@ const ConnectionButton: React.FC<ConnectionButtonProps> = ({ children, className
             <button onClick={() => activate(walletconnect)}>WalletConnect</button>
           </div>
         )}
-      </Modal>
+      </EditorModal>
     </Fragment>
   )
 }
