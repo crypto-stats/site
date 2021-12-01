@@ -1,5 +1,5 @@
 async function query(query: string) {
-  const req = await fetch('https://api.thegraph.com/subgraphs/name/dmihal/stateless-list-registry-kovan', {
+  const req = await fetch('https://api.thegraph.com/subgraphs/name/dmihal/stateless-list-registry-kovan-staging', {
     headers: {
       'content-type': 'application/json',
     },
@@ -12,34 +12,43 @@ async function query(query: string) {
 
 export async function getListNames(): Promise<string[]> {
   const response = await query(`{
-    lists {
+    collections {
       id
     }
   }`)
-  return response.lists.map((list: any) => list.id)
+  return response.collections.map((collection: any) => collection.id)
 }
 
-export async function getModulesForList(list: string): Promise<any[]> {
+export async function getModulesForList(collection: string): Promise<any[]> {
   const response = await query(`{
-    listAdapters(where: { list: "${list}"}) {
+    collectionAdapters(where: { collection: "${collection}"}) {
       adapter {
         id
       }
     }
   }`)
-  return response.listAdapters.map((item: any) => item.adapter.id)
+  return response.collectionAdapters.map((item: any) => item.adapter.id)
 }
 
-export async function getListsForAdapter(list: string): Promise<string[]> {
+export async function getListsForAdapter(adapterCID: string): Promise<string[]> {
   const response = await query(`  {
-    adapter(id: "${list}") {
-      lists {
-        list {
+    adapter(id: "${adapterCID}") {
+      collections {
+        collection {
           id
         }
       }
     }
   }
 `)
-  return response.adapter?.lists.map((list: any) => list.list.id) || []
+  return response.adapter?.collections.map((collection: any) => collection.collection.id) || []
+}
+
+export async function getProxyForCollection(collection: string): Promise<string | null> {
+  const response = await query(`{
+    collection(id: "${collection}") {
+      proxy
+    }
+  }`)
+  return response.collection?.proxy || null
 }

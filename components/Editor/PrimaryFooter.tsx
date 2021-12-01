@@ -50,7 +50,7 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName }) => {
         {adapter && (
           <Fragment>
             {lastPublication && (
-              <Link href={`/module/${lastPublication.cid}`} passHref>
+              <Link href={`/discover/adapter/${lastPublication.cid}`} passHref>
                 <IPFSLink>
                   Last published to IPFS as {lastPublication.cid.substr(0,6)}...{lastPublication.cid.substr(-4)}
                   {' (v'}{lastPublication.version})

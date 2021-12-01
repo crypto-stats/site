@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ethers } from 'ethers'
 import { handleErrors } from 'utils/api-endpoints'
+import { getProxyForCollection } from 'utils/lists-chain'
 
 function typeCheck(value: any, type: string, label: string) {
   if (typeof value !== type) {
@@ -9,8 +10,8 @@ function typeCheck(value: any, type: string, label: string) {
 }
 
 const registryAbi = [
-  'event ListCreated(bytes32 indexed list, address proxy)',
-  'function createList(bytes32 list) external returns (address proxy)',
+  'event CollectionCreated(bytes32 indexed collection, address proxy)',
+  'function createCollection(bytes32 collection) external returns (address proxy)',
 ]
 
 const proxyAbi = [
@@ -24,7 +25,7 @@ const cidToBytes32 = (cid: string) =>
   ethers.utils.hexlify(ethers.utils.base58.decode(cid).slice(2))
 
 const rpc = `https://speedy-nodes-nyc.moralis.io/${process.env.NEXT_PUBLIC_MORALIS_KEY}/eth/kovan`
-const registryAddress = '0xa21cc34c6662e6f38dc81d958552c2aa1864ab47'
+const registryAddress = '0x67bBD1dDC36C93f3443e74ddAc786c1717c9c7F1'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {
@@ -50,29 +51,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const provider = new ethers.providers.JsonRpcProvider(rpc)
   const signer = ethers.Wallet.fromMnemonic(process.env.MNEMONIC).connect(provider)
 
-  const graphRequest = await fetch('https://api.thegraph.com/subgraphs/name/dmihal/stateless-list-registry-kovan', {
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      query: `{
-        list(id: "${listId}") {
-          proxy
-        }
-      }`,
-    }),
-    method: 'POST',
-  })
-  const json = await graphRequest.json()
-
   const transactions = []
 
-  let proxyAddress = json.data.list?.proxy
+  let proxyAddress = await getProxyForCollection(listId)
   if (!proxyAddress) {
     const registry = new ethers.Contract(registryAddress, registryAbi, signer)
-    const newListTx = await registry.createList(listIdBytes32)
+    const newListTx = await registry.createCollection(listIdBytes32)
     const newListReceipt = await newListTx.wait()
-    proxyAddress = newListReceipt.events[0].args.proxy
+    proxyAddress = newListReceipt.events[0].args.proxy as string
 
     transactions.push(newListTx.hash)
   }
