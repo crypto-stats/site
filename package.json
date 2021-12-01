@@ -20,6 +20,7 @@
     "copy-to-clipboard": "^3.3.1",
     "eth-ens-namehash": "^2.0.8",
     "ethers": "^5.5.1",
+    "ipfs-http-client": "^54.0.2",
     "next": "latest",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

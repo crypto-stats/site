@@ -1,5 +1,6 @@
 import * as fs from 'fs'
 import pinataSDK from '@pinata/sdk'
+import { create } from 'ipfs-http-client'
 
 const filePath = '/tmp/upload.txt';
 
@@ -10,7 +11,7 @@ export async function saveToIPFS(file: string, name: string): Promise<string> {
 
   const pinata = pinataSDK(process.env.PINATA_KEY, process.env.PINATA_SECRET)
   fs.writeFileSync(filePath, file);
-  const response = await pinata.pinFromFS(filePath, {
+  const pinataPromise = pinata.pinFromFS(filePath, {
     pinataMetadata: {
       name,
       // @ts-ignore
@@ -20,5 +21,20 @@ export async function saveToIPFS(file: string, name: string): Promise<string> {
     },
   });
 
-  return response.IpfsHash;
+  const graphNode = create('https://api.thegraph.com/ipfs/api/v0' as any)
+  const graphPromise = graphNode.add(file)
+
+  const csNode = create('https://ipfs.cryptostats.community' as any)
+  const csPromise = csNode.add(file)
+
+  const [pinataResult, graphResult, csResult] = await Promise.all([pinataPromise, graphPromise, csPromise])
+
+  if (pinataResult.IpfsHash !== graphResult.path) {
+    throw new Error(`Mismatched CIDs: ${pinataResult.IpfsHash} & ${graphResult.path}`)
+  }
+  if (pinataResult.IpfsHash !== csResult.path) {
+    throw new Error(`Mismatched CIDs: ${pinataResult.IpfsHash} & ${csResult.path}`)
+  }
+
+  return pinataResult.IpfsHash;
 }
