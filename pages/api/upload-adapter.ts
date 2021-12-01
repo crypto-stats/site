@@ -38,11 +38,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.body.signature && req.body.hash && req.body.signer) {
     const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(code))
-    if (hash !== req.body.hash) {
+    const message = `CryptoStats Adapter Hash: ${hash}`
+    if (message !== req.body.hash) {
       throw new Error('Calculated hash does not match')
     }
 
-    const signer = ethers.utils.verifyMessage(hash, req.body.signature)
+    const signer = ethers.utils.verifyMessage(message, req.body.signature)
     if (signer !== req.body.signer) {
       throw new Error('Signer does not match')
     }

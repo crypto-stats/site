@@ -165,8 +165,9 @@ export const useAdapter = (id?: string | null) => {
       })
     })
 
-    const response = await req.json()
-    return response.hash
+    const { hash } = await req.json()
+    const message = `CryptoStats Adapter Hash: ${hash}`
+    return message
   }
 
   const adapter = id ? getStorageItem(id) as Adapter : null
