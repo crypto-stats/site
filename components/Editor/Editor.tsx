@@ -17,6 +17,9 @@ import { useENSName } from 'hooks/ens'
 import PrimaryFooter from './PrimaryFooter'
 import RightPanel from './RightPanel'
 import Tabs from './Tabs'
+import EmptyState from './EmptyState'
+import { emptyAdapter } from 'templates'
+import NewAdapterForm from './NewAdapterForm'
 
 const Left = styled(LeftResizable)`
   display: flex;
@@ -135,6 +138,7 @@ const Editor: React.FC = () => {
   const router = useRouter()
   const [fileName, setFileName] = useState<string | null>(null)
   const [started, setStarted] = useState(false)
+  const [newAdapterModalOpen, setNewAdapterModalOpen] = useState(false)
   const [filter, setFilter] = useState('')
   const [imageLibraryOpen, setImageLibraryOpen] = useState(false)
   const { save, adapter } = useAdapter(fileName)
@@ -171,7 +175,7 @@ const Editor: React.FC = () => {
         <CloseButton onClick={() => router.push('/adapters')}>Close</CloseButton>
 
         <HeaderRight>
-          <NewAdapterButton onClick={() => setFileName(newModule())}>New Adapter</NewAdapterButton>
+          <NewAdapterButton onClick={() => setNewAdapterModalOpen(true)}>New Adapter</NewAdapterButton>
           <WalletButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</WalletButton>
         </HeaderRight>
       </Header>
@@ -209,7 +213,7 @@ const Editor: React.FC = () => {
               </TabContainer>
 
               <Fill>
-                {fileName && adapter && (
+                {(fileName && adapter) ? (
                   <CodeEditor
                     fileId={fileName}
                     defaultValue={adapter.code}
@@ -223,6 +227,8 @@ const Editor: React.FC = () => {
                       })
                     })}
                   />
+                ) : (
+                  <EmptyState onCreate={() => setNewAdapterModalOpen(true)} />
                 )}
               </Fill>
             </Fill>
@@ -238,7 +244,6 @@ const Editor: React.FC = () => {
         </Fill>
       </Fill>
 
-
       <EditorModal
         isOpen={imageLibraryOpen}
         onClose={() => setImageLibraryOpen(false)}
@@ -248,6 +253,23 @@ const Editor: React.FC = () => {
         ]}
       >
         <ImageSelector close={() => setImageLibraryOpen(false)} />
+      </EditorModal>
+
+      <EditorModal
+        isOpen={newAdapterModalOpen}
+        onClose={() => setNewAdapterModalOpen(false)}
+        title="Create new adapter"
+        buttons={[
+          { label: 'Return to Editor', onClick: () => setNewAdapterModalOpen(false) },
+          { label: 'Create Blank Adapter', onClick: () => setFileName(newModule(emptyAdapter)) },
+        ]}
+      >
+        <NewAdapterForm
+          onAdapterSelection={(fileName: string) => {
+            setFileName(fileName)
+            setNewAdapterModalOpen(false)
+          }}
+        />
       </EditorModal>
     </ViewPort>
   )

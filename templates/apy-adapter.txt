@@ -1,0 +1,56 @@
+export const name = 'Sample APY Adapter';
+export const version = '0.0.1';
+export const license = 'MIT';
+
+const VAULT_ABI = [
+  'function pricePerShare() external view returns (uint256)',
+];
+
+const blocksPerDay = 6570; // (13.15 seconds per block)
+const daysPerYear = 365;
+
+const markets: { [underlying: string]: string } = {
+  '0x6b175474e89094c44da98b954eedeac495271d0f': '0xdA816459F1AB5631232FE5e97a05BBBb94970c95', // Dai
+  '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48': '0x5f18C75AbDAe578b483E5F43f12a39cF75b973a9', // USDC
+  '0xdac17f958d2ee523a2206206994597c13d831ec7': '0x7Da96a3891Add058AdA2E826306D812C638D87a7', // USDT
+}
+
+export function setup(sdk: Context) {
+  const getInterestRateLoader = (daysToSample: number) => async (assetAddress: string): Promise<number> => {
+    const vault = markets[assetAddress.toLowerCase()];
+    if (!vault) {
+      return 0;
+    }
+
+    const contract = sdk.ethers.getContract(vault, VAULT_ABI);
+
+    const currentBlock = await sdk.ethers.getProvider('ethereum').getBlockNumber();
+    const dayAgoBlock = currentBlock - (blocksPerDay * daysToSample);
+
+    const nowPrice = await contract.pricePerShare({ blockTag: currentBlock });
+    const dayAgoPrice = await contract.pricePerShare({ blockTag: dayAgoBlock });
+
+    const apy = Math.pow(nowPrice / dayAgoPrice, (daysPerYear / daysToSample)) - 1;
+
+    return apy;
+  }
+
+  sdk.register({
+    id: 'sample-adapter',
+    queries: {
+      apyCurrent: getInterestRateLoader(3),
+      apyPrevious30Days: getInterestRateLoader(30),
+      apyPreviousDateRange: (numDays: number, asset: string) => getInterestRateLoader(numDays)(asset),
+    },
+    metadata: {
+      name: 'Sample Protocol',
+      icon: sdk.ipfs.getDataURILoader('QmPj9PoFfMCAtne9qovR9iJwyMRiEsCyfZs7r65CwBiH9F', 'image/svg+xml'),
+      description: 'This protocol moves money back and forth.',
+      blockchain: 'Ethereum',
+      source: 'The Graph Protocol',
+      website: 'https://example.com',
+      tokenTicker: 'TOK',
+      tokenCoingecko: 'sample-id',
+    },
+  });
+}

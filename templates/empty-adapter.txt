@@ -1,0 +1,6 @@
+export const name = 'New Module';
+export const version = '0.0.1';
+export const license = 'MIT';
+
+export function setup(sdk: Context) {
+}

@@ -1,0 +1,59 @@
+export const name = 'New Fee Adapter';
+export const version = '0.0.1';
+export const license = 'MIT';
+
+export function setup(sdk: Context) {
+  const getFees = async (date: string): Promise<number> => {
+    const startOfDayBlock = await sdk.chainData.getBlockNumber(date, 'ethereum');
+    const nextDayDate = sdk.date.offsetDaysFormatted(date, 1);
+    const endOfDayBlock = await sdk.chainData.getBlockNumber(nextDayDate, 'ethereum');
+    
+    const query = `query txFees($startOfDayBlock: Int!, $startOfDayBlock: Int!){
+      startOfDay: fees(block: {number: $startOfDayBlock}) {
+        totalFees
+      }
+      endOfDay: fee(block: {number: $endOfDayBlock}) {
+        totalFees
+      }
+    }`;
+
+    const data = await sdk.graph.query('sample/sample-subgraph', query, {
+      variables: {
+        startOfDayBlock: startOfDayBlock,
+        endOfDayBlock: endOfDayBlock,
+      },
+    });
+
+    const totalFeesNative = data.endOfDay.totalFees - data.startOfDay.totalFees;
+
+    const tokenPrice = await sdk.coinGecko.getHistoricalPrice('sample-token', date);
+
+    return totalFeesNative * tokenPrice;
+  }
+
+  sdk.register({
+    id: 'sample-adapter',
+    queries: {
+      oneDayTotalFees: getFees,
+    },
+    metadata: {
+      name: 'Sample Protocol',
+      icon: sdk.ipfs.getDataURILoader('QmedJLPy6R7x3dDEy2cfMd8gXbZm9e3vxvgBLXp3YZEHCy', 'image/svg+xml'),
+      category: 'dex',
+      description: 'This protocol moves money back and forth.',
+      feeDescription: 'Fees are paid to Jerome Powell.',
+      blockchain: 'Ethereum',
+      source: 'The Graph Protocol',
+      website: 'https://example.com',
+      protocolLaunch: '2021-08-11',
+      tokenTicker: 'TOK',
+      tokenCoingecko: 'sample-id',
+      events: [
+        {
+          date: '2021-08-05',
+          description: 'Fees increase',
+        },
+      ],
+    },
+  })
+}
