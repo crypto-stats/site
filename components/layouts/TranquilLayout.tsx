@@ -47,11 +47,14 @@ const Main = styled.main`
 
 const TopContent = styled.div`
   display: flex;
-  height: 200px;
+  min-height: 200px;
 `
 
 const HeroContainer = styled.div`
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `
 
 const Sidebar = styled.div`

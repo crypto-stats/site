@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { newModule } from 'hooks/local-adapters'
-import { feeAdapter, apyAdapter } from 'templates'
+import { feeAdapter, apyAdapter } from 'resources/templates'
 
 const Container = styled.div`
   display: flex;

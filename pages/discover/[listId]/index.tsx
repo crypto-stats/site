@@ -1,12 +1,42 @@
 import React, { useState } from 'react'
 import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
+import styled from 'styled-components'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import APIExplainer from 'components/APIExplainer'
 import Button from 'components/Button'
 import CardList from 'components/CardList'
 import SiteModal from 'components/SiteModal'
 import { getListNames, getModulesForList } from 'utils/lists-chain'
+import collectionMetadata, { CollectionMetadata } from 'resources/collection-metadata'
+
+const Hero = styled.div`
+  max-width: 600px;
+  width: 100%;
+  margin: 40px 0 60px;
+`
+
+const Type = styled.div`
+  font-size: 12px;
+  color: #808080;
+  text-transform: uppercase;
+`
+
+const Title = styled.h1`
+  font-size: 36px;
+  font-weight: 600;
+  margin: 6px 0 20px;
+`
+
+const Description = styled.p`
+  color: #808080;
+`
+
+const HeroBottom = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
 
 interface SubAdapter {
   id: string
@@ -24,9 +54,10 @@ interface ListPageProps {
   listId: string,
   adapters: AdapterData[]
   subadapters: SubAdapter[]
+  metadata: CollectionMetadata | null
 }
 
-const DiscoverPage: NextPage<ListPageProps> = ({ adapters, subadapters, listId }) => {
+const DiscoverPage: NextPage<ListPageProps> = ({ adapters, subadapters, listId, metadata }) => {
   const [showDataModal, setShowDataModal] = useState(false)
 
   const listItems = adapters.map((adapter: AdapterData) => ({
@@ -44,14 +75,17 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, subadapters, listId }
     <TranquilLayout
       breadcrumbs={[{ name: 'Home', path: '/' }, { name: 'Discover', path: '/discover' }]}
       hero={
-        <div>
-          <h1>{listId}</h1>
-          <p>The most valuable crypto metrics, currated and managed by the community</p>
-          <div>
+        <Hero>
+          <Type>Collection</Type>
+          <Title>{metadata?.name || listId}</Title>
+          
+          {metadata?.description && <Description>{metadata?.description}</Description>}
+          
+          <HeroBottom>
             Adapters: {adapters.length} - SubAdapters: {subadapters.length}
             <Button onClick={() => setShowDataModal(true)}>Use Collection Data</Button>
-          </div>
-        </div>
+          </HeroBottom>
+        </Hero>
       }
     >
       <div>
@@ -72,7 +106,8 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, subadapters, listId }
 export default DiscoverPage
 
 export const getStaticProps: GetStaticProps<ListPageProps, { listId: string }> = async (ctx: GetStaticPropsContext) => {
-  const adapterCids = await getModulesForList(ctx.params!.listId as string)
+  const listId = ctx.params!.listId as string
+  const adapterCids = await getModulesForList(listId)
   const sdk = new CryptoStatsSDK({})
 
   const allSubadapters: SubAdapter[] = []
@@ -102,9 +137,10 @@ export const getStaticProps: GetStaticProps<ListPageProps, { listId: string }> =
 
   return {
     props: {
-      listId: ctx.params!.listId as string,
+      listId,
       adapters,
       subadapters: allSubadapters,
+      metadata: collectionMetadata[listId] || null,
     },
     revalidate: 60,
   }

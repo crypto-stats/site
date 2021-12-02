@@ -3,10 +3,13 @@ import styled from 'styled-components';
 
 const ButtonElement = styled.button`
   border-radius: 0;
-  background: #58a8fd;
+  background: #0477f4;
   border: none;
-  padding: 4px 8px;
+  padding: 8px 24px;
   font-size: 14px;
+  font-weight: 600;
+  border-radius: 4px;
+  color: white;
 
   &:hover {
     background: #3a98fd;

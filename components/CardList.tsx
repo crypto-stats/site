@@ -27,10 +27,25 @@ const Card = styled.a`
   background-color: #ffffff;
   color: #002750;
 
-  :hover {
+  &:hover {
     color: #0477f4;
     border: solid 1px #0477f4;
   }
+
+  &:hover h2 {
+    color: #0477f4;
+  }
+`
+
+const Title = styled.h2`
+  font-size: 22px;
+  font-weight: bold;
+  color: #002750;
+`
+
+const Subtitle = styled.div`
+  color: #717d8a;
+  font-size: 18px;
 `
 
 const IconList = styled.ul`
@@ -68,6 +83,7 @@ const Metadata = styled.span`
 
 export interface Item {
   title: string
+  subtitle?: string | null
   description?: string
   metadata?: string[]
   iconlist?: { path: string, title: string }[]
@@ -89,7 +105,9 @@ const CardList: React.FC<CardListProps> = ({ items }) => {
                 <Card>
                   <div />
                   <Content>
-                    <h2>{item.title}</h2>
+                    <Title>{item.title}</Title>
+                    
+                    {item.subtitle && <Subtitle>{item.subtitle}</Subtitle>}
 
                     {item.iconlist && (
                       <IconList>

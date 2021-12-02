@@ -2,25 +2,30 @@ import { NextPage, GetStaticProps } from 'next'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import { getListNames, getModulesForList } from 'utils/lists-chain'
 import CardList from 'components/CardList'
+import collectionMetadata from 'resources/collection-metadata'
 
-interface List {
-  name: string
+interface Collection {
+  id: string
   modules: string[]
 }
 
 interface AdaptersPageProps {
-  lists: List[]
+  collections: Collection[]
 }
 
-const DiscoverPage: NextPage<AdaptersPageProps> = ({ lists }) => {
-  const listItems = lists
-    .sort((a: List, b: List) => b.modules.length - a.modules.length)
-    .map((list: { name: string, modules: string[] }) => ({
-      title: list.name,
-      description: 'Lorem ipsum',
-      metadata: [`${list.modules.length} adapters`],
-      link: `/discover/${list.name}`,
-    }))
+const DiscoverPage: NextPage<AdaptersPageProps> = ({ collections }) => {
+  const collectionItems = collections
+    .sort((a: Collection, b: Collection) => b.modules.length - a.modules.length)
+    .map((collection: { id: string, modules: string[] }) => {
+      const metadata = collectionMetadata[collection.id]
+      return {
+        title: metadata?.name || collection.id,
+        subtitle: metadata ? collection.id : null,
+        description: metadata?.description,
+        metadata: [`${collection.modules.length} adapters`],
+        link: `/discover/${collection.id}`,
+      }
+    })
 
   return (
     <TranquilLayout
@@ -32,7 +37,7 @@ const DiscoverPage: NextPage<AdaptersPageProps> = ({ lists }) => {
       }
     >
       <div>
-        <CardList items={listItems} />
+        <CardList items={collectionItems} />
       </div>
     </TranquilLayout>
   )
@@ -44,14 +49,14 @@ export default DiscoverPage
 export const getStaticProps: GetStaticProps<AdaptersPageProps> = async () => {
   const listNames = await getListNames()
 
-  const lists = await Promise.all(listNames.map(async (name: string) => ({
-    name: name,
+  const collections = await Promise.all(listNames.map(async (name: string): Promise<Collection> => ({
+    id: name,
     modules: await getModulesForList(name),
   })))
 
   return {
     props: {
-      lists
+      collections
     },
     revalidate: 60,
   }

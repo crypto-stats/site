@@ -18,7 +18,7 @@ import PrimaryFooter from './PrimaryFooter'
 import RightPanel from './RightPanel'
 import Tabs from './Tabs'
 import EmptyState from './EmptyState'
-import { emptyAdapter } from 'templates'
+import { emptyAdapter } from 'resources/templates'
 import NewAdapterForm from './NewAdapterForm'
 
 const Left = styled(LeftResizable)`
