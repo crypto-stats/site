@@ -90,7 +90,6 @@ const Header: React.FC = () => {
         <Link href="/discover" passHref>
           <NavLink active={router.route.indexOf('/discover') === 0}>Discover</NavLink>
         </Link>
-        <Link href="/adapters" passHref><NavLink>Adapters</NavLink></Link>
         <NavLink href="https://forum.cryptostats.community/">Forum</NavLink>
 
         <Link href="/editor" passHref>

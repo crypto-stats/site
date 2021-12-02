@@ -172,7 +172,7 @@ const Editor: React.FC = () => {
   return (
     <ViewPort style={{ background: '#0f1011' }}>
       <Header size={64} order={1}>
-        <CloseButton onClick={() => router.push('/adapters')}>Close</CloseButton>
+        <CloseButton onClick={() => router.push('/discover')}>Close</CloseButton>
 
         <HeaderRight>
           <NewAdapterButton onClick={() => setNewAdapterModalOpen(true)}>New Adapter</NewAdapterButton>
