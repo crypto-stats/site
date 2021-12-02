@@ -1,3 +1,4 @@
+import InputField from 'components/InputField'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
@@ -30,7 +31,7 @@ const Label = styled.div`
   color: #9d9d9d;
 `
 
-const Input = styled.input`
+const Input = styled(InputField)`
   padding: 8px;
   border-radius: 4px;
   border: solid 1px #424242;
@@ -104,7 +105,7 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault }) => {
                 <Label>{functionNames[index]}</Label>
                 <Input
                   value={values[index]}
-                  placeholder={functionNames[index]}
+                  name={functionNames[index]}
                   disabled={running}
                   onChange={(e: any) => {
                     const newValues = [...values]
