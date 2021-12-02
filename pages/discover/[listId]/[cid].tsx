@@ -202,7 +202,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
                   listModules={listModules}
                   cid={cid}
                   previousVersion={moduleDetails.previousVersion}
-                  onVerified={() => setVerified(true)}
+                  onVerified={(newVerified: boolean) => setVerified(newVerified)}
                 />
               </div>
             )}

@@ -27,6 +27,41 @@ const cidToBytes32 = (cid: string) =>
 const rpc = `https://speedy-nodes-nyc.moralis.io/${process.env.NEXT_PUBLIC_MORALIS_KEY}/eth/kovan`
 const registryAddress = '0x67bBD1dDC36C93f3443e74ddAc786c1717c9c7F1'
 
+function verifyOperation(method: string, listId: string, cid: string, signature: string, previousVersion?: string) {
+  let oldElement = ZERO
+  let newElement = ZERO
+  let message = ''
+
+  switch (method) {
+    case 'add':
+      newElement = cidToBytes32(cid)
+      message = `Add ${cid} to ${listId}`
+      break
+    case 'update':
+      if (!previousVersion) {
+        throw new Error('Must provide previous version')
+      }
+      newElement = cidToBytes32(cid)
+      oldElement = cidToBytes32(previousVersion)
+      message = `Replace ${previousVersion} with ${cid} on ${listId}`
+      break
+    case 'remove':
+      oldElement = cidToBytes32(cid)
+      message = `Remove ${cid} from ${listId}`
+      break
+    default:
+      throw new Error(`Unknown method ${method}`)
+  }
+
+  const signer = ethers.utils.verifyMessage(message, signature)
+  console.log(message, signer)
+  if (signer.toLowerCase() !== process.env.NEXT_PUBLIC_ADMIN_ACCOUNT?.toLowerCase()) {
+    throw new Error('Signer does not match admin')
+  }
+
+  return { oldElement, newElement }
+}
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {
     throw new Error('Only POST requests allowed')
@@ -63,8 +98,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     transactions.push(newListTx.hash)
   }
 
-  const oldElement = previousVersion ? cidToBytes32(previousVersion) : ZERO
-  const newElement = cidToBytes32(cid)
+  const { oldElement, newElement } = verifyOperation(method, listId, cid, signature, previousVersion)
 
   const proxyContract = new ethers.Contract(proxyAddress, proxyAbi, signer)
   const tx = await proxyContract.update(oldElement, newElement)

@@ -7,7 +7,7 @@ interface VerifyFormProps {
   listModules: string[]
   cid: string
   previousVersion: string | null
-  onVerified: () => void
+  onVerified: (val: boolean) => void
 }
 
 async function sendUpdate(
@@ -37,7 +37,7 @@ async function sendUpdate(
   }
 }
 
-const VerifyForm: React.FC<VerifyFormProps> = ({ listId, /*listModules, */cid, previousVersion, onVerified }) => {
+const VerifyForm: React.FC<VerifyFormProps> = ({ listId, listModules, cid, previousVersion, onVerified }) => {
   const [pending, setPending] = useState(false)
   const { library } = useWeb3React()
 
@@ -47,7 +47,7 @@ const VerifyForm: React.FC<VerifyFormProps> = ({ listId, /*listModules, */cid, p
       const message = `Add ${cid} to ${listId}`
       const signature = await library.getSigner().signMessage(message)
       await sendUpdate(listId, 'add', signature, cid)
-      onVerified()
+      onVerified(true)
     } catch (e) {}
     setPending(false)
   }
@@ -58,18 +58,39 @@ const VerifyForm: React.FC<VerifyFormProps> = ({ listId, /*listModules, */cid, p
       const message = `Replace ${previousVersion} with ${cid} on ${listId}`
       const signature = await library.getSigner().signMessage(message)
       await sendUpdate(listId, 'update', signature, cid, previousVersion)
-      onVerified()
+      onVerified(true)
     } catch (e) {}
     setPending(false)
   }
 
+  const remove = async () => {
+    setPending(true)
+    try {
+      const message = `Remove ${cid} from ${listId}`
+      const signature = await library.getSigner().signMessage(message)
+      await sendUpdate(listId, 'remove', signature, cid)
+      onVerified(false)
+    } catch (e) {}
+    setPending(false)
+  }
+
+  const verified = listModules.indexOf(cid) !== -1
+
   return (
     <div>
-      <div>
-        <button onClick={add} disabled={pending}>
-          Verify &amp; add to {listId}
+      {verified ? (
+        <div>
+        <button onClick={remove} disabled={pending}>
+          Remove from {listId}
         </button>
-      </div>
+        </div>
+      ) : (
+        <div>
+          <button onClick={add} disabled={pending}>
+            Verify &amp; add to {listId}
+          </button>
+        </div>
+      )}
 
       {previousVersion && (
         <div>
