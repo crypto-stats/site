@@ -14,6 +14,8 @@ const AdapterPreviewList: React.FC<AdapterPreviewListProps> = ({ staticDetails, 
     evaluate({ code })
   }, [code])
 
+  console.log(list)
+
   return (
     <div>
       {staticDetails.map((details: any, i: number) => (

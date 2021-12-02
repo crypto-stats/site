@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import type { Adapter } from '@cryptostats/sdk'
+import QueryForm from './QueryForm'
+
 
 const AttributeContainer = styled.div`
   margin: 2px 0;
@@ -52,6 +54,12 @@ const Row = styled.div`
 const Col = styled.div`
   flex: 1 0 0;
   overflow: hidden;
+  border-left: solid 1px #dddddd;
+  padding: 24px;
+
+  &:first-child {
+    border-left: none;
+  }
 `
 
 const Icon = styled.img`
@@ -61,6 +69,8 @@ const Icon = styled.img`
 
 const Pre = styled.pre`
   white-space: pre-wrap;
+  font-size: 14px;
+  margin: 4px 0 10px;
 `
 
 interface AdapterPreviewProps {
@@ -99,9 +109,9 @@ const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter }) => 
 
           <Col>
             <div>Queries</div>
-            {adapter && Object.entries(adapter.queries).map(([id/*, fn*/]: [string, any]) => {
+            {adapter && Object.entries(adapter.queries).map(([id, fn]: [string, any], _id: number, list: any[]) => {
               return (
-                <div key={id}>{id}</div>
+                <QueryForm key={id} id={id} fn={fn} openByDefault={list.length === 1}/>
               )
             })}
           </Col>
