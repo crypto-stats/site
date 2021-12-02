@@ -23,6 +23,7 @@ const AdapterPreviewList: React.FC<AdapterPreviewListProps> = ({ staticDetails, 
           key={details.id}
           details={details}
           adapter={list?.getAdapters()[i] || null}
+          openByDefault={staticDetails.length === 1}
         />
       ))}
     </div>

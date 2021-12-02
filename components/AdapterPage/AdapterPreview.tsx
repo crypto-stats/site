@@ -34,6 +34,11 @@ const AdapterTitle = styled.div`
   height: 42px;
   display: flex;
   align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background: #eee;
+  }
 `
 
 const AdapterIcon = styled.div`
@@ -49,6 +54,7 @@ const Row = styled.div`
   display: flex;
   border: solid 1px #ddd;
   background: #ffffff;
+  border-top: none;
 `
 
 const Col = styled.div`
@@ -76,12 +82,15 @@ const Pre = styled.pre`
 interface AdapterPreviewProps {
   details: any
   adapter: Adapter | null
+  openByDefault?: boolean
 }
 
-const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter }) => {
-  const [open, setOpen] = useState(false)
+const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter, openByDefault }) => {
+  const [open, setOpen] = useState(!!openByDefault)
 
-  const title = details.metadata.name ? `${details.metadata.name} (${details.id})` : details.id
+  const title = details.metadata.name
+    ? `${details.metadata.name}${details.metadata.subtitle ? ' - ' + details.metadata.subtitle : ''} (${details.id})`
+    : details.id
 
   return (
     <div>

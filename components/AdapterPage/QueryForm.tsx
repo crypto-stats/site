@@ -10,6 +10,11 @@ const TopBar = styled.div`
   border-bottom: solid 1px #ddd;
   padding: 6px 0;
   margin-bottom: 14px;
+  cursor: pointer;
+
+  &:hover {
+    background: #eee;
+  }
 `
 
 const Result = styled.pre`
@@ -51,8 +56,15 @@ const RunButton = styled.button`
   font-weight: 500;
 
   &:hover {
-    background: #363636;
+    background: #eee;
   }
+
+  &:disabled {
+    color: #999;
+    background: transparent;
+    border: solid 1px #ccc;
+  }
+}
 `
 
 const Error = styled.div`
