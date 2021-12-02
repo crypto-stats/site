@@ -233,7 +233,7 @@ const Editor: React.FC = () => {
               </Fill>
             </Fill>
 
-            <RightResizable size={200}>
+            <RightResizable size={300}>
               <RightPanel />
             </RightResizable>
           </FillWithStyledResize>

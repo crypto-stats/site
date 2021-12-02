@@ -4,7 +4,24 @@ import { Adapter } from '@cryptostats/sdk'
 import Attribute from '../Attribute'
 
 const Container = styled.div`
-  margin: 16px;
+`
+
+const Header = styled.div`
+  border-top: solid 1px #4a4a4d;
+  border-bottom: solid 1px #4a4a4d;
+  padding: 16px;
+  background: #2f2f2f;
+  margin: 0 -16px;
+
+  &:hover {
+    background: #262626;
+  }
+`
+
+const Value = styled.pre`
+  white-space: pre-wrap;
+  margin: 4px 0 10px;
+  font-size: 14px;
 `
 
 const Icon = styled.img`
@@ -27,15 +44,19 @@ const SubAdapterPreview: React.FC<SubAdapterPreviewProps> = ({ subadapter, openB
 
   if (!open) {
     return (
-      <div onClick={() => setOpen(true)}>
+      <Header onClick={() => setOpen(true)}>
         {name || subadapter.id}
-      </div>
+        {metadata.subtitle ? ` - ${metadata.subtitle}` : null}
+      </Header>
     )
   }
 
   return (
     <Container>
-      <div onClick={() => setOpen(false)}>{name || subadapter.id}</div>
+      <Header onClick={() => setOpen(false)}>
+        {name || subadapter.id}
+        {metadata.subtitle ? ` - ${metadata.subtitle}` : null}
+      </Header>
 
       <div>
         {Object.entries(metadata).map(([key, val]: [string, any]) => (
@@ -43,10 +64,9 @@ const SubAdapterPreview: React.FC<SubAdapterPreviewProps> = ({ subadapter, openB
             {val.cid ? (
               <div>
                 <Icon src={`https://ipfs.io/ipfs/${val.cid}`} />
-                <div>{val.cid}</div>
               </div>
             ) : (
-              <pre>{JSON.stringify(val, null, 2)}</pre>
+              <Value>{JSON.stringify(val, null, 2)}</Value>
             )}
           </Attribute>
         ))}

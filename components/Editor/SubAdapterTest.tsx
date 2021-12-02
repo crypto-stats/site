@@ -4,7 +4,17 @@ import { Adapter } from '@cryptostats/sdk'
 import QueryForm from './QueryForm'
 
 const Container = styled.div`
-  margin: 16px;
+`
+
+const Header = styled.div`
+  border-top: solid 1px #4a4a4d;
+  border-bottom: solid 1px #4a4a4d;
+  padding: 16px;
+  background: #2f2f2f;
+
+  &:hover {
+    background: #262626;
+  }
 `
 
 interface SubAdapterPreviewProps {
@@ -20,9 +30,10 @@ const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDe
 
   if (!open) {
     return (
-      <div onClick={() => setOpen(true)}>
+      <Header onClick={() => setOpen(true)}>
         {name || subadapter.id}
-      </div>
+        {subtitle ? ` - ${subtitle}` : null}
+      </Header>
     )
   }
 
@@ -30,10 +41,10 @@ const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDe
 
   return (
     <Container>
-      <div onClick={() => setOpen(false)}>
+      <Header onClick={() => setOpen(false)}>
         {name || subadapter.id}
         {subtitle ? ` - ${subtitle}` : null}
-      </div>
+      </Header>
 
       <div>
         {queries.map(([queryName, fn]: [string, (...params: any[]) => Promise<any>]) => (

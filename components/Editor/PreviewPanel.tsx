@@ -9,6 +9,13 @@ const Container = styled.div`
   margin: 16px;
 `
 
+const SectionHeader = styled.div`
+  font-size: 14px;
+  color: #6b6b6b;
+  margin: 20px 0 6px;
+  text-transform: uppercase;
+`
+
 const PreviewPanel: React.FC = () => {
   const { module, list, processing } = useCompiler()
 
@@ -25,10 +32,12 @@ const PreviewPanel: React.FC = () => {
       { processing && (
         <div>Building adapter...</div>
       )}
+      <SectionHeader>Adapter Metadata</SectionHeader>
       <Attribute name="Name">{module.name}</Attribute>
       <Attribute name="Version">{module.version}</Attribute>
       <Attribute name="License">{module.license}</Attribute>
 
+      <SectionHeader>Sub-Adapters</SectionHeader>
       <div>
         {list && list.adapters.map((adapter: Adapter) => (
           <SubAdapterPreview

@@ -6,7 +6,59 @@ const Container = styled.div`
   padding: 12px 16px;
 `
 
-const TopBar = styled.div``
+const TopBar = styled.div`
+  font-size: 14px;
+  border-bottom: solid 1px #636363;
+  padding: 6px 0;
+  margin-bottom: 14px;
+`
+
+const Result = styled.pre`
+  white-space: pre-wrap;
+  font-size: 14px;
+  min-height: 30px;
+  margin: 4px 0;
+`
+
+const InputBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const Label = styled.div`
+  font-size: 14px;
+  color: #9d9d9d;
+`
+
+const Input = styled.input`
+  padding: 8px;
+  border-radius: 4px;
+  border: solid 1px #424242;
+  background-color: #1a1919;
+  font-size: 14px;
+  color: #b5b6b9;
+  outline: none;
+`
+
+const RunButton = styled.button`
+  height: 20px;
+  padding: 3px 0 2px;
+  border-radius: 4px;
+  border: solid 1px #ffffff;
+  background-color: transparent;
+  margin: 16px 0 6px;
+  color: white;
+  padding: 2px 16px;
+
+  &:hover {
+    background: #363636;
+  }
+`
+
+const Error = styled.div`
+  font-size: 14px;
+  color: #cf9b9b;
+`
 
 interface QueryProps {
   id: string;
@@ -35,7 +87,7 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault }) => {
       setError(null)
       const newResult = await fn.apply(null, values)
       setResult(newResult)
-    } catch (e) {
+    } catch (e: any) {
       setError(e.message)
     }
     setRunning(false)
@@ -46,26 +98,30 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault }) => {
       <TopBar onClick={() => setOpen(!open)}>{id}</TopBar>
       {open && (
         <div>
-          <div>Input</div>
           <div>
             {[...new Array(fn.length)].map((_: any, index: number) => (
-              <input
-                key={index}
-                value={values[index]}
-                placeholder={functionNames[index]}
-                disabled={running}
-                onChange={(e: any) => {
-                  const newValues = [...values]
-                  newValues[index] = e.target.value
-                  setValues(newValues)
-                }}
-              />
+              <InputBlock key={index}>
+                <Label>{functionNames[index]}</Label>
+                <Input
+                  value={values[index]}
+                  placeholder={functionNames[index]}
+                  disabled={running}
+                  onChange={(e: any) => {
+                    const newValues = [...values]
+                    newValues[index] = e.target.value
+                    setValues(newValues)
+                  }}
+                />
+              </InputBlock>
             ))}
           </div>
-          <button onClick={execute} disabled={running}>Run Query</button>
-          <div>Output</div>
-          {result && <pre>{result}</pre>}
-          {error && <div>Error: {error}</div>}
+          <RunButton onClick={execute} disabled={running}>Run Query</RunButton>
+          <Label>Output</Label>
+          {error ? (
+            <Error>Error: {error}</Error>
+          ) : (
+            <Result>{result}</Result>
+          )}
         </div>
       )}
     </Container>
