@@ -1,5 +1,5 @@
 async function query(query: string) {
-  const req = await fetch('https://api.thegraph.com/subgraphs/name/dmihal/stateless-list-registry-kovan-staging', {
+  const req = await fetch('https://api.thegraph.com/subgraphs/name/dmihal/cryptostats-adapter-registry-test', {
     headers: {
       'content-type': 'application/json',
     },

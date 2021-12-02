@@ -24,8 +24,8 @@ const ZERO = '0x0000000000000000000000000000000000000000000000000000000000000000
 const cidToBytes32 = (cid: string) =>
   ethers.utils.hexlify(ethers.utils.base58.decode(cid).slice(2))
 
-const rpc = `https://speedy-nodes-nyc.moralis.io/${process.env.NEXT_PUBLIC_MORALIS_KEY}/eth/kovan`
-const registryAddress = '0x67bBD1dDC36C93f3443e74ddAc786c1717c9c7F1'
+const rpc = `https://speedy-nodes-nyc.moralis.io/${process.env.NEXT_PUBLIC_MORALIS_KEY}/eth/goerli`
+const registryAddress = '0xF22e79604434ea8213eb7D79fcEB854e5E4283f7'
 
 function verifyOperation(method: string, listId: string, cid: string, signature: string, previousVersion?: string) {
   let oldElement = ZERO
@@ -54,7 +54,6 @@ function verifyOperation(method: string, listId: string, cid: string, signature:
   }
 
   const signer = ethers.utils.verifyMessage(message, signature)
-  console.log(message, signer)
   if (signer.toLowerCase() !== process.env.NEXT_PUBLIC_ADMIN_ACCOUNT?.toLowerCase()) {
     throw new Error('Signer does not match admin')
   }
