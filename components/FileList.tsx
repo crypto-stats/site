@@ -40,12 +40,17 @@ const ListItem = styled.li<{ selected?: boolean }>`
 interface FileListProps {
   selected?: string | null
   onSelected: (id: string) => void
+  filter?: string
 }
 
-const FileList: React.FC<FileListProps> = ({ selected, onSelected }) => {
-  const adapters = useAdapterList()
+const FileList: React.FC<FileListProps> = ({ selected, onSelected, filter }) => {
+  let adapters = useAdapterList()
 
-  const sortedAdapters = adapters.sort(
+  if (filter && filter.length > 0) {
+    adapters = adapters.filter((a: AdapterWithID) => (a.name || 'New').toLowerCase().indexOf(filter.toLowerCase()) !== -1)
+  }
+
+  adapters = adapters.sort(
     (a: AdapterWithID, b: AdapterWithID) => (a.name || 'New').localeCompare(b.name || 'New')
   )
 
@@ -54,7 +59,7 @@ const FileList: React.FC<FileListProps> = ({ selected, onSelected }) => {
       <Label>Saved in Browser</Label>
 
       <List>
-        {sortedAdapters.map((adapter: AdapterWithID) => (
+        {adapters.map((adapter: AdapterWithID) => (
           <ListItem
             selected={selected === adapter.id}
             key={adapter.id}
