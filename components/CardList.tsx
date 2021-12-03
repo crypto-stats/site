@@ -21,7 +21,7 @@ const Card = styled.a`
   box-sizing: border-box;
   padding: 40px;
   text-decoration: none;
-  height: 244px;
+  min-height: 244px;
   border-radius: 5px;
   border: solid 1px #ddd;
   background-color: #ffffff;
@@ -52,6 +52,7 @@ const IconList = styled.ul`
   margin: 4px 0;
   padding: 0;
   display: flex;
+  flex-wrap: wrap;
 `
 
 const IconListIcon = styled.li`
