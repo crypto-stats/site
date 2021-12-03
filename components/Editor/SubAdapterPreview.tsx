@@ -61,7 +61,7 @@ const SubAdapterPreview: React.FC<SubAdapterPreviewProps> = ({ subadapter, openB
       <div>
         {Object.entries(metadata).map(([key, val]: [string, any]) => (
           <Attribute name={key} key={key}>
-            {val.cid ? (
+            {val?.cid ? (
               <div>
                 <Icon src={`https://ipfs.io/ipfs/${val.cid}`} />
               </div>
