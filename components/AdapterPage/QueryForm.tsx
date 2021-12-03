@@ -133,7 +133,7 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault }) => {
           {error ? (
             <Error>Error: {error}</Error>
           ) : (
-            <Result>{result}</Result>
+            <Result>{JSON.stringify(result, null, 2)}</Result>
           )}
         </div>
       )}
