@@ -105,7 +105,7 @@ const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter, openB
 
             {Object.entries(details.metadata).map(([key, val]: [string, any]) => (
               <Attribute name={key} key={key}>
-                {val.indexOf('data:') === 0 ? (
+                {typeof val === 'string' && val.indexOf('data:') === 0 ? (
                   <div>
                     <Icon src={val} />
                   </div>
