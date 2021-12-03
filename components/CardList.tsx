@@ -85,7 +85,7 @@ const Metadata = styled.span`
 export interface Item {
   title: string
   subtitle?: string | null
-  description?: string
+  description?: string | null
   metadata?: string[]
   iconlist?: { path: string, title: string }[]
   link: string

@@ -48,6 +48,7 @@ interface AdapterData {
   cid: string
   name: string
   subadapters: SubAdapter[]
+  description: string | null
 }
 
 interface ListPageProps {
@@ -62,7 +63,7 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, subadapters, listId, 
 
   const listItems = adapters.map((adapter: AdapterData) => ({
     title: adapter.name,
-    description: 'Lorem ipsum',
+    description: adapter.description,
     metadata: [`${adapter.subadapters.length} subadapters`],
     iconlist: adapter.subadapters.map((subadapter: SubAdapter) => ({
       path: subadapter.icon || '', // TODO placeholder
@@ -131,6 +132,8 @@ export const getStaticProps: GetStaticProps<ListPageProps, { listId: string }> =
     return {
       cid,
       name: module.name || cid,
+      // @ts-ignore
+      description: module.description || null,
       subadapters,
     }
   }))
