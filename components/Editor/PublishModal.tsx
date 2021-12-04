@@ -20,26 +20,6 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) 
   const { account, library } = useWeb3React()
   const accountName = useENSName(account, account)
 
-  const simplePublish = async () => {
-    setState('simple-publish-pending')
-    try {
-      if (!adapter) {
-        throw new Error('Adapter not set')
-      }
-      if (!adapter.name) {
-        throw new Error('Name not set')
-      }
-      if (!adapter.version) {
-        throw new Error('Version not set')
-      }
-
-      const { codeCID } = await publishToIPFS()
-      setCID(codeCID)
-    } catch (e) {
-      console.warn(e)
-    }
-    setState('published')
-  }
   const prepareSignature = async () => {
     setState('sign')
     const _hash = await getSignableHash()
@@ -47,11 +27,17 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) 
   }
 
   const sign = async () => {
-    const signature = await library.getSigner().signMessage(hash)
+    setState('signed-publish-pending')
+    try {
+      const signature = await library.getSigner().signMessage(hash)
 
-    const { codeCID } = await publishToIPFS({ signature, hash, signer: account })
-    setCID(codeCID)
-    setState('published')
+      const { codeCID } = await publishToIPFS({ signature, hash, signer: account })
+      setCID(codeCID)
+      setState('published')
+    } catch (e) {
+      console.warn(e)
+      setState('sign')
+    }
   }
 
   const lastPublication = adapter?.publications && adapter.publications.length > 0
@@ -72,7 +58,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) 
   let buttons: Button[] = []
   let content = null
 
-  const disabled = state === 'simple-publish-pending' || state === 'signed-publish-pending'
+  const disabled = state === 'signed-publish-pending'
 
   if (show) {
     switch (state) {
@@ -80,12 +66,12 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) 
         if (hasUpdatedVersion) {
           buttons = [
             returnButton,
-            { label: 'Continue', onClick: () => setState('signature-prompt') },
-          ]
+            { label: 'Continue', onClick: prepareSignature, disabled },
+        ]
           content = (
             <div>
               <p>Publish your adapter to IPFS to make it viewable by the community.</p>
-              <p>Once your adapter is published, you may post it on the CryptoStats forum to request inclusion.</p>
+              <p>Once your adapter is published, you can share it on the CryptoStats forum to request verification.</p>
             </div>
           )
         } else {
@@ -99,26 +85,13 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) 
         }
         break
 
-      case 'signature-prompt':
-      case 'simple-publish-pending':
-        buttons = [
-          returnButton,
-          { label: 'Skip signing and publish', onClick: simplePublish, disabled },
-          { label: 'Sign my adapter', onClick: prepareSignature, disabled },
-        ]
-        content = (
-          <div>
-            <p>Publish your adapter to IPFS to make it viewable by the community.</p>
-            <p>Once your adapter is published, you may post it on the CryptoStats forum to request inclusion.</p>
-          </div>
-        )
-        break
-
       case 'sign':
+      case 'signed-publish-pending':
         buttons = [returnButton]
         if (!account) {
           content = (
             <div>
+              <div>You need to connect your Web3 wallet to sign your adapter.</div>
               <ConnectionButton>Connect Wallet</ConnectionButton>
             </div>
           )
@@ -127,7 +100,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) 
         } else {
           buttons = [
             returnButton,
-            { label: 'Sign adapter', onClick: sign },
+            { label: 'Sign adapter', onClick: sign, disabled },
           ]
           content = (
             <div>
@@ -143,7 +116,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) 
         content = (
           <div>
             <p>Your adapter has been published to IPFS! You may now share the following link:</p>
-            <p>https://cryptostats.community/module/{cid}</p>
+            <p>https://cryptostats.community/discover/adapter/{cid}</p>
           </div>
         )
         break

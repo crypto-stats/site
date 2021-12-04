@@ -14,6 +14,9 @@ const ButtonElement = styled.button`
   &:hover {
     background: #3a98fd;
   }
+  &:disabled: {
+    background: #999;
+  }
 }
 `
 
