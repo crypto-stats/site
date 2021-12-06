@@ -149,7 +149,7 @@ const Editor: React.FC = () => {
 
   useEffect(() => {
     const saveBlocker = (e: any) => {
-      if (e.metaKey || e.ctrlKey && e.keyCode == 83) {
+      if ((e.metaKey || e.ctrlKey) && e.keyCode == 83) {
         e.preventDefault()
       }
     }
