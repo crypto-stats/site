@@ -1,6 +1,20 @@
+export interface Parameter {
+  name: string
+  type?: string
+  description?: string
+}
+
+export interface Query {
+  id: string
+  name: string
+  description?: string
+  parameters?: Parameter[]
+}
+
 export interface CollectionMetadata {
   name: string
   description?: string
+  queries?: Query[]
 }
 
 const collectionMetadata: { [id: string]: CollectionMetadata } = {
@@ -27,6 +41,20 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   fees: {
     name: 'Fee Revenue',
     description: 'Total fees paid to a protocol on a given day.',
+    queries: [
+      {
+        id: 'oneDayTotalFees',
+        name: 'One day total fees',
+        description: 'Query the USD value of all fees paid to a protocol on a given calendar date.',
+        parameters: [
+          {
+            name: 'Date',
+            type: 'date',
+            description: 'The date to query fees for (UTC time)',
+          },
+        ],
+      }
+    ],
   },
   'fee-range': {
     name: 'Fee Revenue over Date Range',
