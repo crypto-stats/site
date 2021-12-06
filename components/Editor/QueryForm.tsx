@@ -107,9 +107,9 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault }) => {
                   value={values[index]}
                   name={functionNames[index]}
                   disabled={running}
-                  onChange={(e: any) => {
+                  onChange={(newValue: string) => {
                     const newValues = [...values]
-                    newValues[index] = e.target.value
+                    newValues[index] = newValue
                     setValues(newValues)
                   }}
                 />
