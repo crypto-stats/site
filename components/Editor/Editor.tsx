@@ -148,6 +148,18 @@ const Editor: React.FC = () => {
   const name = useENSName(account)
 
   useEffect(() => {
+    const saveBlocker = (e: any) => {
+      if (e.metaKey || e.ctrlKey && e.keyCode == 83) {
+        e.preventDefault()
+      }
+    }
+
+    window.document.addEventListener('keydown', saveBlocker, false)
+
+    return () => window.document.removeEventListener('keydown', saveBlocker)
+  }, [])
+
+  useEffect(() => {
     if (module && adapter && (module.name !== adapter.name || module.version !== adapter.version)) {
       const name = module.name && module.name.length > 0 ? module.name : 'Unnamed Adapter'
       save(adapter.code, name, module.version || null)
