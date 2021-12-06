@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import collectionMetadata, { Parameter, Query } from 'resources/collection-metadata';
-import styled from 'styled-components';
+import styled from 'styled-components'
+import InputField from './InputField'
 
 const SwitchContainer = styled.div`
   display: inline-flex;
@@ -30,6 +31,15 @@ const SwitchTitle = styled.div`
 
 const SwitchDescription = styled.div``
 
+const CopyField = styled.input`
+  display: block;
+  width: 100%;
+`
+
+const Output = styled.pre`
+  overflow-x: auto;
+`
+
 interface APIExplainerProps {
   listId: string
 }
@@ -42,10 +52,63 @@ enum MODE {
 const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
   const [mode, setMode] = useState<MODE>(MODE.REST)
   const [selectedQuery, setSelectedQuery] = useState<null | number>(null)
+  const [paramValues, setParamValues] = useState<string[]>([])
+  const [executing, setExecuting] = useState(false)
+  const [output, setOutput] = useState('')
+
+  const changeMode = (newMode: MODE) => {
+    setMode(newMode)
+    setOutput('')
+  }
+
+  const appendOutput = (output: string) => setOutput((_output: string) => `${_output}\n${output}`)
 
   const queries = collectionMetadata[listId]?.queries || []
 
   const selectQuery = (e: any) => setSelectedQuery(parseInt(e.target.value))
+
+  let url = ''
+  if (selectedQuery !== null) {
+    url = `https://staging.api.cryptostats.community/api/v1/${listId}/${queries![selectedQuery].id}`
+    if (paramValues.length > 0) {
+      url += '/' + paramValues.join(',')
+    }
+  }
+
+  const execute = async () => {
+    setExecuting(true)
+    setOutput('')
+    try {
+      if (mode === MODE.REST) {
+        const req = await fetch(url)
+        const json = await req.json()
+        setOutput(JSON.stringify(json, null, 2))
+      } else {
+        appendOutput('Initializing CryptoStats SDK')
+        const { CryptoStatsSDK, LOG_LEVEL } = await import('@cryptostats/sdk')
+        const sdk = new CryptoStatsSDK({
+          moralisKey: process.env.NEXT_PUBLIC_MORALIS_KEY,
+          adapterListSubgraph: 'dmihal/cryptostats-adapter-registry-test',
+          onLog: (level: LOG_LEVEL, ...args: any[]) =>
+            appendOutput(`${LOG_LEVEL[level]}: ${args.map((arg: any) => JSON.stringify(arg)).join(' ')}`)
+        })
+
+        appendOutput(`Fetching ${listId} collection from on-chain & IPFS`)
+        const list = sdk.getList(listId)
+        await list.fetchAdapters()
+
+        const queryId = queries[selectedQuery!].id
+        appendOutput(`Executing ${queryId} query`)
+        const result = await list.executeQuery(queryId, ...paramValues)
+
+        appendOutput(`\nResult: \n${JSON.stringify(result, null, 2)}`)
+      }
+    } catch (e: any) {
+      console.warn(e)
+      appendOutput(`\nError: ${e.message}`)
+    }
+    setExecuting(false)
+  }
 
   return (
     <div>
@@ -53,7 +116,7 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
 
       <div style={{ margin: '24px 0' }}>
         {queries.map((query: Query, i: number) => (
-          <label>
+          <label key={query.id}>
             <div>
               <input type="radio" checked={selectedQuery === i} value={i} onChange={selectQuery} />
               {query.name}
@@ -64,14 +127,14 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
       </div>
 
       <SwitchContainer>
-        <Switch onClick={() => setMode(MODE.REST)} selected={mode === MODE.REST}>
+        <Switch onClick={() => changeMode(MODE.REST)} selected={mode === MODE.REST}>
           <SwitchTitle>REST API</SwitchTitle>
           <SwitchDescription>
             The easiest way to retrieve data is the REST API provided by CryptoStats' centralized server
           </SwitchDescription>
         </Switch>
 
-        <Switch onClick={() => setMode(MODE.SDK)} selected={mode === MODE.SDK}>
+        <Switch onClick={() => changeMode(MODE.SDK)} selected={mode === MODE.SDK}>
           <SwitchTitle>CryptoStats SDK</SwitchTitle>
           <SwitchDescription>
             Ensure uptime by loading data from the decentralized CryptoStats protocol, using the JavaScript SDK
@@ -82,11 +145,25 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
       {selectedQuery !== null && (
         <div>
           <div>
-            {collectionMetadata[listId]!.queries![selectedQuery].parameters?.map((param: Parameter) => (
-              <div>
+            {queries[selectedQuery].parameters?.map((param: Parameter, i: number, list: Parameter[]) => (
+              <div key={param.name}>
                 <label>
                   {param.name}
-                  <input />
+                  <InputField
+                    name={param.name}
+                    value={paramValues[i] || ''}
+                    onChange={(newVal: any) => setParamValues((_currentVals: string[]) => {
+                      const newParamList = []
+                      for (let j = 0; j < list.length; j += 1) {
+                        if (i === j) {
+                          newParamList.push(newVal)
+                        } else {
+                          newParamList.push(_currentVals[j] || null)
+                        }
+                      }
+                      return newParamList
+                    })}
+                  />
                 </label>
                 {param.description && <div>{param.description}</div>}
               </div>
@@ -97,27 +174,40 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
             <div>
               <div>
                 <div>Request URL</div>
-                <div>https://api.cryptostats.community/api/v1/{listId}/{collectionMetadata[listId]!.queries![selectedQuery].id}</div>
+                <CopyField readOnly value={url} />
               </div>
 
               <div>
                 <div>CURL</div>
-                <div>curl https://api.cryptostats.community/api/v1/{listId}/{collectionMetadata[listId]!.queries![selectedQuery].id}</div>
+                <CopyField readOnly value={`curl ${url}`} />
               </div>
             </div>
           ) : (
             <div>
-              <pre>yarn add @cryptostats/sdk</pre>
+              <div>1. Install CryptoStats SDK</div>
+              <CopyField value="yarn add @cryptostats/sdk" readOnly />
+              <div>2. Import SDK, fetch adapters and execute query</div>
               <pre>{`
-    const { CryptoStatsSDK } = require('@cryptostats/sdk');
+const { CryptoStatsSDK } = require('@cryptostats/sdk');
 
-    (async function() {
-      const sdk = new CryptoStatsSDK();
-      const list = sdk.getList('${listId}');
-      await list.fetchAdapters();
-    })`}</pre>
+(async function() {
+  const sdk = new CryptoStatsSDK({
+    moralisKey: <your key>,
+    adapterListSubgraph: 'dmihal/cryptostats-adapter-registry-test',
+  });
+  const list = sdk.getList('${listId}');
+  await list.fetchAdapters();
+
+  const result = await list.executeQuery(queryId, ...paramValues);
+  console.log(result);
+})`}</pre>
             </div>
           )}
+
+          <div>Preview</div>
+          <button onClick={execute} disabled={executing}>Execute query</button>
+          <div>Output</div>
+          <Output>{output}</Output>
         </div>
       )}
     </div>

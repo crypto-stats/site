@@ -20,7 +20,7 @@ const InputField: React.FC<InputFieldProps> = ({ name, value, onChange, disabled
         dateFormat="yyyy-MM-dd"
         selected={value && value.length > 0 ? new Date(value) : null}
         className={className}
-        onChange={(date: Date) => onChange(dateLib.formatDate(date))}
+        onChange={(date: Date) => onChange(date ? dateLib.formatDate(date) : '')}
         disabled={disabled}
       />
     )

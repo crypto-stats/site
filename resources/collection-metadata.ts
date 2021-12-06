@@ -59,6 +59,25 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   'fee-range': {
     name: 'Fee Revenue over Date Range',
     description: 'Total fees paid to a protocol across a date range.',
+    queries: [
+      {
+        id: 'dateRangeTotalFees',
+        name: 'Total fees over date range',
+        description: 'Query the USD value of all fees paid to a protocol across a range of dates.',
+        parameters: [
+          {
+            name: 'Start date',
+            type: 'date',
+            description: 'The beginning of the date range (inclusive, UTC time)',
+          },
+          {
+            name: 'End date',
+            type: 'date',
+            description: 'The end date of the date range (exclusive, UTC time)',
+          },
+        ],
+      }
+    ],
   },
   issuance: {
     name: 'Issuance',
