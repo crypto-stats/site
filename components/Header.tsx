@@ -12,7 +12,9 @@ const Container = styled.header`
   justify-content: space-between;
 `
 
-const Logo = styled.div`
+const Logo = styled.a`
+  display: block;
+  color: transparent;
   background-image: url('/logo.svg');
   background-repeat: no-repeat;
   background-position: center;
@@ -84,7 +86,9 @@ const Header: React.FC = () => {
 
   return (
     <Container>
-      <Logo />
+      <Link href="/" passHref>
+        <Logo>Home</Logo>
+      </Link>
 
       <Nav>
         <Link href="/discover" passHref>
