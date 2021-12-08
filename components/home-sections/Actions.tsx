@@ -25,6 +25,11 @@ const SectionHeader = styled.h3`
 const Row = styled.div`
   display: flex;
   flex: 1;
+
+  @media (min-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
 `
 
 const Description = styled.p`

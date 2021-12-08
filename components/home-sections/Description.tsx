@@ -5,6 +5,13 @@ const Container = styled.div`
   height: 776px;
   display: flex;
   align-items: center;
+
+  @media (min-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    margin: 40px 20px;
+    height: unset;
+  }
 `
 
 const Column = styled.div`
@@ -47,6 +54,11 @@ const CSBlock = styled(Block)`
   background-image: url('/logo.svg');
   background-repeat: no-repeat;
   background-position: center;
+
+  @media (min-width: 768px) {
+    min-height: 60px;
+    background-position-y: 70%;
+  }
 `
 
 const ArrowBox = styled.div`

@@ -7,12 +7,22 @@ const Container = styled.div`
   height: 776px;
   display: flex;
   align-items: center;
+
+  @media (min-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    margin: 40px 20px;
+  }
 `
 
 const Column = styled.div`
   display: flex;
   flex: 1 0 0;
   flex-direction: column;
+
+  @media (min-width: 768px) {
+    margin-bottom: 20px;
+  }
 `
 
 const CardContainer = styled.div`
@@ -38,6 +48,11 @@ const CTA = styled.a`
   align-self: flex-start;
   padding: 0 30px;
   text-decoration: none;
+  margin-top: 40px;
+
+  &:hover {
+    background: #278efc;
+  }
 `
 
 const Hero: React.FC = () => {
