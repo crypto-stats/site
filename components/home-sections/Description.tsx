@@ -136,7 +136,8 @@ const Hero: React.FC = () => {
       <Column>
         <SectionHeader>What is CryptoStats?</SectionHeader>
 
-        <p>It’s all about data, verified and trustworthy data. All the activities can be represented in 4 layers. First we have Blockchain and Dapps who run on it. Then Indexers who collect those data and index it. Then we come in, normalizing those data.</p>
+        <p>CryptoStats is a decentralized protocol for trustworthy data metrics for the crypto ecosystem.</p>
+        <p>Verified adapters pull data from various indexers, normalize it, and make it freely available to all.</p>
       </Column>
 
       <Diagram>

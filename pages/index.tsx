@@ -6,6 +6,7 @@ import Description from 'components/home-sections/Description'
 import Hero from 'components/home-sections/Hero'
 import Actions from 'components/home-sections/Actions'
 import { GetStaticProps, NextPage } from 'next'
+import FAQs from 'components/home-sections/FAQs'
 
 const Container = styled.div`
   display: flex;
@@ -33,6 +34,8 @@ const Home: NextPage<HomePageProps> = ({ sampleData }) => {
         <Description />
 
         <Actions />
+
+        <FAQs />
       </Column>
 
       <Footer />
