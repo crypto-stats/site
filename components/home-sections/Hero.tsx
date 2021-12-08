@@ -55,7 +55,31 @@ const CTA = styled.a`
   }
 `
 
-const Hero: React.FC = () => {
+const Label = styled.div`
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: #363636;
+  margin-top: 12px;
+`
+
+const Attribute = styled.div`
+  font-size: 16px;
+  font-weight: bold;
+  color: #363636;
+  line-height: 1.75;
+`
+
+const Number = styled.span`
+  font-size: 16px;
+  font-weight: normal;
+`
+
+const formatNum = (num: number) => num.toLocaleString('en-US', {
+  style: 'currency',
+  currency: 'USD',
+})
+
+const Hero: React.FC<{ sampleData: any }> = ({ sampleData }) => {
   return (
     <Container>
       <Column>
@@ -71,31 +95,31 @@ const Hero: React.FC = () => {
       </Column>
 
       <CardContainer>
-        <HeroCard title="Uniswap fees" subtitle="Preview" position="TopRight">
-          <div>Adapter Name</div>
-          <div>Uniswap</div>
-          <div>Data type</div>
-          <div>Fees</div>
-          <div>Data</div>
-          <div>24 hours fees: $12,000,000</div>
+        <HeroCard title="Gitcoin DAO Treasury" subtitle="Preview" position="TopRight">
+          <Label>Adapter Name</Label>
+          <Attribute>Gitcoin</Attribute>
+          <Label>Data type</Label>
+          <Attribute>Treasury</Attribute>
+          <Label>Data</Label>
+          <Attribute>24 hours fees: <Number>{formatNum(sampleData.gitcoinTreasury)}</Number></Attribute>
         </HeroCard>
         
-        <HeroCard title="Uniswap fees" subtitle="Preview" position="Center">
-          <div>Adapter Name</div>
-          <div>Uniswap</div>
-          <div>Data type</div>
-          <div>Fees</div>
-          <div>Data</div>
-          <div>24 hours fees: $12,000,000</div>
+        <HeroCard title="Yearn Vault APYs" subtitle="Preview" position="Center">
+          <Label>Adapter Name</Label>
+          <Attribute>Uniswap</Attribute>
+          <Label>Data type</Label>
+          <Attribute>Fees</Attribute>
+          <Label>Data</Label>
+          <Attribute>24 hours fees: <Number>{formatNum(sampleData.yearnApy)}</Number></Attribute>
         </HeroCard>
 
-        <HeroCard title="Uniswap fees" subtitle="Preview" position="BottomLeft">
-          <div>Adapter Name</div>
-          <div>Uniswap</div>
-          <div>Data type</div>
-          <div>Fees</div>
-          <div>Data</div>
-          <div>24 hours fees: $12,000,000</div>
+        <HeroCard title="Arbitrum fees" subtitle="Preview" position="BottomLeft">
+          <Label>Adapter Name</Label>
+          <Attribute>Arbitrum</Attribute>
+          <Label>Data type</Label>
+          <Attribute>Fees</Attribute>
+          <Label>Data</Label>
+          <Attribute>24 hours fees: <Number>{formatNum(sampleData.arbitrumFees)}</Number></Attribute>
         </HeroCard>
       </CardContainer>
     </Container>

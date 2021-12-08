@@ -22,7 +22,7 @@ const CardHeader = styled.div`
   font-weight: 700;
   justify-content: space-between;
   align-items: center;
-  padding: 0 4px;
+  padding: 0 8px;
 `
 
 const SubtitleChip = styled.div`
