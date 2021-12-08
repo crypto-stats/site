@@ -1,4 +1,6 @@
-module.exports = {
+const { withPlausibleProxy } = require('next-plausible');
+
+let config = {
   webpack: (config) => {
     return {
       ...config,
@@ -9,3 +11,9 @@ module.exports = {
     }
   },
 }
+
+config = withPlausibleProxy({
+  customDomain: 'https://analytics.cryptostats.community',
+})(config)
+
+module.exports = config

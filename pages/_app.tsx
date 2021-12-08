@@ -4,6 +4,7 @@ import { ethers } from 'ethers'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { createGlobalStyle } from 'styled-components'
+import PlausibleProvider from 'next-plausible'
 import { runOnce } from 'hooks/lib'
 import { setCache } from 'hooks/ipfs'
 
@@ -37,7 +38,9 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
 
       <GlobalStyle />
       <Web3ReactProvider getLibrary={(provider: any) => new ethers.providers.Web3Provider(provider)}>
-        <Component {...pageProps} />
+        <PlausibleProvider domain="cryptostats.community">
+          <Component {...pageProps} />
+        </PlausibleProvider>
       </Web3ReactProvider>
     </Fragment>
   )
