@@ -6,7 +6,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
 
-  @media (min-width: 768px) {
+  @media (max-width: 768px) {
     flex-direction: column;
     align-items: stretch;
     margin: 40px 20px;
@@ -55,7 +55,7 @@ const CSBlock = styled(Block)`
   background-repeat: no-repeat;
   background-position: center;
 
-  @media (min-width: 768px) {
+  @media (max-width: 768px) {
     min-height: 60px;
     background-position-y: 70%;
   }

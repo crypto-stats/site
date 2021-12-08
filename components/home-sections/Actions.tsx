@@ -26,7 +26,7 @@ const Row = styled.div`
   display: flex;
   flex: 1;
 
-  @media (min-width: 768px) {
+  @media (max-width: 768px) {
     flex-direction: column;
     align-items: stretch;
   }

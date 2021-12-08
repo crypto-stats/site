@@ -8,7 +8,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
 
-  @media (min-width: 768px) {
+  @media (max-width: 768px) {
     flex-direction: column;
     align-items: stretch;
     margin: 40px 20px;
@@ -20,7 +20,7 @@ const Column = styled.div`
   flex: 1 0 0;
   flex-direction: column;
 
-  @media (min-width: 768px) {
+  @media (max-width: 768px) {
     margin-bottom: 20px;
   }
 `
