@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import CloseIcon from 'components/CloseIcon'
 
 const TabRow = styled.div`
   display: flex;
@@ -17,6 +18,23 @@ const Tab = styled.div`
   padding: 4px 12px;
 `
 
+const CloseButton = styled.button`
+  border: none;
+  background: transparent;
+  margin-left: 10px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+
+  & svg {
+    fill: #888888;
+  }
+  &:hover svg {
+    fill: #666666;
+  }
+`
+
 interface TabsProps {
   current?: string | null
   onClose?: () => void
@@ -28,7 +46,11 @@ const Tabs: React.FC<TabsProps> = ({ current, onClose }) => {
       {current && (
         <Tab>
           <div>{current}</div>
-          {onClose && <button onClick={onClose}>X</button>}
+          {onClose && (
+            <CloseButton onClick={onClose}>
+              <CloseIcon />
+            </CloseButton>
+          )}
         </Tab>
       )}
     </TabRow>

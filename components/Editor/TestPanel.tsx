@@ -25,6 +25,21 @@ const ConsoleTop = styled(Top)`
   justify-content: space-between;
 `
 
+const ClearButton = styled.button`
+  height: 20px;
+  padding: 3px 0 2px;
+  border-radius: 4px;
+  border: solid 1px #ffffff;
+  background-color: transparent;
+  margin: 16px 0 6px;
+  color: white;
+  padding: 2px 16px;
+
+  &:hover {
+    background: #363636;
+  }
+`
+
 const ConsoleView = styled(Fill)`
   padding: 8px;
 `
@@ -70,7 +85,7 @@ const PreviewPanel: React.FC = () => {
         <ConsoleTop size={40}>
           Console
           <div>
-            <button onClick={clearConsole}>Clear</button>
+            <ClearButton onClick={clearConsole}>Clear</ClearButton>
           </div>
         </ConsoleTop>
         <ConsoleView scrollable={true}>

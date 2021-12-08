@@ -23,10 +23,16 @@ const Tab = styled.li<{ selected?: boolean }>`
   padding: 0 16px;
   justify-content: center;
 
+
   ${({ selected }) => !selected && `
     background: #2f2f2f;
     border-bottom: solid 1px #4a4a4d;
     border-left: solid 1px #4a4a4d;
+    cursor: pointer;
+
+    &:hover {
+      background: #222222;
+    }
   `}
 `
 

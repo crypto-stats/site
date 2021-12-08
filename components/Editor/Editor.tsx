@@ -20,6 +20,7 @@ import Tabs from './Tabs'
 import EmptyState from './EmptyState'
 import { emptyAdapter } from 'resources/templates'
 import NewAdapterForm from './NewAdapterForm'
+import CloseIcon from 'components/CloseIcon'
 
 const Left = styled(LeftResizable)`
   display: flex;
@@ -127,9 +128,9 @@ const PrimaryFooterContainer = styled(Bottom)`
   background: #2f2f2f;
 `
 
-const FillWithStyledResize = styled(Fill)`
+const FillWithStyledResize = styled(Fill)<{ side: string }>`
   > .spaces-resize-handle {
-    border-left: solid 2px #4a4a4d;
+    border-${({ side }) => side}: solid 2px #4a4a4d;
     box-sizing: border-box;
   }
 `
@@ -191,7 +192,7 @@ const Editor: React.FC = () => {
           <WalletButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</WalletButton>
         </HeaderRight>
       </Header>
-      <Fill>
+      <FillWithStyledResize side="right">
         <Left size={200}>
           <FilterBox size={40} >
             <FilterField
@@ -200,9 +201,7 @@ const Editor: React.FC = () => {
               onChange={(e: any) => setFilter(e.target.value)}
             />
             <ClearButton onClick={() => setFilter('')}>
-              <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1000 1000">
-                <path d="M500,10C229.4,10,10,229.4,10,500c0,270.6,219.4,490,490,490c270.6,0,490-219.4,490-490C990,229.4,770.6,10,500,10z M718.5,631.1c24.1,24.1,24.1,63.3,0,87.4s-63.3,24.1-87.4,0L500,587.4L368.9,718.5c-24.1,24.1-63.3,24.1-87.4,0c-24.1-24.1-24.1-63.3,0-87.4L412.6,500L281.5,368.9c-24.1-24.1-24.1-63.3,0-87.4c24.1-24.1,63.3-24.1,87.4,0L500,412.6l131.1-131.1c24.1-24.1,63.3-24.1,87.4,0s24.1,63.3,0,87.4L587.4,500L718.5,631.1z"/>
-              </svg>
+              <CloseIcon />
             </ClearButton>
           </FilterBox>
 
@@ -218,7 +217,7 @@ const Editor: React.FC = () => {
         </Left>
 
         <Fill>
-          <FillWithStyledResize>
+          <FillWithStyledResize side="left">
             <Fill>
               <TabContainer size={50}>
                 <Tabs current={adapter?.name} onClose={() => setFileName(null)} />
@@ -254,7 +253,7 @@ const Editor: React.FC = () => {
             <PrimaryFooter fileName={fileName} />
           </PrimaryFooterContainer>
         </Fill>
-      </Fill>
+      </FillWithStyledResize>
 
       <EditorModal
         isOpen={imageLibraryOpen}

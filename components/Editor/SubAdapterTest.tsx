@@ -11,6 +11,7 @@ const Header = styled.div`
   border-bottom: solid 1px #4a4a4d;
   padding: 16px;
   background: #2f2f2f;
+  cursor: pointer;
 
   &:hover {
     background: #262626;
