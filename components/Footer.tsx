@@ -8,6 +8,7 @@ const Container = styled.header`
   background-color: #ffffff;
   border-top: solid 1px #ddd;
   justify-content: center;
+  width: 100%;
 `
 
 const Inner = styled.div`
@@ -66,20 +67,12 @@ const Footer: React.FC = () => {
 
         <Nav>
           <NavHeading>Data Metrics</NavHeading>
-          <Link href="/lists" passHref><NavLink>Lists</NavLink></Link>
-          <Link href="/adapters" passHref><NavLink>Adapters</NavLink></Link>
-          <NavLink href="https://forum.cryptostats.community/">Forum</NavLink>
-        </Nav>
-        <Nav>
-          <NavHeading>DAO</NavHeading>
-          <Link href="/lists" passHref><NavLink>Lists</NavLink></Link>
-          <Link href="/adapters" passHref><NavLink>Adapters</NavLink></Link>
+          <Link href="/discover" passHref><NavLink>Data Collections</NavLink></Link>
           <NavLink href="https://forum.cryptostats.community/">Forum</NavLink>
         </Nav>
         <Nav>
           <NavHeading>Social</NavHeading>
-          <NavLink href="https://forum.cryptostats.community/">Twitter</NavLink>
-          <NavLink href="https://forum.cryptostats.community/">Telegram</NavLink>
+          <NavLink href="https://twitter.com/CryptoStats_">Twitter</NavLink>
           <NavLink href="/discord">Discord</NavLink>
         </Nav>
       </Inner>
