@@ -90,18 +90,42 @@ const SidebarInner = styled.div`
   }
 `
 
+const NotificationBarContainer = styled.div`
+  background-color: #d6eaff;
+  height: 60px;
+  margin: 0 -2000px;
+  display: flex;
+  justify-content: center;
+`
+
+const NotificationBarInner = styled.div`
+  max-width: 1248px;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  padding: 0 6px;
+  box-sizing: border-box;
+`
+
 interface TranquilLayoutProps {
   hero: React.ReactNode
   sidebar?: React.ReactNode
   breadcrumbs?: { name: string; path: string }[]
+  notificationBar?: React.ReactNode
 }
 
-const TranquilLayout: React.FC<TranquilLayoutProps> = ({ children, hero, sidebar, breadcrumbs }) => {
+const TranquilLayout: React.FC<TranquilLayoutProps> = ({ children, hero, sidebar, breadcrumbs, notificationBar }) => {
   return (
     <LayoutContainer>
       <Top>
         <TopInner>
           <Header />
+
+          {notificationBar && (
+            <NotificationBarContainer>
+              <NotificationBarInner>{notificationBar}</NotificationBarInner>
+            </NotificationBarContainer>
+          )}
 
           {breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs} />}
 

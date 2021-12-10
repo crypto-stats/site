@@ -14,6 +14,7 @@ import CodeViewer from 'components/CodeViewer'
 import VerifyForm from 'components/VerifyForm'
 import { CompilerProvider } from 'hooks/compiler'
 import { useENSName } from 'hooks/ens'
+import PublisherBar from 'components/AdapterPage/PublisherBar'
 
 const VerifiedTick = styled.span`
   display: inline-block;
@@ -98,10 +99,11 @@ interface AdaptersPageProps {
   subadapters: SubAdapter[]
   listModules: string[]
   verifiedLists: string[]
+  collections: string[]
 }
 
 const AdapterPage: NextPage<AdaptersPageProps> = ({
-  listId, cid, verified, moduleDetails, subadapters, listModules, verifiedLists
+  listId, cid, verified, moduleDetails, subadapters, listModules, verifiedLists, collections
 }) => {
   const [_verified, setVerified] = useState(verified)
   const { account } = useWeb3React()
@@ -110,7 +112,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
   const signer = useENSName(moduleDetails.signer)
 
   // NextJS page changes might not re-initialize component
-  useEffect(() => setVerified(verified), [cid])
+  useEffect(() => setVerified(verified), [cid, listId])
 
   const edit = () => {
     for (const adapter of adapters) {
@@ -145,6 +147,15 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
   return (
     <CompilerProvider>
       <TranquilLayout
+        notificationBar={!_verified && account?.toLowerCase() === moduleDetails.signer?.toLowerCase() && (
+          <PublisherBar
+            address={account!}
+            collections={collections}
+            name={moduleDetails.name}
+            version={moduleDetails.version}
+            previous={moduleDetails.previousVersion}
+          />
+        )}
         breadcrumbs={breadcrumbs}
         hero={
           <div>
@@ -165,8 +176,8 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
               <div>
                 <Attribute label="Version">{moduleDetails.version}</Attribute>
                 <Attribute label="License">{moduleDetails.license}</Attribute>
-                {signer && (
-                  <Attribute label="Signed by">{signer}</Attribute>
+                {(signer || moduleDetails.signer) && (
+                  <Attribute label="Signed by">{signer || moduleDetails.signer}</Attribute>
                 )}
                 {verifiedLists.length > 0 && (
                   <Attribute label="Collections">
@@ -243,6 +254,8 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
 
   const sourceCode = module.sourceFile ? await sdk.ipfs.getFile(module.sourceFile) : null
 
+  const collections = await getListNames()
+
   const moduleDetails: ModuleDetails = {
     name: module.name,
     version: module.version,
@@ -263,6 +276,7 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
       subadapters,
       listModules,
       verifiedLists,
+      collections,
     },
     revalidate: 60,
   }
