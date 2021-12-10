@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import styled from 'styled-components'
 import { useWeb3React } from '@web3-react/core'
-import EditorModal from './EditorModal'
+import EditorModal from './Editor/EditorModal'
 
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'

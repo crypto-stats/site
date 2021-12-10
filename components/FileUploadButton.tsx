@@ -1,16 +1,18 @@
 import React, { Fragment, useRef } from 'react';
 
 interface FileUploadButtonProps {
-  onUploaded: (cid: string, type: string, name: string) => void;
+  onUploaded: (cid: string, type: string, name: string) => void
+  onUploadStart?: () => void
+  className?: string
 }
 
-const FileUploadButton: React.FC<FileUploadButtonProps> = ({ onUploaded }) => {
+const FileUploadButton: React.FC<FileUploadButtonProps> = ({ onUploaded, className, onUploadStart }) => {
   const hiddenFileInput = useRef<HTMLInputElement | null>(null)
 
   const handleChange = async (event: any) => {
     const fileUploaded = event.target.files[0]
 
-    console.log(fileUploaded)
+    onUploadStart && onUploadStart()
 
     const req = await fetch('/api/upload-image', {
       method: 'POST',
@@ -26,7 +28,7 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({ onUploaded }) => {
 
   return (
     <Fragment>
-      <button onClick={() => hiddenFileInput.current!.click()}>
+      <button className={className} onClick={() => hiddenFileInput.current!.click()}>
         Upload a file
       </button>
       <input

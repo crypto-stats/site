@@ -9,16 +9,16 @@ import CodeEditor from 'components/CodeEditor'
 import ConnectionButton from 'components/ConnectionButton'
 import FileList from 'components/FileList'
 import ImageSelector from 'components/ImageSelector'
-import EditorModal from 'components/EditorModal'
 import { useAdapter, newModule } from 'hooks/local-adapters'
 import { useCompiler } from 'hooks/compiler'
 import { useConsole } from 'hooks/console'
 import { useENSName } from 'hooks/ens'
+import { emptyAdapter } from 'resources/templates'
 import PrimaryFooter from './PrimaryFooter'
 import RightPanel from './RightPanel'
 import Tabs from './Tabs'
 import EmptyState from './EmptyState'
-import { emptyAdapter } from 'resources/templates'
+import EditorModal from './EditorModal'
 import NewAdapterForm from './NewAdapterForm'
 import CloseIcon from 'components/CloseIcon'
 
@@ -262,6 +262,8 @@ const Editor: React.FC = () => {
         buttons={[
           { label: 'Return to Editor', onClick: () => setImageLibraryOpen(false) },
         ]}
+        width="100%"
+        height="70%"
       >
         <ImageSelector close={() => setImageLibraryOpen(false)} />
       </EditorModal>

@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import ReactModal from 'react-modal'
-import ButtonComponent from './Button'
+import ButtonComponent from '../Button'
 
-const ModalOverlay = styled.div`
+const ModalOverlay = styled.div<{ width?: string | number; height?: string | number }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,6 +14,12 @@ const ModalOverlay = styled.div`
     background: #2f2f2f;
     color: #c8c8c8;
     margin: 40px;
+    display: flex;
+    flex-direction: column;
+    ${({ width, height }) => `
+      ${width ? `width: ${width};` : ''}
+      ${height ? `height: ${height};` : ''}
+    `}
   }
 `
 
@@ -36,6 +42,7 @@ const Content = styled.div`
   max-height: 70vh;
   padding: 10px 30px;
   overflow: auto;
+  flex: 1;
 `
 
 ReactModal.setAppElement('#__next')
@@ -51,9 +58,11 @@ interface ModalProps {
   onClose: () => void
   title: string
   buttons: Button[]
+  width?: string
+  height?: string
 }
 
-const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, buttons, children }) => {
+const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, buttons, children, width, height }) => {
   return (
     <ReactModal
       isOpen={isOpen}
@@ -61,7 +70,7 @@ const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, buttons, ch
       contentLabel={title}
       className="modal-content"
       overlayElement={(props: any, contentElement: any) => (
-        <ModalOverlay {...props}>{contentElement}</ModalOverlay>
+        <ModalOverlay width={width} height={height} {...props}>{contentElement}</ModalOverlay>
       )}
     >
       <Header>{title}</Header>
@@ -83,4 +92,4 @@ const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, buttons, ch
   )
 }
 
-export default EditorModal;
+export default EditorModal

@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { useENSName } from 'hooks/ens'
 import ConnectionButton from 'components/ConnectionButton'
-import EditorModal, { Button } from 'components/EditorModal'
+import EditorModal, { Button } from './EditorModal'
 import { useAdapter } from 'hooks/local-adapters'
 
 interface PublishModalProps {
