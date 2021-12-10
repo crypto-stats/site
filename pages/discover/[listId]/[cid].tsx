@@ -15,6 +15,7 @@ import VerifyForm from 'components/VerifyForm'
 import { CompilerProvider } from 'hooks/compiler'
 import { useENSName } from 'hooks/ens'
 import PublisherBar from 'components/AdapterPage/PublisherBar'
+import MetaTags from 'components/MetaTags'
 
 const VerifiedTick = styled.span`
   display: inline-block;
@@ -144,8 +145,15 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
     breadcrumbs.push({ name: listId, path: `/discover/${listId}` })
   }
 
+  const subadapterNames = subadapters.map((subadapter: SubAdapter) => subadapter.metadata.name || subadapter.id)
+
   return (
     <CompilerProvider>
+      <MetaTags
+        title={`${moduleDetails.name || ''} Adapter - ${listId}`}
+        description={`The ${moduleDetails.name || ''} adapter ${moduleDetails.version && `(v${moduleDetails.version})`} contains ${subadapters.length} subadapters: ${subadapterNames.join(', ')}`}
+      />
+
       <TranquilLayout
         notificationBar={!_verified && account?.toLowerCase() === moduleDetails.signer?.toLowerCase() && (
           <PublisherBar
