@@ -48,6 +48,10 @@ const Main = styled.main`
 const TopContent = styled.div`
   display: flex;
   min-height: 200px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `
 
 const HeroContainer = styled.div`
@@ -60,10 +64,19 @@ const HeroContainer = styled.div`
 const Sidebar = styled.div`
   width: 288px;
   position: relative;
+
+  @media (max-width: 768px) {
+    margin-top: 12px;
+    width: unset;
+  }
 `
 
 const Spacer = styled.div`
   width: 288px;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `
 
 const SidebarInner = styled.div`
@@ -71,6 +84,10 @@ const SidebarInner = styled.div`
   top: 20px;
   left: 0;
   right: 0;
+
+  @media (max-width: 768px) {
+    position: unset;
+  }
 `
 
 interface TranquilLayoutProps {
