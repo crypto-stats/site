@@ -12,6 +12,7 @@ const Container = styled.div`
     flex-direction: column;
     align-items: stretch;
     margin: 40px 20px;
+    height: unset;
   }
 `
 
@@ -29,12 +30,20 @@ const CardContainer = styled.div`
   position: relative;
   flex: 1 0 0;
   height: 370px;
+
+  @media (max-width: 768px) {
+    flex: 1 0 370px;
+  }
 `
 
 const Tagline = styled.div`
   font-size: 52px;
   font-weight: 700;
   color: #272727;
+
+  @media (max-width: 768px) {
+    font-size: 42px;
+  }
 `
 
 const CTA = styled.a`

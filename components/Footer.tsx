@@ -9,6 +9,10 @@ const Container = styled.header`
   border-top: solid 1px #ddd;
   justify-content: center;
   width: 100%;
+
+  @media (max-width: 768px) {
+    height: unset;
+  }
 `
 
 const Inner = styled.div`
@@ -17,6 +21,12 @@ const Inner = styled.div`
   max-width: 1248px;
   width: calc(100% - 12px);
   align-items: center;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    flex-direction: column;
+    align-items: stretch;
+  }
 `
 
 const Logo = styled.div`
@@ -33,6 +43,10 @@ const Nav = styled.nav`
   display: flex;
   flex-direction: column;
   margin-right: 20px;
+
+  @media (max-width: 768px) {
+    margin: 12px 0;
+  }
 `
 
 const NavLink = styled.a`

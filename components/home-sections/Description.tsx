@@ -46,6 +46,11 @@ const Block = styled.div`
   flex: 1;
   padding: 12px;
   margin: 0 7px;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
 `
 
 const CSBlock = styled(Block)`
