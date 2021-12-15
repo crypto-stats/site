@@ -156,7 +156,7 @@ const Hero: React.FC = () => {
           <Arrow dashed />
           <TopForkArrows />
         </ArrowBox>
-        <CSBlock>Normalization &amp; Curration</CSBlock>
+        <CSBlock>Normalization &amp; Curation</CSBlock>
         <ArrowBox>
           <Arrow />
           <BottomForkArrows />

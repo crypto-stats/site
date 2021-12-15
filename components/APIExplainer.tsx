@@ -1,13 +1,104 @@
 import React, { useState } from 'react';
 import collectionMetadata, { Parameter, Query } from 'resources/collection-metadata';
 import styled from 'styled-components'
+import Button from './Button';
 import InputField from './InputField'
+
+const Section = styled.h3`
+  font-size: 18px;
+  font-weight: 600;
+  margin: 30px 0;
+`
+
+const SubSection = styled.h4`
+  font-size: 14px;
+  color: #6b6b6b;
+`
+
+const QueryContainer = styled.div`
+  border: solid 1px #ddd;
+  border-bottom: none;
+
+  &:last-child {
+    border-bottom: solid 1px #ddd;
+  }
+`
+
+const QueryLabel = styled.label`
+  padding: 20px;
+  background: #ffffff;
+  display: flex;
+`
+
+const RadioBtn = styled.input`
+  appearance: none;
+  margin: 0;
+
+  width: 16px;
+  height: 16px;
+  border: solid 1px #979797;
+
+  display: grid;
+  place-content: center;
+  margin-right: 14px;
+
+  &:before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    background-color: #0477f4;
+  }
+
+  &:checked:before {
+    transform: scale(1);
+  }
+
+  &:focus {
+    background: #eee;
+  }
+`
+
+const QueryDescription = styled.div`
+  font-size: 16px;
+  color: #818181;
+`
+
+const ParamInputBox = styled.div`
+  padding: 16px 30px;
+  display: flex;
+  flex-wrap: wrap;
+  background: #eef1f7;
+  border-top: solid 1px #ddd;
+`
+
+const ParamInputLabel = styled.label`
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  margin-right: 16px;
+`
+
+const ParamInput = styled(InputField)`
+  width: 100%;
+  box-sizing: border-box;
+  border: solid 1px #ccc;
+  padding: 8px 16px;
+  border-radius: 4px;
+  margin: 8px 0;
+`
+
+const ParamDescription = styled.div`
+  font-size: 14px;
+  color: #818181;
+`
 
 const SwitchContainer = styled.div`
   display: inline-flex;
-  background: #9e39ac;
+  background: #eef1f7;
   border-radius: 4px;
-  padding: 1px;
+  padding: 8px;
 `
 
 const Switch = styled.button<{ selected: boolean }>`
@@ -18,26 +109,53 @@ const Switch = styled.button<{ selected: boolean }>`
   border: none;
   align-items: center;
   padding: 8px;
+  border-radius: 4px;
 
   ${({ selected }) => selected && `
-    background: #d6eaff;
+    border: solid 1px #ddd;
+    background-color: #ffffff;
   `}
 `
 
-const SwitchTitle = styled.div`
-  font-size: 18px;
+const SwitchTitle = styled.div<{ selected: boolean }>`
+  font-size: 16px;
   margin-bottom: 8px;
+  font-weight: bold;
+  color: ${({ selected }) => selected ? '#0477f4' : '#262626'};
 `
 
-const SwitchDescription = styled.div``
+const SwitchDescription = styled.div`
+  color: #002750;
+`
 
 const CopyField = styled.input`
   display: block;
   width: 100%;
+  padding: 16px;
+  border-radius: 4px;
+  border: solid 1px #ddd;
+  background-color: #f9f9f9;
+  font-size: 16px;
+  font-weight: 500;
+  color: #717d8a;
+  box-sizing: border-box;
+  outline: none;
+`
+
+const CodeField = styled.pre`
+  padding: 16px;
+  background-color: #f9f9f9;
+  color: #717d8a;
+  border: solid 1px #ddd;
 `
 
 const Output = styled.pre`
   overflow-x: auto;
+  border-radius: 4px;
+  border: solid 1px #151a20;
+  background-color: #404c59;
+  color: #ffffff;
+  padding: 32px;
 `
 
 interface APIExplainerProps {
@@ -112,30 +230,62 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
 
   return (
     <div>
-      <div>Choose the best way to get data for your site</div>
+      <Section>Queries & Parameters</Section>
 
       <div style={{ margin: '24px 0' }}>
-        {queries.map((query: Query, i: number) => (
-          <label key={query.id}>
-            <div>
-              <input type="radio" checked={selectedQuery === i} value={i} onChange={selectQuery} />
-              {query.name}
-            </div>
-            {query.description && <div>{query.description}</div>}
-          </label>
-        ))}
+        {queries.map((query: Query, i: number) => {
+          const selected = selectedQuery === i
+          const params = query.parameters || []
+          return (
+            <QueryContainer key={query.id}>
+              <QueryLabel>
+                <RadioBtn type="radio" checked={selected} value={i} onChange={selectQuery} />
+                <div>
+                  <div>{query.name} ({query.id})</div>
+                  {query.description && <QueryDescription>{query.description}</QueryDescription>}
+                </div>
+              </QueryLabel>
+
+              {selected && params.length > 0 && (
+                <ParamInputBox>
+                  {params.map((param: Parameter, i: number) => (
+                    <ParamInputLabel key={param.name}>
+                      {param.name}
+                      <ParamInput
+                        name={param.name}
+                        value={paramValues[i] || ''}
+                        onChange={(newVal: any) => setParamValues((_currentVals: string[]) => {
+                          const newParamList = []
+                          for (let j = 0; j < params.length; j += 1) {
+                            if (i === j) {
+                              newParamList.push(newVal)
+                            } else {
+                              newParamList.push(_currentVals[j] || null)
+                            }
+                          }
+                          return newParamList
+                        })}
+                      />
+                      {param.description && <ParamDescription>{param.description}</ParamDescription>}
+                    </ParamInputLabel>
+                  ))}
+                </ParamInputBox>
+              )}
+            </QueryContainer>
+          )
+        })}
       </div>
 
       <SwitchContainer>
         <Switch onClick={() => changeMode(MODE.REST)} selected={mode === MODE.REST}>
-          <SwitchTitle>REST API</SwitchTitle>
+          <SwitchTitle selected={mode === MODE.REST}>REST API</SwitchTitle>
           <SwitchDescription>
             The easiest way to retrieve data is the REST API provided by CryptoStats' centralized server
           </SwitchDescription>
         </Switch>
 
         <Switch onClick={() => changeMode(MODE.SDK)} selected={mode === MODE.SDK}>
-          <SwitchTitle>CryptoStats SDK</SwitchTitle>
+          <SwitchTitle selected={mode === MODE.SDK}>CryptoStats SDK</SwitchTitle>
           <SwitchDescription>
             Ensure uptime by loading data from the decentralized CryptoStats protocol, using the JavaScript SDK
           </SwitchDescription>
@@ -144,32 +294,6 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
 
       {selectedQuery !== null && (
         <div>
-          <div>
-            {queries[selectedQuery].parameters?.map((param: Parameter, i: number, list: Parameter[]) => (
-              <div key={param.name}>
-                <label>
-                  {param.name}
-                  <InputField
-                    name={param.name}
-                    value={paramValues[i] || ''}
-                    onChange={(newVal: any) => setParamValues((_currentVals: string[]) => {
-                      const newParamList = []
-                      for (let j = 0; j < list.length; j += 1) {
-                        if (i === j) {
-                          newParamList.push(newVal)
-                        } else {
-                          newParamList.push(_currentVals[j] || null)
-                        }
-                      }
-                      return newParamList
-                    })}
-                  />
-                </label>
-                {param.description && <div>{param.description}</div>}
-              </div>
-            ))}
-          </div>
-
           {mode === MODE.REST ? (
             <div>
               <div>
@@ -187,8 +311,7 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
               <div>1. Install CryptoStats SDK</div>
               <CopyField value="yarn add @cryptostats/sdk" readOnly />
               <div>2. Import SDK, fetch adapters and execute query</div>
-              <pre>{`
-const { CryptoStatsSDK } = require('@cryptostats/sdk');
+              <CodeField>{`const { CryptoStatsSDK } = require('@cryptostats/sdk');
 
 (async function() {
   const sdk = new CryptoStatsSDK({
@@ -200,13 +323,13 @@ const { CryptoStatsSDK } = require('@cryptostats/sdk');
 
   const result = await list.executeQuery(queryId, ...paramValues);
   console.log(result);
-})`}</pre>
+})`}</CodeField>
             </div>
           )}
 
           <div>Preview</div>
-          <button onClick={execute} disabled={executing}>Execute query</button>
-          <div>Output</div>
+          <Button onClick={execute} disabled={executing}>Execute query</Button>
+          <SubSection>Output</SubSection>
           <Output>{output}</Output>
         </div>
       )}
