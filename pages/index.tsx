@@ -70,9 +70,9 @@ export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
   const dai = '0x6b175474e89094c44da98b954eedeac495271d0f'
 
   const [arbitrumFees, yearnApy, gitcoinTreasury] = await Promise.all([
-    arbitrum.executeQuery('oneDayTotalFees', yesterday),
-    yearn.executeQuery('apyPrevious30Days', dai),
-    gitcoin.executeQuery('currentTreasuryUSD'),
+    arbitrum.executeQuery('oneDayTotalFees', yesterday).catch(() => 145_932.31),
+    yearn.executeQuery('apyPrevious30Days', dai).catch(() => 0.05123),
+    gitcoin.executeQuery('currentTreasuryUSD').catch(() => 564507541.7869024),
   ])
 
   const sampleData = {
