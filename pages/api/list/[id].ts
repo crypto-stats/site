@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getModulesForList } from 'utils/lists'
+import { getModulesForList } from 'utils/lists-chain'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const listId = req.query.id.toString();

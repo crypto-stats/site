@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getListNames } from 'utils/lists'
+import { getListNames } from 'utils/lists-chain'
 
 const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
   const result = await getListNames()
