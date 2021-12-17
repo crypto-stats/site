@@ -173,10 +173,20 @@ declare class Ethers {
     getProvider(network: string): any;
 }
 
+export interface QueryOptions {
+    subgraph: string;
+    query: string;
+    variables?: any;
+    operationName?: string;
+    node?: string;
+}
+
 declare class Graph {
     private http;
     constructor({ http }: GraphProps);
-    query(subgraph: string, query: string, { variables, operationName, node, }?: Options_2): Promise<any>;
+
+    query(options: QueryOptions): Promise<any>;
+    query(subgraph: string, query: string, variables?: any): Promise<any>;
 }
 
 declare interface GraphProps {
