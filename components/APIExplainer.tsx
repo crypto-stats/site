@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
+import type { LOG_LEVEL } from '@cryptostats/sdk'
 import collectionMetadata, { Parameter, Query } from 'resources/collection-metadata';
 import styled from 'styled-components'
 import Button from './Button';
@@ -203,12 +204,12 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
         setOutput(JSON.stringify(json, null, 2))
       } else {
         appendOutput('Initializing CryptoStats SDK')
-        const { CryptoStatsSDK, LOG_LEVEL } = await import('@cryptostats/sdk')
+        const { CryptoStatsSDK, LOG_LEVEL: logLevel } = await import('@cryptostats/sdk')
         const sdk = new CryptoStatsSDK({
           moralisKey: process.env.NEXT_PUBLIC_MORALIS_KEY,
           adapterListSubgraph: 'dmihal/cryptostats-adapter-registry-test',
           onLog: (level: LOG_LEVEL, ...args: any[]) =>
-            appendOutput(`${LOG_LEVEL[level]}: ${args.map((arg: any) => JSON.stringify(arg)).join(' ')}`)
+            appendOutput(`${logLevel[level]}: ${args.map((arg: any) => JSON.stringify(arg)).join(' ')}`)
         })
 
         appendOutput(`Fetching ${listId} collection from on-chain & IPFS`)
