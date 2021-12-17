@@ -173,7 +173,7 @@ declare class Ethers {
     getProvider(network: string): any;
 }
 
-export interface QueryOptions {
+declare interface QueryOptions {
     subgraph: string;
     query: string;
     variables?: any;
