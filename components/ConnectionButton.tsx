@@ -6,7 +6,6 @@ import EditorModal from './Editor/EditorModal'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 
-
 export const injected = new InjectedConnector({ })
 
 export const walletconnect = new WalletConnectConnector({
@@ -14,6 +13,41 @@ export const walletconnect = new WalletConnectConnector({
 })
 
 const ButtonElement = styled.button`
+`
+
+const ButtonRow = styled.div`
+  display: flex;
+`
+
+const ConnectorButton = styled.button<{ background: string }>`
+  border: solid 1px #4b4b4b;
+  border-radius: 4px;
+  height: 120px;
+  width: 260px;
+  display: flex;
+  background: transparent;
+  align-items: center;
+  justify-content: space-around;
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 20px;
+  cursor: pointer;
+
+  &:hover {
+    background: #222222;
+  }
+
+  &:before {
+    content: '';
+    display: block;
+    background: url('${({ background }) => background}');
+    width: 86px;
+    height: 86px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+  }
 `
 
 interface ConnectionButtonProps {
@@ -44,7 +78,7 @@ const ConnectionButton: React.FC<ConnectionButtonProps> = ({ children, className
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         title="Connect Wallet"
-        buttons={[{ label: 'Cancel', onClick: () => setModalOpen(false) }]}
+        buttons={[{ label: 'Close', onClick: () => setModalOpen(false) }]}
       >
         {account ? (
           <div>
@@ -54,10 +88,14 @@ const ConnectionButton: React.FC<ConnectionButtonProps> = ({ children, className
             </div>
           </div>
         ) : (
-          <div>
-            <button onClick={() => activate(injected)}>Metamask/browser wallet</button>
-            <button onClick={() => activate(walletconnect)}>WalletConnect</button>
-          </div>
+          <ButtonRow>
+            <ConnectorButton background="/metamask.svg" onClick={() => activate(injected)}>
+              Metamask
+            </ConnectorButton>
+            <ConnectorButton background="/walletconnect.svg" onClick={() => activate(walletconnect)}>
+              WalletConnect
+            </ConnectorButton>
+          </ButtonRow>
         )}
       </EditorModal>
     </Fragment>
