@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { ViewPort, Top, LeftResizable, Fill, RightResizable, Bottom } from 'react-spaces'
 import { useRouter } from 'next/router'
 import { LOG_LEVEL } from '@cryptostats/sdk'
@@ -142,6 +142,7 @@ const Editor: React.FC = () => {
   const [newAdapterModalOpen, setNewAdapterModalOpen] = useState(false)
   const [filter, setFilter] = useState('')
   const [imageLibraryOpen, setImageLibraryOpen] = useState(false)
+  const editorRef = useRef<any>(null)
   const { save, adapter } = useAdapter(fileName)
   const { evaluate, module } = useCompiler()
   const { addLine } = useConsole()
@@ -228,6 +229,9 @@ const Editor: React.FC = () => {
                   <CodeEditor
                     fileId={fileName}
                     defaultValue={adapter.code}
+                    onMount={(editor: any) => {
+                      editorRef.current = editor
+                    }}
                     onChange={(code: string) => save(code, adapter.name, adapter.version)}
                     onValidated={(code: string) => evaluate({
                       code,
@@ -265,7 +269,10 @@ const Editor: React.FC = () => {
         width="100%"
         height="70%"
       >
-        <ImageSelector close={() => setImageLibraryOpen(false)} />
+        <ImageSelector
+          close={() => setImageLibraryOpen(false)}
+          editor={editorRef.current}
+        />
       </EditorModal>
 
       <EditorModal

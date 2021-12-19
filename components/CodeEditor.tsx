@@ -9,9 +9,10 @@ interface EditorProps {
   onChange?: (code: string) => void;
   defaultValue: string;
   fileId: string;
+  onMount?: (editor: any, monaco: any) => void
 }
 
-const Editor: React.FC<EditorProps> = ({ onValidated, onChange, defaultValue, fileId }) => {
+const Editor: React.FC<EditorProps> = ({ onValidated, onChange, defaultValue, fileId, onMount }) => {
   const code = useRef(defaultValue)
   const monaco = useMonaco()
 
@@ -64,7 +65,9 @@ const Editor: React.FC<EditorProps> = ({ onValidated, onChange, defaultValue, fi
         insertSpaces: true,
       }}
       onMount={(editor: any) => {
-        console.log('mount', editor, monaco)
+        if (onMount) {
+          onMount(editor, monaco)
+        }
       }}
       onChange={(newCode?: string) => {
         code.current = newCode || ''

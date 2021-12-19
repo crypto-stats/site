@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled, { keyframes, css } from 'styled-components'
 import { useImages } from 'hooks/images'
 import copy from 'copy-to-clipboard';
 import FileUploadButton from './FileUploadButton'
 import { IPFS_GATEWAY } from 'utils/ipfs'
+import Button from './Button'
 
 const Cards = styled.ul`
   display: flex;
@@ -122,14 +123,49 @@ const Copyable: React.FC = ({ children }) => {
   )
 }
 
+const NAME_REGEX = /\n(\s*)"?name"?:\s*(?:"|')([\w\d- ]+)(?:"|'),/g
+
 interface ImageSelectorProps {
-  close: () => void;
+  close: () => void
+  editor?: any
 }
 
-const ImageSelector: React.FC<ImageSelectorProps> = ({ close }) => {
+interface MetadataName {
+  code: string
+  name: string
+  whitespace: string
+  position: number
+}
+
+const ImageSelector: React.FC<ImageSelectorProps> = ({ close, editor }) => {
   const [selectedImage, setSelectedImage] = useState<null | { cid: string, type: string }>(null)
   const [uploading, setUploading] = useState(false)
+  const [metadataNames, setMetadataNames] = useState<MetadataName[]>([])
   const [images, addImage] = useImages()
+
+  useEffect(() => {
+    if (selectedImage && editor) {
+      const model = editor.getModel()
+      const value = model.getValue()
+
+      const metadataNames: MetadataName[] = []
+
+      let result;
+      do {
+        result = NAME_REGEX.exec(value);
+        if (result) {
+          metadataNames.push({
+            code: result[0],
+            name: result[2],
+            whitespace: result[1],
+            position: result.index,
+          })
+        }
+      } while (result);
+
+      setMetadataNames(metadataNames)
+    }
+  }, [selectedImage])
 
   if (selectedImage) {
     return (
@@ -157,6 +193,23 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ close }) => {
         </Code>
 
         <div>
+          {metadataNames.map(metadataName => {
+            const add = () => {
+              const model = editor.getModel()
+              const currentCode = model.getValue()
+              const slicePoint = metadataName.position + metadataName.code.length
+              const newCode = `${currentCode.slice(0, slicePoint)}
+${metadataName.whitespace}icon: sdk.ipfs.getDataURILoader('${selectedImage.cid}', '${selectedImage.type}'),${currentCode.slice(slicePoint)}`
+
+              model.setValue(newCode)
+              close()
+            }
+
+            return (
+              <Button key={metadataName.position} onClick={add}>Add to {metadataName.name}</Button>
+            )
+          })}
+
           <button onClick={() => {
             copy(`sdk.ipfs.getDataURILoader('${selectedImage.cid}', '${selectedImage.type}')`)
             close()
