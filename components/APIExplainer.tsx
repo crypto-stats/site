@@ -99,7 +99,7 @@ const SwitchContainer = styled.div`
   display: inline-flex;
   background: #eef1f7;
   border-radius: 4px;
-  padding: 8px;
+  padding: 6px;
 `
 
 const Switch = styled.button<{ selected: boolean }>`
@@ -107,14 +107,20 @@ const Switch = styled.button<{ selected: boolean }>`
   display: flex;
   flex-direction: column;
   background: transparent;
-  border: none;
+  border: solid 1px transparent;
   align-items: center;
   padding: 8px;
   border-radius: 4px;
+  margin: 2px;
 
-  ${({ selected }) => selected && `
+  ${({ selected }) => selected ? `
     border: solid 1px #ddd;
     background-color: #ffffff;
+  ` : `
+    &:hover {
+      cursor: pointer;
+      background-color: #dee3ed;
+    }
   `}
 `
 
