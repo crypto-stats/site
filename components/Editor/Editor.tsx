@@ -42,6 +42,10 @@ const Header = styled(Top)`
 const HeaderRight = styled.div`
   display: flex;
   align-items: center;
+
+  @media (max-width: 700px) {
+    display: none;
+  }
 `
 
 const CloseButton = styled.button`
@@ -137,6 +141,26 @@ const FillWithStyledResize = styled(Fill)<{ side: string }>`
   }
 `
 
+const PrimaryFill = styled(FillWithStyledResize)`
+  @media (max-width: 700px) {
+    & > * {
+      display: none;
+    }
+
+    &:before {
+      content: 'The CryptoStats editor is not available on mobile devices 😢';
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      margin: 32px;
+      font-size: 24px;
+      text-align: center;
+    }
+  }
+`
+
 const Editor: React.FC = () => {
   const router = useRouter()
   const [fileName, setFileName] = useState<string | null>(null)
@@ -197,7 +221,7 @@ const Editor: React.FC = () => {
           <WalletButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</WalletButton>
         </HeaderRight>
       </Header>
-      <FillWithStyledResize side="right">
+      <PrimaryFill side="right">
         <Left size={200}>
           <FilterBox size={40} >
             <FilterField
@@ -277,7 +301,7 @@ const Editor: React.FC = () => {
             />
           </PrimaryFooterContainer>
         </Fill>
-      </FillWithStyledResize>
+      </PrimaryFill>
 
       <EditorModal
         isOpen={imageLibraryOpen}
