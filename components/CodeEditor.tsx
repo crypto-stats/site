@@ -1,12 +1,13 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import MonacoEditor, { useMonaco } from '@monaco-editor/react'
+import { MarkerSeverity } from './Editor/types'
 
 // @ts-ignore
 import sdkTypeDefs from '!raw-loader!generated/cryptostats-sdk.d.ts'
 
 interface EditorProps {
-  onValidated: (code: string) => void;
-  onChange?: (code: string) => void;
+  onValidated: (code: string, markers: any[]) => void
+  onChange?: (code: string) => void
   defaultValue: string;
   fileId: string;
   onMount?: (editor: any, monaco: any) => void
@@ -75,10 +76,8 @@ const Editor: React.FC<EditorProps> = ({ onValidated, onChange, defaultValue, fi
           onChange(newCode)
         }
       }}
-      onValidate={(markers: any[]) => {
-        if (markers.length === 0) {
-          onValidated(code.current)
-        }
+      onValidate={(markers: MarkerSeverity[]) => {
+        onValidated(code.current, markers)
       }}
     />
   )

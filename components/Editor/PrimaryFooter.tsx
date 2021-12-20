@@ -3,6 +3,8 @@ import Link from 'next/link'
 import styled from 'styled-components'
 import { useAdapter } from 'hooks/local-adapters'
 import PublishModal from './PublishModal'
+import { info } from 'console'
+import { MarkerSeverity } from './types'
 
 const Container = styled.div`
   flex: 1;
@@ -31,11 +33,21 @@ const IPFSLink = styled.a`
   font-size: 12px;
 `
 
+const ErrorChip = styled.div`
+  background: #222222;
+  border-radius: 4px;
+  padding: 4px 8px;
+  color: #7c8190;
+  font-size: 12px;
+  margin: 4px;
+`
+
 interface PrimaryFooterProps {
   fileName: string | null
+  markers: any[]
 }
 
-const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName }) => {
+const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers }) => {
   const [showModal, setShowModal] = useState(false)
   const { adapter } = useAdapter(fileName)
 
@@ -43,9 +55,28 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName }) => {
     ? adapter!.publications[adapter!.publications.length - 1]
     : null
 
+  const infos = []
+  const warnings = []
+  const errors = []
+
+  for (const marker of markers) {
+    if (marker.severity === MarkerSeverity.Error) {
+      errors.push(marker)
+    } else if (marker.severity === MarkerSeverity.Warning) {
+      warnings.push(marker)
+    } else {
+      infos.push(marker)
+    }
+  }
+
   return (
     <Container>
-      <Side />
+      <Side>
+        <ErrorChip>i: {infos.length}</ErrorChip>
+        <ErrorChip>!: {warnings.length}</ErrorChip>
+        <ErrorChip>x: {errors.length}</ErrorChip>
+      </Side>
+
       <Side>
         {adapter && (
           <Fragment>

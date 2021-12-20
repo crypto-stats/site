@@ -21,6 +21,7 @@ import EmptyState from './EmptyState'
 import EditorModal from './EditorModal'
 import NewAdapterForm from './NewAdapterForm'
 import CloseIcon from 'components/CloseIcon'
+import { MarkerSeverity } from './types'
 
 const Left = styled(LeftResizable)`
   display: flex;
@@ -141,6 +142,7 @@ const Editor: React.FC = () => {
   const [started, setStarted] = useState(false)
   const [newAdapterModalOpen, setNewAdapterModalOpen] = useState(false)
   const [filter, setFilter] = useState('')
+  const [markers, setMarkers] = useState<any[]>([])
   const [imageLibraryOpen, setImageLibraryOpen] = useState(false)
   const editorRef = useRef<any>(null)
   const { save, adapter } = useAdapter(fileName)
@@ -233,14 +235,20 @@ const Editor: React.FC = () => {
                       editorRef.current = editor
                     }}
                     onChange={(code: string) => save(code, adapter.name, adapter.version)}
-                    onValidated={(code: string) => evaluate({
-                      code,
-                      isTS: true,
-                      onLog: (level: LOG_LEVEL, ...args: any[]) => addLine({
-                        level: level.toString(),
-                        value: args.join(' '),
-                      })
-                    })}
+                    onValidated={(code: string, markers: any[]) => {
+                      setMarkers(markers)
+
+                      if (markers.filter((marker: any) => marker.severity === MarkerSeverity.Error).length === 0) {
+                        evaluate({
+                          code,
+                          isTS: true,
+                          onLog: (level: LOG_LEVEL, ...args: any[]) => addLine({
+                            level: level.toString(),
+                            value: args.join(' '),
+                          })
+                        })
+                      }
+                    }}
                   />
                 ) : (
                   <EmptyState onCreate={() => setNewAdapterModalOpen(true)} />
@@ -254,7 +262,10 @@ const Editor: React.FC = () => {
           </FillWithStyledResize>
 
           <PrimaryFooterContainer size={55}>
-            <PrimaryFooter fileName={fileName} />
+            <PrimaryFooter
+              fileName={fileName}
+              markers={markers}
+            />
           </PrimaryFooterContainer>
         </Fill>
       </FillWithStyledResize>
