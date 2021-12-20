@@ -28,6 +28,7 @@ const VerifiedTick = styled.span`
   text-align: center;
   line-height: 30px;
   font-size: 20px;
+  margin: 8px;
 
   :before {
     content: '✓';

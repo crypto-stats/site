@@ -1,6 +1,7 @@
 import React, { useState, Fragment } from 'react'
 import Link from 'next/link'
 import styled from 'styled-components'
+import { XOctagon, AlertTriangle, Info } from 'react-feather'
 import { useAdapter } from 'hooks/local-adapters'
 import PublishModal from './PublishModal'
 import { MarkerSeverity } from './types'
@@ -31,18 +32,24 @@ const IPFSLink = styled.a`
   font-size: 12px;
 `
 
-const ErrorChip = styled.button`
+const ErrorChip = styled.button<{ color?: string }>`
   background: #222222;
   border-radius: 4px;
   padding: 4px 8px;
-  color: #7c8190;
+  color: ${({ color }) => color || '#7c8190'};
   font-size: 12px;
   margin: 4px;
   border: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 
   &:hover {
     background: #191919;
+  }
+
+  svg {
+    margin-right: 4px;
   }
 `
 
@@ -77,9 +84,15 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers, onMark
   return (
     <Container>
       <Side>
-        <ErrorChip onClick={onMarkerClick}>i: {infos.length}</ErrorChip>
-        <ErrorChip onClick={onMarkerClick}>!: {warnings.length}</ErrorChip>
-        <ErrorChip onClick={onMarkerClick}>x: {errors.length}</ErrorChip>
+        <ErrorChip onClick={onMarkerClick} color={infos.length > 0 ? '#cccccc' : undefined}>
+          <Info size={12} /> {infos.length}
+        </ErrorChip>
+        <ErrorChip onClick={onMarkerClick} color={warnings.length > 0 ? 'yellow' : undefined}>
+          <AlertTriangle size={12} /> {warnings.length}
+        </ErrorChip>
+        <ErrorChip onClick={onMarkerClick} color={errors.length > 0 ? 'red' : undefined}>
+          <XOctagon size={12} /> {errors.length}
+        </ErrorChip>
       </Side>
 
       <Side>
