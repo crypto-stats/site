@@ -25,6 +25,23 @@ const PublishButton = styled(Button)`
   border-radius: 4px;
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.5);
   font-weight: normal;
+  position: relative;
+
+  &:disabled:hover:before {
+    content: 'Fix all errors to allow publishing';
+    display: block;
+    position: absolute;
+    z-index: 100;
+    left: 0;
+    transform: translateX(-140px);
+    top: 0;
+    bottom: 0;
+    background: #222222;
+    padding: 2px;
+    font-size: 12px;
+    border-radius: 4px;
+    color: #cccccc;
+  }
 `
 
 const IPFSLink = styled.a`
