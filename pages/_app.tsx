@@ -7,6 +7,7 @@ import { createGlobalStyle } from 'styled-components'
 import PlausibleProvider from 'next-plausible'
 import { runOnce } from 'hooks/lib'
 import { setCache } from 'hooks/ipfs'
+import { setENSCache } from 'use-ens-name'
 
 const GlobalStyle = createGlobalStyle`
   body, html, #__next {
@@ -24,6 +25,12 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
     if (pageProps.ipfsCache) {
       for (const item of pageProps.ipfsCache) {
         setCache(item.cid, item.text)
+      }
+    }
+
+    if (pageProps.ensCache) {
+      for (const item of pageProps.ensCache) {
+        setENSCache(item.address, item.name)
       }
     }
   })

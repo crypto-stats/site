@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 // import styled from 'styled-components'
+import { useENSName } from 'use-ens-name'
 import { useWeb3React } from '@web3-react/core'
-import { useENSName } from 'hooks/ens'
 import ConnectionButton from 'components/ConnectionButton'
 import EditorModal, { Button } from './EditorModal'
 import { useAdapter } from 'hooks/local-adapters'

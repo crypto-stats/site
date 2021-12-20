@@ -1,8 +1,9 @@
 import { NextPage, GetStaticProps } from 'next'
+import { useENSName } from 'use-ens-name'
 import styled from 'styled-components'
 import { CryptoStatsSDK } from '@cryptostats/sdk'
 import TranquilLayout from 'components/layouts/TranquilLayout'
-import { useENSName } from 'hooks/ens'
+import { getENSCache } from 'utils/ens'
 
 const Row = styled.div`
   display: flex;
@@ -81,9 +82,12 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps> = async () => {
   }`
   const { signers } = await sdk.graph.query('dmihal/cryptostats-adapter-registry-test', query)
 
+  const ensCache = await getENSCache(signers.map((signer: any) => signer.id))
+
   return {
     props: {
-      signers
+      signers,
+      ensCache,
     },
     revalidate: 1100,
   }

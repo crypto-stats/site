@@ -3,6 +3,7 @@ import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { useENSName } from 'use-ens-name'
 import { useWeb3React } from '@web3-react/core'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
 import TranquilLayout from 'components/layouts/TranquilLayout'
@@ -13,9 +14,9 @@ import Button from 'components/Button'
 import CodeViewer from 'components/CodeViewer'
 import VerifyForm from 'components/VerifyForm'
 import { CompilerProvider } from 'hooks/compiler'
-import { useENSName } from 'hooks/ens'
 import PublisherBar from 'components/AdapterPage/PublisherBar'
 import MetaTags from 'components/MetaTags'
+import { getENSCache } from 'utils/ens'
 
 const VerifiedTick = styled.span`
   display: inline-block;
@@ -275,6 +276,8 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
     sourceCode,
   }
 
+  const ensCache = module.signer ? await getENSCache([module.signer]) : []
+
   return {
     props: {
       listId,
@@ -285,6 +288,7 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
       listModules,
       verifiedLists,
       collections,
+      ensCache,
     },
     revalidate: 60,
   }

@@ -1,10 +1,10 @@
 import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useENSName } from 'use-ens-name'
 import styled from 'styled-components'
 import { useWeb3React } from '@web3-react/core'
 import ConnectionButton from './ConnectionButton'
-import { useENSName } from 'hooks/ens'
 
 const Container = styled.header`
   display: flex;

@@ -38,8 +38,6 @@ interface SubAdapterPreviewProps {
 const SubAdapterPreview: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDefault }) => {
   const [open, setOpen] = useState(openByDefault)
 
-  console.log(subadapter)
-
   // @ts-ignore
   const { name, ...metadata } = subadapter.metadata.metadata
 
