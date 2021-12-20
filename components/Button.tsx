@@ -14,20 +14,22 @@ const ButtonElement = styled.button`
   &:hover {
     background: #3a98fd;
   }
-  &:disabled: {
+
+  &:disabled {
     background: #999;
   }
 }
 `
 
 interface ButtonProps {
-  onClick?: () => void;
-  disabled?: boolean;
+  onClick?: () => void
+  disabled?: boolean
+  className?: string
 }
 
-const Button: React.FC<ButtonProps> = ({ children, onClick, disabled }) => {
+const Button: React.FC<ButtonProps> = ({ children, onClick, disabled, className }) => {
   return (
-    <ButtonElement onClick={onClick} disabled={disabled}>
+    <ButtonElement onClick={onClick} disabled={disabled} className={className}>
       {children}
     </ButtonElement>
   )

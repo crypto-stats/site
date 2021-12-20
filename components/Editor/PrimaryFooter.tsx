@@ -3,8 +3,8 @@ import Link from 'next/link'
 import styled from 'styled-components'
 import { useAdapter } from 'hooks/local-adapters'
 import PublishModal from './PublishModal'
-import { info } from 'console'
 import { MarkerSeverity } from './types'
+import Button from 'components/Button'
 
 const Container = styled.div`
   flex: 1;
@@ -17,15 +17,13 @@ const Side = styled.div`
   align-items: center;
 `
 
-const PublishButton = styled.button`
+const PublishButton = styled(Button)`
   height: 35px;
-  margin: 0 0 0 32px;
+  margin: 0 4px 0 32px;
   padding: 9px 20px;
   border-radius: 4px;
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.5);
-  color: white;
-  background: #0477f4;
-  border: none;
+  font-weight: normal;
 `
 
 const IPFSLink = styled.a`
@@ -33,21 +31,28 @@ const IPFSLink = styled.a`
   font-size: 12px;
 `
 
-const ErrorChip = styled.div`
+const ErrorChip = styled.button`
   background: #222222;
   border-radius: 4px;
   padding: 4px 8px;
   color: #7c8190;
   font-size: 12px;
   margin: 4px;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background: #191919;
+  }
 `
 
 interface PrimaryFooterProps {
   fileName: string | null
   markers: any[]
+  onMarkerClick: () => void
 }
 
-const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers }) => {
+const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers, onMarkerClick }) => {
   const [showModal, setShowModal] = useState(false)
   const { adapter } = useAdapter(fileName)
 
@@ -72,9 +77,9 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers }) => {
   return (
     <Container>
       <Side>
-        <ErrorChip>i: {infos.length}</ErrorChip>
-        <ErrorChip>!: {warnings.length}</ErrorChip>
-        <ErrorChip>x: {errors.length}</ErrorChip>
+        <ErrorChip onClick={onMarkerClick}>i: {infos.length}</ErrorChip>
+        <ErrorChip onClick={onMarkerClick}>!: {warnings.length}</ErrorChip>
+        <ErrorChip onClick={onMarkerClick}>x: {errors.length}</ErrorChip>
       </Side>
 
       <Side>
@@ -89,7 +94,9 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers }) => {
               </Link>
             )}
 
-            <PublishButton onClick={() => setShowModal(true)}>Publish to IPFS</PublishButton>
+            <PublishButton onClick={() => setShowModal(true)} disabled={errors.length > 0}>
+              Publish to IPFS
+            </PublishButton>
           </Fragment>
         )}
       </Side>

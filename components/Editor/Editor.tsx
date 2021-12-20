@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { ViewPort, Top, LeftResizable, Fill, RightResizable, Bottom } from 'react-spaces'
+import { ViewPort, Top, LeftResizable, Fill, RightResizable, Bottom, BottomResizable } from 'react-spaces'
 import { useRouter } from 'next/router'
 import { LOG_LEVEL } from '@cryptostats/sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -22,6 +22,7 @@ import EditorModal from './EditorModal'
 import NewAdapterForm from './NewAdapterForm'
 import CloseIcon from 'components/CloseIcon'
 import { MarkerSeverity } from './types'
+import ErrorPanel from './ErrorPanel'
 
 const Left = styled(LeftResizable)`
   display: flex;
@@ -144,6 +145,7 @@ const Editor: React.FC = () => {
   const [filter, setFilter] = useState('')
   const [markers, setMarkers] = useState<any[]>([])
   const [imageLibraryOpen, setImageLibraryOpen] = useState(false)
+  const [showErrors, setShowErrors] = useState(false)
   const editorRef = useRef<any>(null)
   const { save, adapter } = useAdapter(fileName)
   const { evaluate, module } = useCompiler()
@@ -254,6 +256,12 @@ const Editor: React.FC = () => {
                   <EmptyState onCreate={() => setNewAdapterModalOpen(true)} />
                 )}
               </Fill>
+
+              {showErrors && (
+                <BottomResizable size={160} minimumSize={60} maximumSize={300}>
+                  <ErrorPanel markers={markers} onClose={() => setShowErrors(false)} />
+                </BottomResizable>
+              )}
             </Fill>
 
             <RightResizable size={300}>
@@ -265,6 +273,7 @@ const Editor: React.FC = () => {
             <PrimaryFooter
               fileName={fileName}
               markers={markers}
+              onMarkerClick={() => setShowErrors(true)}
             />
           </PrimaryFooterContainer>
         </Fill>
