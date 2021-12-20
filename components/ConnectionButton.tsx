@@ -50,6 +50,10 @@ const ConnectorButton = styled.button<{ background: string }>`
   }
 `
 
+const getForceDisconnect = () => window.localStorage.getItem('force-disconnect') === 'true'
+
+const setForceDisconnect = (val: boolean) => window.localStorage.setItem('force-disconnect', val.toString())
+
 interface ConnectionButtonProps {
   className?: string;
 }
@@ -59,7 +63,7 @@ const ConnectionButton: React.FC<ConnectionButtonProps> = ({ children, className
   const { active, account, deactivate, activate } = useWeb3React()
 
   useEffect(() => {
-    if (!active) {
+    if (!active && !getForceDisconnect()) {
       injected.isAuthorized().then((isAuthorized) => {
         if (isAuthorized) {
           activate(injected, undefined, true)
@@ -67,6 +71,11 @@ const ConnectionButton: React.FC<ConnectionButtonProps> = ({ children, className
       })
     }
   }, [activate, active])
+
+  const disconnect = () => {
+    setForceDisconnect(true)
+    deactivate()
+  }
 
   return (
     <Fragment>
@@ -84,15 +93,21 @@ const ConnectionButton: React.FC<ConnectionButtonProps> = ({ children, className
           <div>
             <div>Connected to {account}</div>
             <div>
-              <button onClick={deactivate}>Disconnect</button>
+              <button onClick={disconnect}>Disconnect</button>
             </div>
           </div>
         ) : (
           <ButtonRow>
-            <ConnectorButton background="/metamask.svg" onClick={() => activate(injected)}>
+            <ConnectorButton
+              background="/metamask.svg"
+              onClick={() => activate(injected).then(() => setForceDisconnect(false))}
+            >
               Metamask
             </ConnectorButton>
-            <ConnectorButton background="/walletconnect.svg" onClick={() => activate(walletconnect)}>
+            <ConnectorButton
+              background="/walletconnect.svg"
+              onClick={() => activate(walletconnect).then(() => setForceDisconnect(false))}
+            >
               WalletConnect
             </ConnectorButton>
           </ButtonRow>
