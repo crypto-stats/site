@@ -98,6 +98,7 @@ const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter, openB
         <AdapterIcon style={{ backgroundImage: `url('${details.metadata.icon}')` }} />
         <div>{title}</div>
       </AdapterTitle>
+
       {open && (
         <Row>
           <Col>
@@ -120,7 +121,13 @@ const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter, openB
             <div>Queries</div>
             {adapter && Object.entries(adapter.queries).map(([id, fn]: [string, any], _id: number, list: any[]) => {
               return (
-                <QueryForm key={id} id={id} fn={fn} openByDefault={list.length === 1}/>
+                <QueryForm
+                  key={id}
+                  id={id}
+                  fn={fn}
+                  adapter={adapter.id}
+                  openByDefault={list.length === 1}
+                />
               )
             })}
           </Col>

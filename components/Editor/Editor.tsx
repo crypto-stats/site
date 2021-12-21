@@ -23,6 +23,7 @@ import NewAdapterForm from './NewAdapterForm'
 import CloseIcon from 'components/CloseIcon'
 import { MarkerSeverity } from './types'
 import ErrorPanel from './ErrorPanel'
+import { usePlausible } from 'next-plausible'
 
 const Left = styled(LeftResizable)`
   display: flex;
@@ -163,6 +164,7 @@ const PrimaryFill = styled(FillWithStyledResize)`
 
 const Editor: React.FC = () => {
   const router = useRouter()
+  const plausible = usePlausible()
   const [fileName, setFileName] = useState<string | null>(null)
   const [started, setStarted] = useState(false)
   const [newAdapterModalOpen, setNewAdapterModalOpen] = useState(false)
@@ -203,6 +205,12 @@ const Editor: React.FC = () => {
       router.replace({ pathname: '/editor', query })
     }
   }, [router.query])
+
+  useEffect(() => {
+    if (imageLibraryOpen) {
+      plausible('open-image-library')
+    }
+  }, [imageLibraryOpen])
 
   useEffect(() => {
     setStarted(true)
@@ -325,7 +333,19 @@ const Editor: React.FC = () => {
         title="Create new adapter"
         buttons={[
           { label: 'Return to Editor', onClick: () => setNewAdapterModalOpen(false) },
-          { label: 'Create Blank Adapter', onClick: () => setFileName(newModule(emptyAdapter)) },
+          {
+            label: 'Create Blank Adapter',
+            onClick: () => {
+              plausible('new-adapter', {
+                props: {
+                  template: 'blank',
+                },
+              })
+
+              setFileName(newModule(emptyAdapter))
+              setNewAdapterModalOpen(false)
+            },
+          },
         ]}
       >
         <NewAdapterForm

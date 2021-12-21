@@ -17,6 +17,7 @@ import { CompilerProvider } from 'hooks/compiler'
 import PublisherBar from 'components/AdapterPage/PublisherBar'
 import MetaTags from 'components/MetaTags'
 import { getENSCache } from 'utils/ens'
+import { usePlausible } from 'next-plausible'
 
 const VerifiedTick = styled.span`
   display: inline-block;
@@ -108,6 +109,7 @@ interface AdaptersPageProps {
 const AdapterPage: NextPage<AdaptersPageProps> = ({
   listId, cid, verified, moduleDetails, subadapters, listModules, verifiedLists, collections
 }) => {
+  const plausible = usePlausible()
   const [_verified, setVerified] = useState(verified)
   const { account } = useWeb3React()
   const router = useRouter()
@@ -121,6 +123,14 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
     for (const adapter of adapters) {
       for (const publication of adapter.publications || []) {
         if (publication.cid === cid) {
+          plausible('edit-adapter', {
+            props: {
+              listId,
+              adapter: cid,
+              newAdapter: false,
+            },
+          })
+
           router.push({
             pathname: '/editor',
             query: { adapter: adapter.id },
@@ -129,6 +139,15 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         }
       }
     }
+
+
+    plausible('edit-adapter', {
+      props: {
+        listId,
+        adapter: cid,
+        newAdapter: true,
+      },
+    })
 
     const adapterId = newModule(moduleDetails.sourceCode || moduleDetails.code, [{ cid, version: moduleDetails.version || '0.0.0' }])
     router.push({

@@ -1,4 +1,5 @@
 import InputField from 'components/InputField'
+import { usePlausible } from 'next-plausible'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
@@ -76,6 +77,7 @@ const Error = styled.div`
 interface QueryProps {
   id: string;
   fn: (...params: any[]) => Promise<any>;
+  adapter: string
   openByDefault?: boolean
 }
 
@@ -84,7 +86,8 @@ const functionToParamNames = (fn: Function) => {
   return match ? match[1].split(',').map((name: string) => name.trim()) : []
 }
 
-const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault }) => {
+const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, adapter }) => {
+  const plausible = usePlausible()
   const [open, setOpen] = useState(!!openByDefault)
   const [values, setValues] = useState([...new Array(fn.length)].map(() => ''))
   const [running, setRunning] = useState(false)
@@ -95,6 +98,14 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault }) => {
 
   const execute = async () => {
     setRunning(true)
+
+    plausible('execute-adapter-query', {
+      props: {
+        adapter,
+        query: id,
+      },
+    })
+
     try {
       setResult(null)
       setError(null)

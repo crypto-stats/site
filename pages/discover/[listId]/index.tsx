@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
 import styled from 'styled-components'
@@ -9,6 +9,7 @@ import CardList from 'components/CardList'
 import SiteModal from 'components/SiteModal'
 import { getListNames, getModulesForList } from 'utils/lists-chain'
 import collectionMetadata, { CollectionMetadata } from 'resources/collection-metadata'
+import { usePlausible } from 'next-plausible'
 
 const Hero = styled.div`
   max-width: 600px;
@@ -59,7 +60,14 @@ interface ListPageProps {
 }
 
 const DiscoverPage: NextPage<ListPageProps> = ({ adapters, subadapters, listId, metadata }) => {
+  const plausible = usePlausible()
   const [showDataModal, setShowDataModal] = useState(false)
+
+  useEffect(() => {
+    if (showDataModal) {
+      plausible('open-data-modal')
+    }
+  }, [showDataModal])
 
   const listItems = adapters.map((adapter: AdapterData) => ({
     title: adapter.name,

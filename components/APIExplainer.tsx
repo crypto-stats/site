@@ -4,6 +4,7 @@ import collectionMetadata, { Parameter, Query } from 'resources/collection-metad
 import styled from 'styled-components'
 import Button from './Button';
 import InputField from './InputField'
+import { usePlausible } from 'next-plausible';
 
 const Section = styled.h3`
   font-size: 18px;
@@ -175,6 +176,7 @@ enum MODE {
 }
 
 const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
+  const plausible = usePlausible()
   const [mode, setMode] = useState<MODE>(MODE.REST)
   const [selectedQuery, setSelectedQuery] = useState<null | number>(null)
   const [paramValues, setParamValues] = useState<string[]>([])
@@ -208,6 +210,15 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
   const execute = async () => {
     setExecuting(true)
     setOutput('')
+
+    plausible('execute-collection-query', {
+      props: {
+        mode: MODE[mode],
+        listId,
+        query: queries![selectedQuery!].id,
+      },
+    })
+
     try {
       if (mode === MODE.REST) {
         const req = await fetch(url)
