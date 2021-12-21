@@ -180,6 +180,7 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
   const [paramValues, setParamValues] = useState<string[]>([])
   const [executing, setExecuting] = useState(false)
   const [output, setOutput] = useState('')
+  const [includeMetadata, setIncludeMetadata] = useState(false)
 
   const changeMode = (newMode: MODE) => {
     setMode(newMode)
@@ -194,9 +195,13 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
 
   let url = ''
   if (selectedQuery !== null) {
-    url = `https://staging.api.cryptostats.community/api/v1/${listId}/${queries![selectedQuery].id}`
+    url = `https://api.cryptostats.community/api/v1/${listId}/${queries![selectedQuery].id}`
     if (paramValues.length > 0) {
       url += '/' + paramValues.join(',')
+    }
+
+    if (!includeMetadata) {
+      url += '?metadata=false'
     }
   }
 
@@ -213,7 +218,6 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
         const { CryptoStatsSDK, LOG_LEVEL: logLevel } = await import('@cryptostats/sdk')
         const sdk = new CryptoStatsSDK({
           moralisKey: process.env.NEXT_PUBLIC_MORALIS_KEY,
-          adapterListSubgraph: 'dmihal/cryptostats-adapter-registry-test',
           onLog: (level: LOG_LEVEL, ...args: any[]) =>
             appendOutput(`${logLevel[level]}: ${args.map((arg: any) => JSON.stringify(arg)).join(' ')}`)
         })
@@ -224,7 +228,9 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
 
         const queryId = queries[selectedQuery!].id
         appendOutput(`Executing ${queryId} query`)
-        const result = await list.executeQuery(queryId, ...paramValues)
+        const result = includeMetadata
+          ? await list.executeQueryWithMetadata(queryId, ...paramValues)
+          : await list.executeQuery(queryId, ...paramValues)
 
         appendOutput(`\nResult: \n${JSON.stringify(result, null, 2)}`)
       }
@@ -239,7 +245,7 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
     <div>
       <Section>Queries & Parameters</Section>
 
-      <div style={{ margin: '24px 0' }}>
+      <div style={{ margin: '12px 0' }}>
         {queries.map((query: Query, i: number) => {
           const selected = selectedQuery === i
           const params = query.parameters || []
@@ -283,6 +289,13 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
         })}
       </div>
 
+      <div style={{ marginBottom: '12px' }}>
+        <QueryLabel>
+          <RadioBtn type="checkbox" checked={includeMetadata} onChange={(e: any) => setIncludeMetadata(e.target.checked)} />
+          Include metadata
+        </QueryLabel>
+      </div>
+
       <SwitchContainer>
         <Switch onClick={() => changeMode(MODE.REST)} selected={mode === MODE.REST}>
           <SwitchTitle selected={mode === MODE.REST}>REST API</SwitchTitle>
@@ -323,12 +336,11 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
 (async function() {
   const sdk = new CryptoStatsSDK({
     moralisKey: <your key>,
-    adapterListSubgraph: 'dmihal/cryptostats-adapter-registry-test',
   });
   const list = sdk.getList('${listId}');
   await list.fetchAdapters();
 
-  const result = await list.executeQuery(queryId, ...paramValues);
+  const result = await list.${includeMetadata ? 'executeQueryWithMetadata' : 'executeQuery'}(queryId, ...paramValues);
   console.log(result);
 })`}</CodeField>
             </div>
