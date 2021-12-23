@@ -37,11 +37,11 @@ const VerifiedTick = styled.span`
 `
 
 const DetailsBox = styled.div`
-  padding: 24px;
+  // padding: 24px;
   border-radius: 5px;
-  box-shadow: 0 3px 4px 0 rgba(0, 36, 75, 0.07);
-  border: solid 1px #ddd;
-  background-color: #ffffff;
+  background: #FFFFFF;
+  border: 1px solid #DDDDDD;
+  box-shadow: 0 3px 4px 0 rgba(0,36,75,0.07);
 `
 
 const Verified = styled.div`
@@ -59,23 +59,90 @@ const Unverified = styled.div`
   font-weight: bold;
 `
 
-const Column = styled.div`
-  display: flex;
-  margin: 10px 0;
+const InfoBoxHeader = styled.div`
+  font-family: Inter-Regular;
+  font-size: 12px;
+  color: #838383;
+  letter-spacing: 2px;
+  padding: 24px;
+  text-transform: uppercase;
+  border-bottom: 1px solid #D8D8D8;
 `
 
-const Row = styled.div`
-  flex: 1 0 0;
+const InfoBoxGrid = styled.div`
+  background-color: #F9FAFB;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-row-gap: 24px;
+`
+
+const InfoBoxItem = styled.div`
+  margin: 0;
+  padding: 0;
+`
+
+const InfoBoxLabel = styled.div`
+  display: block;
+  font-family: Inter-Regular;
+  font-size: 12px;
+  color: #4B4B4B;
+  letter-spacing: 0.34px;
+  text-transform: uppercase;
+  `
+
+const InfoBoxValue = styled.div`
+  font-family: Inter-Medium;
+  font-size: 14px;
+  color: #000000;
+  margin: 8px 0 0;
+  max-width: 100px;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `
+const InfoBoxValueFullWidth = styled.div`
+  font-family: Inter-Medium;
+  font-size: 14px;
+  color: #000000;
+  margin: 8px 0 0;
+`
+
+const InfoBoxAuthor = styled.div`
+  padding: 24px 24px 32px 24px;
+`
+const InfoBoxAuthorLabel = styled(InfoBoxLabel)``
+const InfoBoxAuthorValue = styled.div`
+  display: inline;
+  padding: 12px;
+  background-color: #EEF1F7;
+  border-radius: 4px;
+  width: auto;
+  margin-top: 16px;
+  font-family: Inter-Medium;
+  font-size: 14px;
+  color: #0477F4;
+
+  &:hover{
+    cursor: pointer;
+  }
+`
 
 const Attribute: React.FC<{ label: string }> = ({ label, children }) => {
+  if(label && label === "Author") {
+    return (
+      <InfoBoxAuthor>
+        <InfoBoxAuthorLabel>{label}</InfoBoxAuthorLabel>
+        <InfoBoxAuthorValue>{children}</InfoBoxAuthorValue>
+      </InfoBoxAuthor>
+    )
+  }
+
   return (
-    <Column>
-      <Row>{label}</Row>
-      <Row>{children}</Row>
-    </Column>
+    <InfoBoxItem>
+      <InfoBoxLabel>{label}</InfoBoxLabel>
+      {label === "Collections"? <InfoBoxValueFullWidth>{children}</InfoBoxValueFullWidth> : <InfoBoxValue>{children}</InfoBoxValue>}
+    </InfoBoxItem>
   )
 }
 
@@ -201,28 +268,26 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         sidebar={
           <Fragment>
             <DetailsBox>
-              {_verified ? <Verified>Verified adapter</Verified> : <Unverified>Unverified adapter</Unverified>}
+              {/* {_verified ? <Verified>Verified adapter</Verified> : <Unverified>Unverified adapter</Unverified>} */}
 
-              <div>Details</div>
-              <div>
+              <InfoBoxHeader>Adapter Info</InfoBoxHeader>
+              <InfoBoxGrid>
                 <Attribute label="Version">{moduleDetails.version}</Attribute>
                 <Attribute label="License">{moduleDetails.license}</Attribute>
-                {(signer || moduleDetails.signer) && (
-                  <Attribute label="Signed by">{signer || moduleDetails.signer}</Attribute>
-                )}
+                <Attribute label="IPFS CID">{cid}</Attribute>
+                <Attribute label="IPFS CID (source)">{moduleDetails.sourceFileCid}</Attribute>
                 {verifiedLists.length > 0 && (
                   <Attribute label="Collections">
                     {verifiedLists.map((list: string) => (
-                      <div key={list}>
-                        <Link href={`/discover/${list}`}>
+                      <>
+                        <Link href={`/discover/${list}`} key={list}>
                           <a>{list}</a>
                         </Link>
-                      </div>
+                        <span>, </span>
+                      </>
                     ))}
                   </Attribute>
                 )}
-                <Attribute label="IPFS CID">{cid}</Attribute>
-                <Attribute label="IPFS CID (source)">{moduleDetails.sourceFileCid}</Attribute>
                 {moduleDetails.previousVersion && (
                   <Attribute label="Previous Version">
                     <Link href={`/discover/${listId}/${moduleDetails.previousVersion}`}>
@@ -230,10 +295,13 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
                     </Link>
                   </Attribute>
                 )}
-              </div>
+              </InfoBoxGrid>
+              {(signer || moduleDetails.signer) && (
+                <Attribute label="Author">{signer || moduleDetails.signer}</Attribute>
+              )}
             </DetailsBox>
 
-            <div>
+            <div style={{marginTop: "24px"}}>
               <Button onClick={edit}>Edit Adapter</Button>
             </div>
 
