@@ -7,6 +7,10 @@ async function query(query: string) {
     method: 'POST',
   });
   const json = await req.json()
+  if (json.errors) {
+    console.error(query)
+    throw new Error(`Error in adapter subgraph query: ${json.errors[0].message}`)
+  }
   return json.data
 }
 
