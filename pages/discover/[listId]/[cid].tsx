@@ -8,7 +8,7 @@ import { useWeb3React } from '@web3-react/core'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import { useAdapterList, newModule } from 'hooks/local-adapters'
-import { getListNames, getModulesForList, getListsForAdapter } from 'utils/lists-chain'
+import { getListNames, getModulesForList, getListsForAdapter, getHistoricalVersions } from 'utils/lists-chain'
 import AdapterPreviewList from 'components/AdapterPage/AdapterPreviewList'
 import Button from 'components/Button'
 import CodeViewer from 'components/CodeViewer'
@@ -18,6 +18,8 @@ import PublisherBar from 'components/AdapterPage/PublisherBar'
 import MetaTags from 'components/MetaTags'
 import { getENSCache } from 'utils/ens'
 import { usePlausible } from 'next-plausible'
+import SiteModal from 'components/SiteModal'
+import HistoryModal, { HistoricalVersion } from 'components/AdapterPage/HistoryModal'
 
 const VerifiedTick = styled.span`
   display: inline-block;
@@ -104,20 +106,25 @@ interface AdaptersPageProps {
   listModules: string[]
   verifiedLists: string[]
   collections: string[]
+  historicalVersions: HistoricalVersion[]
 }
 
 const AdapterPage: NextPage<AdaptersPageProps> = ({
-  listId, cid, verified, moduleDetails, subadapters, listModules, verifiedLists, collections
+  listId, cid, verified, moduleDetails, subadapters, listModules, verifiedLists, collections, historicalVersions
 }) => {
   const plausible = usePlausible()
   const [_verified, setVerified] = useState(verified)
+  const [showVersions, setShowVersions] = useState(false)
   const { account } = useWeb3React()
   const router = useRouter()
   const adapters = useAdapterList()
   const signer = useENSName(moduleDetails.signer)
 
   // NextJS page changes might not re-initialize component
-  useEffect(() => setVerified(verified), [cid, listId])
+  useEffect(() => {
+    setVerified(verified)
+    setShowVersions(false)
+  }, [cid, listId])
 
   const edit = () => {
     for (const adapter of adapters) {
@@ -251,12 +258,22 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
           </Fragment>
         }
       >
+        <button onClick={() => setShowVersions(true)}>Show History</button>
+
         <h2>Sub-Adapters</h2>
         <AdapterPreviewList staticDetails={subadapters} code={moduleDetails.code} />
         
         <h2>Code</h2>
         <CodeViewer js={moduleDetails.code} ts={moduleDetails.sourceCode} />    
       </TranquilLayout>
+
+      <SiteModal
+        title="Adapter History"
+        isOpen={showVersions}
+        onClose={() => setShowVersions(true)}
+      >
+        <HistoryModal historicalVersions={historicalVersions} />
+      </SiteModal>
     </CompilerProvider>
   )
 }
@@ -298,6 +315,8 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
     sourceCode,
   }
 
+  const historicalVersions = await getHistoricalVersions(cid)
+
   const ensCache = module.signer ? await getENSCache([module.signer]) : []
 
   return {
@@ -310,6 +329,7 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
       listModules,
       verifiedLists,
       collections,
+      historicalVersions,
       ensCache,
     },
     revalidate: 60,

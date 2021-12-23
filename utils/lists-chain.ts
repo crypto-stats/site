@@ -56,3 +56,30 @@ export async function getProxyForCollection(collection: string): Promise<string 
   }`)
   return response.collection?.proxy || null
 }
+
+export async function getHistoricalVersions(adapterCID: string) {
+  const response = await query(`{
+    adapter(id: "${adapterCID}") {
+      rootAdapter {
+        descendents {
+          id
+          version
+          signer {
+            id
+          }
+        }
+      }
+    }
+  }`)
+
+  const versions = response.adapter.rootAdapter.descendents.map((descendentAdapter: any) => {
+    const adapter: { cid: string, version: string, signer: string } = {
+      cid: descendentAdapter.id,
+      version: descendentAdapter.version,
+      signer: descendentAdapter.signer.id,
+    }
+    return adapter
+  })
+
+  return versions
+}
