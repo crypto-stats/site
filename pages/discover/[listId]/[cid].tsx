@@ -320,7 +320,9 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
   const listId = ctx.params!.listId as string
   const cid = ctx.params!.cid as string
 
-  const sdk = new CryptoStatsSDK({})
+  const sdk = new CryptoStatsSDK({
+    executionTimeout: 70,
+  })
 
   const listModules = listId === 'adapter' ? [] : await getModulesForList(listId)
   const verified = listModules.indexOf(cid) !== -1
