@@ -127,6 +127,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
             props: {
               listId,
               adapter: cid,
+              adapterName: moduleDetails.name,
               newAdapter: false,
             },
           })
@@ -145,6 +146,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
       props: {
         listId,
         adapter: cid,
+        adapterName: moduleDetails.name,
         newAdapter: true,
       },
     })
