@@ -44,21 +44,6 @@ const DetailsBox = styled.div`
   box-shadow: 0 3px 4px 0 rgba(0,36,75,0.07);
 `
 
-const Verified = styled.div`
-  font-weight: bold;
-  color: blue;
-
-  &:before {
-    content: '✓';
-    display: inline-block;
-
-  }
-`
-
-const Unverified = styled.div`
-  font-weight: bold;
-`
-
 const InfoBoxHeader = styled.div`
   font-family: Inter-Regular;
   font-size: 12px;
