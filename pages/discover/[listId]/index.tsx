@@ -10,6 +10,7 @@ import SiteModal from 'components/SiteModal'
 import { getListNames, getModulesForList } from 'utils/lists-chain'
 import collectionMetadata, { CollectionMetadata } from 'resources/collection-metadata'
 import { usePlausible } from 'next-plausible'
+import { getSlug } from 'utils/adapters'
 
 const Hero = styled.div`
   max-width: 600px;
@@ -47,6 +48,7 @@ interface SubAdapter {
 
 interface AdapterData {
   cid: string
+  slug: string | null
   name: string
   subadapters: SubAdapter[]
   description: string | null
@@ -77,7 +79,7 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, subadapters, listId, 
       path: subadapter.icon || '', // TODO placeholder
       title: subadapter.name,
     })),
-    link: `/discover/${listId}/${adapter.cid}`,
+    link: `/discover/${listId}/${adapter.slug || adapter.cid}`,
   }))
 
   return (
@@ -140,7 +142,7 @@ export const getStaticProps: GetStaticProps<ListPageProps, { listId: string }> =
     return {
       cid,
       name: module.name || cid,
-      // @ts-ignore
+      slug: getSlug(module.name),
       description: module.description || null,
       subadapters,
     }

@@ -56,3 +56,19 @@ export async function getProxyForCollection(collection: string): Promise<string 
   }`)
   return response.collection?.proxy || null
 }
+
+export async function getCIDFromSlug(collectionId: string, slug: string) {
+  const response = await query(`{
+    collectionAdapters(where: {
+      collection: "${collectionId}",
+      adapterSlug: "${slug}"
+    }) {
+      adapter {
+        id
+      }
+    }
+  }`)
+
+  return response.collectionAdapters.length > 0 ? response.collectionAdapters[0].adapter.id : null
+
+}
