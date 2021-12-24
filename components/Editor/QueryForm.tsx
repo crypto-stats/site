@@ -4,26 +4,31 @@ import styled from 'styled-components'
 
 const Container = styled.div`
   background-color: #444;
-  padding: 12px 16px;
+  margin: 16px;
+  border-radius: 4px;
 `
 
 const TopBar = styled.div`
-  font-size: 14px;
+  font-size: 16px;
+  padding: 12px 16px;
+  border-radius: 4px;
   border-bottom: solid 1px #636363;
-  padding: 6px 0;
-  margin-bottom: 14px;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #565656;
+  }
 `
 
 const Result = styled.pre`
   white-space: pre-wrap;
-  font-size: 14px;
-  min-height: 30px;
-  margin: 4px 0;
+  font-size: 16px;
+  font-weight: medium;
+  margin: 8px 0;
 `
 
 const InputBlock = styled.div`
-  display: flex;
-  flex-direction: column;
+  padding: 24px 16px 0;
 `
 
 const Label = styled.div`
@@ -32,28 +37,43 @@ const Label = styled.div`
 `
 
 const Input = styled(InputField)`
-  padding: 8px;
+  width: 100%;
+  width: -webkit-fill-available;
+  padding: 8px 0px 8px 16px;
   border-radius: 4px;
   border: solid 1px #424242;
   background-color: #1a1919;
   font-size: 14px;
   color: #b5b6b9;
+  margin-top: 8px;
   outline: none;
 `
 
 const RunButton = styled.button`
-  height: 20px;
-  padding: 3px 0 2px;
+  width: 100%;
+  padding: 10px 0;
+  background: #D6EAFF;
+  color: #0477F4;
+  border: none;
   border-radius: 4px;
-  border: solid 1px #ffffff;
-  background-color: transparent;
-  margin: 16px 0 6px;
-  color: white;
-  padding: 2px 16px;
+  text-align: center;
+  outline: none;
 
   &:hover {
-    background: #363636;
+    cursor: pointer;
+    color: #fff;
+    background-color: #0477F4;
   }
+`
+
+const RunQueryBtn = styled.div`
+  padding: 24px 16px;
+`
+const Output = styled.div`
+  padding: 16px;
+  background-color: #000;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
 `
 
 const Error = styled.div`
@@ -99,7 +119,7 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault }) => {
       <TopBar onClick={() => setOpen(!open)}>{id}</TopBar>
       {open && (
         <div>
-          <div>
+          <>
             {[...new Array(fn.length)].map((_: any, index: number) => (
               <InputBlock key={index}>
                 <Label>{functionNames[index]}</Label>
@@ -115,14 +135,18 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault }) => {
                 />
               </InputBlock>
             ))}
-          </div>
-          <RunButton onClick={execute} disabled={running}>Run Query</RunButton>
-          <Label>Output</Label>
-          {error ? (
-            <Error>Error: {error}</Error>
-          ) : (
-            <Result>{JSON.stringify(result, null, 2)}</Result>
-          )}
+          </>
+          <RunQueryBtn>
+            <RunButton onClick={execute} disabled={running}>Run Query</RunButton>
+          </RunQueryBtn>
+          <Output>
+            <Label>Output</Label>
+            {error ? (
+              <Error>Error: {error}</Error>
+            ) : (
+              <Result>{JSON.stringify(result, null, 2)}</Result>
+            )}
+          </Output>
         </div>
       )}
     </Container>

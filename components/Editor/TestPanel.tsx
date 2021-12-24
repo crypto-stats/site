@@ -14,7 +14,7 @@ const Container = styled(Fill)`
 `
 
 const Main = styled(Fill)`
-  padding: 16px;
+  
 `
 
 const ConsoleTop = styled(Top)`

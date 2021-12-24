@@ -32,7 +32,7 @@ const Left = styled(LeftResizable)`
 
 const Header = styled(Top)`
   background-image: url("/logo-white.svg");
-  background-color: #2f2f2f;
+  background-color: #2F2F2F;
   background-position: center;
   background-repeat: no-repeat;
   border-bottom: solid 1px #4a4a4d;
