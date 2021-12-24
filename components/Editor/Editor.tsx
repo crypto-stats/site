@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { ViewPort, Top, LeftResizable, Fill, RightResizable, Bottom, BottomResizable } from 'react-spaces'
+import { ViewPort, Top, LeftResizable, Left, Fill, RightResizable, Bottom, BottomResizable } from 'react-spaces'
 import { useRouter } from 'next/router'
 import { LOG_LEVEL } from '@cryptostats/sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -24,11 +24,6 @@ import CloseIcon from 'components/CloseIcon'
 import { MarkerSeverity } from './types'
 import ErrorPanel from './ErrorPanel'
 import { usePlausible } from 'next-plausible'
-
-const Left = styled(LeftResizable)`
-  display: flex;
-  flex-direction: column;
-`
 
 const Header = styled(Top)`
   background-image: url("/editor_logo.png");
@@ -134,6 +129,34 @@ const ClearButton = styled.button`
 
 const LeftFooter = styled(Bottom)`
   border-top: solid 1px #444447;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 16px;
+`
+
+const LeftCollapsed = styled(Left)`
+  border-right: solid 2px #4a4a4d;
+`
+
+const CollapseButton = styled.button<{ open?: boolean }>`
+  width: 24px;
+  height: 24px;
+  border: solid 1px #878787;
+  border-radius: 4px;
+  color: #878787;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+
+  &:before {
+    content: '${({ open }) => open ? '<' : '>'}';
+  }
+
+  &:hover {
+    background: #333;
+  }
 `
 
 const PrimaryFooterContainer = styled(Bottom)`
@@ -174,6 +197,7 @@ const Editor: React.FC = () => {
   const plausible = usePlausible()
   const [fileName, setFileName] = useState<string | null>(null)
   const [started, setStarted] = useState(false)
+  const [leftCollapsed, setLeftCollapsed] = useState(false)
   const [newAdapterModalOpen, setNewAdapterModalOpen] = useState(false)
   const [filter, setFilter] = useState('')
   const [markers, setMarkers] = useState<any[]>([])
@@ -237,28 +261,38 @@ const Editor: React.FC = () => {
         </HeaderRight>
       </Header>
       <PrimaryFill side="right">
-        <Left size={200}>
-          <FilterBox size={40} >
-            <FilterField
-              placeholder="Search an Adapter here..."
-              value={filter}
-              onChange={(e: any) => setFilter(e.target.value)}
-            />
-            <ClearButton onClick={() => setFilter('')}>
-              <CloseIcon />
-            </ClearButton>
-          </FilterBox>
+        {leftCollapsed ? (
+          <LeftCollapsed size={50}>
+            <LeftFooter order={1} size={55}>
+              <CollapseButton onClick={() => setLeftCollapsed(false)} />
+            </LeftFooter>
+          </LeftCollapsed>
+        ) : (
+          <LeftResizable size={200}>
+            <FilterBox size={40} >
+              <FilterField
+                placeholder="Search an Adapter here..."
+                value={filter}
+                onChange={(e: any) => setFilter(e.target.value)}
+              />
+              <ClearButton onClick={() => setFilter('')}>
+                <CloseIcon />
+              </ClearButton>
+            </FilterBox>
 
-          <Fill scrollable={true}>
-            <FileList selected={fileName} onSelected={setFileName} filter={filter} />
-          </Fill>
+            <Fill scrollable={true}>
+              <FileList selected={fileName} onSelected={setFileName} filter={filter} />
+            </Fill>
 
-          <Bottom size={30}>
-            <Button onClick={() => setImageLibraryOpen(true)}>Image Library</Button>
-          </Bottom>
+            <Bottom size={30}>
+              <Button onClick={() => setImageLibraryOpen(true)}>Image Library</Button>
+            </Bottom>
 
-          <LeftFooter order={1} size={55} style={{ borderTop: 'solid 1px #444447' }} />
-        </Left>
+            <LeftFooter order={1} size={55}>
+              <CollapseButton open onClick={() => setLeftCollapsed(true)} />
+            </LeftFooter>
+          </LeftResizable>
+        )}
 
         <Fill>
           <FillWithStyledResize side="left">
