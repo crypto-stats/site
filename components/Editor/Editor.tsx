@@ -296,7 +296,7 @@ const Editor: React.FC = () => {
             </Fill>
 
             <LeftSidebarFooter size={40}>
-              <Button type="outline" onClick={() => setImageLibraryOpen(true)}>Image Library</Button>
+              <Button className="outline" onClick={() => setImageLibraryOpen(true)}>Image Library</Button>
             </LeftSidebarFooter>
 
             <LeftFooter order={1} size={55}>

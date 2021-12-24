@@ -17,6 +17,7 @@ const GlobalStyle = createGlobalStyle`
     flex-direction: column;
     flex: 1;
     font-family: 'Inter', sans-serif;
+    font-size: 16px;
   }
 `
 

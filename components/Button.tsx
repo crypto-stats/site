@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const ButtonElement = styled.button<{ type: string }>`
+const ButtonElement = styled.button<{ className: string }>`
   border: none;
   border-radius: 4px;
   box-shadow: none;
@@ -15,7 +15,7 @@ const ButtonElement = styled.button<{ type: string }>`
   letter-spacing: 0.2px;
   
 
-  ${({type}) => type === "outline" ?  `
+  ${({className}) => className === "outline" ?  `
       background-color: transparent;
       color: #0477F4;
       border: 1px solid #0477F4;
@@ -37,12 +37,11 @@ interface ButtonProps {
   onClick?: () => void
   disabled?: boolean
   className?: string
-  type?: string
 }
 
-const Button: React.FC<ButtonProps> = ({ children, onClick, disabled, className, type }) => {
+const Button: React.FC<ButtonProps> = ({ children, onClick, disabled, className}) => {
   return (
-    <ButtonElement type={type} onClick={onClick} disabled={disabled} className={className}>
+    <ButtonElement onClick={onClick} disabled={disabled} className={className}>
       {children}
     </ButtonElement>
   )

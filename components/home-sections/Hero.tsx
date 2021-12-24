@@ -36,7 +36,7 @@ const CardContainer = styled.div`
   }
 `
 
-const Tagline = styled.div`
+const Tagline = styled.h1`
   font-size: 52px;
   font-weight: 700;
   color: #272727;
