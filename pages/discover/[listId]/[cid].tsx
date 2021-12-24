@@ -8,7 +8,7 @@ import { useWeb3React } from '@web3-react/core'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import { useAdapterList, newModule } from 'hooks/local-adapters'
-import { getListNames, getModulesForList, getListsForAdapter, getCIDFromSlug } from 'utils/lists-chain'
+import { getListNames, getModulesForList, getListsForAdapter, getCIDFromSlug, getAllVerifiedAdapters } from 'utils/lists-chain'
 import AdapterPreviewList from 'components/AdapterPage/AdapterPreviewList'
 import Button from 'components/Button'
 import CodeViewer from 'components/CodeViewer'
@@ -376,15 +376,17 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const listNames = await getListNames()
+  const adapters = await getAllVerifiedAdapters()
 
   const paths: any[] = []
-  await Promise.all(listNames.map(async (listId: string) => {
-    const cids = await getModulesForList(listId)
-    for (const cid of cids) {
-      paths.push({ params: { listId, cid } })
-    }
-  }))
+  for (const adapter of adapters) {
+    paths.push({
+      params: {
+        listId: adapter.collection,
+        cid: adapter.slug || adapter.cid,
+      }
+    })
+  }
 
   return {
     paths,
