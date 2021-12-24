@@ -37,7 +37,6 @@ const VerifiedTick = styled.span`
 `
 
 const DetailsBox = styled.div`
-  // padding: 24px;
   border-radius: 5px;
   background: #FFFFFF;
   border: 1px solid #DDDDDD;
@@ -252,9 +251,10 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         }
         sidebar={
           <Fragment>
+            <div style={{marginBottom: "24px", display: "flex", justifyContent: "flex-end"}}>
+              <Button onClick={edit}>Edit Adapter</Button>
+            </div>
             <DetailsBox>
-              {/* {_verified ? <Verified>Verified adapter</Verified> : <Unverified>Unverified adapter</Unverified>} */}
-
               <InfoBoxHeader>Adapter Info</InfoBoxHeader>
               <InfoBoxGrid>
                 <Attribute label="Version">{moduleDetails.version}</Attribute>
@@ -286,9 +286,6 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
               )}
             </DetailsBox>
 
-            <div style={{marginTop: "24px"}}>
-              <Button onClick={edit}>Edit Adapter</Button>
-            </div>
 
             {isAdmin && listId !== 'adapter' && (
               <div>
