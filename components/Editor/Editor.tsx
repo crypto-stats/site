@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { ViewPort, Top, LeftResizable, Left, Fill, RightResizable, Bottom, BottomResizable } from 'react-spaces'
+import { ViewPort, Top, LeftResizable, Left, Fill, RightResizable, Bottom, BottomResizable, Right } from 'react-spaces'
 import { useRouter } from 'next/router'
 import { LOG_LEVEL } from '@cryptostats/sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -25,6 +25,7 @@ import { MarkerSeverity } from './types'
 import ErrorPanel from './ErrorPanel'
 import { usePlausible } from 'next-plausible'
 import { useEditorState } from '../../hooks/editor-state'
+import EditorControls from './EditorControls'
 
 const Header = styled(Top)`
   background-image: url("/editor_logo.png");
@@ -91,8 +92,11 @@ const WalletButton = styled(ConnectionButton)`
 `
 
 const TabContainer = styled(Top)`
-  display: flex;
   background-color: #2F2F2F;
+
+  & > .spaces-space > div {
+    display: flex;
+  }
 `
 
 const FilterBox = styled(Top)`
@@ -299,7 +303,12 @@ const Editor: React.FC = () => {
           <FillWithStyledResize side="left">
             <Fill>
               <TabContainer size={50}>
-                <Tabs current={adapter?.name} onClose={() => setFileName(null)} />
+                <Fill>
+                  <Tabs current={adapter?.name} onClose={() => setFileName(null)} />
+                </Fill>
+                <Right size={100}>
+                  <EditorControls editorRef={editorRef} />
+                </Right>
               </TabContainer>
 
               <Fill>
