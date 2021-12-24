@@ -9,7 +9,7 @@ const Container = styled.div`
 `
 
 const TopBar = styled.div`
-  font-size: 16px;
+  font-size: 14px;
   padding: 12px 16px;
   border-radius: 4px;
   border-bottom: solid 1px #636363;

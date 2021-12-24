@@ -44,10 +44,26 @@ const ConsoleView = styled(Fill)`
   padding: 8px;
 `
 
+const Label = styled.div`
+  font-size: 14px;
+  color: #6B6B6B;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  margin: 16px;
+`
+
+
 const ConsoleLine = styled.div`
   font-family: monospace;
   white-space: pre-wrap;
   word-break: break-all;
+`
+
+const TabContentIntro = styled.div`
+  font-size: 14px;
+  color: #808080;
+  line-height: 19px;
+  margin: 16px 16px 24px;
 `
 
 const PreviewPanel: React.FC = () => {
@@ -72,6 +88,8 @@ const PreviewPanel: React.FC = () => {
   return (
     <Container>
       <Main scrollable={true}>
+        <TabContentIntro>In order to publish your Adapter you need to test the query you wrote.</TabContentIntro>
+        <Label>Queries to test</Label>
         {list && list.adapters.map((adapter: Adapter) => (
           <SubAdapterTest
             key={adapter.id}

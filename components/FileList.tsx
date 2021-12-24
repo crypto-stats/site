@@ -8,9 +8,10 @@ const Container = styled.div`
 `
 
 const Label = styled.div`
-  padding: 8px 4px;
+  padding: 24px 16px 16px;
   font-size: 14px;
   color: #6b6b6b;
+  text-transform: uppercase;
 `
 
 const List = styled.ul`
@@ -19,16 +20,23 @@ const List = styled.ul`
 `
 
 const ListItem = styled.li<{ selected?: boolean }>`
+  font-family: Inter-Regular;
+  font-size: 14px;
+  color: #C8C8C8;
+  letter-spacing: 0;
   list-style: none;
   margin: 0;
-  font-size: 14px;
-  color: #c8c8c8;
-  padding: 12px;
-  height: 40px;
+  padding: 12px 12px 12px 32px;
   box-sizing: border-box;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  &:hover {
+    background: #7e90b43b;
+    color: white;
+    cursor: pointer;
+  }
 
   ${(props) => props.selected ? `
     background: #7e90b43b;
@@ -56,7 +64,7 @@ const FileList: React.FC<FileListProps> = ({ selected, onSelected, filter }) => 
 
   return (
     <Container>
-      <Label>Saved in Browser</Label>
+      <Label>Saved in Browser ({adapters.length})</Label>
 
       <List>
         {adapters.map((adapter: AdapterWithID) => (

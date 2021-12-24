@@ -101,10 +101,8 @@ const TabContainer = styled(Top)`
 
 const FilterBox = styled(Top)`
   display: flex;
-
-  &:hover {
-    background: #131416;
-  }
+  background: #212121;
+  padding: 8px 16px;
 `
 
 const FilterField = styled.input`
@@ -113,7 +111,6 @@ const FilterField = styled.input`
   border: none;
   outline: none;
   color: #c6c6c6;
-  padding-left: 12px;
 `
 
 const ClearButton = styled.button`
@@ -168,6 +165,15 @@ const PrimaryFooterContainer = styled(Bottom)`
   border-top: solid 1px #444447;
   display: flex;
   background: #2f2f2f;
+`
+
+const LeftSidebarFooter = styled.div`
+  position: absolute;
+  bottom: 55px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
 `
 
 const FillWithStyledResize = styled(Fill)<{ side: string }>`
@@ -273,10 +279,10 @@ const Editor: React.FC = () => {
             </LeftFooter>
           </LeftCollapsed>
         ) : (
-          <LeftResizable size={200}>
-            <FilterBox size={40} >
+          <LeftResizable size={298}>
+            <FilterBox size={42} >
               <FilterField
-                placeholder="Search an Adapter here..."
+                placeholder="Search for your Adapters here..."
                 value={filter}
                 onChange={(e: any) => setFilter(e.target.value)}
               />
@@ -289,9 +295,9 @@ const Editor: React.FC = () => {
               <FileList selected={fileName} onSelected={setFileName} filter={filter} />
             </Fill>
 
-            <Bottom size={30}>
-              <Button onClick={() => setImageLibraryOpen(true)}>Image Library</Button>
-            </Bottom>
+            <LeftSidebarFooter size={40}>
+              <Button type="outline" onClick={() => setImageLibraryOpen(true)}>Image Library</Button>
+            </LeftSidebarFooter>
 
             <LeftFooter order={1} size={55}>
               <CollapseButton open onClick={() => setLeftCollapsed(true)} />
@@ -347,7 +353,7 @@ const Editor: React.FC = () => {
               )}
             </Fill>
 
-            <RightResizable size={300}>
+            <RightResizable size={443}>
               <RightPanel />
             </RightResizable>
           </FillWithStyledResize>

@@ -20,7 +20,7 @@ const Side = styled.div`
 
 const PublishButton = styled(Button)`
   height: 35px;
-  margin: 0 4px 0 32px;
+  margin: 0 16px 0 32px;
   padding: 9px 20px;
   border-radius: 4px;
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.5);

@@ -5,6 +5,7 @@ import PreviewPanel from './PreviewPanel'
 import TestPanel from './TestPanel'
 import { useEditorState } from 'hooks/editor-state'
 
+
 const Container = styled(Fill)`
   color: #ffffff;
   background-color: #212121;
@@ -39,6 +40,25 @@ const Tab = styled.li<{ selected?: boolean }>`
   `}
 `
 
+const IconPreview = styled.i`
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  background-image: url("/Icon/View.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-right: 8px;
+`
+const IconTest = styled.i`
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  background-image: url("/Icon/Flag.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-right: 8px;
+`
+
 enum TAB {
   PREVIEW,
   TEST,
@@ -51,11 +71,10 @@ const RightPanel = () => {
     <Container>
       <Top size={50}>
         <Tabs>
-          <Tab selected={tab === TAB.PREVIEW} onClick={() => setTab(TAB.PREVIEW)}>Preview</Tab>
-          <Tab selected={tab === TAB.TEST} onClick={() => setTab(TAB.TEST)}>Test</Tab>
+          <Tab selected={tab === TAB.PREVIEW} onClick={() => setTab(TAB.PREVIEW)}><IconPreview /> Preview</Tab>
+          <Tab selected={tab === TAB.TEST} onClick={() => setTab(TAB.TEST)}><IconTest />  Test</Tab>
         </Tabs>
       </Top>
-
       <Fill scrollable={tab === TAB.PREVIEW}>
         {tab === TAB.PREVIEW ? <PreviewPanel /> : <TestPanel />}
       </Fill>
