@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { Adapter } from '@cryptostats/sdk'
 import QueryForm from './QueryForm'
+import { useEditorState } from 'hooks/editor-state'
 
 const Container = styled.div`
 `
@@ -24,7 +25,7 @@ interface SubAdapterPreviewProps {
 }
 
 const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDefault }) => {
-  const [open, setOpen] = useState(openByDefault)
+  const [open, setOpen] = useEditorState(`subtest-${subadapter.id}-open`, openByDefault)
 
   // @ts-ignore
   const { name, subtitle } = subadapter.metadata.metadata

@@ -24,6 +24,7 @@ import CloseIcon from 'components/CloseIcon'
 import { MarkerSeverity } from './types'
 import ErrorPanel from './ErrorPanel'
 import { usePlausible } from 'next-plausible'
+import { useEditorState } from '../../hooks/editor-state'
 
 const Header = styled(Top)`
   background-image: url("/editor_logo.png");
@@ -195,9 +196,9 @@ const PrimaryFill = styled(FillWithStyledResize)`
 const Editor: React.FC = () => {
   const router = useRouter()
   const plausible = usePlausible()
-  const [fileName, setFileName] = useState<string | null>(null)
+  const [fileName, setFileName] = useEditorState<string | null>('open-file', null)
   const [started, setStarted] = useState(false)
-  const [leftCollapsed, setLeftCollapsed] = useState(false)
+  const [leftCollapsed, setLeftCollapsed] = useEditorState('left-collapsed', false)
   const [newAdapterModalOpen, setNewAdapterModalOpen] = useState(false)
   const [filter, setFilter] = useState('')
   const [markers, setMarkers] = useState<any[]>([])

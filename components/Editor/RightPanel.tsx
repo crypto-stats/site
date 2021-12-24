@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { Fill, Top } from 'react-spaces'
 import PreviewPanel from './PreviewPanel'
 import TestPanel from './TestPanel'
+import { useEditorState } from 'hooks/editor-state'
 
 const Container = styled(Fill)`
   color: #ffffff;
@@ -38,20 +39,25 @@ const Tab = styled.li<{ selected?: boolean }>`
   `}
 `
 
+enum TAB {
+  PREVIEW,
+  TEST,
+}
+
 const RightPanel = () => {
-  const [tab, setTab] = useState('preview')
+  const [tab, setTab] = useEditorState('right-tab', TAB.PREVIEW)
 
   return (
     <Container>
       <Top size={50}>
         <Tabs>
-          <Tab selected={tab === 'preview'} onClick={() => setTab('preview')}>Preview</Tab>
-          <Tab selected={tab === 'test'} onClick={() => setTab('test')}>Test</Tab>
+          <Tab selected={tab === TAB.PREVIEW} onClick={() => setTab(TAB.PREVIEW)}>Preview</Tab>
+          <Tab selected={tab === TAB.TEST} onClick={() => setTab(TAB.TEST)}>Test</Tab>
         </Tabs>
       </Top>
 
-      <Fill scrollable={tab === 'preview'}>
-        {tab === 'preview' ? <PreviewPanel /> : <TestPanel />}
+      <Fill scrollable={tab === TAB.PREVIEW}>
+        {tab === TAB.PREVIEW ? <PreviewPanel /> : <TestPanel />}
       </Fill>
     </Container>
   );
