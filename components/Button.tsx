@@ -1,36 +1,48 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const ButtonElement = styled.button`
-  border-radius: 0;
-  background: #0477f4;
+const ButtonElement = styled.button<{ type: string }>`
   border: none;
-  padding: 8px 24px;
-  font-size: 14px;
-  font-weight: 600;
   border-radius: 4px;
-  color: white;
+  box-shadow: none;
+  background: none;
+  cursor: pointer;
+  outline: none;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 32px;
+  letter-spacing: 0.2px;
+  
 
-  &:hover {
-    cursor: pointer;
-    background: #3a98fd;
-  }
+  ${({type}) => type === "outline" ?  `
+      background-color: transparent;
+      color: #0477F4;
+      border: 1px solid #0477F4;
 
-  &:disabled {
-    background: #999;
+      &:hover {
+        background-color: #0477F4;
+        color: #FFF;
+      }
+    `
+    :
+    `
+      background-color: #0477F4;
+      color: #FFF;
+    `
   }
-}
 `
 
 interface ButtonProps {
   onClick?: () => void
   disabled?: boolean
   className?: string
+  type?: string
 }
 
-const Button: React.FC<ButtonProps> = ({ children, onClick, disabled, className }) => {
+const Button: React.FC<ButtonProps> = ({ children, onClick, disabled, className, type }) => {
   return (
-    <ButtonElement onClick={onClick} disabled={disabled} className={className}>
+    <ButtonElement type={type} onClick={onClick} disabled={disabled} className={className}>
       {children}
     </ButtonElement>
   )
