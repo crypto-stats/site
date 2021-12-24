@@ -41,10 +41,14 @@ interface ButtonProps {
 
 const Button: React.FC<ButtonProps> = ({ children, onClick, disabled, className}) => {
   return (
-    <ButtonElement onClick={onClick} disabled={disabled} className={className}>
+    <ButtonElement onClick={onClick} disabled={disabled} className={className || 'primary'}>
       {children}
     </ButtonElement>
   )
+}
+
+Button.defaultProps = {
+  className: "primary"
 }
 
 export default Button;

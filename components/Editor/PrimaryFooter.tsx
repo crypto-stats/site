@@ -124,7 +124,7 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers, onMark
               </Link>
             )}
 
-            <PublishButton onClick={() => setShowModal(true)} disabled={errors.length > 0}>
+            <PublishButton onClick={() => setShowModal(true)} disabled={errors.length > 0} className={"primary"}>
               Publish to IPFS
             </PublishButton>
           </Fragment>

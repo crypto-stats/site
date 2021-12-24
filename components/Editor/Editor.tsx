@@ -295,8 +295,8 @@ const Editor: React.FC = () => {
               <FileList selected={fileName} onSelected={setFileName} filter={filter} />
             </Fill>
 
-            <LeftSidebarFooter size={40}>
-              <Button className="outline" onClick={() => setImageLibraryOpen(true)}>Image Library</Button>
+            <LeftSidebarFooter>
+              <Button className={"outline"} onClick={() => setImageLibraryOpen(true)}>Image Library</Button>
             </LeftSidebarFooter>
 
             <LeftFooter order={1} size={55}>
