@@ -8,7 +8,7 @@ import { useWeb3React } from '@web3-react/core'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import { useAdapterList, newModule } from 'hooks/local-adapters'
-import { getListNames, getModulesForList, getListsForAdapter } from 'utils/lists-chain'
+import { getListNames, getModulesForList, getListsForAdapter, getCIDFromSlug, getAllVerifiedAdapters } from 'utils/lists-chain'
 import AdapterPreviewList from 'components/AdapterPage/AdapterPreviewList'
 import Button from 'components/Button'
 import CodeViewer from 'components/CodeViewer'
@@ -314,14 +314,18 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
 export default AdapterPage
 
 export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string }> = async (ctx: GetStaticPropsContext) => {
-  const listId = ctx.params!.listId as string
-  const cid = ctx.params!.cid as string
+  const collectionId = ctx.params!.listId as string
+  let cid = ctx.params!.cid as string
+
+  if (cid.indexOf('Qm') != 0) {
+    cid = await getCIDFromSlug(collectionId, cid)
+  }
 
   const sdk = new CryptoStatsSDK({
     executionTimeout: 70,
   })
 
-  const listModules = listId === 'adapter' ? [] : await getModulesForList(listId)
+  const listModules = collectionId === 'adapter' ? [] : await getModulesForList(collectionId)
   const verified = listModules.indexOf(cid) !== -1
 
   const verifiedLists = await getListsForAdapter(cid)
@@ -354,7 +358,7 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
 
   return {
     props: {
-      listId,
+      listId: collectionId,
       cid,
       verified,
       moduleDetails,
@@ -369,15 +373,17 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const listNames = await getListNames()
+  const adapters = await getAllVerifiedAdapters()
 
   const paths: any[] = []
-  await Promise.all(listNames.map(async (listId: string) => {
-    const cids = await getModulesForList(listId)
-    for (const cid of cids) {
-      paths.push({ params: { listId, cid } })
-    }
-  }))
+  for (const adapter of adapters) {
+    paths.push({
+      params: {
+        listId: adapter.collection,
+        cid: adapter.slug || adapter.cid,
+      }
+    })
+  }
 
   return {
     paths,
