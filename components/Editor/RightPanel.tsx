@@ -6,6 +6,7 @@ import TestPanel from './TestPanel'
 
 const Container = styled(Fill)`
   color: #ffffff;
+  background-color: #212121;
 `
 
 const Tabs = styled.ul`
