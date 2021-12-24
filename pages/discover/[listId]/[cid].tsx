@@ -97,7 +97,7 @@ const InfoBoxAuthor = styled.div`
 `
 const InfoBoxAuthorLabel = styled(InfoBoxLabel)``
 const InfoBoxAuthorValue = styled.div`
-  display: inline;
+  display: inline-block;
   padding: 12px;
   background-color: #EEF1F7;
   border-radius: 4px;
