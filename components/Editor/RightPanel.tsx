@@ -13,6 +13,7 @@ const Tabs = styled.ul`
   display: flex;
   margin: 0;
   padding: 0;
+  height: 50px;
 `
 
 const Tab = styled.li<{ selected?: boolean }>`
@@ -27,8 +28,8 @@ const Tab = styled.li<{ selected?: boolean }>`
 
   ${({ selected }) => !selected && `
     background: #2f2f2f;
-    border-bottom: solid 1px #4a4a4d;
-    border-left: solid 1px #4a4a4d;
+    border-bottom: 1px solid #4A4A4D;
+    border-left: 1px solid #4A4A4D;
     cursor: pointer;
 
     &:hover {

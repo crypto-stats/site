@@ -31,7 +31,8 @@ const Left = styled(LeftResizable)`
 `
 
 const Header = styled(Top)`
-  background-image: url("/logo-white.svg");
+  background-image: url("/editor_logo.png");
+  background-size: 140px;
   background-color: #2F2F2F;
   background-position: center;
   background-repeat: no-repeat;
@@ -55,6 +56,11 @@ const CloseButton = styled.button`
   font-size: 12px;
   font-weight: 600;
   color: white;
+  margin-left: 16px;
+
+  &:hover {
+    cursor: pointer;
+  }
 `
 
 const NewAdapterButton = styled.button`
@@ -90,6 +96,7 @@ const WalletButton = styled(ConnectionButton)`
 
 const TabContainer = styled(Top)`
   display: flex;
+  background-color: #2F2F2F;
 `
 
 const FilterBox = styled(Top)`
@@ -222,7 +229,7 @@ const Editor: React.FC = () => {
   return (
     <ViewPort style={{ background: '#0f1011' }}>
       <Header size={64} order={1}>
-        <CloseButton onClick={() => router.push('/discover')}>Close</CloseButton>
+        <CloseButton onClick={() => router.push('/discover')}>X Close</CloseButton>
 
         <HeaderRight>
           <NewAdapterButton onClick={() => setNewAdapterModalOpen(true)}>New Adapter</NewAdapterButton>
@@ -233,7 +240,7 @@ const Editor: React.FC = () => {
         <Left size={200}>
           <FilterBox size={40} >
             <FilterField
-              placeholder="Filter"
+              placeholder="Search an Adapter here..."
               value={filter}
               onChange={(e: any) => setFilter(e.target.value)}
             />

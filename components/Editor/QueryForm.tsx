@@ -20,6 +20,10 @@ const TopBar = styled.div`
   }
 `
 
+const QueryFormInfo = styled.div`
+  padding: 16px 16px 0;
+`
+
 const Result = styled.pre`
   white-space: pre-wrap;
   font-size: 16px;
@@ -28,7 +32,7 @@ const Result = styled.pre`
 `
 
 const InputBlock = styled.div`
-  padding: 24px 16px 0;
+  padding: 16px 16px 0;
 `
 
 const Label = styled.div`
@@ -120,6 +124,9 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault }) => {
       {open && (
         <div>
           <>
+            <QueryFormInfo>
+              <Label>Fill the parameters below</Label>
+            </QueryFormInfo>
             {[...new Array(fn.length)].map((_: any, index: number) => (
               <InputBlock key={index}>
                 <Label>{functionNames[index]}</Label>
