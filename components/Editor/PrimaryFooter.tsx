@@ -74,9 +74,10 @@ interface PrimaryFooterProps {
   fileName: string | null
   markers: any[]
   onMarkerClick: () => void
+  editorRef: any
 }
 
-const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers, onMarkerClick }) => {
+const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers, onMarkerClick, editorRef }) => {
   const [showModal, setShowModal] = useState(false)
   const { adapter } = useAdapter(fileName)
 
@@ -136,6 +137,7 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers, onMark
           fileName={fileName}
           show={showModal}
           onClose={() => setShowModal(false)}
+          editorRef={editorRef}
         />
       )}
     </Container>

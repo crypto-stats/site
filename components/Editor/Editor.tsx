@@ -363,6 +363,7 @@ const Editor: React.FC = () => {
               fileName={fileName}
               markers={markers}
               onMarkerClick={() => setShowErrors(true)}
+              editorRef={editorRef}
             />
           </PrimaryFooterContainer>
         </Fill>
