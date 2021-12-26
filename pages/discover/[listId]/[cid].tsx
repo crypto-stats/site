@@ -226,7 +226,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
   return (
     <CompilerProvider>
       <MetaTags
-        title={`${moduleDetails.name || ''} Adapter - ${listId}`}
+        title={`${moduleDetails.name || ''} Adapter${listId !== 'adapter' ? ` - ${listId}` : ''}`}
         description={`The ${moduleDetails.name || ''} adapter ${moduleDetails.version && `(v${moduleDetails.version})`} contains ${subadapters.length} subadapters: ${subadapterNames.join(', ')}`}
       />
 
