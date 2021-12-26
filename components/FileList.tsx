@@ -20,7 +20,6 @@ const List = styled.ul`
 `
 
 const ListItem = styled.li<{ selected?: boolean }>`
-  font-family: Inter-Regular;
   font-size: 14px;
   color: #C8C8C8;
   letter-spacing: 0;

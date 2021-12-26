@@ -44,7 +44,6 @@ const DetailsBox = styled.div`
 `
 
 const InfoBoxHeader = styled.div`
-  font-family: Inter-Regular;
   font-size: 12px;
   color: #838383;
   letter-spacing: 2px;
@@ -68,7 +67,6 @@ const InfoBoxItem = styled.div`
 
 const InfoBoxLabel = styled.div`
   display: block;
-  font-family: Inter-Regular;
   font-size: 12px;
   color: #4B4B4B;
   letter-spacing: 0.34px;
@@ -76,7 +74,7 @@ const InfoBoxLabel = styled.div`
   `
 
 const InfoBoxValue = styled.div`
-  font-family: Inter-Medium;
+  font-weight: 500;
   font-size: 14px;
   color: #000000;
   margin: 8px 0 0;
@@ -86,7 +84,7 @@ const InfoBoxValue = styled.div`
   text-overflow: ellipsis;
 `
 const InfoBoxValueFullWidth = styled.div`
-  font-family: Inter-Medium;
+  font-weight: 500;
   font-size: 14px;
   color: #000000;
   margin: 8px 0 0;
@@ -103,9 +101,12 @@ const InfoBoxAuthorValue = styled.div`
   border-radius: 4px;
   width: auto;
   margin-top: 16px;
-  font-family: Inter-Medium;
   font-size: 14px;
   color: #0477F4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  box-sizing: border-box;
 
   &:hover{
     cursor: pointer;
