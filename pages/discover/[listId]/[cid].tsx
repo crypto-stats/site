@@ -16,6 +16,7 @@ import VerifyForm from 'components/VerifyForm'
 import { CompilerProvider } from 'hooks/compiler'
 import PublisherBar from 'components/AdapterPage/PublisherBar'
 import MetaTags from 'components/MetaTags'
+import Text from 'components/Text'
 import { getENSCache } from 'utils/ens'
 import { usePlausible } from 'next-plausible'
 
@@ -242,12 +243,12 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         breadcrumbs={breadcrumbs}
         hero={
           <div>
-            <div>Adapter</div>
-            <h1>
+            <Text tag="p" type="label">Adapter</Text>
+            <Text tag="h1" type="title">
               {moduleDetails.name || cid}
               {_verified && <VerifiedTick />}
-            </h1>
-            <div>SubAdapters: {subadapters.length}</div>
+            </Text>
+            <Text tag="p" type="description">SubAdapters: {subadapters.length}</Text>
           </div>
         }
         sidebar={
@@ -262,6 +263,13 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
                 <Attribute label="License">{moduleDetails.license}</Attribute>
                 <Attribute label="IPFS CID">{cid}</Attribute>
                 <Attribute label="IPFS CID (source)">{moduleDetails.sourceFileCid}</Attribute>
+                {moduleDetails.previousVersion && (
+                  <Attribute label="Prev. Version">
+                    <Link href={`/discover/${listId}/${moduleDetails.previousVersion}`}>
+                      <a>{moduleDetails.previousVersion}</a>
+                    </Link>
+                  </Attribute>
+                )}
                 {verifiedLists.length > 0 && (
                   <Attribute label="Collections">
                     {verifiedLists.map((list: string) => (
@@ -272,13 +280,6 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
                         <span>, </span>
                       </>
                     ))}
-                  </Attribute>
-                )}
-                {moduleDetails.previousVersion && (
-                  <Attribute label="Previous Version">
-                    <Link href={`/discover/${listId}/${moduleDetails.previousVersion}`}>
-                      <a>{moduleDetails.previousVersion}</a>
-                    </Link>
                   </Attribute>
                 )}
               </InfoBoxGrid>
@@ -302,10 +303,12 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
           </Fragment>
         }
       >
-        <h2>Sub-Adapters</h2>
+        <Text tag="h2" type="subtitle">Sub-Adapters</Text>
+        <Text tag="p" type="description">Preview of how the aub-Adapter are returning the data.</Text>
         <AdapterPreviewList staticDetails={subadapters} code={moduleDetails.code} />
         
-        <h2>Code</h2>
+        <Text tag="h2" type="subtitle">Code</Text>
+        <Text tag="p" type="description">Check the entire code written for the Adapter.</Text>
         <CodeViewer js={moduleDetails.code} ts={moduleDetails.sourceCode} />    
       </TranquilLayout>
     </CompilerProvider>

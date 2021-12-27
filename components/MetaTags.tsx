@@ -18,9 +18,6 @@ const MetaTags: React.FC<MetaTagsProps> = ({ title, description }) => {
       <meta name="twitter:site" content="@CryptoStats_" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
     </Head>
   )
 }

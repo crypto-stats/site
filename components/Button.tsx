@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const ButtonElement = styled.button<{ className: string }>`
+const ButtonElement = styled.button<{ className?: string }>`
   border: none;
   border-radius: 4px;
   box-shadow: none;
@@ -41,7 +41,7 @@ interface ButtonProps {
 
 const Button: React.FC<ButtonProps> = ({ children, onClick, disabled, className}) => {
   return (
-    <ButtonElement onClick={onClick} disabled={disabled} className={className || 'primary'}>
+    <ButtonElement onClick={onClick} disabled={disabled} className={className}>
       {children}
     </ButtonElement>
   )

@@ -2,29 +2,16 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import type { Adapter } from '@cryptostats/sdk'
 import QueryForm from './QueryForm'
+import Text from 'components/Text'
 
-
-const AttributeContainer = styled.div`
-  margin: 2px 0;
-`
-
-const Name = styled.div`
-  font-size: 12px;
-  color: #7b7b7b;
-`
-
-const Value = styled.div`
-  font-size: 16px;
-  color: #000000;
-`;
 
 // TODO: use existing Attribute component with dark/bright colors
 const Attribute: React.FC<{ name: string }> = ({ name, children }) => {
   return (
-    <AttributeContainer>
-      <Name>{name}</Name>
-      <Value>{children}</Value>
-    </AttributeContainer>
+    <dl>
+      <Text type="dt" type="label">{name}</Text>
+      <Text tag="dd" type="content">{children}</Text>
+    </dl>
   )
 }
 
@@ -42,12 +29,12 @@ const AdapterTitle = styled.div`
 `
 
 const AdapterIcon = styled.div`
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  margin: 0 4px;
+  margin: 16px;
 `
 
 const Row = styled.div`
@@ -96,13 +83,13 @@ const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter, openB
     <div>
       <AdapterTitle onClick={() => setOpen(!open)}>
         <AdapterIcon style={{ backgroundImage: `url('${details.metadata.icon}')` }} />
-        <div>{title}</div>
+        <Text tag="h3" type="label">{title}</Text>
       </AdapterTitle>
 
       {open && (
         <Row>
           <Col>
-            <div>Metadata</div>
+            <Text tag="p" type="label">Metadata</Text>
 
             {Object.entries(details.metadata).map(([key, val]: [string, any]) => (
               <Attribute name={key} key={key}>
@@ -111,14 +98,14 @@ const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter, openB
                     <Icon src={val} />
                   </div>
                 ) : (
-                  <Pre>{JSON.stringify(val, null, 2)}</Pre>
+                  <Text tag="pre" type="pre">{JSON.stringify(val, null, 2)}</Text>
                 )}
               </Attribute>
             ))}
           </Col>
 
           <Col>
-            <div>Queries</div>
+            <Text tag="p" type="label">Queries</Text>
             {adapter && Object.entries(adapter.queries).map(([id, fn]: [string, any], _id: number, list: any[]) => {
               return (
                 <QueryForm
