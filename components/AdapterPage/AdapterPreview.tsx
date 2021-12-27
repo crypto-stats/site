@@ -60,12 +60,6 @@ const Icon = styled.img`
   max-height: 50px;
 `
 
-const Pre = styled.pre`
-  white-space: pre-wrap;
-  font-size: 14px;
-  margin: 4px 0 10px;
-`
-
 interface AdapterPreviewProps {
   details: any
   adapter: Adapter | null
