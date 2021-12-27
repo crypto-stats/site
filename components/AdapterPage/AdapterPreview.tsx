@@ -9,7 +9,7 @@ import Text from 'components/Text'
 const Attribute: React.FC<{ name: string }> = ({ name, children }) => {
   return (
     <dl>
-      <Text type="dt" type="label">{name}</Text>
+      <Text tag="dt" type="label">{name}</Text>
       <Text tag="dd" type="content">{children}</Text>
     </dl>
   )

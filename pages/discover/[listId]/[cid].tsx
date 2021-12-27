@@ -45,11 +45,7 @@ const DetailsBox = styled.div`
 `
 
 const InfoBoxHeader = styled.div`
-  font-size: 12px;
-  color: #838383;
-  letter-spacing: 2px;
   padding: 24px;
-  text-transform: uppercase;
   border-bottom: 1px solid #D8D8D8;
 `
 
@@ -65,14 +61,6 @@ const InfoBoxItem = styled.div`
   margin: 0;
   padding: 0;
 `
-
-const InfoBoxLabel = styled.div`
-  display: block;
-  font-size: 12px;
-  color: #4B4B4B;
-  letter-spacing: 0.34px;
-  text-transform: uppercase;
-  `
 
 const InfoBoxValue = styled.div`
   font-weight: 500;
@@ -94,39 +82,20 @@ const InfoBoxValueFullWidth = styled.div`
 const InfoBoxAuthor = styled.div`
   padding: 24px 24px 32px 24px;
 `
-const InfoBoxAuthorLabel = styled(InfoBoxLabel)``
-const InfoBoxAuthorValue = styled.div`
-  display: inline-block;
-  padding: 12px;
-  background-color: #EEF1F7;
-  border-radius: 4px;
-  width: auto;
-  margin-top: 16px;
-  font-size: 14px;
-  color: #0477F4;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  box-sizing: border-box;
-
-  &:hover{
-    cursor: pointer;
-  }
-`
 
 const Attribute: React.FC<{ label: string }> = ({ label, children }) => {
   if(label && label === "Author") {
     return (
       <InfoBoxAuthor>
-        <InfoBoxAuthorLabel>{label}</InfoBoxAuthorLabel>
-        <InfoBoxAuthorValue>{children}</InfoBoxAuthorValue>
+        <Text tag="p" type="label">{label}</Text>
+        <Text tag="p" type="content">{children}</Text>
       </InfoBoxAuthor>
     )
   }
 
   return (
     <InfoBoxItem>
-      <InfoBoxLabel>{label}</InfoBoxLabel>
+      <Text tag="p" type="label">{label}</Text>
       {label === "Collections"? <InfoBoxValueFullWidth>{children}</InfoBoxValueFullWidth> : <InfoBoxValue>{children}</InfoBoxValue>}
     </InfoBoxItem>
   )
@@ -254,10 +223,12 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         sidebar={
           <Fragment>
             <div style={{marginBottom: "24px", display: "flex", justifyContent: "flex-end"}}>
-              <Button onClick={edit}>Edit Adapter</Button>
+              <Button className="outline" onClick={edit}>Edit Adapter</Button>
             </div>
             <DetailsBox>
-              <InfoBoxHeader>Adapter Info</InfoBoxHeader>
+              <InfoBoxHeader>
+                <Text tag="p" type="label">Adapter Info</Text>
+              </InfoBoxHeader>
               <InfoBoxGrid>
                 <Attribute label="Version">{moduleDetails.version}</Attribute>
                 <Attribute label="License">{moduleDetails.license}</Attribute>
