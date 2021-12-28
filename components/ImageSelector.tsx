@@ -3,8 +3,9 @@ import styled, { keyframes, css } from 'styled-components'
 import { useImages } from 'hooks/images'
 import copy from 'copy-to-clipboard';
 import FileUploadButton from './FileUploadButton'
-import { IPFS_GATEWAY } from 'utils/ipfs'
 import Button from './Button'
+
+export const IPFS_GATEWAY = 'https://cloudflare-ipfs.com'
 
 const Cards = styled.ul`
   display: flex;

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const ButtonElement = styled.button<{ className?: string }>`
+  display: flex;
   border: none;
   border-radius: 4px;
   box-shadow: none;

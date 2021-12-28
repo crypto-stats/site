@@ -167,13 +167,11 @@ const PrimaryFooterContainer = styled(Bottom)`
   background: #2f2f2f;
 `
 
-const LeftSidebarFooter = styled.div`
-  position: absolute;
-  bottom: 55px;
-  width: 100%;
+const LeftSidebarFooter = styled(Bottom)`
   display: flex;
   justify-content: center;
   margin-bottom: 24px;
+  align-items: center;
 `
 
 const FillWithStyledResize = styled(Fill)<{ side: string }>`
@@ -295,7 +293,7 @@ const Editor: React.FC = () => {
               <FileList selected={fileName} onSelected={setFileName} filter={filter} />
             </Fill>
 
-            <LeftSidebarFooter>
+            <LeftSidebarFooter size={70}>
               <Button className={"outline"} onClick={() => setImageLibraryOpen(true)}>Image Library</Button>
             </LeftSidebarFooter>
 
