@@ -84,6 +84,10 @@ const InfoBoxAuthor = styled.div`
   padding: 24px 24px 32px 24px;
 `
 
+const SectionContainer = styled.div`
+  margin-top: 40px;
+`
+
 const Attribute: React.FC<{ label: string }> = ({ label, children }) => {
   if(label && label === "Author") {
     return (
@@ -295,13 +299,16 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
           </Fragment>
         }
       >
-        <Text tag="h2" type="subtitle">Sub-Adapters</Text>
-        <Text tag="p" type="description">Preview of how the aub-Adapter are returning the data.</Text>
-        <AdapterPreviewList staticDetails={subadapters} code={moduleDetails.code} />
-        
-        <Text tag="h2" type="subtitle">Code</Text>
-        <Text tag="p" type="description">Check the entire code written for the Adapter.</Text>
-        <CodeViewer js={moduleDetails.code} ts={moduleDetails.sourceCode} />    
+        <SectionContainer>
+          <Text tag="h2" type="subtitle">Sub-Adapters</Text>
+          <Text tag="p" type="description" mt="8">Preview of how the aub-Adapter are returning the data.</Text>
+          <AdapterPreviewList staticDetails={subadapters} code={moduleDetails.code} />
+        </SectionContainer>
+        <SectionContainer>
+          <Text tag="h2" type="subtitle">Code</Text>
+          <Text tag="p" type="description" mt="8">Check the entire code written for the Adapter.</Text>
+          <CodeViewer js={moduleDetails.code} ts={moduleDetails.sourceCode} />    
+        </SectionContainer>
       </TranquilLayout>
     </CompilerProvider>
   )
