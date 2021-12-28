@@ -1,9 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const TagElement = styled.div<{ type?: string }>`
+const TagElement = styled.div<{ type?: string, mt?:string, mb?:string }>`
   font-weight: 400;
   margin: 0;
+  margin-top: ${({mt})=>mt}px;
+  margin-bottom: ${({mb})=>mb}px;
   padding: 0;
 
   ${({type}) => type === "display" && `
@@ -55,13 +57,15 @@ const TagElement = styled.div<{ type?: string }>`
 
 interface TextProps {
   tag?: React.ElementType | "div"
+  mt?: string | "0"
+  mb?: string | "0"
   type?: string
   className?: string
 }
 
-const Text: React.FC<TextProps> = ({ tag, type, className, children }) => {
+const Text: React.FC<TextProps> = ({ tag, type, className, children, mt, mb }) => {
   return (
-    <TagElement as={tag} className={className} type={type}>
+    <TagElement as={tag} className={className} type={type} mt={mt} mb={mb}>
       {children}
     </TagElement>
   )
