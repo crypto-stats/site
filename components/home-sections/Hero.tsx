@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import HeroCard from './HeroCard'
+import Text from 'components/Text'
 
 const Container = styled.div`
   height: 776px;
@@ -33,16 +34,6 @@ const CardContainer = styled.div`
 
   @media (max-width: 768px) {
     flex: 1 0 370px;
-  }
-`
-
-const Tagline = styled.h1`
-  font-size: 52px;
-  font-weight: 700;
-  color: #272727;
-
-  @media (max-width: 768px) {
-    font-size: 42px;
   }
 `
 
@@ -92,11 +83,11 @@ const Hero: React.FC<{ sampleData: any }> = ({ sampleData }) => {
   return (
     <Container>
       <Column>
-        <Tagline>
+        <Text tag="h1" type="display">
           One neutral source of truth for crypto metrics.
           <br />
           Used by everyone, managed by the community.
-        </Tagline>
+        </Text>
 
         <Link href="/discover" passHref>
           <CTA>Discover the data collection</CTA>

@@ -1,11 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const TagElement = styled.div<{ type: string }>`
+const TagElement = styled.div<{ type?: string }>`
   font-weight: 400;
   margin: 0;
   padding: 0;
 
+  ${({type}) => type === "display" && `
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 30px;
+    color: #272727;
+
+    @media (min-width: 1024px) { 
+      font-size: 52px;
+      line-height: 56px;
+      letter-spacing: -1.5px;
+    }
+  `}
   ${({type}) => type === "title" && `
     font-weight: 600;
     font-size: 36px;
@@ -20,7 +32,7 @@ const TagElement = styled.div<{ type: string }>`
   ${({type}) => type === "label" &&  `
     font-size: 12px;
     color: #838383;
-    letter-spacing: 2px;  
+    letter-spacing: 1.5px;  
     text-transform: uppercase;
   `}
   ${({type}) => type === "description" && `
@@ -42,7 +54,7 @@ const TagElement = styled.div<{ type: string }>`
 `
 
 interface TextProps {
-  tag?: string
+  tag: React.ElementType
   type?: string
   className?: string
 }
