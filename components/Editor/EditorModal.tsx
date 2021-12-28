@@ -7,11 +7,23 @@ const ModalOverlay = styled.div<{ width?: string | number; height?: string | num
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: transparent !important;
+  
+  &:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7) !important;
+    backdrop-filter: blur(4px);
+    z-index: 1;
+  }
 
   & .modal-content {
+    z-index: 2;
     border: solid 1px #444;
-    border-radius: 5px;
-    background: #2f2f2f;
+    border-radius: 4px;
+    background-color: #2f2f2f;
     color: #c8c8c8;
     margin: 40px;
     display: flex;

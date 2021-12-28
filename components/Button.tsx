@@ -13,6 +13,11 @@ const ButtonElement = styled.button<{ className?: string }>`
   font-size: 14px;
   padding: 8px 32px;
   letter-spacing: 0.2px;
+
+  &:hover {
+    background-color: #0477F4;
+    color: #FFF;
+  }
   
 
   ${({className}) => className === "outline" ?  `
