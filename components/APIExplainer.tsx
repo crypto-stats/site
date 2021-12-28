@@ -75,7 +75,7 @@ const ParamInputBox = styled.div`
   border-top: solid 1px #ddd;
 `
 
-const ParamInputLabel = styled.label`
+const ParamInputLabel = styled.div`
   width: 300px;
   display: flex;
   flex-direction: column;
@@ -176,9 +176,11 @@ enum MODE {
 }
 
 const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
+  const queries = collectionMetadata[listId]?.queries || []
+
   const plausible = usePlausible()
   const [mode, setMode] = useState<MODE>(MODE.REST)
-  const [selectedQuery, setSelectedQuery] = useState<null | number>(null)
+  const [selectedQuery, setSelectedQuery] = useState<null | number>(queries.length === 1 ? 0 : null)
   const [paramValues, setParamValues] = useState<string[]>([])
   const [executing, setExecuting] = useState(false)
   const [output, setOutput] = useState('')
@@ -190,8 +192,6 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
   }
 
   const appendOutput = (output: string) => setOutput((_output: string) => `${_output}\n${output}`)
-
-  const queries = collectionMetadata[listId]?.queries || []
 
   const selectQuery = (e: any) => setSelectedQuery(parseInt(e.target.value))
 
