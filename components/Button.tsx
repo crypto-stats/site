@@ -13,7 +13,7 @@ const ButtonElement = styled.button<{ className?: string }>`
   font-size: 14px;
   padding: 8px 32px;
   letter-spacing: 0.2px;
-  
+  display: flex;
 
   ${({className}) => className === "outline" ?  `
       background-color: transparent;

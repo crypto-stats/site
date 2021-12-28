@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useENSName } from 'use-ens-name'
 import { useWeb3React } from '@web3-react/core'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
+import { Edit } from 'react-feather'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import { useAdapterList, newModule } from 'hooks/local-adapters'
 import { getListNames, getModulesForList, getListsForAdapter, getCIDFromSlug, getAllVerifiedAdapters } from 'utils/lists-chain'
@@ -128,6 +129,16 @@ interface AdaptersPageProps {
   collections: string[]
 }
 
+const ForkIcon: React.FC = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" >
+    <path d="M8 7C9.10457 7 10 6.10457 10 5C10 3.89543 9.10457 3 8 3C6.89543 3 6 3.89543 6 5C6 6.10457 6.89543 7 8 7Z" />
+    <path d="M8 21C9.10457 21 10 20.1046 10 19C10 17.8954 9.10457 17 8 17C6.89543 17 6 17.8954 6 19C6 20.1046 6.89543 21 8 21Z" />
+    <path d="M17 10C18.1046 10 19 9.10457 19 8C19 6.89543 18.1046 6 17 6C15.8954 6 15 6.89543 15 8C15 9.10457 15.8954 10 17 10Z" />
+    <path d="M8 7V17" />
+    <path d="M17 11V12.8C17 13.1183 16.7893 13.4235 16.4142 13.6485C16.0391 13.8736 15.5304 14 15 14H8"/>
+  </svg>
+)
+
 const AdapterPage: NextPage<AdaptersPageProps> = ({
   listId, cid, verified, moduleDetails, subadapters, listModules, verifiedLists, collections
 }) => {
@@ -141,28 +152,29 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
   // NextJS page changes might not re-initialize component
   useEffect(() => setVerified(verified), [cid, listId])
 
-  const edit = () => {
-    for (const adapter of adapters) {
-      for (const publication of adapter.publications || []) {
-        if (publication.cid === cid) {
-          plausible('edit-adapter', {
-            props: {
-              listId,
-              adapter: cid,
-              adapterName: moduleDetails.name,
-              newAdapter: false,
-            },
-          })
+  const edit = (clone?: boolean) => () => {
+    if (!clone) {
+      for (const adapter of adapters) {
+        for (const publication of adapter.publications || []) {
+          if (publication.cid === cid) {
+            plausible('edit-adapter', {
+              props: {
+                listId,
+                adapter: cid,
+                adapterName: moduleDetails.name,
+                newAdapter: false,
+              },
+            })
 
-          router.push({
-            pathname: '/editor',
-            query: { adapter: adapter.id },
-          })
-          return
+            router.push({
+              pathname: '/editor',
+              query: { adapter: adapter.id },
+            })
+            return
+          }
         }
       }
     }
-
 
     plausible('edit-adapter', {
       props: {
@@ -173,7 +185,11 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
       },
     })
 
-    const adapterId = newModule(moduleDetails.sourceCode || moduleDetails.code, [{ cid, version: moduleDetails.version || '0.0.0' }])
+    const newCode = moduleDetails.name
+      ? (moduleDetails.sourceCode || moduleDetails.code).replace(moduleDetails.name, `${moduleDetails.name} - Clone`)
+      : moduleDetails.sourceCode || moduleDetails.code
+
+    const adapterId = newModule(newCode, [{ cid, version: moduleDetails.version || '0.0.0' }])
     router.push({
       pathname: '/editor',
       query: { adapter: adapterId },
@@ -223,7 +239,12 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         sidebar={
           <Fragment>
             <div style={{marginBottom: "24px", display: "flex", justifyContent: "flex-end"}}>
-              <Button className="outline" onClick={edit}>Edit Adapter</Button>
+              <Button className="outline" onClick={edit()}>
+                <Edit /> Edit Adapter
+              </Button>
+              <Button className="outline" onClick={edit(true)}>
+                <ForkIcon /> Clone Adapter
+              </Button>
             </div>
             <DetailsBox>
               <InfoBoxHeader>
@@ -244,12 +265,12 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
                 {verifiedLists.length > 0 && (
                   <Attribute label="Collections">
                     {verifiedLists.map((list: string) => (
-                      <>
+                      <Fragment key={list}>
                         <Link href={`/discover/${list}`} key={list}>
                           <a>{list}</a>
                         </Link>
                         <span>, </span>
-                      </>
+                      </Fragment>
                     ))}
                   </Attribute>
                 )}
