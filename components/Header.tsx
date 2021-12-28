@@ -6,7 +6,8 @@ import styled from 'styled-components'
 import { useWeb3React } from '@web3-react/core'
 import ConnectionButton from './ConnectionButton'
 
-const Container = styled.header`
+const HeaderContainer = styled.header`
+  width: 100%;
   display: flex;
   height: 65px;
   justify-content: space-between;
@@ -85,7 +86,7 @@ const Header: React.FC = () => {
   const name = useENSName(account)
 
   return (
-    <Container>
+    <HeaderContainer>
       <Link href="/" passHref>
         <Logo>Home</Logo>
       </Link>
@@ -102,7 +103,7 @@ const Header: React.FC = () => {
 
         <WalletButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</WalletButton>
       </Nav>
-    </Container>
+    </HeaderContainer>
   )
 }
 

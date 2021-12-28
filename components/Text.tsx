@@ -54,7 +54,7 @@ const TagElement = styled.div<{ type?: string }>`
 `
 
 interface TextProps {
-  tag: React.ElementType
+  tag?: React.ElementType | "div"
   type?: string
   className?: string
 }

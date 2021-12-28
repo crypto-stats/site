@@ -3,108 +3,30 @@ import styled from 'styled-components'
 import Header from '../Header'
 import Footer from '../Footer'
 import Breadcrumbs from './Breadcrumbs'
+import NotificationBar from 'components/NotificationBar'
+import Hero from 'components/Hero'
+import RowSection from 'components/RowSection'
+import ColumnSection from 'components/ColumSection'
+
 
 const LayoutContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
   background: #f9fafb;
 `
 
-const Top = styled.div`
+const HeaderContainer = styled.div`
   box-shadow: 0 3px 18px 0 rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #ffffff;
-
-  & h1 {
-    font-size: 36px;
-    font-weight: 600;
-    color: #002750;
-  }
-`
-
-const TopInner = styled.div`
-  max-width: 1248px;
-  width: calc(100% - 12px);
-`
-
-const MainContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  padding: 10px 0 40px;
-`
-
-const Main = styled.main`
-  max-width: 720px;
-  width: 0;
-  margin: 20px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-`
-
-const TopContent = styled.div`
-  display: flex;
-  min-height: 200px;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-`
-
-const HeroContainer = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  background-color: #ffffff;
+  padding: 0 0 32px;
 `
 
 const Sidebar = styled.div`
-  width: 288px;
-  position: relative;
-
-  @media (max-width: 768px) {
-    margin-top: 12px;
-    width: unset;
-  }
-`
-
-const Spacer = styled.div`
-  width: 288px;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`
-
-const SidebarInner = styled.div`
-  position: absolute;
-  top: 20px;
-  left: 0;
-  right: 0;
-
-  @media (max-width: 768px) {
-    position: unset;
-  }
-`
-
-const NotificationBarContainer = styled.div`
-  background-color: #d6eaff;
-  height: 60px;
-  margin: 0 -2000px;
-  display: flex;
-  justify-content: center;
-`
-
-const NotificationBarInner = styled.div`
-  max-width: 1248px;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  padding: 0 6px;
-  box-sizing: border-box;
+  position: sticky;
+  top: calc(100px + 32px);
+  bottom: 32px;
+  transform: translateY(-100px);
 `
 
 interface TranquilLayoutProps {
@@ -117,34 +39,59 @@ interface TranquilLayoutProps {
 const TranquilLayout: React.FC<TranquilLayoutProps> = ({ children, hero, sidebar, breadcrumbs, notificationBar }) => {
   return (
     <LayoutContainer>
-      <Top>
-        <TopInner>
-          <Header />
 
-          {notificationBar && (
-            <NotificationBarContainer>
-              <NotificationBarInner>{notificationBar}</NotificationBarInner>
-            </NotificationBarContainer>
-          )}
+      {/* Header + Hero */}
+      <HeaderContainer>
+        <RowSection>
+          <ColumnSection columns="12">
+            <Header />
+          </ColumnSection>
+        </RowSection>
+        
+        {notificationBar && (
+          <RowSection>
+            <ColumnSection columns="12">
+              <NotificationBar>{notificationBar}</NotificationBar>
+            </ColumnSection>
+          </RowSection>
+        )}
+          
+        <RowSection>
+          <ColumnSection columns="12">
+            {breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs} />}
+          </ColumnSection>
+        </RowSection>
 
-          {breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs} />}
+        <RowSection>
+          <ColumnSection columns="9">
+            <Hero align="left">{hero}</Hero>          
+          </ColumnSection>
+        </RowSection>
+      </HeaderContainer>
 
-          <TopContent>
-            <HeroContainer>{hero}</HeroContainer>
+      <RowSection>
+        <ColumnSection tag="main" columns="9">
+          {children}
+        </ColumnSection>
+        {sidebar && (
+          <ColumnSection columns="3">
+            <Sidebar>
+              {sidebar}
+            </Sidebar>
+          </ColumnSection>
+        )}
+      </RowSection>
 
-            {sidebar && (
-              <Sidebar>
-                <SidebarInner>{sidebar}</SidebarInner>
-              </Sidebar>
-            )}
-          </TopContent>
-        </TopInner>
-      </Top>
-      
-      <MainContainer>
-        <Main>{children}</Main>
-        {sidebar && <Spacer />}
-      </MainContainer>
+      {/* <Main>
+        <MainInner>
+          {children}
+        </MainInner>
+        {sidebar && (
+          <Sidebar>
+            <SidebarInner>{sidebar}</SidebarInner>
+          </Sidebar>
+        )}
+      </Main> */}
 
       <Footer />
     </LayoutContainer>
