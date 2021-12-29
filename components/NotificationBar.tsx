@@ -4,7 +4,6 @@ import styled from 'styled-components';
 const NotificationBarContainer = styled.section`
   background-color: #d6eaff;
   height: 60px;
-  margin: 0 -2000px;
   display: flex;
   justify-content: center;
 `

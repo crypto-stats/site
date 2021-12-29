@@ -9,9 +9,57 @@ import { runOnce } from 'hooks/lib'
 import { setENSCache } from 'use-ens-name'
 
 const GlobalStyle = createGlobalStyle`
+  :root {
+
+    // Colors 
+    --color-primary: #0477F4;
+    --color-primary-100: #BDD0F6;
+    --color-primary-200: #EEF1F7;
+    --color-primary-200: #F9FAFB;
+    --color-white: #FFFFFF;
+    --color-dark-100: #000000;
+    --color-dark-200: #0F1011;
+    --color-dark-300: #131415;
+    --color-dark-400: #2F2F2F;
+    --color-dark-500: #282D36;
+    --color-dark-600: #505050;
+    --color-dark-700: #878787;
+
+    // Containers
+    --container-full: 100%;
+    --container-fixed: 1280px;
+
+    // Spaces
+    --spaces-1: 4px;
+    --spaces-2: 8px;
+    --spaces-3: 16px;
+    --spaces-4: 24px;
+    --spaces-5: 32px;
+    --spaces-6: 40px;
+    --spaces-7: 48px;
+    --spaces-8: 56px;
+    --spaces-9: 64px;
+    --spaces-10: 72px;
+    --spaces-11: 80px;
+    --spaces-12: 100px;
+    --spaces-13: 140px;
+
+    // Media Query
+    --bp-small: 768px;
+    --bp-medium: 992px;
+    --bp-large: 1200px;
+    --bp-xl: 1400px;
+
+    // Grid
+    --grid-columns: 12;
+    --grid-column-gap: var(--spaces-5);
+    --grid-row-gap: var(--spaces-6);
+  }
+
   body, html, #__next {
     min-height: 100%;
     margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     flex: 1;

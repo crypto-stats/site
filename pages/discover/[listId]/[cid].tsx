@@ -73,6 +73,7 @@ const InfoBoxValue = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
 `
+
 const InfoBoxValueFullWidth = styled.div`
   font-weight: 500;
   font-size: 14px;

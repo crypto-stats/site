@@ -6,8 +6,7 @@ import Breadcrumbs from './Breadcrumbs'
 import NotificationBar from 'components/NotificationBar'
 import Hero from 'components/Hero'
 import RowSection from 'components/RowSection'
-import ColumnSection from 'components/ColumSection'
-
+import ColumnSection from 'components/ColumnSection'
 
 const LayoutContainer = styled.div`
   background: #f9fafb;
@@ -49,7 +48,7 @@ const TranquilLayout: React.FC<TranquilLayoutProps> = ({ children, hero, sidebar
         </RowSection>
         
         {notificationBar && (
-          <RowSection>
+          <RowSection fullWidth>
             <ColumnSection columns="12">
               <NotificationBar>{notificationBar}</NotificationBar>
             </ColumnSection>
@@ -81,17 +80,6 @@ const TranquilLayout: React.FC<TranquilLayoutProps> = ({ children, hero, sidebar
           </ColumnSection>
         )}
       </RowSection>
-
-      {/* <Main>
-        <MainInner>
-          {children}
-        </MainInner>
-        {sidebar && (
-          <Sidebar>
-            <SidebarInner>{sidebar}</SidebarInner>
-          </Sidebar>
-        )}
-      </Main> */}
 
       <Footer />
     </LayoutContainer>
