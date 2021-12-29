@@ -2,7 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 
 const ColumnContainer = styled.div<{ columns?: string }>`
-  grid-column: span ${({columns})=>columns};
+  grid-column: span 12;
+
+  @media ( min-width: 1200px ) {
+    grid-column: span ${({columns})=>columns};
+  }
 `
 
 interface ColumnSectionProps {
