@@ -14,6 +14,8 @@ export interface Query {
 export interface CollectionMetadata {
   name: string
   description?: string
+  icon?: string,
+  iconColor?: string,
   queries?: Query[]
 }
 
@@ -21,6 +23,8 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   'apy-current': {
     name: 'Current APY',
     description: 'The current yield rates of various lending protocols and yield aggregators.',
+    icon: '🗓',
+    iconColor: 'palette-1',
     queries: [
       {
         id: 'apyCurrent',
@@ -39,6 +43,8 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   'apy-range': {
     name: 'Average APY',
     description: 'The average yield rate of various lending protocols and yield aggregators across a period of time.',
+    icon: '📆',
+    iconColor: 'palette-2',
     queries: [
       {
         id: 'apyOverDateRange',
@@ -67,6 +73,8 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   'eth-beacon-chain': {
     name: 'Ethereum Beacon Chain',
     description: 'Various beacon chain statistics, such as the current staking APY, the total ETH staked, total ETH paid as rewards, and more',
+    icon: '🏎',
+    iconColor: 'palette-3',
     queries: [
       {
         id: 'currentAPY',
@@ -98,6 +106,8 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   'eth-burned': {
     name: 'ETH Burned',
     description: 'The amount of ETH burned by EIP-1559',
+    icon: '🔥',
+    iconColor: 'palette-2',
     queries: [
       {
         id: 'tokensBurnedTotal',
@@ -218,6 +228,8 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   'eth-staking-pools': {
     name: 'ETH Staking Pools',
     description: 'The current APY and total ETH staked of various staking providers',
+    icon: '💎',
+    iconColor: 'palette-1',
     queries: [
       {
         id: 'totalStakedETH',
@@ -234,6 +246,8 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   fees: {
     name: 'Fee Revenue',
     description: 'Total fees paid to a protocol on a given day.',
+    icon: '💰',
+    iconColor: 'palette-8',
     queries: [
       {
         id: 'oneDayTotalFees',
@@ -252,6 +266,8 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   'fee-range': {
     name: 'Fee Revenue over Date Range',
     description: 'Total fees paid to a protocol across a date range.',
+    icon: '💰',
+    iconColor: 'palette-5',
     queries: [
       {
         id: 'dateRangeTotalFees',
@@ -275,6 +291,8 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   issuance: {
     name: 'Issuance',
     description: 'The amount of tokens issued in the past day, in USD.',
+    icon: '🏛',
+    iconColor: 'palette-1',
     queries: [
       {
         id: 'issuance7DayAvgUSD',
@@ -291,6 +309,8 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   'l2-fees': {
     name: 'Layer-2 Fees',
     description: 'The USD transaction fees for basic transactions on Ethereum layer-2s.',
+    icon: '🌀',
+    iconColor: 'palette-6',
     queries: [
       {
         id: 'feeTransferEth',
@@ -312,6 +332,8 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   treasuries: {
     name: 'DAO Treasuries',
     description: 'The total value and assets currently held in DAO treasuries.',
+    icon: '🏛',
+    iconColor: 'palette-1',
     queries: [
       {
         id: 'currentTreasuryUSD',

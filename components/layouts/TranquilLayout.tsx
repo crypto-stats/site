@@ -73,14 +73,14 @@ const TranquilLayout: React.FC<TranquilLayoutProps> = ({ children, hero, sidebar
         </RowSection>
 
         <RowSection>
-          <ColumnSection columns={sidebar ? "9" : "9"} offset={sidebar ? "" : "3"}>
+          <ColumnSection columns={sidebar ? "9" : "7"} offset={sidebar ? "" : "3"}>
             <Hero>{hero}</Hero>          
           </ColumnSection>
         </RowSection>
       </HeaderContainer>
 
       <RowSection>
-        <ColumnSection tag="main" columns={sidebar ? "9" : "9"} offset={sidebar ? "" : "3"}>
+        <ColumnSection tag="main" columns={sidebar ? "9" : "6"} offset={sidebar ? "" : "4"}>
           {children}
         </ColumnSection>
         {sidebar && (

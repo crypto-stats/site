@@ -37,7 +37,6 @@ const TagElement = styled.div<{ type?: string, mt?:string, mb?:string }>`
     font-size: 22px;
     color: #002750;
     letter-spacing: 0.1px;
-    text-align: left;
   `}
   ${({type}) => type === "label" &&  `
     font-size: 12px;

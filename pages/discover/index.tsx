@@ -39,6 +39,8 @@ const DiscoverPage: NextPage<AdaptersPageProps> = ({ collections }) => {
         title: metadata?.name || collection.id,
         subtitle: metadata ? collection.id : null,
         description: metadata?.description,
+        icon: metadata?.icon,
+        iconColor: metadata?.iconColor,
         metadata: [`${collection.modules.length} adapters`],
         link: `/discover/${collection.id}`,
       }

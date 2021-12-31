@@ -17,6 +17,7 @@ const GlobalStyle = createGlobalStyle`
     --color-primary-200: #D6EAFF;
     --color-primary-300: #EEF1F7;
     --color-primary-400: #F9FAFB;
+    --color-primary-800: #DDDDDD;
     --color-white: #FFFFFF;
     --color-dark-100: #000000;
     --color-dark-200: #0F1011;
@@ -25,6 +26,17 @@ const GlobalStyle = createGlobalStyle`
     --color-dark-500: #282D36;
     --color-dark-600: #505050;
     --color-dark-700: #878787;
+    --color-palette-1: #D0E0FF;
+    --color-palette-2: #FFE3D0;
+    --color-palette-3: #FFFDD0;
+    --color-palette-4: #DCFFD0;
+    --color-palette-5: #D0FFF7;
+    --color-palette-6: #D3D0FF;
+    --color-palette-7: #F0D0FF;
+    --color-palette-8: #FFD0DD;
+
+    // Shadows
+    --box-shadow-card: 0 3px 6px 0 rgba(0,36,75,.07);
 
     // Containers
     --container-full: 100%;
