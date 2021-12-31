@@ -99,6 +99,10 @@ const AdapterActionBtns = styled.div`
   margin-bottom:  var(--spaces-4);
 `
 
+const AdapterInfo = styled.div`
+  margin-top: var(--spaces-6);
+`
+
 const Attribute: React.FC<{ label: string }> = ({ label, children }) => {
   if(label && label === "Author") {
     return (
@@ -232,14 +236,14 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         )}
         breadcrumbs={breadcrumbs}
         hero={
-          <div>
+          <AdapterInfo>
             <Text tag="p" type="label">Adapter</Text>
-            <Text tag="h1" type="title">
+            <Text tag="h1" type="title" mt="8" mb="16">
               {moduleDetails.name || cid}
               {_verified && <VerifiedTick />}
             </Text>
-            <Text tag="p" type="description">SubAdapters: {subadapters.length}</Text>
-          </div>
+            <Text tag="p" type="description" mb="16">SubAdapters: {subadapters.length}</Text>
+          </AdapterInfo>
         }
         sidebar={
           <Fragment>

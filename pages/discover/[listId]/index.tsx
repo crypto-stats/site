@@ -11,33 +11,12 @@ import { getListNames, getModulesForList } from 'utils/lists-chain'
 import collectionMetadata, { CollectionMetadata } from 'resources/collection-metadata'
 import { usePlausible } from 'next-plausible'
 import { getSlug } from 'utils/adapters'
+import Text from "components/Text"
+import RowSection from "components/RowSection"
+import ColumnSection from "components/ColumnSection"
 
 const Hero = styled.div`
-  max-width: 600px;
-  width: 100%;
-  margin: 40px 0 60px;
-`
-
-const Type = styled.div`
-  font-size: 12px;
-  color: #808080;
-  text-transform: uppercase;
-`
-
-const Title = styled.h1`
-  font-size: 36px;
-  font-weight: 600;
-  margin: 6px 0 20px;
-`
-
-const Description = styled.p`
-  color: #808080;
-`
-
-const HeroBottom = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  margin: var(--spaces-5) 0;
 `
 
 interface SubAdapter {
@@ -87,15 +66,21 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, subadapters, listId, 
       breadcrumbs={[{ name: 'Home', path: '/' }, { name: 'Discover', path: '/discover' }]}
       hero={
         <Hero>
-          <Type>Collection</Type>
-          <Title>{metadata?.name || listId}</Title>
+          <Text tag="p" type="label">Collection</Text>
+          <Text tag="h1" type="title" mt="8" mb="16">{metadata?.name || listId}</Text>
           
-          {metadata?.description && <Description>{metadata?.description}</Description>}
+          {metadata?.description && <Text tag="p" type="description" mb="16">{metadata?.description}</Text>}
           
-          <HeroBottom>
-            Adapters: {adapters.length} - SubAdapters: {subadapters.length}
-            <Button onClick={() => setShowDataModal(true)}>Use Collection Data</Button>
-          </HeroBottom>
+          <RowSection alignItems="center" noMargin>
+            <ColumnSection columns="9">
+              <Text tag="p" type="content">
+                Adapters: {adapters.length} - SubAdapters: {subadapters.length}
+              </Text>
+            </ColumnSection>
+            <ColumnSection columns="3">
+              <Button onClick={() => setShowDataModal(true)}>Use Collection Data</Button>
+            </ColumnSection>
+          </RowSection>
         </Hero>
       }
     >

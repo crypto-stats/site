@@ -27,9 +27,9 @@ const Sidebar = styled.div`
   @media (min-width: 768px) {
     margin-bottom: 0;
     position: sticky;
-    top: calc(100px + 32px);
-    bottom: 32px;
-    transform: translateY(-100px);
+    top: calc(150px + var(--spaces-4));
+    bottom: var(--spaces-4);
+    transform: translateY(-150px);
   } 
 `
 
@@ -67,14 +67,14 @@ const TranquilLayout: React.FC<TranquilLayoutProps> = ({ children, hero, sidebar
         </RowSection>
 
         <RowSection>
-          <ColumnSection columns="9">
-            <Hero align="left">{hero}</Hero>          
+          <ColumnSection columns={sidebar ? "9" : "9"} offset={sidebar ? "" : "3"}>
+            <Hero>{hero}</Hero>          
           </ColumnSection>
         </RowSection>
       </HeaderContainer>
 
       <RowSection>
-        <ColumnSection tag="main" columns="9">
+        <ColumnSection tag="main" columns={sidebar ? "9" : "9"} offset={sidebar ? "" : "3"}>
           {children}
         </ColumnSection>
         {sidebar && (
