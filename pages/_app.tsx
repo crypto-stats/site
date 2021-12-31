@@ -19,6 +19,7 @@ const GlobalStyle = createGlobalStyle`
     --color-primary-400: #F9FAFB;
     --color-primary-800: #DDDDDD;
     --color-white: #FFFFFF;
+
     --color-dark-100: #000000;
     --color-dark-200: #0F1011;
     --color-dark-300: #131415;
@@ -26,6 +27,7 @@ const GlobalStyle = createGlobalStyle`
     --color-dark-500: #282D36;
     --color-dark-600: #505050;
     --color-dark-700: #878787;
+
     --color-palette-1: #D0E0FF;
     --color-palette-2: #FFE3D0;
     --color-palette-3: #FFFDD0;
@@ -67,6 +69,9 @@ const GlobalStyle = createGlobalStyle`
     --grid-columns: 12;
     --grid-column-gap: var(--spaces-5);
     --grid-row-gap: var(--spaces-6);
+
+    // Transitions
+    --transition-fast: 150ms ease;
   }
 
   body, html, #__next {
