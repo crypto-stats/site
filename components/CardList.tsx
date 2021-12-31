@@ -1,9 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
+import Text from 'components/Text'
 
 const Container = styled.div`
-  margin: 2px 0;
+ 
 `
 
 const List = styled.ul`
@@ -12,7 +13,7 @@ const List = styled.ul`
 `
 
 const ListItem = styled.li`
-  margin: 12px 0;
+  margin: var(--spaces-4) 0;
   list-style: none;
 `
 
@@ -21,11 +22,11 @@ const Card = styled.a`
   box-sizing: border-box;
   padding: 40px;
   text-decoration: none;
-  min-height: 244px;
-  border-radius: 5px;
+  border-radius: var(--spaces-2);
   border: solid 1px #ddd;
   background-color: #ffffff;
   color: #002750;
+  cursor: pointer;
 
   &:hover {
     color: #0477f4;
@@ -37,16 +38,6 @@ const Card = styled.a`
   }
 `
 
-const Title = styled.h2`
-  font-size: 22px;
-  font-weight: bold;
-  color: #002750;
-`
-
-const Subtitle = styled.div`
-  color: #717d8a;
-  font-size: 18px;
-`
 
 const IconList = styled.ul`
   margin: 4px 0;
@@ -106,9 +97,9 @@ const CardList: React.FC<CardListProps> = ({ items }) => {
                 <Card>
                   <div />
                   <Content>
-                    <Title>{item.title}</Title>
+                    <Text tag="h3" type="h3">{item.title}</Text>
                     
-                    {item.subtitle && <Subtitle>{item.subtitle}</Subtitle>}
+                    {item.subtitle && <Text tag="p" type="description">{item.subtitle}</Text>}
 
                     {item.iconlist && (
                       <IconList>
@@ -121,7 +112,7 @@ const CardList: React.FC<CardListProps> = ({ items }) => {
                       </IconList>
                     )}
 
-                    {item.description && <Description>{item.description}</Description>}
+                    {item.description && <Text tag="p" type="description">{item.description}</Text>}
 
                     {item.metadata && (
                       <div>

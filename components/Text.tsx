@@ -32,6 +32,13 @@ const TagElement = styled.div<{ type?: string, mt?:string, mb?:string }>`
     color: #002750;
     letter-spacing: 0.1px;
   `}
+  ${({type}) => type === "h3" && `
+    font-weight: 700;
+    font-size: 22px;
+    color: #002750;
+    letter-spacing: 0.1px;
+    text-align: left;
+  `}
   ${({type}) => type === "label" &&  `
     font-size: 12px;
     color: #838383;

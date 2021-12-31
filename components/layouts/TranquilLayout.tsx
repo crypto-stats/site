@@ -8,16 +8,21 @@ import Hero from 'components/Hero'
 import RowSection from 'components/RowSection'
 import ColumnSection from 'components/ColumnSection'
 
-const LayoutContainer = styled.div`
-  background: #f9fafb;
+const LayoutContainer = styled.div<{ page?:string }>`
+  ${({page})=> page === "adapter" || page === "collection" ? `
+    background: var(--color-primary-400);
+  ` : ``}
+  
 `
 
-const HeaderContainer = styled.div`
-  box-shadow: 0 3px 18px 0 rgba(0, 0, 0, 0.05);
+const HeaderContainer = styled.div<{page?:string}>`
+  ${({page})=> page === "adapter" || page === "collection" ? `
+    box-shadow: 0 3px 18px 0 rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+  ` : ``}
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #ffffff;
   padding: 0 0 32px;
 `
 
@@ -38,14 +43,15 @@ interface TranquilLayoutProps {
   sidebar?: React.ReactNode
   breadcrumbs?: { name: string; path: string }[]
   notificationBar?: React.ReactNode
+  page?: string
 }
 
-const TranquilLayout: React.FC<TranquilLayoutProps> = ({ children, hero, sidebar, breadcrumbs, notificationBar }) => {
+const TranquilLayout: React.FC<TranquilLayoutProps> = ({ children, hero, sidebar, breadcrumbs, notificationBar, page }) => {
   return (
-    <LayoutContainer>
+    <LayoutContainer page={page}>
 
       {/* Header + Hero */}
-      <HeaderContainer>
+      <HeaderContainer page={page}>
         <RowSection>
           <ColumnSection columns="12">
             <Header />

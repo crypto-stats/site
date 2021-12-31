@@ -225,6 +225,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
       />
 
       <TranquilLayout
+        page="adapter"
         notificationBar={!_verified && account?.toLowerCase() === moduleDetails.signer?.toLowerCase() && (
           <PublisherBar
             address={account!}
