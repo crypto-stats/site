@@ -14,8 +14,9 @@ const GlobalStyle = createGlobalStyle`
     // Colors 
     --color-primary: #0477F4;
     --color-primary-100: #BDD0F6;
-    --color-primary-200: #EEF1F7;
-    --color-primary-200: #F9FAFB;
+    --color-primary-200: #D6EAFF;
+    --color-primary-300: #EEF1F7;
+    --color-primary-400: #F9FAFB;
     --color-white: #FFFFFF;
     --color-dark-100: #000000;
     --color-dark-200: #0F1011;
