@@ -63,10 +63,7 @@ const InfoBoxItem = styled.div`
   padding: 0;
 `
 
-const InfoBoxValue = styled.div`
-  font-weight: 500;
-  font-size: 14px;
-  color: #000000;
+const InfoBoxValue = styled(Text)`
   margin: 8px 0 0;
   max-width: 100px;
   white-space: nowrap;
@@ -94,7 +91,7 @@ const Attribute: React.FC<{ label: string }> = ({ label, children }) => {
     return (
       <InfoBoxAuthor>
         <Text tag="p" type="label">{label}</Text>
-        <Text tag="p" type="content">{children}</Text>
+        <InfoBoxValue tag="p" type="content">{children}</InfoBoxValue>
       </InfoBoxAuthor>
     )
   }
