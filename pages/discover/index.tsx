@@ -7,7 +7,7 @@ import collectionMetadata from 'resources/collection-metadata'
 import Text from 'components/Text'
 
 const HeroWrapper = styled.div`
-  margin: var(--spaces-12) 0;
+  margin: var(--spaces-12) 0 var(--spaces-6);
   text-align: center;
   
   @media ( min-width: 768px ) {
@@ -51,7 +51,7 @@ const DiscoverPage: NextPage<AdaptersPageProps> = ({ collections }) => {
       hero={
         <HeroWrapper>
           <Text tag="h1" type="display">Discover our Collections</Text>
-          <Text tag="p" type="description" mt="16">The most valuable crypto metrics, currated and managed by the community</Text>
+          <Text tag="p" type="description" mt="16">The most valuable crypto metrics, curated and managed by the community</Text>
         </HeroWrapper>
       }
     >
@@ -63,7 +63,6 @@ const DiscoverPage: NextPage<AdaptersPageProps> = ({ collections }) => {
 }
 
 export default DiscoverPage
-
 
 export const getStaticProps: GetStaticProps<AdaptersPageProps> = async () => {
   const listNames = await getListNames()

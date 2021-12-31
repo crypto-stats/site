@@ -5,30 +5,50 @@ import { useENSName } from 'use-ens-name'
 import styled from 'styled-components'
 import { useWeb3React } from '@web3-react/core'
 import ConnectionButton from './ConnectionButton'
+import Button from 'components/Button'
+// import { Menu } from 'react-feather'
 
 const HeaderContainer = styled.header`
   width: 100%;
-  display: flex;
-  height: 65px;
-  justify-content: space-between;
+  height: auto;
+  margin-bottom: var(--spaces-4);
+
+  @media (min-width: 768px) {
+    display: grid;
+    grid-template-columns: 30% 1fr;
+    align-items: center;
+    margin-bottom: 0;
+  }
 `
 
 const Logo = styled.a`
   display: block;
-  color: transparent;
   background-image: url('/logo.svg');
+  color: transparent;
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  width: 190px;
-  margin: 4px 0;
+  width: 165px;
+  height: 29px;
+  cursor: pointer;
+  margin: var(--spaces-4) auto;
+
+  @media (min-width: 768px) {
+    margin: none;
+  }
 `
 
 const Nav = styled.nav`
-  display: flex;
+  display: inline-grid;
+  grid-template-columns: repeat(4, min-content);
+  grid-gap: 0 var(--spaces-3);
+  align-items: center;
+  justify-self: end;
+
 `
 
 const NavLink = styled.a<{ active?: boolean }>`
+  display: inline-block;
   margin: 0 4px;
   line-height: 65px;
   color: #3d3d3d;
@@ -36,9 +56,11 @@ const NavLink = styled.a<{ active?: boolean }>`
   font-size: 16px;
   font-weight: 500;
   margin: 0 10px;
+  border-bottom: solid 5px transparent;
+  cursor: pointer;
 
   &:hover {
-    border-bottom: solid 5px #3d3d3d;
+    color: var(--color-primary);
   }
 
   ${({ active }) => active && `
@@ -62,23 +84,19 @@ const WalletButton = styled(ConnectionButton)`
   }
 `
 
-const AdapterButton = styled.a`
-  display: block;
-  align-self: center;
-  line-height: 35px;
-  border-radius: 4px;
-  background-color: #d6eaff;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 600;
-  color: #0477f4;
-  padding: 0 20px;
-  margin: 0 4px;
+// const MenuToggle = styled(Button)`
+//   position: absolute;
+//   top: var(--spaces-4);
+//   right: var(--spaces-4);
+//   min-width: 45px;
+//   width: 45px;
+//   max-width: 45px;
+//   height: 45px;
 
-  &:hover {
-    background: #c4e0fd;
-  }
-`
+//   @media (min-width: 768px) {
+//     display: none;
+//   }
+// `
 
 const Header: React.FC = () => {
   const router = useRouter()
@@ -98,11 +116,12 @@ const Header: React.FC = () => {
         <NavLink href="https://forum.cryptostats.community/">Forum</NavLink>
 
         <Link href="/editor" passHref>
-          <AdapterButton>Create Adapter</AdapterButton>
+          <Button className="secondary">Create Adapter</Button>
         </Link>
 
         <WalletButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</WalletButton>
       </Nav>
+      {/* <MenuToggle className="outline"><Menu /></MenuToggle> */}
     </HeaderContainer>
   )
 }

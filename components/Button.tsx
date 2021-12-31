@@ -15,6 +15,7 @@ const ForkIcon: React.FC = () => (
 const ButtonElement = styled.button<{ className?: string }>`
   display: flex;
   width: 100%;
+  min-width: 160px;
   border: none;
   border-radius: 4px;
   box-shadow: none;
@@ -26,33 +27,37 @@ const ButtonElement = styled.button<{ className?: string }>`
   align-items: center;
 
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.2px;
   line-height: 17px;
   transition: 150ms ease;
 
   &:hover {
-    background-color: #0477F4;
-    color: #FFFFFF !important;
+    background-color: var(--color-primary);
+    color: var(--color-white) !important;
   }
   
 
-  ${({className}) => className === "outline" ?  `
+  ${({className}) => className === "outline" &&  `
       background-color: transparent;
+      color: var(--color-primary);
+      border: 1px solid var(--color-primary);
+
+      &:hover {
+        background-color: var(--color-primary);
+        color: var(--color-white);
+      }
+  `}
+  ${({className}) => className === "secondary" &&  `
+      background-color: var(--color-primary-200);
       color: #0477F4;
-      border: 1px solid #0477F4;
+      border: 1px solid transparent;
 
       &:hover {
         background-color: #0477F4;
         color: #FFF;
       }
-    `
-    :
-    `
-      background-color: #0477F4;
-      color: #FFF;
-    `
-  }
+  `}
 `
 
 const Icon = styled.i`
