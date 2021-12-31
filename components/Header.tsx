@@ -34,7 +34,7 @@ const Logo = styled.a`
   margin: var(--spaces-4) auto;
 
   @media (min-width: 768px) {
-    margin: none;
+    margin: 0 0 0 0;
   }
 `
 
