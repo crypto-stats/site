@@ -79,7 +79,7 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, subadapters, listId, 
               </Text>
             </ColumnSection>
             <ColumnSection columns="3">
-              <Button onClick={() => setShowDataModal(true)}>Use Collection Data</Button>
+              <Button onClick={() => setShowDataModal(true)} className="primary">Use Collection Data</Button>
             </ColumnSection>
           </RowSection>
         </Hero>

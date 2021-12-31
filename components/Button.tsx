@@ -12,10 +12,10 @@ const ForkIcon: React.FC = () => (
   </svg>
 )
 
-const ButtonElement = styled.button<{ className?: string }>`
+const ButtonElement = styled.button<{ className?: string, width?: string}>`
   display: flex;
   width: 100%;
-  min-width: 160px;
+  min-width: ${({width})=>width === "auto" ? `auto` : `160px`};
   border: none;
   border-radius: 4px;
   box-shadow: none;
@@ -32,6 +32,10 @@ const ButtonElement = styled.button<{ className?: string }>`
   line-height: 17px;
   transition: 150ms ease;
 
+  // Primary styling
+  background-color: var(--color-primary);
+  color: var(--color-white);
+
   &:hover {
     background-color: var(--color-primary);
     color: var(--color-white) !important;
@@ -39,7 +43,7 @@ const ButtonElement = styled.button<{ className?: string }>`
   
 
   ${({className}) => className === "outline" &&  `
-      background-color: transparent;
+      background-color: var(--color-white);
       color: var(--color-primary);
       border: 1px solid var(--color-primary);
 
@@ -48,6 +52,7 @@ const ButtonElement = styled.button<{ className?: string }>`
         color: var(--color-white);
       }
   `}
+
   ${({className}) => className === "secondary" &&  `
       background-color: var(--color-primary-200);
       color: #0477F4;
@@ -72,9 +77,10 @@ interface ButtonProps {
   disabled?: boolean
   className?: string
   icon?: string
+  width?: string
 }
 
-const Button: React.FC<ButtonProps> = ({ children, onClick, disabled, className, icon}) => {
+const Button: React.FC<ButtonProps> = ({ children, onClick, disabled, className, icon, width}) => {
 
   let svgIcon;
 
@@ -90,7 +96,7 @@ const Button: React.FC<ButtonProps> = ({ children, onClick, disabled, className,
   }
     
   return (
-    <ButtonElement onClick={onClick} disabled={disabled} className={className}>
+    <ButtonElement onClick={onClick} disabled={disabled} className={className} width={width}>
       {icon &&   
         <Icon>
           {svgIcon}
