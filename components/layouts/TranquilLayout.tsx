@@ -22,10 +22,15 @@ const HeaderContainer = styled.div`
 `
 
 const Sidebar = styled.div`
-  position: sticky;
-  top: calc(100px + 32px);
-  bottom: 32px;
-  transform: translateY(-100px);
+  margin-bottom: 40px;
+
+  @media (min-width: 768px) {
+    margin-bottom: 0;
+    position: sticky;
+    top: calc(100px + 32px);
+    bottom: 32px;
+    transform: translateY(-100px);
+  } 
 `
 
 interface TranquilLayoutProps {

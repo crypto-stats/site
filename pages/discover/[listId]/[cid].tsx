@@ -6,7 +6,6 @@ import Link from 'next/link'
 import { useENSName } from 'use-ens-name'
 import { useWeb3React } from '@web3-react/core'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
-import { Edit } from 'react-feather'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import { useAdapterList, newModule } from 'hooks/local-adapters'
 import { getListNames, getModulesForList, getListsForAdapter, getCIDFromSlug, getAllVerifiedAdapters } from 'utils/lists-chain'
@@ -46,21 +45,28 @@ const DetailsBox = styled.div`
 `
 
 const InfoBoxHeader = styled.div`
-  padding: 24px;
+  padding: 16px 24px;
   border-bottom: 1px solid #D8D8D8;
 `
 
 const InfoBoxGrid = styled.div`
   background-color: #F9FAFB;
   padding: 24px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-row-gap: 24px;
+  
+  @media (min-width: 768px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-row-gap: 24px;
+  }
 `
 
 const InfoBoxItem = styled.div`
-  margin: 0;
+  margin: 24px 0;
   padding: 0;
+
+  @media (min-width: 768px) {
+    margin: 0;
+  }
 `
 
 const InfoBoxValue = styled(Text)`
@@ -84,6 +90,13 @@ const InfoBoxAuthor = styled.div`
 
 const SectionContainer = styled.div`
   margin-top: 40px;
+`
+
+const AdapterActionBtns = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: var(--spaces-3);
+  margin-bottom:  var(--spaces-4);
 `
 
 const Attribute: React.FC<{ label: string }> = ({ label, children }) => {
@@ -130,16 +143,6 @@ interface AdaptersPageProps {
   verifiedLists: string[]
   collections: string[]
 }
-
-const ForkIcon: React.FC = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" >
-    <path d="M8 7C9.10457 7 10 6.10457 10 5C10 3.89543 9.10457 3 8 3C6.89543 3 6 3.89543 6 5C6 6.10457 6.89543 7 8 7Z" />
-    <path d="M8 21C9.10457 21 10 20.1046 10 19C10 17.8954 9.10457 17 8 17C6.89543 17 6 17.8954 6 19C6 20.1046 6.89543 21 8 21Z" />
-    <path d="M17 10C18.1046 10 19 9.10457 19 8C19 6.89543 18.1046 6 17 6C15.8954 6 15 6.89543 15 8C15 9.10457 15.8954 10 17 10Z" />
-    <path d="M8 7V17" />
-    <path d="M17 11V12.8C17 13.1183 16.7893 13.4235 16.4142 13.6485C16.0391 13.8736 15.5304 14 15 14H8"/>
-  </svg>
-)
 
 const AdapterPage: NextPage<AdaptersPageProps> = ({
   listId, cid, verified, moduleDetails, subadapters, listModules, verifiedLists, collections
@@ -240,14 +243,14 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         }
         sidebar={
           <Fragment>
-            <div style={{marginBottom: "24px", display: "flex", justifyContent: "flex-end"}}>
-              <Button className="outline" onClick={edit()}>
-                <Edit /> Edit Adapter
+            <AdapterActionBtns>
+              <Button className="outline" onClick={edit()} icon="Edit">
+                Edit
               </Button>
-              <Button className="outline" onClick={edit(true)}>
-                <ForkIcon /> Clone Adapter
+              <Button className="outline" onClick={edit(true)} icon="Fork">
+                Clone
               </Button>
-            </div>
+            </AdapterActionBtns>
             <DetailsBox>
               <InfoBoxHeader>
                 <Text tag="p" type="label">Adapter Info</Text>
