@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useLayoutEffect } from 'react'
 import styled from 'styled-components'
 import { Fill, BottomResizable, Top } from 'react-spaces'
 import { Adapter } from '@cryptostats/sdk'
@@ -71,11 +71,9 @@ const PreviewPanel: React.FC = () => {
   const { lines, clear: clearConsole } = useConsole()
   const bottomRef = useRef<any>(null)
 
-  useEffect(() => {
-    if (bottomRef) {
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" })
-    }
-  }, [bottomRef, lines])
+  useLayoutEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [bottomRef.current, lines])
 
   if (!module) {
     if (processing) {

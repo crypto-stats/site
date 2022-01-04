@@ -201,6 +201,15 @@ const PrimaryFill = styled(FillWithStyledResize)`
   }
 `
 
+const formatLog = (val: any) => {
+  if (val.toString() === '[object Object]') {
+    return JSON.stringify(val, null, 2)
+  } else if (typeof val === 'string') {
+    return `"${val}"`
+  }
+  return val.toString()
+}
+
 const Editor: React.FC = () => {
   const router = useRouter()
   const plausible = usePlausible()
@@ -333,7 +342,7 @@ const Editor: React.FC = () => {
                           isTS: true,
                           onLog: (level: LOG_LEVEL, ...args: any[]) => addLine({
                             level: level.toString(),
-                            value: args.join(' '),
+                            value: args.map(formatLog).join(' '),
                           })
                         })
                       }
