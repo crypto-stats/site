@@ -176,7 +176,7 @@ const LeftSidebarFooter = styled(Bottom)`
 
 const FillWithStyledResize = styled(Fill)<{ side: string }>`
   > .spaces-resize-handle {
-    border-${({ side }) => side}: solid 2px #4a4a4d;
+    ${({ side }) => 'border-' + side}: solid 2px #4a4a4d;
     box-sizing: border-box;
   }
 `
