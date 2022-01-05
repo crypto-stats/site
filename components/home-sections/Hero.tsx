@@ -3,57 +3,10 @@ import styled from 'styled-components'
 import Link from 'next/link'
 import HeroCard from './HeroCard'
 import Text from 'components/Text'
+import RowSection from 'components/RowSection'
+import ColumnSection from 'components/ColumnSection'
+import Button from 'components/Button';
 
-const Container = styled.div`
-  height: 776px;
-  display: flex;
-  align-items: center;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: stretch;
-    margin: 40px 20px;
-    height: unset;
-  }
-`
-
-const Column = styled.div`
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-
-  @media (max-width: 768px) {
-    margin-bottom: 20px;
-  }
-`
-
-const CardContainer = styled.div`
-  position: relative;
-  flex: 1 0 0;
-  height: 370px;
-
-  @media (max-width: 768px) {
-    flex: 1 0 370px;
-  }
-`
-
-const CTA = styled.a`
-  font-size: 14px;
-  font-weight: 600;
-  color: #ffffff;
-  border-radius: 4px;
-  background: #0477f4;
-  line-height: 54px;
-  display: block;
-  align-self: flex-start;
-  padding: 0 30px;
-  text-decoration: none;
-  margin-top: 40px;
-
-  &:hover {
-    background: #278efc;
-  }
-`
 
 const Label = styled.div`
   font-size: 14px;
@@ -81,20 +34,18 @@ const formatNum = (num: number) => num.toLocaleString('en-US', {
 
 const Hero: React.FC<{ sampleData: any }> = ({ sampleData }) => {
   return (
-    <Container>
-      <Column>
-        <Text tag="h1" type="display">
-          One neutral source of truth for crypto metrics.
-          <br />
-          Used by everyone, managed by the community.
+    <RowSection mt="64">
+      <ColumnSection columns="6">
+        <Text tag="h1" type="display" mb="40">
+          One neutral source of truth for crypto metrics. Used by everyone, managed by the community.
         </Text>
 
         <Link href="/discover" passHref>
-          <CTA>Discover the data collection</CTA>
+          <Button>Discover the data collection</Button>
         </Link>
-      </Column>
+      </ColumnSection>
 
-      <CardContainer>
+      <ColumnSection from="8" to="13" hideSmall>
         <HeroCard title="Gitcoin DAO Treasury" subtitle="Preview" position="TopRight">
           <Label>Adapter Name</Label>
           <Attribute>Gitcoin</Attribute>
@@ -121,8 +72,8 @@ const Hero: React.FC<{ sampleData: any }> = ({ sampleData }) => {
           <Label>Data</Label>
           <Attribute>24 hours fees: <Number>{formatNum(sampleData.arbitrumFees)}</Number></Attribute>
         </HeroCard>
-      </CardContainer>
-    </Container>
+      </ColumnSection>
+    </RowSection>
   )
 }
 

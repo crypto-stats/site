@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const TagElement = styled.div<{ type?: string, mt?:string, mb?:string }>`
+const TagElement = styled.div<{ type?: string, mt?:string, mb?:string, color?: string }>`
   font-family: "Inter";
   font-weight: 400;
   margin: 0;
@@ -21,45 +21,66 @@ const TagElement = styled.div<{ type?: string, mt?:string, mb?:string }>`
       letter-spacing: -1.5px;
     }
   `}
+
   ${({type}) => type === "title" && `
     font-weight: 600;
     font-size: 36px;
     color: #002750;
   `}
+
   ${({type}) => type === "subtitle" && `
     font-weight: 600;
     font-size: 24px;
     color: #002750;
     letter-spacing: 0.1px;
   `}
+
+  ${({type}) => type === "title_highlight" && `
+    font-size: 24px;
+    color: #0477F4;
+    letter-spacing: 0.1px;
+  `}
+
   ${({type}) => type === "h3" && `
     font-weight: 700;
     font-size: 22px;
     color: #002750;
     letter-spacing: 0.1px;
   `}
+
   ${({type}) => type === "label" &&  `
     font-size: 12px;
     color: #838383;
     letter-spacing: 1.5px;  
     text-transform: uppercase;
   `}
+
   ${({type}) => type === "description" && `
     font-size: 16px;
     color: #717D8A;
     line-height: 24px;
   `}
+
   ${({type}) => type === "content" && `
     font-size: 16px;
     color: #002750;
     line-height: 21px;
   `}
+  
+  ${({type}) => type === "content_big" && `
+    font-size: 18px;
+    color: #002750;
+    line-height: 24px;
+  `}
+
   ${({type}) => type === "pre" && `
     font-size: 16px;
     color: #002750;
     line-height: 21px;
     white-space: break-spaces;
   `}
+
+  ${({color})=>color && `color: var(--color-${color});`}
 `
 
 interface TextProps {

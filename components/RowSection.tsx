@@ -1,13 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Row = styled.section<{fullWidth?: boolean, alignItems?: string, noMargin?: boolean}>`
+const Row = styled.section<{fullWidth?: boolean, alignItems?: string, noMargin?: boolean, mt?: string, mb?: string}>`
   display: grid;
   grid-template-columns: repeat(var(--grid-columns), 1fr);
   grid-gap: var(--grid-row-gap) var(--grid-column-gap);
   background-color: transparent;
   box-shadow: none;
   margin: 0 ${({noMargin}) => noMargin ? `0` : `auto`};
+
+  ${({mt})=> mt && `margin-top: ${mt}px;`}
+  ${({mb})=> mb && `margin-bottom: ${mb}px;`}
 
   ${({alignItems}) => alignItems && `
     align-items: ${alignItems};
@@ -40,12 +43,14 @@ interface RowSectionProps {
   fullWidth?: boolean | false
   className?: string
   alignItems?: string
+  mt?: string
+  mb?: string
   noMargin?: boolean | false
 }
 
-const RowSection: React.FC<RowSectionProps> = ({ children, className, fullWidth, alignItems, noMargin }) => {
+const RowSection: React.FC<RowSectionProps> = ({ children, className, fullWidth, alignItems, noMargin, mt, mb }) => {
   return (
-   <Row className={className} fullWidth={fullWidth} alignItems={alignItems} noMargin={noMargin}>
+   <Row className={className} fullWidth={fullWidth} alignItems={alignItems} noMargin={noMargin} mt={mt} mb={mb}>
       {children}
    </Row>
   )

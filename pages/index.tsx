@@ -1,4 +1,3 @@
-import styled from 'styled-components'
 import { CryptoStatsSDK } from '@cryptostats/sdk'
 import Footer from 'components/Footer'
 import Header from 'components/Header'
@@ -7,17 +6,8 @@ import Hero from 'components/home-sections/Hero'
 import Actions from 'components/home-sections/Actions'
 import { GetStaticProps, NextPage } from 'next'
 import FAQs from 'components/home-sections/FAQs'
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`
-
-const Column = styled.div`
-  max-width: 1248px;
-  width: calc(100% - 12px);
-`
+import RowSection from 'components/RowSection'
+import ColumnSection from 'components/ColumnSection'
 
 interface HomePageProps {
   sampleData: any
@@ -25,21 +15,24 @@ interface HomePageProps {
 
 const Home: NextPage<HomePageProps> = ({ sampleData }) => {
   return (
-    <Container>
-      <Column>
-        <Header />
+    <>
+      <RowSection>
+        <ColumnSection>
+          <Header />
+        </ColumnSection>
+      </RowSection>
 
-        <Hero sampleData={sampleData} />
+      <Hero sampleData={sampleData} />
 
-        <Description />
+      <Description />
 
-        <Actions />
+      <Actions />
 
-        <FAQs />
-      </Column>
+      <FAQs />
 
       <Footer />
-    </Container>
+
+    </>
   )
 }
 

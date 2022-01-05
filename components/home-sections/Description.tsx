@@ -1,37 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-
-const Container = styled.div`
-  height: 776px;
-  display: flex;
-  align-items: center;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: stretch;
-    margin: 40px 20px;
-    height: unset;
-  }
-`
-
-const Column = styled.div`
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-`
-
-const Diagram = styled.div`
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-  align-self: stretch;
-`
-
-const SectionHeader = styled.h3`
-  font-size: 24px;
-  font-weight: bold;
-  color: #002750;
-`
+import RowSection from 'components/RowSection'
+import ColumnSection from 'components/ColumnSection'
+import Text from 'components/Text'
 
 const Row = styled.div`
   display: flex;
@@ -44,9 +15,10 @@ const Block = styled.div`
   text-align: center;
   color: #838383;
   flex: 1;
-  padding: 12px;
+  padding: 24px;
   margin: 0 7px;
   overflow: hidden;
+  min-height: 100px;
 
   @media (max-width: 768px) {
     font-size: 12px;
@@ -137,15 +109,17 @@ const TopForkArrows = styled(ForkArrows)`
 
 const Hero: React.FC = () => {
   return (
-    <Container>
-      <Column>
-        <SectionHeader>What is CryptoStats?</SectionHeader>
+    <RowSection mt="124" alignItems="center">
+      <ColumnSection from="2" to="6">
+        <Text tag="h3" type="title_highlight" mb="24">What is CryptoStats?</Text>
+        <Text tag="p" type="content_big" mb="16">We are People. We are a Community, we are a DAO. We believe that Data should be open and accessible to everyone. For free and without barriers.</Text>
+        <Text tag="p" type="content_big" mb="16">We are building the new source for Crypto Metrics that everyone can use in a trustfull way.</Text>
+        <Text tag="p" type="content_big" mb="16">Thanks to Blockchain technology and the Community DAO processes, we are decentralizing data consuming. Working at the normalization layer we are able to provide neutral, high quality and verified endpoints that you don't have to trust.</Text>
+        <Text tag="p" type="content_big" mb="16">Best in class projects are already using CryptoStats to empower their users with neutral and trustful data.</Text>
+        <Text tag="p" type="content_big" mb="16">Want to know more?</Text>
+      </ColumnSection>
 
-        <p>CryptoStats is a decentralized protocol for trustworthy data metrics for the crypto ecosystem.</p>
-        <p>Verified adapters pull data from various indexers, normalize it, and make it freely available to all.</p>
-      </Column>
-
-      <Diagram>
+      <ColumnSection from="7" to="12">
         <Block>Blockchains</Block>
         <ArrowBox>
           <Arrow dashed />
@@ -161,13 +135,9 @@ const Hero: React.FC = () => {
           <Arrow />
           <BottomForkArrows />
         </ArrowBox>
-        <Row>
-          <Block>Presentation</Block>
-          <Block>Presentation</Block>
-          <Block>Presentation</Block>
-        </Row>
-      </Diagram>
-    </Container>
+        <Block>Presentations</Block>
+      </ColumnSection>
+    </RowSection>
   )
 }
 
