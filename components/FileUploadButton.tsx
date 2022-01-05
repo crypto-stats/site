@@ -28,7 +28,7 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({ onUploaded, classNa
 
   return (
     <Fragment>
-      <button variant={className} onClick={() => hiddenFileInput.current!.click()}>
+      <button className={className} onClick={() => hiddenFileInput.current!.click()}>
         Upload a file
       </button>
       <input
