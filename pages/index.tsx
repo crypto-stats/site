@@ -1,4 +1,5 @@
 import { CryptoStatsSDK } from '@cryptostats/sdk'
+import styled from 'styled-components'
 import Footer from 'components/Footer'
 import Header from 'components/Header'
 import Description from 'components/home-sections/Description'
@@ -9,6 +10,20 @@ import FAQs from 'components/home-sections/FAQs'
 import RowSection from 'components/RowSection'
 import ColumnSection from 'components/ColumnSection'
 
+const HomeBackgroundHead = styled.div`
+  background-image: url('hp_bg_head.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding-bottom: var(--spaces-13);
+`
+const HomeBackgroundActions = styled.div`
+  background-image: url('hp_bg_actions.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding-bottom: var(--spaces-13);
+`
 interface HomePageProps {
   sampleData: any
 }
@@ -16,17 +31,20 @@ interface HomePageProps {
 const Home: NextPage<HomePageProps> = ({ sampleData }) => {
   return (
     <>
-      <RowSection>
-        <ColumnSection>
-          <Header />
-        </ColumnSection>
-      </RowSection>
-
-      <Hero sampleData={sampleData} />
+      <HomeBackgroundHead>
+        <RowSection>
+          <ColumnSection>
+            <Header />
+          </ColumnSection>
+        </RowSection>
+        <Hero sampleData={sampleData} />
+      </HomeBackgroundHead>
 
       <Description />
 
-      <Actions />
+      <HomeBackgroundActions>
+        <Actions />
+      </HomeBackgroundActions>
 
       <FAQs />
 

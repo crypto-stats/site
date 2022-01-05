@@ -1,13 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const TagElement = styled.div<{ type?: string, mt?:string, mb?:string, color?: string }>`
+const TagElement = styled.div<{ type?: string, mt?:string, mb?:string, color?: string, align?: string }>`
   font-family: "Inter";
   font-weight: 400;
   margin: 0;
   margin-top: ${({mt})=>mt ? mt : '0'}px;
   margin-bottom: ${({mb})=>mb ? mb : '0'}px;
   padding: 0;
+
+  ${({align}) => align && `text-align: ${align};`}
 
   ${({type}) => type === "display" && `
     font-weight: 700;
@@ -90,11 +92,12 @@ interface TextProps {
   type?: string
   className?: string
   color?: string
+  align?: string
 }
 
-const Text: React.FC<TextProps> = ({ tag, type, className, children, mt, mb, color }) => {
+const Text: React.FC<TextProps> = ({ tag, type, className, children, mt, mb, color, align }) => {
   return (
-    <TagElement as={tag} className={className} type={type} mt={mt} mb={mb} color={color}>
+    <TagElement as={tag} className={className} type={type} mt={mt} mb={mb} color={color} align={align}>
       {children}
     </TagElement>
   )

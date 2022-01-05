@@ -52,7 +52,6 @@ const HeroCard: React.FC<HeroCardProps> = ({ title, subtitle, children, position
         {title}
         <SubtitleChip>{subtitle}</SubtitleChip>
       </CardHeader>
-
       <CardBody>{children}</CardBody>
     </CardContainer>
   )

@@ -1,13 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
+import Link from 'next/link'
 import RowSection from 'components/RowSection'
 import ColumnSection from 'components/ColumnSection'
 import Text from 'components/Text'
-
-const Row = styled.div`
-  display: flex;
-  flex: 1;
-`
+import Button from 'components/Button'
 
 const Block = styled.div`
   border-radius: 20px;
@@ -109,7 +106,7 @@ const TopForkArrows = styled(ForkArrows)`
 
 const Hero: React.FC = () => {
   return (
-    <RowSection mt="124" alignItems="center">
+    <RowSection alignItems="center">
       <ColumnSection from="2" to="6">
         <Text tag="h3" type="title_highlight" mb="24">What is CryptoStats?</Text>
         <Text tag="p" type="content_big" mb="16">We are People. We are a Community, we are a DAO. We believe that Data should be open and accessible to everyone. For free and without barriers.</Text>
@@ -117,6 +114,9 @@ const Hero: React.FC = () => {
         <Text tag="p" type="content_big" mb="16">Thanks to Blockchain technology and the Community DAO processes, we are decentralizing data consuming. Working at the normalization layer we are able to provide neutral, high quality and verified endpoints that you don't have to trust.</Text>
         <Text tag="p" type="content_big" mb="16">Best in class projects are already using CryptoStats to empower their users with neutral and trustful data.</Text>
         <Text tag="p" type="content_big" mb="16">Want to know more?</Text>
+        <Link href="/discover" passHref>
+          <Button className="outline">See how it works</Button>
+        </Link>
       </ColumnSection>
 
       <ColumnSection from="7" to="12">
