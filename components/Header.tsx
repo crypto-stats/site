@@ -10,6 +10,7 @@ import Button from 'components/Button'
 const HeaderContainer = styled.header`
   width: 100%;
   height: auto;
+  margin-top: var(--spaces-4);
   margin-bottom: var(--spaces-4);
 
   @media (min-width: 768px) {
@@ -47,15 +48,14 @@ const Nav = styled.nav`
 `
 
 const NavLink = styled.a<{ active?: boolean }>`
+  position: relative;
   display: inline-block;
   margin: 0 4px;
-  line-height: 65px;
   color: #3d3d3d;
   text-decoration: none;
   font-size: 16px;
   font-weight: 500;
   margin: 0 10px;
-  border-bottom: solid 5px transparent;
   cursor: pointer;
 
   &:hover {
@@ -64,8 +64,18 @@ const NavLink = styled.a<{ active?: boolean }>`
 
   ${({ active }) => active && `
     font-weight: 700;
-    color: #0477f4;
-    border-bottom: solid 5px #0477f4;
+    color: var(--color-primary);
+
+    &:after {
+      display: block;
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 5px;
+      left: 0;
+      bottom: -15px;
+      background-color: var(--color-primary);
+    }
   `}
 `
 

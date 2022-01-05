@@ -13,7 +13,7 @@ const formatNum = (num: number) => num.toLocaleString('en-US', {
 
 const Hero: React.FC<{ sampleData: any }> = ({ sampleData }) => {
   return (
-    <RowSection mt="64">
+    <RowSection mt="140">
       <ColumnSection columns="6">
         <Text tag="h1" type="display" mb="40">
           One neutral source of truth for crypto metrics. Used by everyone, managed by the community.
