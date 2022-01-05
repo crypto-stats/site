@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import type { LOG_LEVEL } from '@cryptostats/sdk'
+import { LOG_LEVEL } from '@cryptostats/sdk'
 import collectionMetadata, { Parameter, Query } from 'resources/collection-metadata';
 import styled from 'styled-components'
 import Button from './Button';
 import InputField from './InputField'
 import { usePlausible } from 'next-plausible';
+import { getSDK } from 'utils/sdk';
 
 const Section = styled.h3`
   font-size: 18px;
@@ -226,11 +227,10 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
         setOutput(JSON.stringify(json, null, 2))
       } else {
         appendOutput('Initializing CryptoStats SDK')
-        const { CryptoStatsSDK, LOG_LEVEL: logLevel } = await import('@cryptostats/sdk')
-        const sdk = new CryptoStatsSDK({
-          moralisKey: process.env.NEXT_PUBLIC_MORALIS_KEY,
+
+        const sdk = getSDK({
           onLog: (level: LOG_LEVEL, ...args: any[]) =>
-            appendOutput(`${logLevel[level]}: ${args.map((arg: any) => JSON.stringify(arg)).join(' ')}`)
+            appendOutput(`${LOG_LEVEL[level]}: ${args.map((arg: any) => JSON.stringify(arg)).join(' ')}`)
         })
 
         appendOutput(`Fetching ${listId} collection from on-chain & IPFS`)
