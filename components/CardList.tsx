@@ -95,8 +95,7 @@ const CardList: React.FC<CardListProps> = ({ items }) => {
                 {item.icon && <CardIcon color={item.iconColor} icon={item.icon} />}
                 <Content>
                   <Text tag="h3" type="h3">{item.title}</Text>
-                  {/* {item.subtitle && <Text tag="p" type="description">{item.subtitle}</Text>} */}
-
+                  
                   {item.iconlist && (
                     <IconList>
                       {item.iconlist.map((icon: { path: string, title: string }, i: number) => (

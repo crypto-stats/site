@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import { useWeb3React } from '@web3-react/core'
 import ConnectionButton from './ConnectionButton'
 import Button from 'components/Button'
-// import { Menu } from 'react-feather'
 
 const HeaderContainer = styled.header`
   width: 100%;
@@ -84,20 +83,6 @@ const WalletButton = styled(ConnectionButton)`
   }
 `
 
-// const MenuToggle = styled(Button)`
-//   position: absolute;
-//   top: var(--spaces-4);
-//   right: var(--spaces-4);
-//   min-width: 45px;
-//   width: 45px;
-//   max-width: 45px;
-//   height: 45px;
-
-//   @media (min-width: 768px) {
-//     display: none;
-//   }
-// `
-
 const Header: React.FC = () => {
   const router = useRouter()
   const { account } = useWeb3React()
@@ -121,7 +106,6 @@ const Header: React.FC = () => {
 
         <WalletButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</WalletButton>
       </Nav>
-      {/* <MenuToggle className="outline"><Menu /></MenuToggle> */}
     </HeaderContainer>
   )
 }
