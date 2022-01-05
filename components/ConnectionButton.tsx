@@ -76,7 +76,7 @@ const ConnectionButton: React.FC<ConnectionButtonProps> = ({ children }) => {
 
   return (
     <Fragment>
-      <Button className="outline" onClick={() => setModalOpen(true)} >
+      <Button variant="outline" onClick={() => setModalOpen(true)} >
         {children}
       </Button>
 

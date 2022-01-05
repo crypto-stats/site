@@ -18,6 +18,7 @@ const HomeBackgroundHead = styled.div`
   padding-bottom: 200px;
 `
 const HomeBackgroundActions = styled.div`
+  margin-top: var(--spaces-10);
   background-image: url('hp_bg_actions.png');
   background-size: cover;
   background-position: center;

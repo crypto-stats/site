@@ -28,7 +28,7 @@ const Actions: React.FC = () => {
           <Graphic background="/editor-thumbnail.png"/>
           <Text tag="p" type="content_big" mb="16">Create and update the adapers that provide data to CryptoStats. Write, test and publish the code right in the browser!</Text>
           <Link href="/editor" passHref>
-            <Button className="outline">Open the adapter editor</Button>
+            <Button variant="outline">Open the adapter editor</Button>
           </Link>
         </ColumnSection>
         <ColumnSection from="7" to="12">
@@ -40,7 +40,7 @@ const Actions: React.FC = () => {
           </Graphic>
           <Text tag="p" type="content_big" mb="16">Review a wide range of data metrics, covering protocols across the crypto space.</Text>
           <Link href="/discover" passHref>
-            <Button className="outline">Browse data sets</Button>
+            <Button variant="outline">Browse data sets</Button>
           </Link>
         </ColumnSection>
       </RowSection>
@@ -53,7 +53,7 @@ const Actions: React.FC = () => {
             <div>Adapter name</div>
             <div>Uniswap</div>
           </HeroCard>
-          <Button className="outline">Read the docs</Button>
+          <Button variant="outline">Read the docs</Button>
         </ColumnSection>
       </RowSection>
     </>

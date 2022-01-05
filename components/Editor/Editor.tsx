@@ -303,7 +303,7 @@ const Editor: React.FC = () => {
             </Fill>
 
             <LeftSidebarFooter size={70}>
-              <Button className={"outline"} onClick={() => setImageLibraryOpen(true)}>Image Library</Button>
+              <Button variant="outline" onClick={() => setImageLibraryOpen(true)}>Image Library</Button>
             </LeftSidebarFooter>
 
             <LeftFooter order={1} size={55}>

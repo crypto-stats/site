@@ -249,10 +249,10 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         sidebar={
           <Fragment>
             <AdapterActionBtns>
-              <Button className="outline" onClick={edit()} icon="Edit" width="auto">
+              <Button variant="outline" onClick={edit()} icon="Edit" width="auto">
                 Edit
               </Button>
-              <Button className="outline" onClick={edit(true)} icon="Fork" width="auto">
+              <Button variant="outline" onClick={edit(true)} icon="Fork" width="auto">
                 Clone
               </Button>
             </AdapterActionBtns>

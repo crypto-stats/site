@@ -115,7 +115,7 @@ const Hero: React.FC = () => {
         <Text tag="p" type="content_big" mb="16">Best in class projects are already using CryptoStats to empower their users with neutral and trustful data.</Text>
         <Text tag="p" type="content_big" mb="16">Want to know more?</Text>
         <Link href="/discover" passHref>
-          <Button className="outline">See how it works</Button>
+          <Button variant="outline">See how it works</Button>
         </Link>
       </ColumnSection>
 

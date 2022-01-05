@@ -101,7 +101,7 @@ const Header: React.FC = () => {
         <NavLink href="https://forum.cryptostats.community/">Forum</NavLink>
 
         <Link href="/editor" passHref>
-          <Button className="secondary">Create Adapter</Button>
+          <Button variant="secondary">Create Adapter</Button>
         </Link>
 
         <WalletButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</WalletButton>
