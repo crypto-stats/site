@@ -1,9 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const TagElement = styled.div<{ type?: string }>`
+const TagElement = styled.div<{ type?: string, mt?:string, mb?:string }>`
+  font-family: "Inter";
   font-weight: 400;
   margin: 0;
+  margin-top: ${({mt})=>mt ? mt : '0'}px;
+  margin-bottom: ${({mb})=>mb ? mb : '0'}px;
   padding: 0;
 
   ${({type}) => type === "display" && `
@@ -26,6 +29,12 @@ const TagElement = styled.div<{ type?: string }>`
   ${({type}) => type === "subtitle" && `
     font-weight: 600;
     font-size: 24px;
+    color: #002750;
+    letter-spacing: 0.1px;
+  `}
+  ${({type}) => type === "h3" && `
+    font-weight: 700;
+    font-size: 22px;
     color: #002750;
     letter-spacing: 0.1px;
   `}
@@ -54,14 +63,17 @@ const TagElement = styled.div<{ type?: string }>`
 `
 
 interface TextProps {
-  tag: React.ElementType
+  tag?: React.ElementType | "div"
+  mt?: string | "0"
+  mb?: string | "0"
   type?: string
   className?: string
+  color?: string
 }
 
-const Text: React.FC<TextProps> = ({ tag, type, className, children }) => {
+const Text: React.FC<TextProps> = ({ tag, type, className, children, mt, mb, color }) => {
   return (
-    <TagElement as={tag} className={className} type={type}>
+    <TagElement as={tag} className={className} type={type} mt={mt} mb={mb} color={color}>
       {children}
     </TagElement>
   )

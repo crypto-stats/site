@@ -1,6 +1,11 @@
 import React, { useEffect } from 'react'
 import { useCompiler } from 'hooks/compiler'
 import AdapterPreview from './AdapterPreview'
+import styled from 'styled-components'
+
+const PreviewContainer = styled.div`
+  margin-top: 24px;
+`
 
 interface AdapterPreviewListProps {
   staticDetails: any[]
@@ -15,7 +20,7 @@ const AdapterPreviewList: React.FC<AdapterPreviewListProps> = ({ staticDetails, 
   }, [code])
 
   return (
-    <div>
+    <PreviewContainer>
       {staticDetails.map((details: any, i: number) => (
         <AdapterPreview
           key={details.id}
@@ -24,7 +29,7 @@ const AdapterPreviewList: React.FC<AdapterPreviewListProps> = ({ staticDetails, 
           openByDefault={staticDetails.length === 1}
         />
       ))}
-    </div>
+    </PreviewContainer>
   )
 }
 

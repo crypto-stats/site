@@ -3,108 +3,39 @@ import styled from 'styled-components'
 import Header from '../Header'
 import Footer from '../Footer'
 import Breadcrumbs from './Breadcrumbs'
+import NotificationBar from 'components/NotificationBar'
+import Hero from 'components/Hero'
+import RowSection from 'components/RowSection'
+import ColumnSection from 'components/ColumnSection'
 
-const LayoutContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  background: #f9fafb;
+const LayoutContainer = styled.div<{ page?:string }>`
+  ${({page})=> page === "adapter" || page === "collection" ? `
+    background: var(--color-primary-400);
+  ` : ``}
+  
 `
 
-const Top = styled.div`
-  box-shadow: 0 3px 18px 0 rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: #ffffff;
-
-  & h1 {
-    font-size: 36px;
-    font-weight: 600;
-    color: #002750;
-  }
-`
-
-const TopInner = styled.div`
-  max-width: 1248px;
-  width: calc(100% - 12px);
-`
-
-const MainContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  padding: 10px 0 40px;
-`
-
-const Main = styled.main`
-  max-width: 720px;
-  width: 0;
-  margin: 20px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-`
-
-const TopContent = styled.div`
-  display: flex;
-  min-height: 200px;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-`
-
-const HeroContainer = styled.div`
-  flex: 1;
+const HeaderContainer = styled.div<{page?:string}>`
+  ${({page})=> page === "adapter" || page === "collection" ? `
+    box-shadow: 0 3px 18px 0 rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+  ` : ``}
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0 0 32px;
 `
 
 const Sidebar = styled.div`
-  width: 288px;
-  position: relative;
+  margin-bottom: 40px;
 
-  @media (max-width: 768px) {
-    margin-top: 12px;
-    width: unset;
-  }
-`
-
-const Spacer = styled.div`
-  width: 288px;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`
-
-const SidebarInner = styled.div`
-  position: absolute;
-  top: 20px;
-  left: 0;
-  right: 0;
-
-  @media (max-width: 768px) {
-    position: unset;
-  }
-`
-
-const NotificationBarContainer = styled.div`
-  background-color: #d6eaff;
-  height: 60px;
-  margin: 0 -2000px;
-  display: flex;
-  justify-content: center;
-`
-
-const NotificationBarInner = styled.div`
-  max-width: 1248px;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  padding: 0 6px;
-  box-sizing: border-box;
+  @media (min-width: 768px) {
+    margin-bottom: 0;
+    position: sticky;
+    top: calc(150px + var(--spaces-4));
+    bottom: var(--spaces-4);
+    transform: translateY(-150px);
+  } 
 `
 
 interface TranquilLayoutProps {
@@ -112,39 +43,54 @@ interface TranquilLayoutProps {
   sidebar?: React.ReactNode
   breadcrumbs?: { name: string; path: string }[]
   notificationBar?: React.ReactNode
+  page?: string
 }
 
-const TranquilLayout: React.FC<TranquilLayoutProps> = ({ children, hero, sidebar, breadcrumbs, notificationBar }) => {
+const TranquilLayout: React.FC<TranquilLayoutProps> = ({ children, hero, sidebar, breadcrumbs, notificationBar, page }) => {
   return (
-    <LayoutContainer>
-      <Top>
-        <TopInner>
-          <Header />
+    <LayoutContainer page={page}>
 
-          {notificationBar && (
-            <NotificationBarContainer>
-              <NotificationBarInner>{notificationBar}</NotificationBarInner>
-            </NotificationBarContainer>
-          )}
+      {/* Header + Hero */}
+      <HeaderContainer page={page}>
+        <RowSection>
+          <ColumnSection columns="12">
+            <Header />
+          </ColumnSection>
+        </RowSection>
+        
+        {notificationBar && (
+          <RowSection fullWidth>
+            <ColumnSection columns="12">
+              <NotificationBar>{notificationBar}</NotificationBar>
+            </ColumnSection>
+          </RowSection>
+        )}
+          
+        <RowSection>
+          <ColumnSection columns="12">
+            {breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs} />}
+          </ColumnSection>
+        </RowSection>
 
-          {breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs} />}
+        <RowSection>
+          <ColumnSection columns={sidebar ? "9" : "7"} offset={sidebar ? "" : "4"}>
+            <Hero>{hero}</Hero>          
+          </ColumnSection>
+        </RowSection>
+      </HeaderContainer>
 
-          <TopContent>
-            <HeroContainer>{hero}</HeroContainer>
-
-            {sidebar && (
-              <Sidebar>
-                <SidebarInner>{sidebar}</SidebarInner>
-              </Sidebar>
-            )}
-          </TopContent>
-        </TopInner>
-      </Top>
-      
-      <MainContainer>
-        <Main>{children}</Main>
-        {sidebar && <Spacer />}
-      </MainContainer>
+      <RowSection>
+        <ColumnSection tag="main" columns={sidebar ? "9" : "6"} offset={sidebar ? "" : "4"}>
+          {children}
+        </ColumnSection>
+        {sidebar && (
+          <ColumnSection columns="3">
+            <Sidebar>
+              {sidebar}
+            </Sidebar>
+          </ColumnSection>
+        )}
+      </RowSection>
 
       <Footer />
     </LayoutContainer>

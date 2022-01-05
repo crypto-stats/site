@@ -6,6 +6,7 @@ const BreadcrumbContainer = styled.ol`
   display: flex;
   padding: 0;
   margin: 4px 0;
+  width: 100%;
 `
 
 const BreadcrumbItem = styled.li`

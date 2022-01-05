@@ -9,9 +9,75 @@ import { runOnce } from 'hooks/lib'
 import { setENSCache } from 'use-ens-name'
 
 const GlobalStyle = createGlobalStyle`
+  :root {
+
+    // Colors 
+    --color-primary: #0477F4;
+    --color-primary-100: #BDD0F6;
+    --color-primary-200: #D6EAFF;
+    --color-primary-300: #EEF1F7;
+    --color-primary-400: #F9FAFB;
+    --color-primary-800: #DDDDDD;
+    --color-white: #FFFFFF;
+
+    --color-dark-100: #000000;
+    --color-dark-200: #0F1011;
+    --color-dark-300: #131415;
+    --color-dark-400: #2F2F2F;
+    --color-dark-500: #282D36;
+    --color-dark-600: #505050;
+    --color-dark-700: #878787;
+
+    --color-palette-1: #D0E0FF;
+    --color-palette-2: #FFE3D0;
+    --color-palette-3: #FFFDD0;
+    --color-palette-4: #DCFFD0;
+    --color-palette-5: #D0FFF7;
+    --color-palette-6: #D3D0FF;
+    --color-palette-7: #F0D0FF;
+    --color-palette-8: #FFD0DD;
+
+    // Shadows
+    --box-shadow-card: 0 3px 6px 0 rgba(0,36,75,.07);
+
+    // Containers
+    --container-full: 100%;
+    --container-fixed: 1280px;
+
+    // Spaces
+    --spaces-1: 4px;
+    --spaces-2: 8px;
+    --spaces-3: 16px;
+    --spaces-4: 24px;
+    --spaces-5: 32px;
+    --spaces-6: 40px;
+    --spaces-7: 48px;
+    --spaces-8: 56px;
+    --spaces-9: 64px;
+    --spaces-10: 72px;
+    --spaces-11: 80px;
+    --spaces-12: 100px;
+    --spaces-13: 140px;
+
+    // Media Query
+    --bp-small: 768px;
+    --bp-medium: 992px;
+    --bp-large: 1200px;
+    --bp-xl: 1400px;
+
+    // Grid
+    --grid-columns: 12;
+    --grid-column-gap: var(--spaces-5);
+    --grid-row-gap: var(--spaces-6);
+
+    // Transitions
+    --transition-fast: 150ms ease;
+  }
+
   body, html, #__next {
     min-height: 100%;
     margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     flex: 1;

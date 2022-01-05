@@ -2,18 +2,15 @@ import React, { useState, useEffect, Fragment } from 'react'
 import styled from 'styled-components'
 import { useWeb3React } from '@web3-react/core'
 import EditorModal from './Editor/EditorModal'
-
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-
+import Button from 'components/Button'
 export const injected = new InjectedConnector({ })
 
 export const walletconnect = new WalletConnectConnector({
   qrcode: true
 })
 
-const ButtonElement = styled.button`
-`
 
 const ButtonRow = styled.div`
   display: flex;
@@ -55,10 +52,10 @@ const getForceDisconnect = () => window.localStorage.getItem('force-disconnect')
 const setForceDisconnect = (val: boolean) => window.localStorage.setItem('force-disconnect', val.toString())
 
 interface ConnectionButtonProps {
-  className?: string;
+  
 }
 
-const ConnectionButton: React.FC<ConnectionButtonProps> = ({ children, className }) => {
+const ConnectionButton: React.FC<ConnectionButtonProps> = ({ children }) => {
   const [modalOpen, setModalOpen] = useState(false)
   const { active, account, deactivate, activate } = useWeb3React()
 
@@ -79,9 +76,9 @@ const ConnectionButton: React.FC<ConnectionButtonProps> = ({ children, className
 
   return (
     <Fragment>
-      <ButtonElement className={className} onClick={() => setModalOpen(true)}>
+      <Button className="outline" onClick={() => setModalOpen(true)} >
         {children}
-      </ButtonElement>
+      </Button>
 
       <EditorModal
         isOpen={modalOpen}

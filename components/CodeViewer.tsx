@@ -4,9 +4,15 @@ import js from 'react-syntax-highlighter/dist/cjs/languages/hljs/javascript'
 import ts from 'react-syntax-highlighter/dist/cjs/languages/hljs/typescript'
 // @ts-ignore
 import theme from 'react-syntax-highlighter/dist/cjs/styles/hljs/stackoverflow-dark'
+import styled from 'styled-components'
+
 
 SyntaxHighlighter.registerLanguage('javascript', js);
 SyntaxHighlighter.registerLanguage('typescript', ts);
+
+const CodeViewerContainer = styled.div`
+  margin-top: 24px;
+`
 
 interface CodeViewerProps {
   js: string;
@@ -17,7 +23,7 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ js, ts }) => {
   const [showSource, setShowSource] = useState(true)
   
   return (
-    <div>
+    <CodeViewerContainer>
       <SyntaxHighlighter
         language={ts && showSource ? 'typescript' : 'javascript'}
         style={theme}
@@ -34,7 +40,7 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ js, ts }) => {
           </button>
         </div>
       )}
-    </div>
+    </CodeViewerContainer>
   )
 }
 
