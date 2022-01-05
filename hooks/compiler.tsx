@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
-import { CryptoStatsSDK, List, Module, LOG_LEVEL } from '@cryptostats/sdk'
+import { List, Module, LOG_LEVEL } from '@cryptostats/sdk'
 import { compileTsToJs } from 'utils/ts-compiler'
+import { getSDK } from 'utils/sdk'
 
 interface CompilerState {
   code: string | null
@@ -41,10 +42,7 @@ export const useCompiler = () => {
   const evaluate = async ({ code, isTS, onLog }: EvaluateParams) => {
     setState({ ...DEFAULT_STATE, code, processing: true })
 
-    const sdk = new CryptoStatsSDK({
-      moralisKey: process.env.NEXT_PUBLIC_MORALIS_KEY,
-      onLog,
-    })
+    const sdk = getSDK({ onLog })
 
     const list = sdk.getList('test')
 

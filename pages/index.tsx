@@ -1,4 +1,4 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk'
+import { getSDK } from 'utils/sdk'
 import styled from 'styled-components'
 import Footer from 'components/Footer'
 import Header from 'components/Header'
@@ -58,10 +58,7 @@ export default Home
 
 export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
 
-  const sdk = new CryptoStatsSDK({
-    moralisKey: process.env.NEXT_PUBLIC_MORALIS_KEY,
-    adapterListSubgraph: 'dmihal/cryptostats-adapter-registry-test',
-  })
+  const sdk = getSDK()
   const yesterday = sdk.date.offsetDaysFormatted(sdk.date.formatDate(new Date()), -1)
 
   const feesList = sdk.getList('fees')
