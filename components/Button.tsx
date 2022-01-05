@@ -12,25 +12,29 @@ const ForkIcon: React.FC = () => (
   </svg>
 )
 
-const ButtonElement = styled.button<{ variant?: string, width?: string}>`
+const ButtonElement = styled.button<{ variant?: string, width?: string, size?: string, fullWidth?: boolean}>`
+  font-family: "Inter";
   display: flex;
-  width: 100%;
-  min-width: ${({width})=>width === "auto" ? `auto` : `160px`};
+  width: ${({fullWidth}) => fullWidth ? '100%' : 'auto'};
+  min-width: ${({width})=> width === "auto" ? `auto` : `160px`};
   border: none;
   border-radius: 4px;
   box-shadow: none;
   background: none;
   cursor: pointer;
   outline: none;
-  padding: 8px;
   justify-content: center;
   align-items: center;
-
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.2px;
   line-height: 17px;
   transition: 150ms ease;
+  padding: var(--spaces-2) var(--spaces-3);
+
+  ${({size})=> size && size === "large" && `
+    padding: var(--spaces-3) var(--spaces-5);
+  `}
 
   // Primary styling
   background-color: var(--color-primary);
@@ -75,13 +79,16 @@ const Icon = styled.i`
 interface ButtonProps {
   onClick?: () => void
   disabled?: boolean
+  fullWidth?: boolean
   className?: string
   icon?: string
   width?: string
   variant?: string
+  size?: string
+  
 }
 
-const Button: React.FC<ButtonProps> = ({ children, onClick, disabled, className, variant, icon, width}) => {
+const Button: React.FC<ButtonProps> = ({ children, onClick, disabled, className, variant, icon, width, size, fullWidth}) => {
 
   let svgIcon;
 
@@ -97,7 +104,7 @@ const Button: React.FC<ButtonProps> = ({ children, onClick, disabled, className,
   }
     
   return (
-    <ButtonElement onClick={onClick} disabled={disabled} className={className} width={width} variant={variant}>
+    <ButtonElement onClick={onClick} disabled={disabled} className={className} width={width} variant={variant} size={size} fullWidth={fullWidth}>
       {icon &&   
         <Icon>
           {svgIcon}

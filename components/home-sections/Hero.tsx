@@ -19,7 +19,7 @@ const Hero: React.FC<{ sampleData: any }> = ({ sampleData }) => {
           One neutral source of truth for crypto metrics. Used by everyone, managed by the community.
         </Text>
         <Link href="/discover" passHref>
-          <Button>Discover the data collection</Button>
+          <Button variant="primary" size="large">Discover the data collection</Button>
         </Link>
       </ColumnSection>
 
