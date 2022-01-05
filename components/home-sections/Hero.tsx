@@ -24,7 +24,7 @@ const Hero: React.FC<{ sampleData: any }> = ({ sampleData }) => {
       </ColumnSection>
 
       <ColumnSection from="8" to="13" hideSmall>
-        <HeroCard title="Gitcoin DAO Treasury" subtitle="Preview" position="TopRight">
+        <HeroCard title="Gitcoin DAO Treasury" subtitle="Preview" position="TopRight" icon="gitcoin">
           <Text tag="p" type="label" mt="16" mb="8">Adapter Name</Text>
           <Text tag="p" type="content">Gitcoin</Text>
           <Text tag="p" type="label" mt="16" mb="8">Data type</Text>
@@ -33,7 +33,7 @@ const Hero: React.FC<{ sampleData: any }> = ({ sampleData }) => {
           <Text tag="p" type="content">24 hours fees: {formatNum(sampleData.gitcoinTreasury)}</Text>
         </HeroCard>
         
-        <HeroCard title="Yearn Vault APYs" subtitle="Preview" position="Center">
+        <HeroCard title="Yearn Vault APYs" subtitle="Preview" position="Center" icon="yearn">
           <Text tag="p" type="label" mt="16" mb="8">Adapter Name</Text>
           <Text tag="p" type="content">Uniswap</Text>
           <Text tag="p" type="label" mt="16" mb="8">Data type</Text>
@@ -42,7 +42,7 @@ const Hero: React.FC<{ sampleData: any }> = ({ sampleData }) => {
           <Text tag="p" type="content">24 hours fees: {formatNum(sampleData.yearnApy)}</Text>
         </HeroCard>
 
-        <HeroCard title="Arbitrum fees" subtitle="Preview" position="BottomLeft">
+        <HeroCard title="Arbitrum fees" subtitle="Preview" position="BottomLeft" icon="arbitrum">
           <Text tag="p" type="label" mt="16" mb="8">Adapter Name</Text>
           <Text tag="p" type="content">Arbitrum</Text>
           <Text tag="p" type="label" mt="16" mb="8">Data type</Text>

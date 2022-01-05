@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Positionable, Position } from './Positionable'
+import Icon from 'components/Icon'
 
 const CardContainer = styled(Positionable)<{ position?: Position }>`
   border-radius: 10px;
@@ -25,6 +26,11 @@ const CardHeader = styled.div`
   padding: 0 16px;
 `
 
+const CardIcoName = styled.div`
+  display: flex;
+  align-items: center;
+`
+
 const SubtitleChip = styled.div`
   border-radius: 8px;
   background: #eef1f7;
@@ -43,13 +49,17 @@ interface HeroCardProps {
   title: string
   subtitle: string
   position?: Position
+  icon?: string
 }
 
-const HeroCard: React.FC<HeroCardProps> = ({ title, subtitle, children, position }) => {
+const HeroCard: React.FC<HeroCardProps> = ({ title, subtitle, children, position, icon }) => {
   return (
     <CardContainer position={position}>
       <CardHeader>
-        {title}
+        <CardIcoName>
+          <Icon type={icon} size="small" />
+          {title}
+        </CardIcoName>
         <SubtitleChip>{subtitle}</SubtitleChip>
       </CardHeader>
       <CardBody>{children}</CardBody>
