@@ -39,12 +39,15 @@ const Logo = styled.a`
 `
 
 const Nav = styled.nav`
-  display: inline-grid;
-  grid-template-columns: repeat(4, min-content);
-  grid-gap: 0 var(--spaces-3);
+  display: flex;
   align-items: center;
   justify-self: end;
+`
 
+const NavItem = styled.div`
+  & + & {
+    margin-left: var(--spaces-4);
+  }
 `
 
 const NavLink = styled.a<{ active?: boolean }>`
@@ -55,7 +58,6 @@ const NavLink = styled.a<{ active?: boolean }>`
   text-decoration: none;
   font-size: 16px;
   font-weight: 500;
-  margin: 0 10px;
   cursor: pointer;
 
   &:hover {
@@ -105,16 +107,27 @@ const Header: React.FC = () => {
       </Link>
 
       <Nav>
-        <Link href="/discover" passHref>
-          <NavLink active={router.route.indexOf('/discover') === 0}>Discover</NavLink>
-        </Link>
-        <NavLink href="https://forum.cryptostats.community/">Forum</NavLink>
-
-        <Link href="/editor" passHref>
-          <Button variant="secondary">Create Adapter</Button>
-        </Link>
-
-        <WalletButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</WalletButton>
+        <NavItem>
+          <Link href="/discover" passHref>
+            <NavLink active={router.route.indexOf('/discover') === 0}>Discover</NavLink>
+          </Link>
+        </NavItem>
+        <NavItem>
+          <Link href="/how-it-works" passHref>
+            <NavLink active={router.route.indexOf('/how-it-works') === 0}>How it works</NavLink>
+          </Link>
+        </NavItem>
+        <NavItem>
+          <NavLink href="https://forum.cryptostats.community/">Forum</NavLink>
+        </NavItem>
+        <NavItem>
+          <Link href="/editor" passHref>
+            <Button variant="secondary">Create Adapter</Button>
+          </Link>
+        </NavItem>
+        <NavItem>
+          <WalletButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</WalletButton>
+        </NavItem>
       </Nav>
     </HeaderContainer>
   )
