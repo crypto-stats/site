@@ -40,17 +40,12 @@ const Home: NextPage<HomePageProps> = ({ sampleData }) => {
         </RowSection>
         <Hero sampleData={sampleData} />
       </HomeBackgroundHead>
-
       <Description />
-
       <HomeBackgroundActions>
         <Actions />
       </HomeBackgroundActions>
-
       <FAQs />
-
       <Footer />
-
     </>
   )
 }

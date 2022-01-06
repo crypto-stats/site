@@ -7,7 +7,7 @@ import collectionMetadata from 'resources/collection-metadata'
 import Text from 'components/Text'
 
 const HeroWrapper = styled.div`
-  margin: var(--spaces-12) 0 var(--spaces-6);
+  margin: var(--spaces-10) 0 0;
   text-align: center;
   
   @media ( min-width: 768px ) {
