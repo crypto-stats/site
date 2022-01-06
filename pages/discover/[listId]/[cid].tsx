@@ -8,7 +8,7 @@ import { useWeb3React } from '@web3-react/core'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import { useAdapterList, newModule } from 'hooks/local-adapters'
-import { getListNames, getModulesForList, getListsForAdapter, getCIDFromSlug, getAllVerifiedAdapters } from 'utils/lists-chain'
+import { getListNames, getModulesForList, getListsForAdapter, getCIDFromSlug, getAllVerifiedAdapters, getPreviousVersions, Version } from 'utils/lists-chain'
 import AdapterPreviewList from 'components/AdapterPage/AdapterPreviewList'
 import Button from 'components/Button'
 import CodeViewer from 'components/CodeViewer'
@@ -146,10 +146,11 @@ interface AdaptersPageProps {
   listModules: string[]
   verifiedLists: string[]
   collections: string[]
+  previousVersions: Version[]
 }
 
 const AdapterPage: NextPage<AdaptersPageProps> = ({
-  listId, cid, verified, moduleDetails, subadapters, listModules, verifiedLists, collections
+  listId, cid, verified, moduleDetails, subadapters, listModules, verifiedLists, collections, previousVersions
 }) => {
   const plausible = usePlausible()
   const [_verified, setVerified] = useState(verified)
@@ -299,6 +300,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
                   cid={cid}
                   previousVersion={moduleDetails.previousVersion}
                   onVerified={(newVerified: boolean) => setVerified(newVerified)}
+                  previousVersions={previousVersions}
                 />
               </div>
             )}
@@ -352,6 +354,8 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
 
   const collections = await getListNames()
 
+  const previousVersions = await getPreviousVersions(cid)
+
   const moduleDetails: ModuleDetails = {
     name: module.name,
     version: module.version,
@@ -376,6 +380,7 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
       verifiedLists,
       collections,
       ensCache,
+      previousVersions,
     },
     revalidate: 60,
   }

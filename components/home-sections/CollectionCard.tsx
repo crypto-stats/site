@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Position, Positionable } from './Positionable'
+import collectionMetadata from 'resources/collection-metadata'
+import IconRound from 'components/IconRound'
 
 const Card = styled(Positionable)`
   width: 80%;
@@ -10,37 +12,32 @@ const Card = styled(Positionable)`
   background: #ffffff;
   padding: 8px;
   display: flex;
-
-  &:before {
-    content: '';
-    display: block;
-    height: 50px;
-    width: 50px;
-    background: #d9d9d9;
-    border-radius: 50px;
-    align-self: center;
-  }
+  align-items: center;
 `
 
 const Column = styled.div`
   flex: 1;
+  margin-left: 8px;
 `
 
 const CardTitle = styled.div``
 
 interface CollectionCardProps {
   position: Position
-  title: string
+  collection: string
 }
 
-const CollectionCard: React.FC<CollectionCardProps> = ({ position, title }) => {
-return (
-  <Card position={position}>
-    <Column>
-      <CardTitle>{title}</CardTitle>
-    </Column>
-  </Card>
-)
+const CollectionCard: React.FC<CollectionCardProps> = ({ position, collection }) => {
+  const metadata = collectionMetadata[collection]
+
+  return (
+    <Card position={position}>
+      <IconRound icon={metadata.icon} color={metadata.iconColor} />
+      <Column>
+        <CardTitle>{metadata.name}</CardTitle>
+      </Column>
+    </Card>
+  )
 }
 
 export default CollectionCard

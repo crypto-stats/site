@@ -1,3 +1,5 @@
+import { CryptoStatsSDK, Module } from '@cryptostats/sdk'
+
 async function query(query: string) {
   const req = await fetch('https://api.thegraph.com/subgraphs/name/dmihal/cryptostats-adapter-registry-test', {
     headers: {
@@ -90,4 +92,70 @@ export async function getAllVerifiedAdapters(): Promise<{ collection: string; ci
     cid: collectionAdapter.adapter.id,
     slug: collectionAdapter.adapter.slug,
   }))
+}
+
+export interface Version {
+  cid: string
+  version: string | null
+  verified: boolean
+  signer: string | null
+  activeCollections: string[]
+}
+
+export async function getPreviousVersions(cid: string, numberOfIterations = 4): Promise<Version[]> {
+  const sdk = new CryptoStatsSDK()
+
+  let _cid: string | null = cid
+
+  let result: Version[] = []
+
+  for (let i = 0; _cid && i < numberOfIterations; i += 1) {
+    const response = await query(`{
+      adapter(id: "${_cid}") {
+        version
+        rootAdapter {
+          descendents(orderBy: firstVerificationBlock, orderDirection: desc) {
+            id
+            version
+            signer {
+              id
+            }
+            collections {
+              collection {
+                id
+              }
+            }
+          }
+        }
+      }
+    }`)
+
+    if (response.adapter) {
+      return [
+        ...result,
+        ...response.adapter.rootAdapter.descendents.map((version: any) => ({
+          version: version.version,
+          cid: version.id,
+          verified: true,
+          signer: version.signer.id,
+          activeCollections: version.collections.map((collection: any) => collection.collection.id),
+        }))
+      ]
+    }
+
+    const list = sdk.getList(`test-${i}`)
+    const adapter: Module = await list.fetchAdapterFromIPFS(_cid)
+
+    result.push({
+      cid: _cid,
+      version: adapter.version,
+      verified: false,
+      signer: adapter.signer,
+      activeCollections: [],
+    })
+
+    _cid = adapter.previousVersion
+  }
+
+  return []
 }
