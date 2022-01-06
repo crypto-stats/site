@@ -14,7 +14,6 @@ import theme from 'react-syntax-highlighter/dist/cjs/styles/hljs/stackoverflow-d
 SyntaxHighlighter.registerLanguage('javascript', js)
 
 const sdkCode = `const { CryptoStatsSDK } = require('@cryptostats/sdk');
-
 (async function() {
   const sdk = new CryptoStatsSDK({
     moralisKey: '<your key>',
@@ -32,9 +31,9 @@ const json = await response.json();
 console.log(json);`
 
 const Graphic = styled.div<{ background?: string }>`
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 16 / 9;
   position: relative;
-  background-size: 80%;
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
 
@@ -43,24 +42,25 @@ const Graphic = styled.div<{ background?: string }>`
 
 const CodeCard = styled.div`
   border-radius: 10px;
-  box-shadow: 0 10px 35px 16px rgba(0, 36, 75, 0.05), 0 2px 4px 0 rgba(0, 0, 0, 0.04);
-  border: solid 1px #ddd;
   background-color: #fff;
   overflow: hidden;
+  background: #404C59;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.04), 0 10px 35px 16px rgba(0,36,75,0.05);
+  margin-bottom: var(--spaces-6);
 `
 
 const CodeCardHeader = styled.div`
   border: solid 1px #ddd;
   background: white;
-  height: 53px;
+  padding: var(--spaces-3) var(--spaces-4);
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
 `
 
 const Syntax = styled(SyntaxHighlighter)`
   margin: 0;
-  padding: 16px 8px !important;
+  padding: var(--spaces-4) !important;
 `
 
 const Toggle = styled.button`
@@ -82,7 +82,10 @@ const Toggle = styled.button`
   border: none;
   outline: none;
   padding: 6px 16px;
-  margin: 0 6px;
+
+  & + & {
+    margin-left: var(--spaces-3);
+  }
 `
 
 enum CodeType {
@@ -96,22 +99,22 @@ const Actions: React.FC = () => {
   return (
     <> 
       <RowSection mt="120">
-        <ColumnSection from="2" to="7">
+        <ColumnSection from="2" to="6">
           <Text tag="h3" type="title_highlight" mb="40" align="center">Create</Text>
           <Graphic background="/editor-thumbnail.png"/>
-          <Text tag="p" type="content_big" mb="16">Create and update the adapers that provide data to CryptoStats. Write, test and publish the code right in the browser!</Text>
+          <Text tag="p" type="content_big" mt="32" mb="32">Create and update the adapers that provide data to CryptoStats. Write, test and publish the code right in the browser!</Text>
           <Link href="/editor" passHref>
             <Button variant="outline" size="large">Open the adapter editor</Button>
           </Link>
         </ColumnSection>
-        <ColumnSection from="7" to="12">
+        <ColumnSection from="8" to="12">
           <Text tag="h3" type="title_highlight" mb="40" align="center">Discover</Text>
           <Graphic>
             <CollectionCard position="TopLeft" collection="treasuries" />
             <CollectionCard position="Center" collection="apy-current" />
             <CollectionCard position="BottomRight" collection="fees" />
           </Graphic>
-          <Text tag="p" type="content_big" mb="16">Review a wide range of data metrics, covering protocols across the crypto space.</Text>
+          <Text tag="p" type="content_big" mt="32" mb="32">Review a wide range of data metrics, covering protocols across the crypto space.</Text>
           <Link href="/discover" passHref>
             <Button variant="outline" size="large">Browse data sets</Button>
           </Link>
@@ -125,15 +128,18 @@ const Actions: React.FC = () => {
 
           <CodeCard>
             <CodeCardHeader>
-              <Toggle disabled={codeType === CodeType.SDK} onClick={() => setCodeType(CodeType.SDK)}>CryptoStats SDK</Toggle>
-              <Toggle disabled={codeType === CodeType.REST} onClick={() => setCodeType(CodeType.REST)}>REST API</Toggle>
+              <Text tag="p" type="content">Using the Data is easy. Try it out</Text>
+              <div>
+                <Toggle disabled={codeType === CodeType.SDK} onClick={() => setCodeType(CodeType.SDK)}>CryptoStats SDK</Toggle>
+                <Toggle disabled={codeType === CodeType.REST} onClick={() => setCodeType(CodeType.REST)}>REST API</Toggle>
+              </div>
             </CodeCardHeader>
 
             <Syntax language="javascript" style={theme} showLineNumbers>
               {codeType === CodeType.SDK ? sdkCode : restCode}
             </Syntax>
           </CodeCard>
-          <Button variant="outline" size="large">Read the docs</Button>
+          <Button variant="outline" size="large" centered>Read the docs</Button>
         </ColumnSection>
       </RowSection>
     </>

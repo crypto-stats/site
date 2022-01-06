@@ -47,9 +47,9 @@ const Home: NextPage<HomePageProps> = ({ sampleData }) => {
       <HomeBackgroundActions>
         <Actions />
       </HomeBackgroundActions>
-      <Investors />
       <Users />
       <Dao />
+      <Investors />
       <FAQs />
       <Footer />
     </>
