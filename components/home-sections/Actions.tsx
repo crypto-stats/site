@@ -34,9 +34,9 @@ const Actions: React.FC = () => {
         <ColumnSection from="7" to="12">
           <Text tag="h3" type="title_highlight" mb="40" align="center">Discover</Text>
           <Graphic>
-            <CollectionCard position="TopLeft" title="DAO Treasury Balance" />
-            <CollectionCard position="Center" title="Lending Rate" />
-            <CollectionCard position="BottomRight" title="Total Fee Revenue" />
+            <CollectionCard position="TopLeft" collection="treasuries" />
+            <CollectionCard position="Center" collection="apy-current" />
+            <CollectionCard position="BottomRight" collection="fees" />
           </Graphic>
           <Text tag="p" type="content_big" mb="16">Review a wide range of data metrics, covering protocols across the crypto space.</Text>
           <Link href="/discover" passHref>
