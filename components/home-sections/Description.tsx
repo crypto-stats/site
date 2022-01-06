@@ -5,41 +5,47 @@ import RowSection from 'components/RowSection'
 import ColumnSection from 'components/ColumnSection'
 import Text from 'components/Text'
 import Button from 'components/Button'
+import Icon from 'components/Icon'
 
-const Block = styled.div`
+const Block = styled(Text)`
   border-radius: 20px;
-  box-shadow: 0 2px 11px 1px rgba(0, 0, 0, 0.13);
-  text-align: center;
-  color: #838383;
+  border: 1px solid var(--color-primary-800);
   flex: 1;
   padding: 24px;
   margin: 0 7px;
   overflow: hidden;
-  min-height: 100px;
+  min-height: 80px;
+  opacity: .7;
+  transition: var(--transition-fast);
 
-  @media (max-width: 768px) {
-    font-size: 12px;
+  &:hover {
+    opacity: 1;
+    box-shadow: 0 2px 14px 1px rgba(0, 0, 0, 0.13);
   }
 `
 
 const CSBlock = styled(Block)`
-  border: solid 3px #0477f4;
+  border: solid 2px #0477f4;
   box-shadow: 0 2px 464px 9px rgba(4, 119, 244, 0.17), 0 4px 11px 1px rgba(4, 119, 244, 0.27);
   background-image: url('/logo.svg');
   background-repeat: no-repeat;
   background-position: center;
+  background-position-y: 60%;
+  opacity: 1;
 
-  @media (max-width: 768px) {
-    min-height: 60px;
-    background-position-y: 70%;
+  &:hover {
+    opacity: 1;
+    box-shadow: 0 2px 464px 9px rgba(4, 119, 244, 0.17), 0 4px 11px 1px rgba(4, 119, 244, 0.27);
   }
 `
 
 const ArrowBox = styled.div`
-  height: 60px;
+  height: var(--spaces-8);
   position: relative;
   display: flex;
   justify-content: center;
+  margin: var(--spaces-3) 0;
+  opacity: .65;
 `
 
 const Arrow = styled.div<{ dashed?: boolean }>`
@@ -104,6 +110,26 @@ const TopForkArrows = styled(ForkArrows)`
   bottom: 50%;
 `
 
+const IconsGrid = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: var(--spaces-4);
+
+  & > i + i {
+    margin-left: var(--spaces-4);
+  }
+  
+  & > img {
+    max-height: 40px;
+    width: auto;
+  }
+  & > img + img {
+    margin-left: var(--spaces-4);
+  }
+`
+
 const Description: React.FC = () => {
   return (
     <RowSection alignItems="center">
@@ -120,22 +146,48 @@ const Description: React.FC = () => {
       </ColumnSection>
 
       <ColumnSection from="7" to="12">
-        <Block>Blockchains</Block>
+        <Block>
+          <Text tag="p" type="label" align="center">Blockchains &amp; Protocols</Text>
+          <IconsGrid>
+            <Icon type="ethereum" />
+            <Icon type="bitcoin" />
+            <Icon type="cardano" />
+            <Icon type="polygon" />
+            <Icon type="uniswap" />
+            <Icon type="aave" />
+          </IconsGrid>
+        </Block>
         <ArrowBox>
           <Arrow dashed />
           <SideArrows />
         </ArrowBox>
-        <Block>Indexers</Block>
+        <Block>
+          <Text tag="p" type="label" align="center">Indexers</Text>
+          <IconsGrid>
+            <Icon type="zerion" />
+            <Icon type="thegraph" />
+            <Icon type="coinmetrics" />
+          </IconsGrid>
+        </Block>
         <ArrowBox>
           <Arrow dashed />
           <TopForkArrows />
         </ArrowBox>
-        <CSBlock>Normalization &amp; Curation</CSBlock>
+        <CSBlock>
+          <Text tag="p" type="label" align="center">Normalization &amp; Curation</Text>
+        </CSBlock>
         <ArrowBox>
           <Arrow />
           <BottomForkArrows />
         </ArrowBox>
-        <Block>Presentations</Block>
+        <Block>
+          <Text tag="p" type="label" align="center">Presentations</Text>
+          <IconsGrid>
+            <img src="clients/bloomberg.png" alt="Bloomberg" style={{height: "26px"}}/>
+            <img src="clients/cryptofees.png" alt="CryptoFees" />
+            <img src="clients/cryptotester.png" alt="CryptoTesters" />
+          </IconsGrid>
+        </Block>
       </ColumnSection>
     </RowSection>
   )
