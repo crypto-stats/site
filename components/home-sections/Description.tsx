@@ -104,7 +104,7 @@ const TopForkArrows = styled(ForkArrows)`
   bottom: 50%;
 `
 
-const Hero: React.FC = () => {
+const Description: React.FC = () => {
   return (
     <RowSection alignItems="center">
       <ColumnSection from="2" to="6">
@@ -141,4 +141,4 @@ const Hero: React.FC = () => {
   )
 }
 
-export default Hero
+export default Description

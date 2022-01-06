@@ -7,6 +7,7 @@ import Hero from 'components/home-sections/Hero'
 import Actions from 'components/home-sections/Actions'
 import { GetStaticProps, NextPage } from 'next'
 import FAQs from 'components/home-sections/FAQs'
+import Investors from 'components/home-sections/Investors'
 import RowSection from 'components/RowSection'
 import ColumnSection from 'components/ColumnSection'
 
@@ -44,6 +45,7 @@ const Home: NextPage<HomePageProps> = ({ sampleData }) => {
       <HomeBackgroundActions>
         <Actions />
       </HomeBackgroundActions>
+      <Investors />
       <FAQs />
       <Footer />
     </>
