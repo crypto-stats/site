@@ -75,6 +75,13 @@ const TagElement = styled.div<{ type?: string, mt?:string, mb?:string, color?: s
     line-height: 24px;
   `}
 
+  ${({type}) => type === "content_display" && `
+    font-weight: 400;
+    font-size: 24px;
+    color: #002750;
+    line-height: 37px;
+  `}
+
   ${({type}) => type === "pre" && `
     font-size: 16px;
     color: #002750;
