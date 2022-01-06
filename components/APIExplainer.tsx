@@ -197,8 +197,10 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
   const selectQuery = (e: any) => setSelectedQuery(parseInt(e.target.value))
 
   let url = ''
+  let queryId = ''
   if (selectedQuery !== null) {
-    url = `https://api.cryptostats.community/api/v1/${listId}/${queries![selectedQuery].id}`
+    queryId = queries![selectedQuery].id
+    url = `https://api.cryptostats.community/api/v1/${listId}/${queryId}`
     if (paramValues.length > 0) {
       url += '/' + paramValues.join(',')
     }
@@ -351,9 +353,9 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
   const list = sdk.getList('${listId}');
   await list.fetchAdapters();
 
-  const result = await list.${includeMetadata ? 'executeQueryWithMetadata' : 'executeQuery'}(queryId, ...paramValues);
+  const result = await list.${includeMetadata ? 'executeQueryWithMetadata' : 'executeQuery'}(${[queryId, ...paramValues].map(val => JSON.stringify(val)).join(', ')});
   console.log(result);
-})`}</CodeField>
+})()`}</CodeField>
             </div>
           )}
 
