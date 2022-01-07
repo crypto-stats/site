@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useENSName } from 'use-ens-name'
@@ -12,6 +12,7 @@ const HeaderContainer = styled.header`
   height: auto;
   margin-top: var(--spaces-4);
   margin-bottom: var(--spaces-4);
+  display: flex;
 
   @media (min-width: 768px) {
     display: grid;
@@ -38,10 +39,26 @@ const Logo = styled.a`
   }
 `
 
-const Nav = styled.nav`
-  display: flex;
+const Nav = styled.nav<{ open: boolean }>`
+  display: inline-grid;
+  grid-template-columns: repeat(4, min-content);
+  grid-gap: 0 var(--spaces-3);
   align-items: center;
   justify-self: end;
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100px;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    background: white;
+    transition: 500ms height;
+    height: ${({ open }) => open ? '260px' : '0'};
+    z-index: 10;
+  }
 `
 
 const NavItem = styled.div`
@@ -62,6 +79,10 @@ const NavLink = styled.a<{ active?: boolean }>`
 
   &:hover {
     color: var(--color-primary);
+  }
+
+  @media (max-width: 768px) {
+    margin: 20px 0;
   }
 
   ${({ active }) => active && `
@@ -95,10 +116,73 @@ const WalletButton = styled(ConnectionButton)`
   }
 `
 
+const Hamburger = styled.button<{ open: boolean }>`
+  width: 35px;
+  height: 30px;
+  margin: 10px 10px;
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  border: none;
+  background: transparent;
+  outline: none;
+
+  @media (min-width: 700px) {
+    display: none;
+  }
+
+  & span {
+    background: #000;
+    position: absolute;
+    border-radius: 2px;
+    transition: .3s cubic-bezier(.8, .5, .2, 1.4);
+    width: 100%;
+    height: 4px;
+    transition-duration: 500ms;
+  }
+  & span:nth-child(1){
+    top: 0px;
+    left: 0px;
+  }
+  & span:nth-child(2){
+    top: 13px;
+    left: 0px;
+    opacity: 1;
+  }
+  & span:nth-child(3){
+    bottom: 0px;
+    left: 0px;
+  }
+  ${({ open }) => open ? `
+    & span:nth-child(1){
+      transform: rotate(45deg);
+      top: 13px;
+    }
+    & span:nth-child(2){
+      opacity: 0;
+    }
+    & span:nth-child(3){
+      transform: rotate(-45deg);
+      top: 13px;
+    }
+  ` : `
+    &:hover span:nth-child(1){
+      transform: rotate(-3deg) scaleY(1.1);
+    }
+    &:hover span:nth-child(2){
+      transform: rotate(3deg) scaleY(1.1);
+    }
+    &:hover span:nth-child(3){
+      transform: rotate(-4deg) scaleY(1.1);
+    }
+  `}
+`
+
 const Header: React.FC = () => {
   const router = useRouter()
   const { account } = useWeb3React()
   const name = useENSName(account)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   return (
     <HeaderContainer>
@@ -106,7 +190,13 @@ const Header: React.FC = () => {
         <Logo>Home</Logo>
       </Link>
 
-      <Nav>
+      <Hamburger open={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
+        <span></span>
+        <span></span>
+        <span></span>
+      </Hamburger>
+
+      <Nav open={menuOpen}>
         <NavItem>
           <Link href="/discover" passHref>
             <NavLink active={router.route.indexOf('/discover') === 0}>Discover</NavLink>
