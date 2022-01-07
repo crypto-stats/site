@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
-import CollectionCard from './CollectionCard'
 import RowSection from 'components/RowSection'
 import ColumnSection from 'components/ColumnSection'
 import Text from 'components/Text'
@@ -30,14 +29,9 @@ const response = await fetch(url);
 const json = await response.json();
 console.log(json);`
 
-const Graphic = styled.div<{ background?: string }>`
-  aspect-ratio: 16 / 9;
-  position: relative;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-
-  ${({ background }) => background && `background-image: url('${background}');`}
+const Graphic = styled.img`
+  width: 100%;
+  height: auto;
 `
 
 const CodeCard = styled.div`
@@ -99,21 +93,17 @@ const Actions: React.FC = () => {
   return (
     <> 
       <RowSection mt="120">
-        <ColumnSection from="2" to="6">
+        <ColumnSection from="1" to="6">
           <Text tag="h3" type="title_highlight" mb="40" align="center">Create</Text>
-          <Graphic background="/editor-thumbnail.png"/>
+          <Graphic src="/editor-thumbnail.png" alt="editor" />
           <Text tag="p" type="content_big" mt="32" mb="32">Create and update the adapers that provide data to CryptoStats. Write, test and publish the code right in the browser!</Text>
           <Link href="/editor" passHref>
             <Button variant="outline" size="large">Open the adapter editor</Button>
           </Link>
         </ColumnSection>
-        <ColumnSection from="8" to="12">
+        <ColumnSection from="8" to="13">
           <Text tag="h3" type="title_highlight" mb="40" align="center">Discover</Text>
-          <Graphic>
-            <CollectionCard position="TopLeft" collection="treasuries" />
-            <CollectionCard position="Center" collection="apy-current" />
-            <CollectionCard position="BottomRight" collection="fees" />
-          </Graphic>
+          <Graphic src="/image-collections.png" alt="Collections" />
           <Text tag="p" type="content_big" mt="32" mb="32">Review a wide range of data metrics, covering protocols across the crypto space.</Text>
           <Link href="/discover" passHref>
             <Button variant="outline" size="large">Browse data sets</Button>

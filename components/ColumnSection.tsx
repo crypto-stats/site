@@ -2,8 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 const ColumnContainer = styled.div<{ columns?: string, offset?: string, from?: string, to?: string, hideSmall?: boolean}>`
+  width: 100%;
   position: relative;
-  grid-column: span 12;
+  grid-column: col-start / span 12;
 
   ${({hideSmall}) => hideSmall && `display: none;`}
 

@@ -3,7 +3,8 @@ import styled from 'styled-components';
 
 const Row = styled.section<{fullWidth?: boolean, alignItems?: string, noMargin?: boolean, mt?: string, mb?: string}>`
   display: grid;
-  grid-template-columns: repeat(var(--grid-columns), 1fr);
+  grid-template-columns: repeat(var(--grid-columns), [col-start] 1fr);
+
   grid-gap: var(--grid-row-gap) var(--grid-column-gap);
   background-color: transparent;
   box-shadow: none;
