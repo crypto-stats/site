@@ -19,7 +19,7 @@ const Row = styled.section<{fullWidth?: boolean, alignItems?: string, noMargin?:
   ${({fullWidth}) => fullWidth ? `
     width: var(--container-full);
     ` : `
-    width: calc( var(--container-full) - var(--spaces-4) );
+    width: calc( var(--container-full) - var(--spaces-9) );
 
     @media ( min-width: 768px ) {
       max-width: calc( var(--bp-small) - var(--spaces-4) );

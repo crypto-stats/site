@@ -8,17 +8,27 @@ import ConnectionButton from './ConnectionButton'
 import Button from 'components/Button'
 
 const HeaderContainer = styled.header`
+  display: flex;
+  align-items: center;
   width: 100%;
   height: auto;
   margin-top: var(--spaces-4);
   margin-bottom: var(--spaces-4);
-  display: flex;
 
-  @media (min-width: 768px) {
-    display: grid;
-    grid-template-columns: 30% 1fr;
-    align-items: center;
+  @media (min-width: 1024px) {
     margin-bottom: 0;
+    justify-content: space-between;
+  }
+`
+
+const HeaderMobileWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  @media (min-width: 1024px) {
+    width: auto;
   }
 `
 
@@ -32,39 +42,56 @@ const Logo = styled.a`
   width: 165px;
   height: 29px;
   cursor: pointer;
-  margin: var(--spaces-4) auto;
-
-  @media (min-width: 768px) {
+  margin: var(--spaces-2) auto;
+  
+  @media (min-width: 1024px) {
+    margin: var(--spaces-4) auto;
     margin: 0 0 0 0;
   }
 `
 
 const Nav = styled.nav<{ open: boolean }>`
-  display: inline-grid;
-  grid-template-columns: repeat(4, min-content);
-  grid-gap: 0 var(--spaces-3);
-  align-items: center;
-  justify-self: end;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: var(--spaces-11);
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: ${({ open }) => open ? '260px' : '0'};
+  overflow: hidden;
+  background: var(--color-white);
+  transition: var(--transition-fast) height;
+  box-shadow: var(--box-shadow-card);
+  z-index: 10;
 
-  @media (max-width: 768px) {
+  @media (min-width: 1024px) {
     display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 100px;
-    left: 0;
-    right: 0;
-    overflow: hidden;
-    background: white;
-    transition: 500ms height;
-    height: ${({ open }) => open ? '260px' : '0'};
-    z-index: 10;
+    flex-direction: row;
+    align-items: center;
+    justify-self: end;
+    position: relative;
+    height: auto;
+    width: auto;
+    top: 0;
+    background-color: transparent;
+    box-shadow: none;
   }
 `
 
 const NavItem = styled.div`
-  & + & {
-    margin-left: var(--spaces-4);
+  margin: 0 auto;
+  text-align: center;
+
+  @media (min-width: 1024px) {
+    text-align: left;
+
+    & + & {
+      margin: 0;
+      margin-left: var(--spaces-4);
+    }
   }
+
 `
 
 const NavLink = styled.a<{ active?: boolean }>`
@@ -81,7 +108,7 @@ const NavLink = styled.a<{ active?: boolean }>`
     color: var(--color-primary);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     margin: 20px 0;
   }
 
@@ -117,28 +144,26 @@ const WalletButton = styled(ConnectionButton)`
 `
 
 const Hamburger = styled.button<{ open: boolean }>`
-  width: 35px;
-  height: 30px;
-  margin: 10px 10px;
   position: relative;
-  cursor: pointer;
   display: inline-block;
   border: none;
   background: transparent;
   outline: none;
+  cursor: pointer;
 
-  @media (min-width: 700px) {
+  @media (min-width: 1024px) {
     display: none;
   }
 
   & span {
-    background: #000;
-    position: absolute;
-    border-radius: 2px;
-    transition: .3s cubic-bezier(.8, .5, .2, 1.4);
-    width: 100%;
-    height: 4px;
-    transition-duration: 500ms;
+    width: var(--spaces-5);
+    height: var(--spaces-1);
+    background-color: var(--color-dark-300);
+    display: block;
+    margin: 8px;
+    -webkit-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
   }
   & span:nth-child(1){
     top: 0px;
@@ -153,29 +178,24 @@ const Hamburger = styled.button<{ open: boolean }>`
     bottom: 0px;
     left: 0px;
   }
+
   ${({ open }) => open ? `
     & span:nth-child(1){
-      transform: rotate(45deg);
-      top: 13px;
+      -webkit-transform: translateY(12px) rotate(45deg);
+      -ms-transform: translateY(12px) rotate(45deg);
+      -o-transform: translateY(12px) rotate(45deg);
+      transform: translateY(12px) rotate(45deg);
     }
     & span:nth-child(2){
       opacity: 0;
     }
     & span:nth-child(3){
-      transform: rotate(-45deg);
-      top: 13px;
+      -webkit-transform: translateY(-12px) rotate(-45deg);
+      -ms-transform: translateY(-12px) rotate(-45deg);
+      -o-transform: translateY(-12px) rotate(-45deg);
+      transform: translateY(-12px) rotate(-45deg);
     }
-  ` : `
-    &:hover span:nth-child(1){
-      transform: rotate(-3deg) scaleY(1.1);
-    }
-    &:hover span:nth-child(2){
-      transform: rotate(3deg) scaleY(1.1);
-    }
-    &:hover span:nth-child(3){
-      transform: rotate(-4deg) scaleY(1.1);
-    }
-  `}
+  ` : ``}
 `
 
 const Header: React.FC = () => {
@@ -186,15 +206,17 @@ const Header: React.FC = () => {
 
   return (
     <HeaderContainer>
-      <Link href="/" passHref>
-        <Logo>Home</Logo>
-      </Link>
+      <HeaderMobileWrapper>
+        <Link href="/" passHref>
+          <Logo>Home</Logo>
+        </Link>
 
-      <Hamburger open={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
-        <span></span>
-        <span></span>
-        <span></span>
-      </Hamburger>
+        <Hamburger open={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </Hamburger>
+      </HeaderMobileWrapper>
 
       <Nav open={menuOpen}>
         <NavItem>
