@@ -24,7 +24,7 @@ const HeaderContainer = styled.header`
 const HeaderMobileWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   width: 100%;
 
   @media (min-width: 1024px) {
@@ -42,7 +42,7 @@ const Logo = styled.a`
   width: 165px;
   height: 29px;
   cursor: pointer;
-  margin: var(--spaces-2) auto;
+  margin: var(--spaces-2) 0;
   
   @media (min-width: 1024px) {
     margin: var(--spaces-4) auto;
