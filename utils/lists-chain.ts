@@ -143,18 +143,23 @@ export async function getPreviousVersions(cid: string, numberOfIterations = 4): 
       ]
     }
 
-    const list = sdk.getList(`test-${i}`)
-    const adapter: Module = await list.fetchAdapterFromIPFS(_cid)
+    try {
+      const list = sdk.getList(`test-${i}`)
+      const adapter: Module = await list.fetchAdapterFromIPFS(_cid)
 
-    result.push({
-      cid: _cid,
-      version: adapter.version,
-      verified: false,
-      signer: adapter.signer,
-      activeCollections: [],
-    })
+      result.push({
+        cid: _cid,
+        version: adapter.version,
+        verified: false,
+        signer: adapter.signer,
+        activeCollections: [],
+      })
 
-    _cid = adapter.previousVersion
+      _cid = adapter.previousVersion
+    } catch (e) {
+      console.warn(e)
+      return result
+    }
   }
 
   return []
