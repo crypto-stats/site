@@ -114,7 +114,8 @@ const Actions: React.FC = () => {
       <RowSection mt="64">
         <ColumnSection from="3" to="11">
           <Text tag="h3" type="title_highlight" mb="24" align="center">Consume and use data</Text>
-          <Text tag="p" type="content_big" mb="32" align="center">Use trustworthy data metrics in your website or dapp. It's free and always will be</Text>
+          <Text tag="p" type="content_big" mb="32" align="center">Use trustworthy data metrics in your website or dapp.</Text>
+          <Text tag="p" type="content_big" mb="32" align="center">It's free and always will be.</Text>
 
           <CodeCard>
             <CodeCardHeader>
