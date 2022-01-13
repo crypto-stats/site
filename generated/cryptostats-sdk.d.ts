@@ -49,6 +49,7 @@ declare abstract class BaseCryptoStatsSDK {
         mongoConnectionString?: string;
         redisConnectionString?: string;
     }): void;
+    getCollection(name: string): List;
     getList(name: string): List;
     getContext(list: List): Context;
 }

@@ -110,7 +110,7 @@ export const getStaticProps: GetStaticProps<ListPageProps, { listId: string }> =
   const allSubadapters: SubAdapter[] = []
 
   const adapters = await Promise.all(adapterCids.map(async (cid: string): Promise<AdapterData> => {
-    const list = sdk.getList(cid)
+    const list = sdk.getCollection(cid)
     const module = await list.fetchAdapterFromIPFS(cid)
 
     const subadapters = await Promise.all(list.getAdapters().map(async(adapter: Adapter) => {

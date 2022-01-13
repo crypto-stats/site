@@ -347,7 +347,7 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
 
   const verifiedLists = await getListsForAdapter(cid)
 
-  const list = sdk.getList('test')
+  const list = sdk.getCollection('test')
   const module = await list.fetchAdapterFromIPFS(cid)
 
   // TODO: only do this if verified

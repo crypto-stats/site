@@ -63,9 +63,9 @@ export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
   const sdk = getSDK()
   const yesterday = sdk.date.offsetDaysFormatted(sdk.date.formatDate(new Date()), -1)
 
-  const feesList = sdk.getList('fees')
-  const apyList = sdk.getList('apy-current')
-  const treasuryList = sdk.getList('treasuries')
+  const feesList = sdk.getCollection('fees')
+  const apyList = sdk.getCollection('apy-current')
+  const treasuryList = sdk.getCollection('treasuries')
 
   await Promise.all([
     feesList.fetchAdapters(),

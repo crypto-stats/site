@@ -236,14 +236,16 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
         })
 
         appendOutput(`Fetching ${listId} collection from on-chain & IPFS`)
-        const list = sdk.getList(listId)
-        await list.fetchAdapters()
+        const collection = sdk.getCollection(listId)
+        await collection.fetchAdapters()
 
         const queryId = queries[selectedQuery!].id
         appendOutput(`Executing ${queryId} query`)
         const result = includeMetadata
-          ? await list.executeQueryWithMetadata(queryId, ...paramValues)
-          : await list.executeQuery(queryId, ...paramValues)
+          ? await collection.executeQueryWithMetadata(queryId, ...paramValues)
+          : await collection.executeQuery(queryId, ...paramValues)
+
+        collection.cleanupModules()
 
         appendOutput(`\nResult: \n${JSON.stringify(result, null, 2)}`)
       }
@@ -256,7 +258,7 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
 
   return (
     <div>
-      <Section>Queries & Parameters</Section>
+      <Section>Queries &amp; Parameters</Section>
 
       <div style={{ margin: '12px 0' }}>
         {queries.map((query: Query, i: number) => {
@@ -350,7 +352,7 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
   const sdk = new CryptoStatsSDK({
     moralisKey: <your key>,
   });
-  const list = sdk.getList('${listId}');
+  const list = sdk.getCollection('${listId}');
   await list.fetchAdapters();
 
   const result = await list.${includeMetadata ? 'executeQueryWithMetadata' : 'executeQuery'}(${[queryId, ...paramValues].map(val => JSON.stringify(val)).join(', ')});
