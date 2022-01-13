@@ -33,7 +33,7 @@ const QueryLabel = styled.label`
   display: flex;
 `
 
-const RadioBtn = styled.input`
+const CheckBtn = styled.input`
   appearance: none;
   margin: 0;
 
@@ -61,6 +61,14 @@ const RadioBtn = styled.input`
   &:focus {
     background: #eee;
   }
+`
+
+const RadioBtn = styled(CheckBtn)`
+  border-radius: 100%;
+
+  &:before {
+    border-radius: 100%;
+  }  
 `
 
 const QueryDescription = styled.div`
@@ -306,7 +314,7 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
 
       <div style={{ marginBottom: '12px' }}>
         <QueryLabel>
-          <RadioBtn type="checkbox" checked={includeMetadata} onChange={(e: any) => setIncludeMetadata(e.target.checked)} />
+          <CheckBtn type="checkbox" checked={includeMetadata} onChange={(e: any) => setIncludeMetadata(e.target.checked)} />
           Include metadata
         </QueryLabel>
       </div>

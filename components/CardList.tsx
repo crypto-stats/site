@@ -95,7 +95,9 @@ const CardList: React.FC<CardListProps> = ({ items }) => {
                 {item.icon && <CardIcon color={item.iconColor} icon={item.icon} />}
                 <Content>
                   <Text tag="h3" type="h3">{item.title}</Text>
-                  
+
+                  {item.description && <Text tag="p" type="description" mt="16" mb="16">{item.description}</Text>}
+
                   {item.iconlist && (
                     <IconList>
                       {item.iconlist.map((icon: { path: string, title: string }, i: number) => (
@@ -107,11 +109,9 @@ const CardList: React.FC<CardListProps> = ({ items }) => {
                     </IconList>
                   )}
 
-                  {item.description && <Text tag="p" type="description" mt="16" mb="32">{item.description}</Text>}
-
                   {item.metadata && (
                     <>
-                      {item.metadata.map((val: string) => <Text tag="p" type="content" key={val}>{val}</Text>)}
+                      {item.metadata.map((val: string) => <Text tag="p" type="content" mt="16" key={val}>{val}</Text>)}
                     </>
                   )}
                 </Content>

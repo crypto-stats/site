@@ -19,6 +19,20 @@ const Header = styled.div`
   }
 `
 
+const Icon = styled.img<{size?: string}>`
+  width: auto;
+  margin-right: 16px;
+  
+  ${({size})=> size === "small" ? `
+    max-height: 16px;
+    margin-right: 16px;
+  ` : ``}
+  ${({size})=> size === "large" ? `
+    max-height: 32px;
+    margin-right: 32px;
+  ` : ``}
+`
+
 interface SubAdapterPreviewProps {
   subadapter: Adapter
   openByDefault: boolean
@@ -28,11 +42,12 @@ const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDe
   const [open, setOpen] = useEditorState(`subtest-${subadapter.id}-open`, openByDefault)
 
   // @ts-ignore
-  const { name, subtitle } = subadapter.metadata.metadata
+  const { name, subtitle, ...metadata } = subadapter.metadata.metadata
 
   if (!open) {
     return (
       <Header onClick={() => setOpen(true)}>
+        {metadata.icon?.cid && <Icon size="small" src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />}
         {name || subadapter.id}
         {subtitle ? ` - ${subtitle}` : null}
       </Header>
@@ -44,6 +59,7 @@ const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDe
   return (
     <Container>
       <Header onClick={() => setOpen(false)}>
+        {metadata.icon?.cid && <Icon size="small" src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />}
         {name || subadapter.id}
         {subtitle ? ` - ${subtitle}` : null}
       </Header>

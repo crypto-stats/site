@@ -12,7 +12,7 @@ const Container = styled.div`
 const SectionHeader = styled.div`
   font-size: 14px;
   color: #6b6b6b;
-  margin: 20px 0 6px;
+  margin: 20px 0 16px;
   text-transform: uppercase;
 `
 
@@ -37,7 +37,7 @@ const PreviewPanel: React.FC = () => {
       <Attribute name="Version">{module.version}</Attribute>
       <Attribute name="License">{module.license}</Attribute>
 
-      <SectionHeader>Sub-Adapters</SectionHeader>
+      <SectionHeader>Sub Adapters - {list?.adapters.length}</SectionHeader>
       <div>
         {list && list.adapters.map((adapter: Adapter) => (
           <SubAdapterPreview

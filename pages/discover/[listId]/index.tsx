@@ -23,6 +23,7 @@ interface SubAdapter {
   id: string
   name: string
   icon: string | null
+  description: string | null
 }
 
 interface AdapterData {
@@ -119,6 +120,7 @@ export const getStaticProps: GetStaticProps<ListPageProps, { listId: string }> =
         id: adapter.id,
         name: metadata.name || adapter.id,
         icon: metadata.icon || null,
+        description: metadata.description || null,
       }
 
       allSubadapters.push(subadapter)
@@ -129,7 +131,7 @@ export const getStaticProps: GetStaticProps<ListPageProps, { listId: string }> =
       cid,
       name: module.name || cid,
       slug: getSlug(module.name),
-      description: module.description || null,
+      description: module.description || (subadapters.length === 1 && subadapters[0].description) || null,
       subadapters,
     }
   }))

@@ -6,12 +6,13 @@ const ModalOverlay = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 10;
 
   & .modal-content {
-    border: solid 1px #444;
-    border-radius: 5px;
-    background: #ffffff;
-    color: #000000;
+    background: #FFFFFF;
+    border: 1px solid #DDDDDD;
+    box-shadow: 0 8px 10px 0 rgba(0,0,0,0.12);
+    border-radius: 6px;
     margin: 40px;
     max-width: 800px;
   }

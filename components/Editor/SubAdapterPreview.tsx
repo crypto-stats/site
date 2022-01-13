@@ -13,6 +13,7 @@ const Header = styled.div`
   background: #2f2f2f;
   margin: 0 -16px;
   cursor: pointer;
+  font-size: 14px;
 
   &:hover {
     background: #262626;
@@ -25,9 +26,18 @@ const Value = styled.pre`
   font-size: 14px;
 `
 
-const Icon = styled.img`
-  max-width: 50px;
-  max-height: 50px;
+const Icon = styled.img<{size?: string}>`
+  width: auto;
+  margin-right: 16px;
+  
+  ${({size})=> size === "small" ? `
+    max-height: 16px;
+    margin-right: 16px;
+  ` : ``}
+  ${({size})=> size === "large" ? `
+    max-height: 32px;
+    margin-right: 32px;
+  ` : ``}
 `
 
 interface SubAdapterPreviewProps {
@@ -44,6 +54,7 @@ const SubAdapterPreview: React.FC<SubAdapterPreviewProps> = ({ subadapter, openB
   if (!open) {
     return (
       <Header onClick={() => setOpen(true)}>
+        {metadata.icon?.cid && <Icon size="small" src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />}
         {name || subadapter.id}
         {metadata.subtitle ? ` - ${metadata.subtitle}` : null}
       </Header>
@@ -53,6 +64,7 @@ const SubAdapterPreview: React.FC<SubAdapterPreviewProps> = ({ subadapter, openB
   return (
     <Container>
       <Header onClick={() => setOpen(false)}>
+        {metadata.icon?.cid && <Icon size="large" src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />}
         {name || subadapter.id}
         {metadata.subtitle ? ` - ${metadata.subtitle}` : null}
       </Header>
@@ -62,7 +74,7 @@ const SubAdapterPreview: React.FC<SubAdapterPreviewProps> = ({ subadapter, openB
           <Attribute name={key} key={key}>
             {val?.cid ? (
               <div>
-                <Icon src={`https://ipfs.io/ipfs/${val.cid}`} />
+                <Icon src={`https://gateway.pinata.cloud/ipfs/${val.cid}`} />
               </div>
             ) : (
               <Value>{JSON.stringify(val, null, 2)}</Value>
