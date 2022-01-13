@@ -316,7 +316,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
       >
         <SectionContainer>
           <Text tag="h2" type="subtitle">Sub-Adapters <InfoNumber>{subadapters.length}</InfoNumber></Text>
-          <Text tag="p" type="description" mt="8">Preview of how the aub-Adapter are returning the data.</Text>
+          <Text tag="p" type="description" mt="8">Preview of how the sub-Adapter are returning the data.</Text>
           <AdapterPreviewList staticDetails={subadapters} code={moduleDetails.code} />
         </SectionContainer>
         <SectionContainer>

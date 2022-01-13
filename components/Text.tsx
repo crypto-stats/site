@@ -83,6 +83,7 @@ const TagElement = styled.div<{ type?: string, mt?:string, mb?:string, color?: s
   `}
 
   ${({type}) => type === "pre" && `
+    font-family: monospace;
     font-size: 16px;
     color: #002750;
     line-height: 21px;
