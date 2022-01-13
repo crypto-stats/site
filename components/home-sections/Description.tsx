@@ -135,10 +135,19 @@ const Description: React.FC = () => {
     <RowSection alignItems="center">
       <ColumnSection from="2" to="6">
         <Text tag="h3" type="title_highlight" mb="24">What is CryptoStats?</Text>
-        <Text tag="p" type="content_big" mb="16">We are People. We are a Community, we are a DAO. We believe that Data should be open and accessible to everyone. For free and without barriers.</Text>
-        <Text tag="p" type="content_big" mb="16">We are building the new source for Crypto Metrics that everyone can use in a trustfull way.</Text>
-        <Text tag="p" type="content_big" mb="16">Thanks to Blockchain technology and the Community DAO processes, we are decentralizing data consuming. Working at the normalization layer we are able to provide neutral, high quality and verified endpoints that you don't have to trust.</Text>
-        <Text tag="p" type="content_big" mb="16">Best in class projects are already using CryptoStats to empower their users with neutral and trustful data.</Text>
+        <Text tag="p" type="content_big" mb="16">
+          Data powers the world of crypto.
+        </Text>
+        <Text tag="p" type="content_big" mb="16">
+          We believe this data should not come from closed silos, but from open, transparent protocols.
+        </Text>
+        <Text tag="p" type="content_big" mb="16">
+          CryptoStats empowers any developer to contribute to an open, trustworthy dataset, and
+          enables publishers to access this data for free.
+        </Text>
+        <Text tag="p" type="content_big" mb="16">
+          CryptoStats already powers many popular websites. But we need your help to take this to the next level.
+        </Text>
         <Text tag="p" type="content_big" mb="16">Want to know more?</Text>
         <Link href="/discover" passHref>
           <Button variant="outline" size="large">See how it works</Button>
