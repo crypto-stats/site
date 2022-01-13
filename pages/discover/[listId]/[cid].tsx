@@ -99,6 +99,12 @@ const AdapterActionBtns = styled.div`
   margin-bottom:  var(--spaces-4);
 `
 
+const InfoNumber = styled.span`
+  font-weight: 400; 
+  font-size: 18px;
+  color: gray;
+`
+
 const AdapterInfo = styled.div`
   margin-top: var(--spaces-6);
 `
@@ -217,7 +223,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
   }
 
   const subadapterNames = subadapters.map((subadapter: SubAdapter) => subadapter.metadata.name || subadapter.id)
-
+  
   return (
     <CompilerProvider>
       <MetaTags
@@ -244,7 +250,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
               {moduleDetails.name || cid}
               {_verified && <VerifiedTick />}
             </Text>
-            <Text tag="p" type="description" mb="16">SubAdapters: {subadapters.length}</Text>
+            {subadapters[0].metadata.description && <Text tag="h2" type="description">{ subadapters[0].metadata.description }</Text>}
           </AdapterInfo>
         }
         sidebar={
@@ -308,7 +314,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         }
       >
         <SectionContainer>
-          <Text tag="h2" type="subtitle">Sub-Adapters</Text>
+          <Text tag="h2" type="subtitle">Sub-Adapters <InfoNumber>{subadapters.length}</InfoNumber></Text>
           <Text tag="p" type="description" mt="8">Preview of how the aub-Adapter are returning the data.</Text>
           <AdapterPreviewList staticDetails={subadapters} code={moduleDetails.code} />
         </SectionContainer>
