@@ -77,7 +77,7 @@ const InfoBoxValue = styled(Text)`
   text-overflow: ellipsis;
 `
 
-const InfoBoxValueFullWidth = styled.div`
+const InfoBoxValueFullWidth = styled(Text)`
   font-weight: 500;
   font-size: 14px;
   color: #000000;
@@ -114,7 +114,7 @@ const Attribute: React.FC<{ label: string }> = ({ label, children }) => {
     return (
       <InfoBoxAuthor>
         <Text tag="p" type="label">{label}</Text>
-        <InfoBoxValue tag="p" type="content">{children}</InfoBoxValue>
+        <InfoBoxValue tag="p" type="content_small">{children}</InfoBoxValue>
       </InfoBoxAuthor>
     )
   }
@@ -122,7 +122,7 @@ const Attribute: React.FC<{ label: string }> = ({ label, children }) => {
   return (
     <InfoBoxItem>
       <Text tag="p" type="label">{label}</Text>
-      {label === "Collections"? <InfoBoxValueFullWidth>{children}</InfoBoxValueFullWidth> : <InfoBoxValue>{children}</InfoBoxValue>}
+      {label === "Collections"? <InfoBoxValueFullWidth tag="p" type="content_small">{children}</InfoBoxValueFullWidth> : <InfoBoxValue tag="p" type="content_small">{children}</InfoBoxValue>}
     </InfoBoxItem>
   )
 }
@@ -272,7 +272,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
                 <Attribute label="Version">{moduleDetails.version}</Attribute>
                 <Attribute label="License">{moduleDetails.license}</Attribute>
                 <Attribute label="IPFS CID">{cid}</Attribute>
-                <Attribute label="IPFS CID (source)">{moduleDetails.sourceFileCid}</Attribute>
+                <Attribute label="CID (source)">{moduleDetails.sourceFileCid}</Attribute>
                 {moduleDetails.previousVersion && (
                   <Attribute label="Prev. Version">
                     <Link href={`/discover/${listId}/${moduleDetails.previousVersion}`}>

@@ -68,6 +68,11 @@ const TagElement = styled.div<{ type?: string, mt?:string, mb?:string, color?: s
     color: #002750;
     line-height: 21px;
   `}
+  ${({type}) => type === "content_small" && `
+    font-size: 14px;
+    color: #002750;
+    line-height: 21px;
+  `}
   
   ${({type}) => type === "content_big" && `
     font-size: 18px;
