@@ -1,32 +1,13 @@
 import React from 'react'
 import Link from 'next/link'
 import styled from 'styled-components'
+import RowSection from './RowSection'
+import ColumnSection from './ColumnSection'
+import Text from './Text'
 
-const Container = styled.header`
-  display: flex;
-  height: 415px;
-  background-color: #ffffff;
-  border-top: solid 1px #ddd;
-  justify-content: center;
-  width: 100%;
-
-  @media (max-width: 768px) {
-    height: unset;
-  }
-`
-
-const Inner = styled.div`
-  display: flex;
-  justify-content: space-between;
-  max-width: 1248px;
-  width: calc(100% - 12px);
-  align-items: center;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    flex-direction: column;
-    align-items: stretch;
-  }
+const FooterContainer = styled(RowSection)`
+  padding: var(--spaces-7) 0;
+  border-top: 1px solid var(--color-primary-800);
 `
 
 const Logo = styled.div`
@@ -39,14 +20,28 @@ const Logo = styled.div`
   height: 40px;
 `
 
+const NavContainer = styled.div`
+  @media (min-width: 1024px) {
+    display: flex;
+    justify-content: flex-end;
+  }
+`
+
 const Nav = styled.nav`
   display: flex;
   flex-direction: column;
-  margin-right: 20px;
 
-  @media (max-width: 768px) {
-    margin: 12px 0;
+  & + & {
+    margin-top: var(--spaces-4);
   }
+  
+  @media (min-width: 1024px) {
+    & + & {
+      margin-top: 0;
+      margin-left: var(--spaces-10);
+    }
+  }
+
 `
 
 const NavLink = styled.a`
@@ -60,37 +55,32 @@ const NavLink = styled.a`
   }
 `
 
-const NavHeading = styled.div`
-  font-size: 14px;
-  color: #6b6b6b;
-  text-transform: uppercase;
-`
-
 const Footer: React.FC = () => {
   return (
-    <Container>
-      <Inner>
-        <div>
-          <Logo />
-          <p>
-            One neutral source of truth for crypto metrics.
-            <br />
-            Used by everyone, managed by the community.
-          </p>
-        </div>
-
-        <Nav>
-          <NavHeading>Data Metrics</NavHeading>
-          <Link href="/discover" passHref><NavLink>Data Collections</NavLink></Link>
-          <NavLink href="https://forum.cryptostats.community/">Forum</NavLink>
-        </Nav>
-        <Nav>
-          <NavHeading>Social</NavHeading>
-          <NavLink href="https://twitter.com/CryptoStats_">Twitter</NavLink>
-          <NavLink href="/discord">Discord</NavLink>
-        </Nav>
-      </Inner>
-    </Container>
+    <FooterContainer mt="40" alignItems="center">
+      <ColumnSection columns="5">
+        <Logo />
+        <Text tag="p" type="description" mt="24">
+          One neutral source of truth for crypto metrics.<br />
+          Used by everyone, managed by the community.
+        </Text>
+      </ColumnSection>
+      <ColumnSection columns="7">
+        <NavContainer>
+          <Nav>
+            <Text tag="p" type="label" mb="16">Data Metrics</Text>
+            <Link href="/discover" passHref><NavLink>Data Collections</NavLink></Link>
+            <NavLink href="https://forum.cryptostats.community/" target="_blank">Forum</NavLink>
+          </Nav>
+          <Nav>
+            <Text tag="p" type="label" mb="16">Social</Text>
+            <NavLink href="https://twitter.com/CryptoStats_" target="_blank">Twitter</NavLink>
+            <NavLink href="/discord">Discord</NavLink>
+          </Nav>
+        </NavContainer>
+        
+      </ColumnSection>
+    </FooterContainer>
   )
 }
 
