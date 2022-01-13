@@ -136,6 +136,7 @@ interface ModuleDetails {
   name: string | null
   version: string | null
   license: string | null
+  description: string | null
   code: string
   sourceFileCid: string | null
   sourceCode: string | null
@@ -250,7 +251,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
               {moduleDetails.name || cid}
               {_verified && <VerifiedTick />}
             </Text>
-            {subadapters[0].metadata.description && <Text tag="h2" type="description">{ subadapters[0].metadata.description }</Text>}
+            {moduleDetails.description && <Text tag="h2" type="description">{moduleDetails.description}</Text>}
           </AdapterInfo>
         }
         sidebar={
@@ -370,6 +371,7 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
     signer: module.signer,
     previousVersion: module.previousVersion,
     sourceFileCid: module.sourceFile,
+    description: module.description || (subadapters.length === 1 && subadapters[0].metadata.description) || null,
     sourceCode,
   }
 
