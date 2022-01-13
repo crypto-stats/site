@@ -74,10 +74,11 @@ interface PrimaryFooterProps {
   fileName: string | null
   markers: any[]
   onMarkerClick: () => void
+  onConsoleClick: () => void
   editorRef: any
 }
 
-const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers, onMarkerClick, editorRef }) => {
+const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers, onMarkerClick, onConsoleClick, editorRef }) => {
   const [showModal, setShowModal] = useState(false)
   const { adapter } = useAdapter(fileName)
 
@@ -111,6 +112,7 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers, onMark
         <ErrorChip onClick={onMarkerClick} color={errors.length > 0 ? 'red' : undefined}>
           <XOctagon size={12} /> {errors.length}
         </ErrorChip>
+        <ErrorChip onClick={onConsoleClick}>Console</ErrorChip>
       </Side>
 
       <Side>

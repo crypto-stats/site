@@ -67,7 +67,7 @@ export const CompilerProvider: React.FC = ({ children }) => {
   const [state, _setState] = useState<CompilerState>(DEFAULT_STATE)
 
   const setState = (newState: CompilerState) => _setState((oldState: CompilerState) => {
-    if (oldState.list && oldState.list !== newState) {
+    if (oldState.list && oldState.list !== newState.list) {
       oldState.list.cleanupModules()
     }
 

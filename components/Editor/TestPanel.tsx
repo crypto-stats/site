@@ -1,9 +1,8 @@
-import React, { useRef, useLayoutEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import { Fill, BottomResizable, Top } from 'react-spaces'
+import { Fill } from 'react-spaces'
 import { Adapter } from '@cryptostats/sdk'
 import { useCompiler } from 'hooks/compiler'
-import { useConsole, Line } from 'hooks/console'
 import SubAdapterTest from './SubAdapterTest'
 
 const Container = styled(Fill)`
@@ -17,46 +16,12 @@ const Main = styled(Fill)`
   
 `
 
-const ConsoleTop = styled(Top)`
-  background: #2f2f2f;
-  display: flex;
-  align-items: center;
-  padding: 0 8px;
-  justify-content: space-between;
-`
-
-const ClearButton = styled.button`
-  height: 20px;
-  padding: 3px 0 2px;
-  border-radius: 4px;
-  border: solid 1px #ffffff;
-  background-color: transparent;
-  margin: 16px 0 6px;
-  color: white;
-  padding: 2px 16px;
-
-  &:hover {
-    background: #363636;
-  }
-`
-
-const ConsoleView = styled(Fill)`
-  padding: 8px;
-`
-
 const Label = styled.div`
   font-size: 14px;
   color: #6B6B6B;
   letter-spacing: 1.1px;
   text-transform: uppercase;
   margin: 16px;
-`
-
-
-const ConsoleLine = styled.div`
-  font-family: monospace;
-  white-space: pre-wrap;
-  word-break: break-all;
 `
 
 const TabContentIntro = styled.div`
@@ -68,12 +33,6 @@ const TabContentIntro = styled.div`
 
 const PreviewPanel: React.FC = () => {
   const { module, list, processing } = useCompiler()
-  const { lines, clear: clearConsole } = useConsole()
-  const bottomRef = useRef<any>(null)
-
-  useLayoutEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [bottomRef.current, lines])
 
   if (!module) {
     if (processing) {
@@ -96,21 +55,6 @@ const PreviewPanel: React.FC = () => {
           />
         ))}
       </Main>
-
-      <BottomResizable size={100}>
-        <ConsoleTop size={40}>
-          Console
-          <div>
-            <ClearButton onClick={clearConsole}>Clear</ClearButton>
-          </div>
-        </ConsoleTop>
-        <ConsoleView scrollable={true}>
-          {lines.map((line: Line, i: number) => (
-            <ConsoleLine key={i}>{line.value}</ConsoleLine>
-          ))}
-          <div ref={bottomRef} />
-        </ConsoleView>
-      </BottomResizable>
     </Container>
   )
 }

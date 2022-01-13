@@ -26,6 +26,8 @@ import ErrorPanel from './ErrorPanel'
 import { usePlausible } from 'next-plausible'
 import { useEditorState } from '../../hooks/editor-state'
 import EditorControls from './EditorControls'
+import Console from './Console'
+import BottomTitleBar, { BottomView } from './BottomTitleBar'
 
 const Header = styled(Top)`
   background-image: url("/editor_logo.png");
@@ -220,7 +222,7 @@ const Editor: React.FC = () => {
   const [filter, setFilter] = useState('')
   const [markers, setMarkers] = useState<any[]>([])
   const [imageLibraryOpen, setImageLibraryOpen] = useState(false)
-  const [showErrors, setShowErrors] = useState(false)
+  const [bottomView, setBottomView] = useState(BottomView.NONE)
   const editorRef = useRef<any>(null)
   const { save, adapter } = useAdapter(fileName)
   const { evaluate, module } = useCompiler()
@@ -353,9 +355,18 @@ const Editor: React.FC = () => {
                 )}
               </Fill>
 
-              {showErrors && (
+              {bottomView !== BottomView.NONE && (
                 <BottomResizable size={160} minimumSize={60} maximumSize={300}>
-                  <ErrorPanel markers={markers} onClose={() => setShowErrors(false)} />
+                  <Top size={42}>
+                    <BottomTitleBar view={bottomView} onSetView={setBottomView} />
+                  </Top>
+                  <Fill>
+                    {bottomView === BottomView.ERRORS ? (
+                      <ErrorPanel markers={markers} onClose={() => setBottomView(BottomView.NONE)} />
+                    ) : (
+                      <Console />
+                    )}
+                  </Fill>
                 </BottomResizable>
               )}
             </Fill>
@@ -369,7 +380,8 @@ const Editor: React.FC = () => {
             <PrimaryFooter
               fileName={fileName}
               markers={markers}
-              onMarkerClick={() => setShowErrors(true)}
+              onMarkerClick={() => setBottomView(BottomView.ERRORS)}
+              onConsoleClick={() => setBottomView(BottomView.CONSOLE)}
               editorRef={editorRef}
             />
           </PrimaryFooterContainer>
