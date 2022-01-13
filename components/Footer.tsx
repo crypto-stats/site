@@ -6,7 +6,7 @@ import ColumnSection from './ColumnSection'
 import Text from './Text'
 
 const FooterContainer = styled(RowSection)`
-  padding: var(--spaces-7) 0;
+  padding: var(--spaces-12) 0;
   border-top: 1px solid var(--color-primary-800);
 `
 
