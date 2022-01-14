@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 // import styled from 'styled-components'
 import { useENSName } from 'use-ens-name'
 import { useWeb3React } from '@web3-react/core'
-import ConnectionButton from 'components/ConnectionButton'
 import EditorModal, { Button as ModalButton } from './EditorModal'
 import { useAdapter } from 'hooks/local-adapters'
 import Button from 'components/Button'
+import WalletConnections from 'components/WalletConnections'
 
 interface PublishModalProps {
   fileName: string
@@ -132,7 +132,8 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
           content = (
             <div>
               <div>You need to connect your Web3 wallet to sign your adapter.</div>
-              <ConnectionButton>Connect Wallet</ConnectionButton>
+
+              <WalletConnections />
             </div>
           )
         } else if (!hash) {
