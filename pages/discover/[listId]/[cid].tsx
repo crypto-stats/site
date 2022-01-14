@@ -282,12 +282,12 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
                 )}
                 {verifiedLists.length > 0 && (
                   <Attribute label="Collections">
-                    {verifiedLists.map((list: string) => (
+                    {verifiedLists.map((list: string, i: number) => (
                       <Fragment key={list}>
                         <Link href={`/discover/${list}`} key={list}>
                           <a>{list}</a>
                         </Link>
-                        <span>, </span>
+                        {i !== verifiedLists.length - 1 && ', '}
                       </Fragment>
                     ))}
                   </Attribute>
