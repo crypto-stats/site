@@ -100,6 +100,10 @@ declare interface CoinGeckoProps {
     log: Log;
 }
 
+declare class Etherscan {
+    query(params: any, chain?: string): Promise<any>;
+}
+
 declare class Context {
     readonly coinGecko: CoinGecko;
     readonly chainData: ChainData;
@@ -108,9 +112,9 @@ declare class Context {
     readonly graph: Graph;
     readonly http: HTTP;
     readonly ipfs: IPFS;
+    readonly etherscan: Etherscan;
     readonly log: LogInterface;
     readonly plugins: Plugins;
-    private list;
     constructor({ coinGecko, chainData, date, graph, http, ipfs, ethers, log, plugins, list, }: ContextProps);
     register(registration: RegistrationData): void;
     registerBundle(id: string, metadata?: any): void;
@@ -283,6 +287,7 @@ declare enum LOG_LEVEL {
 }
 
 declare interface LogInterface {
+    (...args: any[]): void;
     log(...args: any[]): void;
     error(...args: any[]): void;
     warn(...args: any[]): void;
