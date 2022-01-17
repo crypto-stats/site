@@ -3,7 +3,7 @@ import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { useENSName } from 'use-ens-name'
+import { useENSName, setRPC } from 'use-ens-name'
 import { useWeb3React } from '@web3-react/core'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
 import TranquilLayout from 'components/layouts/TranquilLayout'
@@ -19,6 +19,8 @@ import MetaTags from 'components/MetaTags'
 import Text from 'components/Text'
 import { getENSCache } from 'utils/ens'
 import { usePlausible } from 'next-plausible'
+
+setRPC('https://api.mycryptoapi.com/eth')
 
 const VerifiedTick = styled.span`
   display: inline-block;

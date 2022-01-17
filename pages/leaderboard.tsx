@@ -1,9 +1,11 @@
 import { NextPage, GetStaticProps } from 'next'
-import { useENSName } from 'use-ens-name'
+import { setRPC, useENSName } from 'use-ens-name'
 import styled from 'styled-components'
 import { CryptoStatsSDK } from '@cryptostats/sdk'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import { getENSCache } from 'utils/ens'
+
+setRPC('https://api.mycryptoapi.com/eth')
 
 const Row = styled.div`
   display: flex;
