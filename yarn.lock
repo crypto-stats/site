@@ -5267,10 +5267,10 @@ ursa-optional@^0.10.1:
     bindings "^1.5.0"
     nan "^2.14.2"
 
-use-ens-name@^0.1.7:
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/use-ens-name/-/use-ens-name-0.1.7.tgz#4e5fcbe37adefa38d6760136fa6b58c9b9dcfac3"
-  integrity sha512-+wtHZXgKEMJaaHzF5naV8EFuX4ac44elhLFeBEpnNk+bVOUOuAWs1/Z3tUqX5/VXL66nPcXmSfAKHV+yYUE2jQ==
+use-ens-name@^0.1.8:
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/use-ens-name/-/use-ens-name-0.1.8.tgz#deecf30208dbb66e3eca08ea2316c03e07651a12"
+  integrity sha512-JP7W6HdJgrXimHg5t3ht4aQUx4zLt5JIiRD1pGbZKEeBSqgOXLA7T+hIzltT7dc7ROE5Gkn0bQbFl0F5oTxnmw==
   dependencies:
     eth-ens-namehash "^2.0.8"
 

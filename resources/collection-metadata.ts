@@ -302,7 +302,7 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
       {
         id: 'issuanceRateCurrent',
         name: 'Current issuance rate',
-        description: 'The annualized issuance rate (averaged over the previous 7 days).',
+        description: 'The annualized issuance rate percentage (in decimal form, averaged over the previous 7 days).',
       },
     ],
   },
