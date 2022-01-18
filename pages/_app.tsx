@@ -27,7 +27,7 @@ const GlobalStyle = createGlobalStyle`
     --color-dark-500: #282D36;
     --color-dark-600: #505050;
     --color-dark-700: #878787;
-
+ 
     --color-palette-1: #D0E0FF;
     --color-palette-2: #FFE3D0;
     --color-palette-3: #FFFDD0;
@@ -98,6 +98,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (
     <Fragment>
       <Head>
+        <link rel="icon" type="image/x-icon" href="/favicon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700&display=swap" rel="stylesheet" />
