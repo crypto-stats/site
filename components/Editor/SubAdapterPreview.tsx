@@ -14,10 +14,16 @@ const Header = styled.div`
   margin: 0 -16px;
   cursor: pointer;
   font-size: 14px;
+  display: flex;
+  align-items: center;
 
   &:hover {
     background: #262626;
   }
+`
+
+const Body = styled.div`
+  padding: var(--spaces-4) var(--spaces-2);
 `
 
 const Value = styled.pre`
@@ -64,24 +70,24 @@ const SubAdapterPreview: React.FC<SubAdapterPreviewProps> = ({ subadapter, openB
   return (
     <Container>
       <Header onClick={() => setOpen(false)}>
-        {metadata.icon?.cid && <Icon size="large" src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />}
+        {metadata.icon?.cid && <Icon size="small" src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />}
         {name || subadapter.id}
         {metadata.subtitle ? ` - ${metadata.subtitle}` : null}
       </Header>
 
-      <div>
+      <Body>
         {Object.entries(metadata).map(([key, val]: [string, any]) => (
           <Attribute name={key} key={key}>
             {val?.cid ? (
               <div>
-                <Icon src={`https://gateway.pinata.cloud/ipfs/${val.cid}`} />
+                <Icon size="large" src={`https://gateway.pinata.cloud/ipfs/${val.cid}`} />
               </div>
             ) : (
               <Value>{JSON.stringify(val, null, 2)}</Value>
             )}
           </Attribute>
         ))}
-      </div>
+      </Body>
     </Container>
   )
 }
