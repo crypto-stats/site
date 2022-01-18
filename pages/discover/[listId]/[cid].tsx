@@ -23,7 +23,7 @@ import { usePlausible } from 'next-plausible'
 setRPC('https://api.mycryptoapi.com/eth')
 
 const VerifiedTick = styled.span`
-  display: inline-block;
+  display: inline-flex;
   background: #6060ff;
   height: 20px;
   width: 20px;
@@ -33,6 +33,8 @@ const VerifiedTick = styled.span`
   line-height: 30px;
   font-size: 14px;
   margin: 8px;
+  align-items: center;
+  justify-content: center;
 
   :before {
     content: '✓';
