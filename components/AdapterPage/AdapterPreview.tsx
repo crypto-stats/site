@@ -9,17 +9,6 @@ const AttributeContainer = styled.dl`
     margin-top: var(--spaces-5);
   }
 `
-
-// TODO: use existing Attribute component with dark/bright colors
-const Attribute: React.FC<{ name: string }> = ({ name, children }) => {
-  return (
-    <>
-      <Text tag="dt" type="label" mb="8">{name}</Text>
-      <Text tag="dd" type="pre" mb="24">{children}</Text>
-    </>
-  )
-}
-
 const AdapterTitle = styled.div<{ open?: boolean}>`
   background: white;
   height: 42px;
@@ -64,16 +53,19 @@ const Row = styled.div`
   background: #ffffff;
   border-top: none;
   
-  @media (min-wodth:1024px) {
+  @media (min-width:1024px) {
     display: flex;
   }
 `
 
 const Col = styled.div`
-  flex: 1 0 0;
   overflow: hidden;
   border-left: solid 1px #dddddd;
   padding: 24px;
+  
+  @media (min-width:1024px) {
+    flex: 1 0 0;
+  }
 
   &:first-child {
     border-left: none;
@@ -94,6 +86,17 @@ interface AdapterPreviewProps {
   adapter: Adapter | null
   openByDefault?: boolean
 }
+
+// TODO: use existing Attribute component with dark/bright colors
+const Attribute: React.FC<{ name: string }> = ({ name, children }) => {
+  return (
+    <>
+      <Text tag="dt" type="label" mb="8">{name}</Text>
+      <Text tag="dd" type="pre" mb="24">{children}</Text>
+    </>
+  )
+}
+
 
 const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter, openByDefault }) => {
   const [open, setOpen] = useState(!!openByDefault)

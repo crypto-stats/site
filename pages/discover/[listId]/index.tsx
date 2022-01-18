@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import Head from 'next/head'
 import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
 import styled from 'styled-components'
@@ -63,41 +64,47 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, subadapters, listId, 
   }))
 
   return (
-    <TranquilLayout
-      page="collection"
-      breadcrumbs={[{ name: 'Home', path: '/' }, { name: 'Discover', path: '/discover' }]}
-      hero={
-        <Hero>
-          <Text tag="p" type="label">Collection</Text>
-          <Text tag="h1" type="title" mt="8" mb="16">{metadata?.name || listId}</Text>
-          
-          {metadata?.description && <Text tag="p" type="description" mb="16">{metadata?.description}</Text>}
-          
-          <RowSection alignItems="center" noMargin>
-            <ColumnSection columns="9">
-              <Text tag="p" type="content">
-                Adapters: {adapters.length} - SubAdapters: {subadapters.length}
-              </Text>
-            </ColumnSection>
-            <ColumnSection columns="3">
-              <Button onClick={() => setShowDataModal(true)} className="primary">Use Collection Data</Button>
-            </ColumnSection>
-          </RowSection>
-        </Hero>
-      }
-    >
-      <div>
-        <CardList items={listItems} />
-      </div>
-
-      <SiteModal
-        title="Use this data on your website"
-        isOpen={showDataModal}
-        onClose={() => setShowDataModal(false)}
+    <>
+      <Head>
+        <title>{metadata?.name} Collection | CryptoStats</title>
+        <meta name="description" content={metadata?.description} />
+      </Head>
+      <TranquilLayout
+        page="collection"
+        breadcrumbs={[{ name: 'Home', path: '/' }, { name: 'Discover', path: '/discover' }]}
+        hero={
+          <Hero>
+            <Text tag="p" type="label">Collection</Text>
+            <Text tag="h1" type="title" mt="8" mb="16">{metadata?.name || listId}</Text>
+            
+            {metadata?.description && <Text tag="p" type="description" mb="16">{metadata?.description}</Text>}
+            
+            <RowSection alignItems="center" noMargin>
+              <ColumnSection columns="9">
+                <Text tag="p" type="content">
+                  Adapters: {adapters.length} - SubAdapters: {subadapters.length}
+                </Text>
+              </ColumnSection>
+              <ColumnSection columns="3">
+                <Button onClick={() => setShowDataModal(true)} className="primary">Use Collection Data</Button>
+              </ColumnSection>
+            </RowSection>
+          </Hero>
+        }
       >
-        <APIExplainer listId={listId}/>
-      </SiteModal>
-    </TranquilLayout>
+        <div>
+          <CardList items={listItems} />
+        </div>
+
+        <SiteModal
+          title="Use this data on your website"
+          isOpen={showDataModal}
+          onClose={() => setShowDataModal(false)}
+        >
+          <APIExplainer listId={listId}/>
+        </SiteModal>
+      </TranquilLayout>
+    </>
   )
 }
 

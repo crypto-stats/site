@@ -1,4 +1,5 @@
 import { getSDK } from 'utils/sdk'
+import Head from 'next/head'
 import styled from 'styled-components'
 import Footer from 'components/Footer'
 import Header from 'components/Header'
@@ -35,6 +36,10 @@ interface HomePageProps {
 const Home: NextPage<HomePageProps> = ({ sampleData }) => {
   return (
     <>
+      <Head>
+        <title>Homepage | CryptoStats</title>
+        <meta name="description" content="It's easy: just publish an adapter or use the Dataset created by the Comunity to create and view anything you want." />
+      </Head>
       <HomeBackgroundHead>
         <RowSection>
           <ColumnSection>

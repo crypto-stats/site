@@ -1,4 +1,5 @@
 import { NextPage, GetStaticProps } from 'next'
+import Head from 'next/head'
 import styled from 'styled-components';
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import { getListNames, getModulesForList } from 'utils/lists-chain'
@@ -47,18 +48,24 @@ const DiscoverPage: NextPage<AdaptersPageProps> = ({ collections }) => {
     })
 
   return (
-    <TranquilLayout
-      hero={
-        <HeroWrapper>
-          <Text tag="h1" type="display">Discover our Collections</Text>
-          <Text tag="p" type="description" mt="16">The most valuable crypto metrics, curated and managed by the community</Text>
-        </HeroWrapper>
-      }
-    >
-      <MainContainer>
-        <CardList items={collectionItems} />
-      </MainContainer>
-    </TranquilLayout>
+    <>
+      <Head>
+        <title>Discover Collections | CryptoStats</title>
+        <meta name="description" content="The most valuable crypto metrics, curated and managed by the community." />
+      </Head>
+      <TranquilLayout
+        hero={
+          <HeroWrapper>
+            <Text tag="h1" type="display">Discover our Collections</Text>
+            <Text tag="p" type="description" mt="16">The most valuable crypto metrics, curated and managed by the community</Text>
+          </HeroWrapper>
+        }
+      >
+        <MainContainer>
+          <CardList items={collectionItems} />
+        </MainContainer>
+      </TranquilLayout>
+    </>
   )
 }
 

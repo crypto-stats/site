@@ -1,4 +1,5 @@
 import { NextPage } from 'next'
+import Head from 'next/head'
 import styled from 'styled-components'
 import Header from 'components/Header'
 import Footer from 'components/Footer'
@@ -24,6 +25,10 @@ const Image = styled.img`
 const HowItWorks: NextPage = () => {
   return (
     <>
+      <Head>
+        <title>How it works | CryptoStats</title>
+        <meta name="description" content="One neutral source of truth for crypto metrics. Used by everyone, managed by the community." />
+      </Head>
       <HeaderBackground>
         <RowSection>
           <ColumnSection>
