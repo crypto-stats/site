@@ -25,13 +25,13 @@ setRPC('https://api.mycryptoapi.com/eth')
 const VerifiedTick = styled.span`
   display: inline-block;
   background: #6060ff;
-  height: 30px;
-  width: 30px;
+  height: 20px;
+  width: 20px;
   color: white;
   border-radius: 20px;
   text-align: center;
   line-height: 30px;
-  font-size: 20px;
+  font-size: 14px;
   margin: 8px;
 
   :before {
@@ -318,11 +318,11 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
       >
         <SectionContainer>
           <Text tag="h2" type="subtitle">Sub-Adapters <InfoNumber>{subadapters.length}</InfoNumber></Text>
-          <Text tag="p" type="description" mt="8">Preview of how the sub-Adapter are returning the data.</Text>
+          <Text tag="p" type="description" mt="8">Preview and test each sub adapter.</Text>
           <AdapterPreviewList staticDetails={subadapters} code={moduleDetails.code} />
         </SectionContainer>
         <SectionContainer>
-          <Text tag="h2" type="subtitle">Code</Text>
+          <Text tag="h2" type="subtitle">Adapter Code</Text>
           <Text tag="p" type="description" mt="8">Check the entire code written for the Adapter.</Text>
           <CodeViewer js={moduleDetails.code} ts={moduleDetails.sourceCode} />    
         </SectionContainer>

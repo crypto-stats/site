@@ -60,10 +60,13 @@ const AdapterIcon = styled.div`
 `
 
 const Row = styled.div`
-  display: flex;
   border: solid 1px #ddd;
   background: #ffffff;
   border-top: none;
+  
+  @media (min-wodth:1024px) {
+    display: flex;
+  }
 `
 
 const Col = styled.div`
@@ -118,7 +121,7 @@ const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter, openB
                       <Icon src={val} />
                     </>
                   ) : (
-                    <Text tag="pre" type="pre">{JSON.stringify(val, null, 2)}</Text>
+                    <Text tag="p" type="pre">{JSON.stringify(val, null, 2)}</Text>
                   )}
                 </Attribute>
               ))}
