@@ -230,6 +230,9 @@ const Header: React.FC = () => {
           </Link>
         </NavItem>
         <NavItem>
+          <NavLink href="https://docs.cryptostats.community/">Docs</NavLink>
+        </NavItem>
+        <NavItem>
           <NavLink href="https://forum.cryptostats.community/">Forum</NavLink>
         </NavItem>
         <NavItem>

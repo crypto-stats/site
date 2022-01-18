@@ -70,6 +70,7 @@ const Footer: React.FC = () => {
           <Nav>
             <Text tag="p" type="label" mb="16">Data Metrics</Text>
             <Link href="/discover" passHref><NavLink>Data Collections</NavLink></Link>
+            <NavLink href="https://docs.cryptostats.community/" target="_blank">Docs</NavLink>
             <NavLink href="https://forum.cryptostats.community/" target="_blank">Forum</NavLink>
           </Nav>
           <Nav>
