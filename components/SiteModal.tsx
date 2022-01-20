@@ -13,21 +13,23 @@ const ModalOverlay = styled.div`
     border: 1px solid #DDDDDD;
     box-shadow: 0 8px 10px 0 rgba(0,0,0,0.12);
     border-radius: 6px;
-    margin: 40px;
+    margin: 40px 40px 0;
     max-width: 800px;
   }
 `
 
 const Header = styled.h1`
+  margin: 0;
   font-size: 18px;
   font-weight: 600;
-  padding: 8px;
+  padding: 32px 40px;
+  border-bottom: 1px solid #ddd;
 `
 
 const Content = styled.div`
   max-height: 70vh;
-  padding: 10px 30px;
   overflow: auto;
+  padding: 32px 0;
 `
 
 ReactModal.setAppElement('#__next')
@@ -50,7 +52,6 @@ const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, children })
       )}
     >
       <Header>{title}</Header>
-
       <Content>{children}</Content>
     </ReactModal>
   )

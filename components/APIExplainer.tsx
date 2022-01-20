@@ -6,31 +6,31 @@ import Button from './Button';
 import InputField from './InputField'
 import { usePlausible } from 'next-plausible';
 import { getSDK } from 'utils/sdk';
+import Text from "components/Text"
 
-const Section = styled.h3`
-  font-size: 18px;
-  font-weight: 600;
-  margin: 30px 0;
+
+const SectionWrapper = styled.section<{noMargin?: boolean}>`
+  padding: 32px 40px;
+
+  ${({noMargin}) => noMargin ? 'padding: 0 40px;' : ''}
 `
 
-const SubSection = styled.h4`
-  font-size: 14px;
-  color: #6b6b6b;
+const SectionHighlight = styled(SectionWrapper)`
+  background-color: var(--color-primary-400);
 `
+
 
 const QueryContainer = styled.div`
-  border: solid 1px #ddd;
-  border-bottom: none;
 
-  &:last-child {
-    border-bottom: solid 1px #ddd;
-  }
 `
 
 const QueryLabel = styled.label`
-  padding: 20px;
-  background: #ffffff;
   display: flex;
+  padding: 16px;
+  align-items: center;
+  background-color: white;
+  border: 1px solid #ddd;
+  cursor: pointer;
 `
 
 const CheckBtn = styled.input`
@@ -77,11 +77,12 @@ const QueryDescription = styled.div`
 `
 
 const ParamInputBox = styled.div`
-  padding: 16px 30px;
   display: flex;
   flex-wrap: wrap;
+  padding: 16px 30px;
   background: #eef1f7;
-  border-top: solid 1px #ddd;
+  border: 1px solid #ddd;
+  border-top: none;
 `
 
 const ParamInputLabel = styled.div`
@@ -164,6 +165,9 @@ const CodeField = styled.pre`
   background-color: #f9f9f9;
   color: #717d8a;
   border: solid 1px #ddd;
+  max-width: 100%;
+  overflow-x: scroll;
+  margin-bottom: 32px;
 `
 
 const Output = styled.pre`
@@ -265,117 +269,125 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
   }
 
   return (
-    <div>
-      <Section>Queries &amp; Parameters</Section>
+    <>
+      <SectionWrapper noMargin>
+        <Text tag="p" type="label" mb="16">Select queries</Text>
+      </SectionWrapper>
 
-      <div style={{ margin: '12px 0' }}>
-        {queries.map((query: Query, i: number) => {
-          const selected = selectedQuery === i
-          const params = query.parameters || []
-          return (
-            <QueryContainer key={query.id}>
-              <QueryLabel>
-                <RadioBtn type="radio" checked={selected} value={i} onChange={selectQuery} />
-                <div>
-                  <div>{query.name} ({query.id})</div>
-                  {query.description && <QueryDescription>{query.description}</QueryDescription>}
-                </div>
-              </QueryLabel>
+      <SectionHighlight>
+        <Text tag="p" type="content_big">Queries &amp; Parameters</Text>
+        <div style={{ margin: '12px 0' }}>
+          {queries.map((query: Query, i: number) => {
+            const selected = selectedQuery === i
+            const params = query.parameters || []
+            return (
+              <QueryContainer key={query.id}>
+                <QueryLabel>
+                  <RadioBtn type="radio" checked={selected} value={i} onChange={selectQuery} />
+                  <div>
+                    <div>{query.name} ({query.id})</div>
+                    {query.description && <QueryDescription>{query.description}</QueryDescription>}
+                  </div>
+                </QueryLabel>
 
-              {selected && params.length > 0 && (
-                <ParamInputBox>
-                  {params.map((param: Parameter, i: number) => (
-                    <ParamInputLabel key={param.name}>
-                      {param.name}
-                      <ParamInput
-                        name={param.name}
-                        value={paramValues[i] || ''}
-                        onChange={(newVal: any) => setParamValues((_currentVals: string[]) => {
-                          const newParamList = []
-                          for (let j = 0; j < params.length; j += 1) {
-                            if (i === j) {
-                              newParamList.push(newVal)
-                            } else {
-                              newParamList.push(_currentVals[j] || null)
+                {selected && params.length > 0 && (
+                  <ParamInputBox>
+                    {params.map((param: Parameter, i: number) => (
+                      <ParamInputLabel key={param.name}>
+                        {param.name}
+                        <ParamInput
+                          name={param.name}
+                          value={paramValues[i] || ''}
+                          onChange={(newVal: any) => setParamValues((_currentVals: string[]) => {
+                            const newParamList = []
+                            for (let j = 0; j < params.length; j += 1) {
+                              if (i === j) {
+                                newParamList.push(newVal)
+                              } else {
+                                newParamList.push(_currentVals[j] || null)
+                              }
                             }
-                          }
-                          return newParamList
-                        })}
-                      />
-                      {param.description && <ParamDescription>{param.description}</ParamDescription>}
-                    </ParamInputLabel>
-                  ))}
-                </ParamInputBox>
-              )}
-            </QueryContainer>
-          )
-        })}
-      </div>
+                            return newParamList
+                          })}
+                        />
+                        {param.description && <ParamDescription>{param.description}</ParamDescription>}
+                      </ParamInputLabel>
+                    ))}
+                  </ParamInputBox>
+                )}
+              </QueryContainer>
+            )
+          })}
+        </div>
+        <div style={{ marginBottom: '12px' }}>
+          <QueryLabel>
+            <CheckBtn type="checkbox" checked={includeMetadata} onChange={(e: any) => setIncludeMetadata(e.target.checked)} />
+            Include metadata
+          </QueryLabel>
+        </div>
+      </SectionHighlight>
 
-      <div style={{ marginBottom: '12px' }}>
-        <QueryLabel>
-          <CheckBtn type="checkbox" checked={includeMetadata} onChange={(e: any) => setIncludeMetadata(e.target.checked)} />
-          Include metadata
-        </QueryLabel>
-      </div>
+      <SectionWrapper>
 
-      <SwitchContainer>
-        <Switch onClick={() => changeMode(MODE.REST)} selected={mode === MODE.REST}>
-          <SwitchTitle selected={mode === MODE.REST}>REST API</SwitchTitle>
-          <SwitchDescription>
-            The easiest way to retrieve data is the REST API provided by CryptoStats' centralized server
-          </SwitchDescription>
-        </Switch>
+        <Text tag="p" type="label" mb="16">Select how you want to pull the data</Text>
 
-        <Switch onClick={() => changeMode(MODE.SDK)} selected={mode === MODE.SDK}>
-          <SwitchTitle selected={mode === MODE.SDK}>CryptoStats SDK</SwitchTitle>
-          <SwitchDescription>
-            Ensure uptime by loading data from the decentralized CryptoStats protocol, using the JavaScript SDK
-          </SwitchDescription>
-        </Switch>
-      </SwitchContainer>
+        <SwitchContainer>
+          <Switch onClick={() => changeMode(MODE.REST)} selected={mode === MODE.REST}>
+            <SwitchTitle selected={mode === MODE.REST}>REST API</SwitchTitle>
+            <SwitchDescription>
+              The easiest way to retrieve data is the REST API provided by CryptoStats' centralized server
+            </SwitchDescription>
+          </Switch>
 
-      {selectedQuery !== null && (
-        <div>
-          {mode === MODE.REST ? (
-            <div>
-              <div>
-                <div>Request URL</div>
-                <CopyField readOnly value={url} />
+          <Switch onClick={() => changeMode(MODE.SDK)} selected={mode === MODE.SDK}>
+            <SwitchTitle selected={mode === MODE.SDK}>CryptoStats SDK</SwitchTitle>
+            <SwitchDescription>
+              Ensure uptime by loading data from the decentralized CryptoStats protocol, using the JavaScript SDK
+            </SwitchDescription>
+          </Switch>
+        </SwitchContainer>
+
+        {selectedQuery !== null && (
+          <div>
+            {mode === MODE.REST ? (
+              <div style={{ marginBottom: '32px' }}>
+                <>
+                  <Text tag="p" type="label" mt="24" mb="16">Request URL</Text>
+                  <CopyField readOnly value={url} />
+                </>
+
+                <>
+                  <Text tag="p" type="label" mt="24" mb="16">CURL</Text>
+                  <CopyField readOnly value={`curl ${url}`} />
+                </>
               </div>
-
+            ) : (
               <div>
-                <div>CURL</div>
-                <CopyField readOnly value={`curl ${url}`} />
+                <Text tag="p" type="label" mt="24" mb="16">1. Install CryptoStats SDK</Text>
+                <CopyField value="yarn add @cryptostats/sdk" readOnly />
+                <Text tag="p" type="label" mt="24" mb="16">2. Import SDK, fetch adapters and execute query</Text>
+                <CodeField>{`const { CryptoStatsSDK } = require('@cryptostats/sdk');
+
+  (async function() {
+    const sdk = new CryptoStatsSDK({
+      moralisKey: <your key>,
+    });
+    const list = sdk.getCollection('${listId}');
+    await list.fetchAdapters();
+
+    const result = await list.${includeMetadata ? 'executeQueryWithMetadata' : 'executeQuery'}(${[queryId, ...paramValues].map(val => JSON.stringify(val)).join(', ')});
+    console.log(result);
+  })()`}</CodeField>
               </div>
-            </div>
-          ) : (
-            <div>
-              <div>1. Install CryptoStats SDK</div>
-              <CopyField value="yarn add @cryptostats/sdk" readOnly />
-              <div>2. Import SDK, fetch adapters and execute query</div>
-              <CodeField>{`const { CryptoStatsSDK } = require('@cryptostats/sdk');
-
-(async function() {
-  const sdk = new CryptoStatsSDK({
-    moralisKey: <your key>,
-  });
-  const list = sdk.getCollection('${listId}');
-  await list.fetchAdapters();
-
-  const result = await list.${includeMetadata ? 'executeQueryWithMetadata' : 'executeQuery'}(${[queryId, ...paramValues].map(val => JSON.stringify(val)).join(', ')});
-  console.log(result);
-})()`}</CodeField>
+            )}
+            
+            <Button onClick={execute} disabled={executing} centered>Execute query</Button>
+            <Text tag="p" type="label" mt="24" mb="16">Preview output</Text>
+            <Output>{output}</Output>
             </div>
           )}
-
-          <div>Preview</div>
-          <Button onClick={execute} disabled={executing}>Execute query</Button>
-          <SubSection>Output</SubSection>
-          <Output>{output}</Output>
-        </div>
-      )}
-    </div>
+      </SectionWrapper>
+    </>
   )
 }
 

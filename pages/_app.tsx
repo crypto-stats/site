@@ -89,6 +89,12 @@ const GlobalStyle = createGlobalStyle`
     max-height: 100vh;
     overflow: hidden;
   }
+
+  .ReactModal__Overlay {
+    background: rgba(0,0,0,0.15);
+    backdrop-filter: blur(4px);
+    transition: var(--transition-fast);
+  }
 `
 
 const App: React.FC<AppProps> = ({ Component, pageProps }) => {
