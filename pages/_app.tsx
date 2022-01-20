@@ -84,6 +84,11 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Inter', sans-serif;
     font-size: 16px;
   }
+
+  body.ReactModal__Body--open {
+    max-height: 100vh;
+    overflow: hidden;
+  }
 `
 
 const App: React.FC<AppProps> = ({ Component, pageProps }) => {
