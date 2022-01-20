@@ -5,9 +5,9 @@ const TagElement = styled.div<{ type?: string, mt?:string, mb?:string, color?: s
   font-family: "Inter";
   font-weight: 400;
   margin: 0;
+  padding: 0;
   margin-top: ${({mt})=>mt ? mt : '0'}px;
   margin-bottom: ${({mb})=>mb ? mb : '0'}px;
-  padding: 0;
 
   ${({align}) => align && `text-align: ${align};`}
 
@@ -31,7 +31,7 @@ const TagElement = styled.div<{ type?: string, mt?:string, mb?:string, color?: s
   `}
 
   ${({type}) => type === "subtitle" && `
-    font-weight: 600;
+    font-weight: 500;
     font-size: 24px;
     color: #002750;
     letter-spacing: 0.1px;

@@ -5,7 +5,7 @@ import Text from 'components/Text'
 import IconRound from 'components/IconRound'
 
 const List = styled.ul`
-  margin: 0;
+  margin: 0 var(--spaces-6);
   padding: 0;
 `
 
