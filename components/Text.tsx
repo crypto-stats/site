@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const TagElement = styled.div<{ type?: string, mt?:string, mb?:string, color?: string, align?: string }>`
+const TagElement = styled.div<{ type?: string, mt?:string, mb?:string, color?: string, align?: string, weight?: string }>`
   font-family: "Inter";
-  font-weight: 400;
   margin: 0;
   padding: 0;
   margin-top: ${({mt})=>mt ? mt : '0'}px;
@@ -95,6 +94,9 @@ const TagElement = styled.div<{ type?: string, mt?:string, mb?:string, color?: s
     word-break: break-all;
   `}
 
+  font-weight: ${({weight}) => weight ? weight : ""};
+
+
   ${({color})=>color && `color: var(--color-${color});`}
 `
 
@@ -105,12 +107,13 @@ interface TextProps {
   type?: string
   className?: string
   color?: string
+  weight?: string
   align?: string
 }
 
-const Text: React.FC<TextProps> = ({ tag, type, className, children, mt, mb, color, align }) => {
+const Text: React.FC<TextProps> = ({ tag, type, className, children, mt, mb, color, weight, align }) => {
   return (
-    <TagElement as={tag} className={className} type={type} mt={mt} mb={mb} color={color} align={align}>
+    <TagElement as={tag} className={className} type={type} mt={mt} mb={mb} color={color} align={align} weight={weight}>
       {children}
     </TagElement>
   )

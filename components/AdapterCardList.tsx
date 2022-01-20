@@ -2,10 +2,43 @@ import React from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import Text from 'components/Text'
+import { ArrowRight } from 'react-feather'
+
 
 
 const ListHead = styled.div`
-  
+  background-color: white;
+  border: 1px solid #ddd;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  padding: 22px 24px;
+  display: grid;
+  grid-template-columns: 4fr 3fr 1fr 1fr;
+  column-gap: 32px;
+  align-items: center;
+`
+
+const ListHeadName = styled(Text)``
+const ListHeadIcons = styled(Text)``
+const ListHeadVersion = styled(Text)``
+const ListHeadCta = styled(Text)``
+
+const CtaAffordance = styled.div`
+  width: 32px;
+  height: 32px;
+  background-color: white;
+  border: 1px solid #ddd;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  font-size: 16px;
+
+  & > svg {
+    color: var(--color-primary);
+    height: 16px;
+  }
 `
 
 const List = styled.ul`
@@ -14,7 +47,6 @@ const List = styled.ul`
 `
 
 const ListItem = styled.li`
-  margin: var(--spaces-4) 0;
   list-style: none;
 `
 
@@ -22,8 +54,6 @@ const Card = styled.a`
   box-sizing: border-box;
   text-decoration: none;
   cursor: pointer;
-  /* align-items: center; */
- 
 `
 
 const IconList = styled.ul`
@@ -31,29 +61,39 @@ const IconList = styled.ul`
   padding: 0;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 `
 
 const IconListIcon = styled.li`
-  height: 44px;
-  width: 44px;
+  height: 32px;
+  width: 32px;
   list-style: none;
-  background-size: 70%;
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  border-radius: 22px;
-  margin-left: -8px;
+  border-radius: 100%;
+  margin-left: 8px;
 `
 
-const Content = styled.div`
-  transition: var(--transition-fast);
-  border-radius: var(--spaces-2);
-  padding: var(--spaces-6);
+const MoreIcons = styled(Text)`
+  background-color: white;
+  border-radius: 100%;
+  border: 1px solid #ddd;
+  padding: 4px 6px;
+  margin-left: 8px;
+`
+
+const Content = styled(ListHead)`
+  padding: var(--spaces-2) var(--spaces-4);
+  background-color: transparent;
   border: 1px solid var(--color-primary-800);
-  box-shadow: var(--box-shadow-card);
+  border-radius: 0;
+  border-top-color: transparent;
+  transition: var(--transition-fast);
 
   &:hover {
     color: var(--color-primary);
-    border: 1px solid var(--color-primary);
+    background-color: var(--color-primary-300);
   }
 
   &:hover h3 {
@@ -79,9 +119,12 @@ interface AdapterCardListProps {
 const AdapterCardList: React.FC<AdapterCardListProps> = ({ items }) => {
   return (
     <>
-      <Text tag="h3" type="subtitle" mt="32">Data is pulled from this adapters</Text>
+      <Text tag="h3" type="subtitle" weight="400" mt="32" mb="24">Data is pulled from this adapters</Text>
       <ListHead>
-
+        <ListHeadName tag="span" type="label">Adapter name</ListHeadName>
+        <ListHeadIcons tag="span" type="label">Protocols/Networks</ListHeadIcons>
+        <ListHeadVersion tag="span" type="label">Version</ListHeadVersion>
+        <ListHeadCta tag="span" type="label"></ListHeadCta>
       </ListHead>
       <List>
         {items.map((item: Item) => {
@@ -90,20 +133,35 @@ const AdapterCardList: React.FC<AdapterCardListProps> = ({ items }) => {
               <Link href={item.link} passHref>
                 <Card>
                   <Content>
-                    <Text tag="h3" type="h3">{item.title}</Text>
-
-                    {item.description && <Text tag="p" type="description" mt="16" mb="16">{item.description}</Text>}
+                    <div>
+                      <Text tag="h3" type="content" weight="600">{item.title}</Text>
+                      {/* {item.description && <Text tag="p" type="description" mt="8">{item.description}</Text>} */}
+                    </div>
 
                     {item.iconlist && (
                       <IconList>
-                        {item.iconlist.map((icon: { path: string, title: string }, i: number) => (
-                          <IconListIcon
-                            key={i}
-                            style={{ backgroundImage: `url(${icon.path})` }}
-                          />
-                        ))}
+                        {item.iconlist.map((icon: { path: string, title: string }, i: number) => {
+                          
+                          if(i < 5 ) {
+                            return (
+                              <IconListIcon
+                                key={i}
+                                style={{ backgroundImage: `url(${icon.path})` }}
+                              />
+                            )
+                          }
+                        }
+                        )}
+                        {
+                          item.iconlist.length > 5 && <MoreIcons tag="span" type="description">+{item.iconlist.length - 5}</MoreIcons>
+                        }
                       </IconList>
                     )}
+                    <Text>0.1.0</Text>
+
+                    <CtaAffordance>
+                      <ArrowRight />
+                    </CtaAffordance>
                   </Content>
                 </Card>
               </Link>
