@@ -15,9 +15,8 @@ import { getSlug } from 'utils/adapters'
 import Text from "components/Text"
 import IconRound from 'components/IconRound'
 
-
 const Hero = styled.div`
-  margin: var(--spaces-5) 0;
+  margin: var(--spaces-5) 0 0;
 `
 
 const CardIcon = styled(IconRound)`
@@ -52,6 +51,7 @@ interface AdapterData {
   cid: string
   slug: string | null
   name: string
+  version: string | null
   subadapters: SubAdapter[]
   description: string | null
 }
@@ -75,6 +75,7 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, listId, metadata }) =
   const listItems = adapters.map((adapter: AdapterData) => ({
     title: adapter.name,
     description: adapter.description,
+    version: adapter.version,
     metadata: [`${adapter.subadapters.length} subadapters`],
     iconlist: adapter.subadapters.map((subadapter: SubAdapter) => ({
       path: subadapter.icon || '', // TODO placeholder
@@ -157,6 +158,7 @@ export const getStaticProps: GetStaticProps<ListPageProps, { listId: string }> =
     return {
       cid,
       name: module.name || cid,
+      version: module.version,
       slug: getSlug(module.name),
       description: module.description || (subadapters.length === 1 && subadapters[0].description) || null,
       subadapters,

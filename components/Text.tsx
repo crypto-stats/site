@@ -5,6 +5,7 @@ const TagElement = styled.div<{ type?: string, mt?:string, mb?:string, color?: s
   font-family: "Inter";
   margin: 0;
   padding: 0;
+  font-weight: 400;
   margin-top: ${({mt})=>mt ? mt : '0'}px;
   margin-bottom: ${({mb})=>mb ? mb : '0'}px;
 

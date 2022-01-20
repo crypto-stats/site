@@ -58,7 +58,7 @@ const DiscoverPage: NextPage<AdaptersPageProps> = ({ collections }) => {
         hero={
           <HeroWrapper>
             <Text tag="h1" type="display">Discover our Collections</Text>
-            <Text tag="p" type="description" mt="16">The most valuable crypto metrics, curated and managed by the community</Text>
+            <Text tag="p" type="description" mt="16">The most valuable crypto metrics, <br />curated and managed by the community</Text>
           </HeroWrapper>
         }
       >

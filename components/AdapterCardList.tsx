@@ -11,11 +11,19 @@ const ListHead = styled.div`
   border: 1px solid #ddd;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  padding: 22px 24px;
+  padding: 22px 24px 0 22px;
   display: grid;
-  grid-template-columns: 4fr 3fr 1fr 1fr;
-  column-gap: 32px;
+  grid-template-columns: auto;
+  grid-template-rows: auto auto auto 0;
+  row-gap: 16px;
   align-items: center;
+  
+  @media (min-width: 768px) {
+    column-gap: 32px;
+    grid-template-columns: 4fr 3fr 1fr 1fr;
+    grid-template-rows: none;
+    padding: 22px 24px;
+  }
 `
 
 const ListHeadName = styled(Text)``
@@ -24,8 +32,8 @@ const ListHeadVersion = styled(Text)``
 const ListHeadCta = styled(Text)``
 
 const CtaAffordance = styled.div`
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   background-color: white;
   border: 1px solid #ddd;
   justify-self: end;
@@ -34,10 +42,15 @@ const CtaAffordance = styled.div`
   justify-content: center;
   border-radius: 100%;
   font-size: 16px;
+  transform: translateY(-64px);
 
   & > svg {
     color: var(--color-primary);
     height: 16px;
+  }
+
+  @media (min-width: 768px) {
+    transform: none;
   }
 `
 
@@ -57,7 +70,6 @@ const Card = styled.a`
 `
 
 const IconList = styled.ul`
-  margin: 4px 0;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
@@ -65,44 +77,52 @@ const IconList = styled.ul`
 `
 
 const IconListIcon = styled.li`
-  height: 32px;
-  width: 32px;
+  height: 26px;
+  width: 26px;
   list-style: none;
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
   border-radius: 100%;
-  margin-left: 8px;
+
+  & + & {
+    margin-left: 8px;
+  }
 `
 
 const MoreIcons = styled(Text)`
   background-color: white;
   border-radius: 100%;
   border: 1px solid #ddd;
-  padding: 4px 6px;
+  padding: 2px 4px;
   margin-left: 8px;
 `
 
 const Content = styled(ListHead)`
-  padding: var(--spaces-2) var(--spaces-4);
+  padding: var(--spaces-4) var(--spaces-4) var(--spaces-2);
   background-color: transparent;
   border: 1px solid var(--color-primary-800);
   border-radius: 0;
   border-top-color: transparent;
   transition: var(--transition-fast);
-
+  
   &:hover {
     color: var(--color-primary);
     background-color: var(--color-primary-300);
   }
-
+  
   &:hover h3 {
     color: var(--color-primary);
+  }
+  
+  @media (min-width: 768px) {
+    padding: var(--spaces-2) var(--spaces-4);
   }
 `
 
 export interface Item {
   title: string
+  version?: string | null
   subtitle?: string | null
   description?: string | null
   icon?: string
@@ -119,7 +139,7 @@ interface AdapterCardListProps {
 const AdapterCardList: React.FC<AdapterCardListProps> = ({ items }) => {
   return (
     <>
-      <Text tag="h3" type="subtitle" weight="400" mt="32" mb="24">Data is pulled from this adapters</Text>
+      <Text tag="h3" type="subtitle" weight="400" mt="48" mb="24">Data is pulled from these adapters</Text>
       <ListHead>
         <ListHeadName tag="span" type="label">Adapter name</ListHeadName>
         <ListHeadIcons tag="span" type="label">Protocols/Networks</ListHeadIcons>
@@ -128,13 +148,14 @@ const AdapterCardList: React.FC<AdapterCardListProps> = ({ items }) => {
       </ListHead>
       <List>
         {items.map((item: Item) => {
+          console.log(item);
           return (
             <ListItem key={item.title}>
               <Link href={item.link} passHref>
                 <Card>
                   <Content>
                     <div>
-                      <Text tag="h3" type="content" weight="600">{item.title}</Text>
+                      <Text tag="h3" type="content" weight="500">{item.title}</Text>
                       {/* {item.description && <Text tag="p" type="description" mt="8">{item.description}</Text>} */}
                     </div>
 
@@ -153,11 +174,11 @@ const AdapterCardList: React.FC<AdapterCardListProps> = ({ items }) => {
                         }
                         )}
                         {
-                          item.iconlist.length > 5 && <MoreIcons tag="span" type="description">+{item.iconlist.length - 5}</MoreIcons>
+                          item.iconlist.length > 5 && <MoreIcons tag="span" type="content_small">+{item.iconlist.length - 5}</MoreIcons>
                         }
                       </IconList>
                     )}
-                    <Text>0.1.0</Text>
+                    <Text tag="p" type="description">{item.version}</Text>
 
                     <CtaAffordance>
                       <ArrowRight />
