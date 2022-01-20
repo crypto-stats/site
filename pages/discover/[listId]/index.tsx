@@ -59,11 +59,10 @@ interface AdapterData {
 interface ListPageProps {
   listId: string,
   adapters: AdapterData[]
-  subadapters: SubAdapter[]
   metadata: CollectionMetadata | null
 }
 
-const DiscoverPage: NextPage<ListPageProps> = ({ adapters, subadapters, listId, metadata }) => {
+const DiscoverPage: NextPage<ListPageProps> = ({ adapters, listId, metadata }) => {
   const plausible = usePlausible()
   const [showDataModal, setShowDataModal] = useState(false)
 
@@ -140,8 +139,6 @@ export const getStaticProps: GetStaticProps<ListPageProps, { listId: string }> =
   const adapterCids = await getModulesForList(listId)
   const sdk = new CryptoStatsSDK({})
 
-  const allSubadapters: SubAdapter[] = []
-
   const adapters = await Promise.all(adapterCids.map(async (cid: string): Promise<AdapterData> => {
     const list = sdk.getCollection(cid)
     const module = await list.fetchAdapterFromIPFS(cid)
@@ -154,8 +151,6 @@ export const getStaticProps: GetStaticProps<ListPageProps, { listId: string }> =
         icon: metadata.icon || null,
         description: metadata.description || null,
       }
-
-      allSubadapters.push(subadapter)
       return subadapter
     }))
 
@@ -172,7 +167,6 @@ export const getStaticProps: GetStaticProps<ListPageProps, { listId: string }> =
     props: {
       listId,
       adapters,
-      subadapters: allSubadapters,
       metadata: collectionMetadata[listId] || null,
     },
     revalidate: 60,
