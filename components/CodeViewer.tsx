@@ -31,6 +31,7 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ js, ts }) => {
         language={ts && showSource ? 'typescript' : 'javascript'}
         style={theme}
         lineNumberStyle={{color:"#ababab"}}
+        customStyle={{fontSize: "14px", backgroundColor: "#F9FAFF", lineHeight: "1.4"}}
         showLineNumbers
       >
         {ts && showSource ? ts : js}
