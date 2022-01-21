@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
+import collectionMetadata, { DEFAULT_FORUM_CATEGORY } from 'resources/collection-metadata'
 
 const Container = styled.div`
   display: flex;
@@ -59,6 +60,7 @@ const PublisherBar: React.FC<PublisherBarProps> = ({ address, collections, name,
 
 https://cryptostats.community/discover/${listId}/${cid}
 `)
+  params.append('category', collectionMetadata[listId as string]?.forumCategory || DEFAULT_FORUM_CATEGORY)
 
   return (
     <Container>
@@ -73,9 +75,12 @@ https://cryptostats.community/discover/${listId}/${cid}
           ))}
         </select>
         {} collection.
-        <PublishButton href={`https://forum.cryptostats.community/new-topic?${params.toString()}`} target="forum">
-          Publish on Forum
-        </PublishButton>
+
+        {listId !== 'adapter' && (
+          <PublishButton href={`https://forum.cryptostats.community/new-topic?${params.toString()}`} target="forum">
+            Publish on Forum
+          </PublishButton>
+        )}
       </div>
     </Container>
   );
