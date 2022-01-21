@@ -24,7 +24,7 @@ setRPC('https://api.mycryptoapi.com/eth')
 
 const VerifiedTick = styled.span`
   display: inline-flex;
-  background: #6060ff;
+  background: var(--color-primary);
   height: 20px;
   width: 20px;
   color: white;
@@ -319,15 +319,22 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         }
       >
         <SectionContainer>
-          <Text tag="h2" type="subtitle">Sub-Adapters <InfoNumber>{subadapters.length}</InfoNumber></Text>
+          <Text tag="h3" type="subtitle">Sub-Adapters <InfoNumber>{subadapters.length}</InfoNumber></Text>
           <Text tag="p" type="description" mt="8">Preview and test each sub adapter.</Text>
           <AdapterPreviewList staticDetails={subadapters} code={moduleDetails.code} />
         </SectionContainer>
         <SectionContainer>
-          <Text tag="h2" type="subtitle">Adapter Code</Text>
+          <Text tag="h3" type="subtitle">Adapter Code</Text>
           <Text tag="p" type="description" mt="8">Check the entire code written for the Adapter.</Text>
           <CodeViewer js={moduleDetails.code} ts={moduleDetails.sourceCode} />    
         </SectionContainer>
+        <div>
+          <Text tag="h3" type="subtitle" mt="100" align="center">It's something off?</Text>
+          <Text tag="p" type="description" mt="16" mb="24" align="center">Report it to the discussion board on Discord, we will take care of it.</Text>
+          <Link href="https://discord.gg/ZunfyPuB6A">
+            <Button centered>Join Discord Community</Button>
+          </Link>
+        </div>
       </TranquilLayout>
     </CompilerProvider>
   )
