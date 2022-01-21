@@ -47,6 +47,54 @@ interface TranquilLayoutProps {
 }
 
 const TranquilLayout: React.FC<TranquilLayoutProps> = ({ children, hero, sidebar, breadcrumbs, notificationBar, page }) => {
+  
+  // Set the columns for each page
+  const PageColumns = {
+    page: "discover",
+    HeroColumns: {
+      from: "4",
+      to: "9"
+    },
+    BodyColumns: {
+     from: "3",
+     to: "10" 
+    },
+    SidebarColumns: {
+      from: "10",
+      to: "13"
+    }
+  };
+
+  switch(page) {
+    case "discover":
+      PageColumns.page = "discover";
+      PageColumns.HeroColumns.from = "3";
+      PageColumns.HeroColumns.to = "11";
+      PageColumns.BodyColumns.from = "3";
+      PageColumns.BodyColumns.to = "11";
+    break;
+
+    case "collection":
+      PageColumns.page = "collection";
+      PageColumns.HeroColumns.from = "2";
+      PageColumns.HeroColumns.to = "12";
+      PageColumns.BodyColumns.from = "2";
+      PageColumns.BodyColumns.to = "12";
+    break;
+
+    case "adapter":
+      PageColumns.page = "discover";
+      PageColumns.HeroColumns.from = "1";
+      PageColumns.HeroColumns.to = "10";
+      PageColumns.BodyColumns.from = "1";
+      PageColumns.BodyColumns.to = "10";
+      PageColumns.SidebarColumns.from = "10";
+      PageColumns.SidebarColumns.to = "13";
+    break;
+  }
+
+
+  
   return (
     <LayoutContainer page={page}>
 
@@ -73,18 +121,18 @@ const TranquilLayout: React.FC<TranquilLayoutProps> = ({ children, hero, sidebar
         </RowSection>
 
         <RowSection>
-          <ColumnSection columns={sidebar ? "9" : "7"} offset={sidebar ? "" : "4"}>
+          <ColumnSection from={PageColumns.HeroColumns.from} to={PageColumns.HeroColumns.to}>
             <Hero>{hero}</Hero>          
           </ColumnSection>
         </RowSection>
       </HeaderContainer>
 
       <RowSection>
-        <ColumnSection tag="main" columns={sidebar ? "9" : "6"} offset={sidebar ? "" : "4"}>
+        <ColumnSection tag="main" from={PageColumns.BodyColumns.from} to={PageColumns.BodyColumns.to}>
           {children}
         </ColumnSection>
         {sidebar && (
-          <ColumnSection columns="3">
+          <ColumnSection from={PageColumns.SidebarColumns.from} to={PageColumns.SidebarColumns.to}>
             <Sidebar>
               {sidebar}
             </Sidebar>

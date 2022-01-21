@@ -6,18 +6,38 @@ import styled from 'styled-components'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import APIExplainer from 'components/APIExplainer'
 import Button from 'components/Button'
-import CardList from 'components/CardList'
+import AdapterCardList from 'components/AdapterCardList'
 import SiteModal from 'components/SiteModal'
 import { getListNames, getModulesForList } from 'utils/lists-chain'
 import collectionMetadata, { CollectionMetadata } from 'resources/collection-metadata'
 import { usePlausible } from 'next-plausible'
 import { getSlug } from 'utils/adapters'
 import Text from "components/Text"
-import RowSection from "components/RowSection"
-import ColumnSection from "components/ColumnSection"
+import IconRound from 'components/IconRound'
 
 const Hero = styled.div`
-  margin: var(--spaces-5) 0;
+  margin: var(--spaces-5) 0 0;
+`
+
+const CardIcon = styled(IconRound)`
+  padding-right: var(--spaces-3);
+`
+
+const CollectionName = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spaces-4);
+`
+
+const CollectionNameDetails = styled.div`
+  margin-left: var(--spaces-4);
+`
+
+const CollectionDetails = styled.div`
+  margin-top: var(--spaces-6);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `
 
 interface SubAdapter {
@@ -31,6 +51,7 @@ interface AdapterData {
   cid: string
   slug: string | null
   name: string
+  version: string | null
   subadapters: SubAdapter[]
   description: string | null
 }
@@ -38,11 +59,10 @@ interface AdapterData {
 interface ListPageProps {
   listId: string,
   adapters: AdapterData[]
-  subadapters: SubAdapter[]
   metadata: CollectionMetadata | null
 }
 
-const DiscoverPage: NextPage<ListPageProps> = ({ adapters, subadapters, listId, metadata }) => {
+const DiscoverPage: NextPage<ListPageProps> = ({ adapters, listId, metadata }) => {
   const plausible = usePlausible()
   const [showDataModal, setShowDataModal] = useState(false)
 
@@ -55,6 +75,7 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, subadapters, listId, 
   const listItems = adapters.map((adapter: AdapterData) => ({
     title: adapter.name,
     description: adapter.description,
+    version: adapter.version,
     metadata: [`${adapter.subadapters.length} subadapters`],
     iconlist: adapter.subadapters.map((subadapter: SubAdapter) => ({
       path: subadapter.icon || '', // TODO placeholder
@@ -74,27 +95,31 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, subadapters, listId, 
         breadcrumbs={[{ name: 'Home', path: '/' }, { name: 'Discover', path: '/discover' }]}
         hero={
           <Hero>
-            <Text tag="p" type="label">Collection</Text>
-            <Text tag="h1" type="title" mt="8" mb="16">{metadata?.name || listId}</Text>
-            
+            <CollectionName>
+              {metadata?.icon && <CardIcon color={metadata?.iconColor} icon={metadata?.icon} />}
+              <CollectionNameDetails>
+                <Text tag="p" type="label">Collection</Text>
+                <Text tag="h1" type="title" mt="8">{metadata?.name || listId}</Text>
+              </CollectionNameDetails>
+            </CollectionName>
+
             {metadata?.description && <Text tag="p" type="description" mb="16">{metadata?.description}</Text>}
             
-            <RowSection alignItems="center" noMargin>
-              <ColumnSection columns="9">
-                <Text tag="p" type="content">
-                  Adapters: {adapters.length} - SubAdapters: {subadapters.length}
-                </Text>
-              </ColumnSection>
-              <ColumnSection columns="3">
+            <CollectionDetails>
+              <div>
+                <Text tag="span" type="label">Adapters: </Text>
+                <Text tag="span" type="content">{adapters.length}</Text>
+              </div>
+              <div>
                 <Button onClick={() => setShowDataModal(true)} className="primary">Use Collection Data</Button>
-              </ColumnSection>
-            </RowSection>
+              </div>
+            </CollectionDetails>
           </Hero>
         }
       >
-        <div>
-          <CardList items={listItems} />
-        </div>
+        <>
+          <AdapterCardList items={listItems} />
+        </>
 
         <SiteModal
           title="Use this data on your website"
@@ -115,8 +140,6 @@ export const getStaticProps: GetStaticProps<ListPageProps, { listId: string }> =
   const adapterCids = await getModulesForList(listId)
   const sdk = new CryptoStatsSDK({})
 
-  const allSubadapters: SubAdapter[] = []
-
   const adapters = await Promise.all(adapterCids.map(async (cid: string): Promise<AdapterData> => {
     const list = sdk.getCollection(cid)
     const module = await list.fetchAdapterFromIPFS(cid)
@@ -129,14 +152,13 @@ export const getStaticProps: GetStaticProps<ListPageProps, { listId: string }> =
         icon: metadata.icon || null,
         description: metadata.description || null,
       }
-
-      allSubadapters.push(subadapter)
       return subadapter
     }))
 
     return {
       cid,
       name: module.name || cid,
+      version: module.version,
       slug: getSlug(module.name),
       description: module.description || (subadapters.length === 1 && subadapters[0].description) || null,
       subadapters,
@@ -147,7 +169,6 @@ export const getStaticProps: GetStaticProps<ListPageProps, { listId: string }> =
     props: {
       listId,
       adapters,
-      subadapters: allSubadapters,
       metadata: collectionMetadata[listId] || null,
     },
     revalidate: 60,
