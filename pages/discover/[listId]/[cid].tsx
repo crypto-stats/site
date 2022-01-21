@@ -93,7 +93,7 @@ const InfoBoxAuthor = styled.div`
 `
 
 const SectionContainer = styled.div`
-  margin-top: 40px;
+  margin-top: 60px;
 `
 
 const AdapterActionBtns = styled.div`
@@ -112,6 +112,9 @@ const InfoNumber = styled.span`
 const AdapterInfo = styled.div`
   margin-top: var(--spaces-6);
 `
+
+
+
 
 const Attribute: React.FC<{ label: string }> = ({ label, children }) => {
   if(label && label === "Author") {
