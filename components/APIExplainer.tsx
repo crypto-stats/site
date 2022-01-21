@@ -70,12 +70,6 @@ const RadioBtn = styled(CheckBtn)`
     border-radius: 100%;
   }  
 `
-
-const QueryDescription = styled.div`
-  font-size: 16px;
-  color: #818181;
-`
-
 const ParamInputBox = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -285,8 +279,8 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
                 <QueryLabel>
                   <RadioBtn type="radio" checked={selected} value={i} onChange={selectQuery} />
                   <div>
-                    <div>{query.name} ({query.id})</div>
-                    {query.description && <QueryDescription>{query.description}</QueryDescription>}
+                    <Text tag="p" type="content" color="primary" weight="600">{query.name} ({query.id})</Text>
+                    {query.description && <Text tag="p" type="description">{query.description}</Text>}
                   </div>
                 </QueryLabel>
 
