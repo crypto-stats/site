@@ -148,7 +148,6 @@ const AdapterCardList: React.FC<AdapterCardListProps> = ({ items }) => {
       </ListHead>
       <List>
         {items.map((item: Item) => {
-          console.log(item);
           return (
             <ListItem key={item.title}>
               <Link href={item.link} passHref>

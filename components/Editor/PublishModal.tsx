@@ -70,7 +70,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
         range: { endColumn, endLineNumber: startLineNumber, startColumn, startLineNumber },
         text: newVersion,
       }
-      console.log(edit)
+
       editorRef.current.executeEdits('version', [edit])
       save(adapter!.code.replace(version, newVersion), adapter!.name, newVersion)
     }
