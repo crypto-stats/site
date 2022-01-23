@@ -28,6 +28,7 @@ import { useEditorState } from '../../hooks/editor-state'
 import EditorControls from './EditorControls'
 import Console from './Console'
 import BottomTitleBar, { BottomView } from './BottomTitleBar'
+import SaveMessage from './SaveMessage'
 
 const Header = styled(Top)`
   background-image: url("/editor_logo.png");
@@ -231,18 +232,6 @@ const Editor: React.FC = () => {
   const name = useENSName(account)
 
   useEffect(() => {
-    const saveBlocker = (e: any) => {
-      if ((e.metaKey || e.ctrlKey) && e.keyCode == 83) {
-        e.preventDefault()
-      }
-    }
-
-    window.document.addEventListener('keydown', saveBlocker, false)
-
-    return () => window.document.removeEventListener('keydown', saveBlocker)
-  }, [])
-
-  useEffect(() => {
     if (module && adapter && (module.name !== adapter.name || module.version !== adapter.version)) {
       const name = module.name && module.name.length > 0 ? module.name : 'Unnamed Adapter'
       save(adapter.code, name, module.version || null)
@@ -273,6 +262,8 @@ const Editor: React.FC = () => {
   return (
     <ViewPort style={{ background: '#0f1011' }}>
       <Header size={64} order={1}>
+        <SaveMessage />
+
         <CloseButton onClick={() => router.push('/discover')}>X Close</CloseButton>
 
         <HeaderRight>
