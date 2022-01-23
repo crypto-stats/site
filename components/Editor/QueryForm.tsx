@@ -1,7 +1,9 @@
 import InputField from 'components/InputField'
 import { useEditorState } from 'hooks/editor-state'
+import { useConsole } from 'hooks/console'
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { LOG_LEVEL } from '@cryptostats/sdk'
 
 const Container = styled.div`
   background-color: #444;
@@ -98,12 +100,26 @@ const functionToParamNames = (fn: Function) => {
   return match ? match[1].split(',').map((name: string) => name.trim()) : []
 }
 
+enum STATUS {
+  READY,
+  RUNNING,
+  DONE,
+  ERROR,
+}
+
+interface State {
+  status: STATUS
+  result?: string
+  error?: string
+}
+
 const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, storageKey }) => {
+  const { addLine } = useConsole()
   const [open, setOpen] = useEditorState(`${storageKey}-open`, !!openByDefault)
   const [storedValues, setStoredValues] = useEditorState(`${storageKey}-values`, JSON.stringify([...new Array(fn.length)].map(() => '')))
-  const [running, setRunning] = useState(false)
-  const [result, setResult] = useState<string | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [state, setState] = useState<State>({
+    status: STATUS.READY,
+  })
 
   const values = JSON.parse(storedValues)
   const setValues = (newVals: string[]) => setStoredValues(JSON.stringify(newVals))
@@ -111,16 +127,14 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, storageKey }) 
   const functionNames = functionToParamNames(fn)
 
   const execute = async () => {
-    setRunning(true)
+    setState({ status: STATUS.RUNNING })
     try {
-      setResult(null)
-      setError(null)
-      const newResult = await fn.apply(null, values)
-      setResult(newResult)
+      const result = await fn.apply(null, values)
+      setState({ status: STATUS.DONE, result })
     } catch (e: any) {
-      setError(e.message)
+      setState({ status: STATUS.ERROR, error: e.message })
+      addLine({ level: LOG_LEVEL.ERROR.toString(), value: e.stack })
     }
-    setRunning(false)
   }
 
   return (
@@ -138,7 +152,7 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, storageKey }) 
                 <Input
                   value={values[index]}
                   name={functionNames[index]}
-                  disabled={running}
+                  disabled={state.status === STATUS.RUNNING}
                   onChange={(newValue: string) => {
                     const newValues = [...values]
                     newValues[index] = newValue
@@ -149,14 +163,15 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, storageKey }) 
             ))}
           </>
           <RunQueryBtn>
-            <RunButton onClick={execute} disabled={running}>Run Query</RunButton>
+            <RunButton onClick={execute} disabled={state.status === STATUS.RUNNING}>Run Query</RunButton>
           </RunQueryBtn>
           <Output>
             <Label>Output</Label>
-            {error ? (
-              <Error>Error: {error}</Error>
-            ) : (
-              <Result>{JSON.stringify(result, null, 2)}</Result>
+            {state.error && (
+              <Error>Error: {state.error}</Error>
+            )}
+            {state.status === STATUS.DONE && (
+              <Result>{JSON.stringify(state.result, null, 2)}</Result>
             )}
           </Output>
         </div>
