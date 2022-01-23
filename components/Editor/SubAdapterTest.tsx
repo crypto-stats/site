@@ -39,7 +39,8 @@ interface SubAdapterPreviewProps {
 }
 
 const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDefault }) => {
-  const [open, setOpen] = useEditorState(`subtest-${subadapter.id}-open`, openByDefault)
+  const [fileName] = useEditorState<string>('open-file')
+  const [open, setOpen] = useEditorState(`subtest-${fileName}-${subadapter.id}-open`, openByDefault)
 
   // @ts-ignore
   const { name, subtitle, ...metadata } = subadapter.metadata.metadata
@@ -69,6 +70,7 @@ const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDe
           <QueryForm
             key={queryName}
             id={queryName}
+            storageKey={`subtest-${fileName}-${subadapter.id}-${queryName}`}
             fn={fn}
             openByDefault={queries.length === 1}
           />

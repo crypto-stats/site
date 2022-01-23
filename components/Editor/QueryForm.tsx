@@ -1,4 +1,5 @@
 import InputField from 'components/InputField'
+import { useEditorState } from 'hooks/editor-state'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
@@ -89,6 +90,7 @@ interface QueryProps {
   id: string;
   fn: (...params: any[]) => Promise<any>;
   openByDefault?: boolean
+  storageKey: string
 }
 
 const functionToParamNames = (fn: Function) => {
@@ -96,12 +98,15 @@ const functionToParamNames = (fn: Function) => {
   return match ? match[1].split(',').map((name: string) => name.trim()) : []
 }
 
-const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault }) => {
-  const [open, setOpen] = useState(!!openByDefault)
-  const [values, setValues] = useState([...new Array(fn.length)].map(() => ''))
+const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, storageKey }) => {
+  const [open, setOpen] = useEditorState(`${storageKey}-open`, !!openByDefault)
+  const [storedValues, setStoredValues] = useEditorState(`${storageKey}-values`, JSON.stringify([...new Array(fn.length)].map(() => '')))
   const [running, setRunning] = useState(false)
   const [result, setResult] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+
+  const values = JSON.parse(storedValues)
+  const setValues = (newVals: string[]) => setStoredValues(JSON.stringify(newVals))
 
   const functionNames = functionToParamNames(fn)
 

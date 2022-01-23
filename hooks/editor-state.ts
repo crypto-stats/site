@@ -14,7 +14,7 @@ export function getEditorState(key: string) {
     state = JSON.parse(window.localStorage.getItem(storageKey) || '{}')
   }
 
-  return state![key] || null
+  return key in state! ? state![key] : undefined
 }
 
 export function setEditorState(key: string, val: any) {
@@ -28,7 +28,8 @@ export function setEditorState(key: string, val: any) {
 }
 
 export function useEditorState<T = any>(key: string, defaultState?: T): [T, (val: T) => void] {
-  const [value, setValue] = useState<T>(getEditorState(key) || defaultState || null)
+  const storedState = getEditorState(key)
+  const [value, setValue] = useState<T>(storedState === undefined ? defaultState || null : storedState)
 
   const setAndSave = (val: T) => {
     setValue(val)

@@ -50,7 +50,7 @@ const ModulePreview: React.FC<ModulePreviewProps> = ({ module, list }) => {
             ))}
             <Attribute name="Queries">
               {Object.entries(adapter.queries).map(([id, fn]: [string, any]) => (
-                <QueryForm id={id} fn={fn} key={id} />
+                <QueryForm id={id} fn={fn} key={id} storageKey={`${module.name}-${id}`} />
               ))}
             </Attribute>
           </AdapterCard>
