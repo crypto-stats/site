@@ -1,39 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import copy from 'copy-to-clipboard';
 import { IPFS_GATEWAY } from 'resources/constants'
-import Button from 'components/Button';
+import DropdownButton from 'components/DropdownButton'
 
 const ImagePreviewContainer = styled.div`
   height: 100px;
   position: relative;
   text-align: center;
   margin: 10px 0;
+  width: 100%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
 `
 
-const Code = styled.div`
-  font-family: monospace;
-  color: #777777;
-  white-space: pre-wrap;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `
-
-const CodeLine = styled.div``
-
-const CopyableSpan = styled.span`
-  color: #000000;
-`
-
-const Copyable: React.FC = ({ children }) => {
-  return (
-    <CopyableSpan>
-      {children}
-      <button onClick={() => copy(children as string)}>Copy</button>
-    </CopyableSpan>
-  )
-}
 
 interface MetadataName {
   code: string
@@ -48,9 +33,10 @@ interface ImagePreviewProps {
   editor: any
   cid: string
   type: string
+  close: () => void
 }
 
-const ImagePreview: React.FC<ImagePreviewProps> = ({ editor, cid, type }) => {
+const ImagePreview: React.FC<ImagePreviewProps> = ({ editor, cid, type, close }) => {
   const [metadataNames, setMetadataNames] = useState<MetadataName[]>([])
 
   useEffect(() => {
@@ -77,54 +63,32 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({ editor, cid, type }) => {
     }
   }, [editor])
 
+  const options = metadataNames.map((name: MetadataName) => ({
+    value: name.name,
+    label: `Add to ${name.name}`,
+    onClick: () => {
+      const model = editor.getModel()
+      const currentCode = model.getValue()
+      const slicePoint = name.position + name.code.length
+      const newCode = `${currentCode.slice(0, slicePoint)}
+${name.whitespace}icon: sdk.ipfs.getDataURILoader('${cid}', '${type}'),${currentCode.slice(slicePoint)}`
+
+      model.setValue(newCode)
+      close()
+    }
+  }))
+
   return (
-    <div>
+    <Container>
       <ImagePreviewContainer
         style={{ backgroundImage: `url('${IPFS_GATEWAY}/ipfs/${cid}')` }}
       />
 
-      <div>Attach an image stored on IPFS to an adapter by using the getDataURILoader function</div>
+      <div>{cid}</div>
+      <div>({type})</div>
 
-      <div>Example:</div>
-
-      <Code>
-        <CodeLine>{'  metadata: {'}</CodeLine>
-        <CodeLine>    name: 'Uniswap V1',</CodeLine>
-        <CodeLine>    category: 'dex',</CodeLine>
-        <CodeLine>
-          {'    icon: '}
-          <Copyable>sdk.ipfs.getDataURILoader('{cid}', '{type}')</Copyable>
-          ,
-        </CodeLine>
-        <CodeLine>{'  }'}</CodeLine>
-      </Code>
-
-      <div>
-        {metadataNames.map(metadataName => {
-          const add = () => {
-            const model = editor.getModel()
-            const currentCode = model.getValue()
-            const slicePoint = metadataName.position + metadataName.code.length
-            const newCode = `${currentCode.slice(0, slicePoint)}
-${metadataName.whitespace}icon: sdk.ipfs.getDataURILoader('${cid}', '${type}'),${currentCode.slice(slicePoint)}`
-
-            model.setValue(newCode)
-            close()
-          }
-
-          return (
-            <Button key={metadataName.position} onClick={add}>Add to {metadataName.name}</Button>
-          )
-        })}
-
-        <button onClick={() => {
-          copy(`sdk.ipfs.getDataURILoader('${cid}', '${type}')`)
-          close()
-        }}>
-          Copy and close
-        </button>
-      </div>
-    </div>
+      <DropdownButton options={options} />
+    </Container>
   )
 }
 

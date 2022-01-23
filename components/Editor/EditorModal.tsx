@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import ReactModal from 'react-modal'
 import ButtonComponent from '../Button'
+import { ChevronLeft, X } from 'react-feather'
 
 const ModalOverlay = styled.div<{ width?: string | number; height?: string | number }>`
   display: flex;
@@ -41,6 +42,7 @@ const Header = styled.h1`
   font-weight: 600;
   border-bottom: solid 1px #444;
   padding: 32px;
+  text-align: center;
 `
 
 const Footer = styled.div`
@@ -55,6 +57,25 @@ const Content = styled.div`
   padding: 10px 30px;
   overflow: auto;
   flex: 1;
+`
+
+const HeaderSide = styled.div<{ side: string }>`
+  width: 100px;
+  float: ${({ side }) => side};
+  text-align: ${({ side }) => side};
+`
+
+const HeaderButton = styled.button`
+  background: none;
+  border: none;
+  color: #cccccc;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background: #444444;
+  }
 `
 
 ReactModal.setAppElement('#__next')
@@ -72,9 +93,10 @@ interface ModalProps {
   buttons: Button[]
   width?: string
   height?: string
+  onBack?: null | (() => void)
 }
 
-const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, buttons, children, width, height }) => {
+const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, buttons, children, width, height, onBack }) => {
   return (
     <ReactModal
       isOpen={isOpen}
@@ -85,7 +107,17 @@ const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, buttons, ch
         <ModalOverlay width={width} height={height} {...props}>{contentElement}</ModalOverlay>
       )}
     >
-      <Header>{title}</Header>
+      <Header>
+        <HeaderSide side="left">
+          {onBack && <HeaderButton onClick={onBack}><ChevronLeft />Back</HeaderButton>}
+        </HeaderSide>
+
+        {title}
+
+        <HeaderSide side="right">
+          <HeaderButton onClick={onClose}>Close<X /></HeaderButton>
+        </HeaderSide>
+      </Header>
 
       <Content>{children}</Content>
 
