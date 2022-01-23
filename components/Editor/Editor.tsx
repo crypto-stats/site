@@ -9,7 +9,6 @@ import Button from 'components/Button'
 import CodeEditor from 'components/CodeEditor'
 import ConnectionButton from 'components/ConnectionButton'
 import FileList from 'components/FileList'
-import ImageSelector from 'components/ImageSelector'
 import { useAdapter, newModule } from 'hooks/local-adapters'
 import { useCompiler } from 'hooks/compiler'
 import { useConsole } from 'hooks/console'
@@ -29,6 +28,7 @@ import EditorControls from './EditorControls'
 import Console from './Console'
 import BottomTitleBar, { BottomView } from './BottomTitleBar'
 import SaveMessage from './SaveMessage'
+import ImageLibrary from './ImageLibrary/ImageLibrary'
 
 const Header = styled(Top)`
   background-image: url("/editor_logo.png");
@@ -379,21 +379,11 @@ const Editor: React.FC = () => {
         </Fill>
       </PrimaryFill>
 
-      <EditorModal
-        isOpen={imageLibraryOpen}
-        onClose={() => setImageLibraryOpen(false)}
-        title="Image Library"
-        buttons={[
-          { label: 'Return to Editor', onClick: () => setImageLibraryOpen(false) },
-        ]}
-        width="100%"
-        height="70%"
-      >
-        <ImageSelector
-          close={() => setImageLibraryOpen(false)}
-          editor={editorRef.current}
-        />
-      </EditorModal>
+      <ImageLibrary
+        open={imageLibraryOpen}
+        close={() => setImageLibraryOpen(false)}
+        editor={editorRef.current}
+      />
 
       <EditorModal
         isOpen={newAdapterModalOpen}

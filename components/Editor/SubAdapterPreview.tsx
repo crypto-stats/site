@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Adapter } from '@cryptostats/sdk'
 import Attribute from '../Attribute'
+import { IPFS_GATEWAY } from 'resources/constants'
 
 const Container = styled.div`
 `
@@ -60,7 +61,7 @@ const SubAdapterPreview: React.FC<SubAdapterPreviewProps> = ({ subadapter, openB
   if (!open) {
     return (
       <Header onClick={() => setOpen(true)}>
-        {metadata.icon?.cid && <Icon size="small" src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />}
+        {metadata.icon?.cid && <Icon size="small" src={`${IPFS_GATEWAY}/ipfs/${metadata.icon.cid}`} />}
         {name || subadapter.id}
         {metadata.subtitle ? ` - ${metadata.subtitle}` : null}
       </Header>
@@ -70,7 +71,7 @@ const SubAdapterPreview: React.FC<SubAdapterPreviewProps> = ({ subadapter, openB
   return (
     <Container>
       <Header onClick={() => setOpen(false)}>
-        {metadata.icon?.cid && <Icon size="small" src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />}
+        {metadata.icon?.cid && <Icon size="small" src={`${IPFS_GATEWAY}/ipfs/${metadata.icon.cid}`} />}
         {name || subadapter.id}
         {metadata.subtitle ? ` - ${metadata.subtitle}` : null}
       </Header>
@@ -80,7 +81,7 @@ const SubAdapterPreview: React.FC<SubAdapterPreviewProps> = ({ subadapter, openB
           <Attribute name={key} key={key}>
             {val?.cid ? (
               <div>
-                <Icon size="large" src={`https://gateway.pinata.cloud/ipfs/${val.cid}`} />
+                <Icon size="large" src={`${IPFS_GATEWAY}/ipfs/${val.cid}`} />
               </div>
             ) : (
               <Value>{JSON.stringify(val, null, 2)}</Value>
