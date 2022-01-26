@@ -1,11 +1,18 @@
 import React, { useState } from 'react'
-// import styled from 'styled-components'
+import styled from 'styled-components'
 import { useENSName } from 'use-ens-name'
 import { useWeb3React } from '@web3-react/core'
 import EditorModal, { Button as ModalButton } from './EditorModal'
 import { useAdapter } from 'hooks/local-adapters'
 import Button from 'components/Button'
 import WalletConnections from 'components/WalletConnections'
+import Text from 'components/Text'
+
+const AlignButtons = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
 
 interface PublishModalProps {
   fileName: string
@@ -101,26 +108,22 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
         ]
           content = (
             <div>
-              <p>Publish your adapter to IPFS to make it viewable by the community.</p>
-              <p>Once your adapter is published, you can share it on the CryptoStats forum to request verification.</p>
+              <Text tag="p" color="white" type="description">Publish your adapter to IPFS to make it viewable by the community.</Text>
+              <Text tag="p" color="white" type="description">Once your adapter is published, you can share it on the CryptoStats forum to request verification.</Text>
             </div>
           )
         } else {
           buttons = [returnButton]
           content = (
-            <div>
-              <p>This adapter has already been deployed with the current version ({adapter!.version}).</p>
-              <p>Update the version number to allow publishing to IPFS.</p>
-              <div>
-                <Button onClick={() => updateVersion!(patchVersion!)}>Small update: {patchVersion}</Button>
-              </div>
-              <div>
-                <Button onClick={() => updateVersion!(minorVersion!)}>Medium update: {minorVersion}</Button>
-              </div>
-              <div>
-                <Button onClick={() => updateVersion!(majorVersion!)}>Large update: {majorVersion}</Button>
-              </div>
-            </div>
+            <>
+              <Text tag="p" color="white" type="description">This adapter has already been deployed with the current version <strong>{adapter!.version}</strong>.</Text>
+              <Text tag="p" color="white" type="description" mb="24">Update the version number to allow publishing to IPFS.</Text>
+              <AlignButtons>
+                <Button variant="outline" onClick={() => updateVersion!(patchVersion!)}>Small update: {patchVersion}</Button>
+                <Button variant="outline" onClick={() => updateVersion!(minorVersion!)}>Medium update: {minorVersion}</Button>
+                <Button variant="outline" onClick={() => updateVersion!(majorVersion!)}>Large update: {majorVersion}</Button>
+              </AlignButtons>
+            </>
           )
         }
         break

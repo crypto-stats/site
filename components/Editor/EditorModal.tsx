@@ -48,19 +48,19 @@ const Header = styled.h1`
 const Footer = styled.div`
   display: flex;
   border-top: solid 1px #444;
-  padding: 10px 30px;
-  justify-content: flex-end;
+  padding: 24px 30px;
+  justify-content: space-between;
 `
 
 const Content = styled.div`
   max-height: 70vh;
-  padding: 10px 30px;
+  padding: 32px;
   overflow: auto;
   flex: 1;
 `
 
 const HeaderSide = styled.div<{ side: string }>`
-  width: 100px;
+  width: 32px;
   float: ${({ side }) => side};
   text-align: ${({ side }) => side};
 `
@@ -115,7 +115,7 @@ const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, buttons, ch
         {title}
 
         <HeaderSide side="right">
-          <HeaderButton onClick={onClose}>Close<X /></HeaderButton>
+          <HeaderButton onClick={onClose}><X /></HeaderButton>
         </HeaderSide>
       </Header>
 
@@ -127,6 +127,7 @@ const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, buttons, ch
             key={button.label}
             onClick={button.onClick}
             disabled={button.disabled}
+            variant={button.label === "Return to Editor" ? 'outline' : 'primary'}
           >
             {button.label}
           </ButtonComponent>
