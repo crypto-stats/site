@@ -14,6 +14,15 @@ const AlignButtons = styled.div`
   justify-content: space-between;
 `
 
+const ShareUrl = styled.div`
+  padding: 16px;
+  max-width: 100%;
+  overflow: hidden;
+  background-color: #222222;
+  border: 1px solid #444444;
+  border-radius: 4px;
+`
+
 interface PublishModalProps {
   fileName: string
   show: boolean
@@ -134,8 +143,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
         if (!account) {
           content = (
             <div>
-              <div>You need to connect your Web3 wallet to sign your adapter.</div>
-
+              <Text tag="p" color="white" type="description">You need to connect your Web3 wallet to sign your adapter.</Text>
               <WalletConnections />
             </div>
           )
@@ -148,19 +156,20 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
           ]
           content = (
             <div>
-              <p>Click "Sign Adapter" to sign your adapter code from your current account ({accountName}).</p>
+              <Text tag="p" color="white" type="description">Click "Sign Adapter" to sign your adapter code from your current account ({accountName}).</Text>
             </div>
           )
         }
         break
 
       case 'published':
-        title = 'Adapter Successfully Published!'
+        title = '🎉  Adapter Successfully Published!'
         buttons = [returnButton]
         content = (
           <div>
-            <p>Your adapter has been published to IPFS! You may now share the following link:</p>
-            <p>https://cryptostats.community/discover/adapter/{cid}</p>
+            <Text tag="p" color="white" type="description">Your adapter has been published to IPFS! You may now share the following link:</Text>
+            <Text tag="p" type="label" mt="24" mb="16">Adapter url</Text>
+            <ShareUrl>https://cryptostats.community/discover/adapter/{cid}</ShareUrl>
           </div>
         )
         break
