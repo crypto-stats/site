@@ -16,16 +16,16 @@ async function query(query: string) {
   return json.data
 }
 
-export async function getListNames(): Promise<string[]> {
+export async function getCollectionNames(): Promise<string[]> {
   const response = await query(`{
-    collections {
+    collections(where: { archived: false }) {
       id
     }
   }`)
   return response.collections.map((collection: any) => collection.id)
 }
 
-export async function getModulesForList(collection: string): Promise<any[]> {
+export async function getModulesForCollection(collection: string): Promise<any[]> {
   const response = await query(`{
     collectionAdapters(where: { collection: "${collection}"}) {
       adapter {
@@ -36,7 +36,7 @@ export async function getModulesForList(collection: string): Promise<any[]> {
   return response.collectionAdapters.map((item: any) => item.adapter.id)
 }
 
-export async function getListsForAdapter(adapterCID: string): Promise<string[]> {
+export async function getCollectionsForAdapter(adapterCID: string): Promise<string[]> {
   const response = await query(`  {
     adapter(id: "${adapterCID}") {
       collections {
@@ -144,8 +144,8 @@ export async function getPreviousVersions(cid: string, numberOfIterations = 4): 
     }
 
     try {
-      const list = sdk.getList(`test-${i}`)
-      const adapter: Module = await list.fetchAdapterFromIPFS(_cid)
+      const collection = sdk.getCollection(`test-${i}`)
+      const adapter: Module = await collection.fetchAdapterFromIPFS(_cid)
 
       result.push({
         cid: _cid,

@@ -8,7 +8,7 @@ import APIExplainer from 'components/APIExplainer'
 import Button from 'components/Button'
 import AdapterCardList from 'components/AdapterCardList'
 import SiteModal from 'components/SiteModal'
-import { getListNames, getModulesForList } from 'utils/lists-chain'
+import { getCollectionNames, getModulesForCollection } from 'utils/lists-chain'
 import collectionMetadata, { CollectionMetadata } from 'resources/collection-metadata'
 import { usePlausible } from 'next-plausible'
 import { getSlug } from 'utils/adapters'
@@ -57,12 +57,12 @@ interface AdapterData {
 }
 
 interface ListPageProps {
-  listId: string,
+  collectionId: string,
   adapters: AdapterData[]
   metadata: CollectionMetadata | null
 }
 
-const DiscoverPage: NextPage<ListPageProps> = ({ adapters, listId, metadata }) => {
+const DiscoverPage: NextPage<ListPageProps> = ({ adapters, collectionId, metadata }) => {
   const plausible = usePlausible()
   const [showDataModal, setShowDataModal] = useState(false)
 
@@ -81,7 +81,7 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, listId, metadata }) =
       path: subadapter.icon || '', // TODO placeholder
       title: subadapter.name,
     })),
-    link: `/discover/${listId}/${adapter.slug || adapter.cid}`,
+    link: `/discover/${collectionId}/${adapter.slug || adapter.cid}`,
   }))
 
   return (
@@ -99,7 +99,7 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, listId, metadata }) =
               {metadata?.icon && <CardIcon color={metadata?.iconColor} icon={metadata?.icon} />}
               <CollectionNameDetails>
                 <Text tag="p" type="label">Collection</Text>
-                <Text tag="h1" type="title" mt="8">{metadata?.name || listId}</Text>
+                <Text tag="h1" type="title" mt="8">{metadata?.name || collectionId}</Text>
               </CollectionNameDetails>
             </CollectionName>
 
@@ -126,7 +126,7 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, listId, metadata }) =
           isOpen={showDataModal}
           onClose={() => setShowDataModal(false)}
         >
-          <APIExplainer listId={listId}/>
+          <APIExplainer listId={collectionId}/>
         </SiteModal>
       </TranquilLayout>
     </>
@@ -135,16 +135,16 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, listId, metadata }) =
 
 export default DiscoverPage
 
-export const getStaticProps: GetStaticProps<ListPageProps, { listId: string }> = async (ctx: GetStaticPropsContext) => {
-  const listId = ctx.params!.listId as string
-  const adapterCids = await getModulesForList(listId)
+export const getStaticProps: GetStaticProps<ListPageProps, { collectionId: string }> = async (ctx: GetStaticPropsContext) => {
+  const collectionId = ctx.params!.collectionId as string
+  const adapterCids = await getModulesForCollection(collectionId)
   const sdk = new CryptoStatsSDK({})
 
   const adapters = await Promise.all(adapterCids.map(async (cid: string): Promise<AdapterData> => {
-    const list = sdk.getCollection(cid)
-    const module = await list.fetchAdapterFromIPFS(cid)
+    const collection = sdk.getCollection(cid)
+    const module = await collection.fetchAdapterFromIPFS(cid)
 
-    const subadapters = await Promise.all(list.getAdapters().map(async(adapter: Adapter) => {
+    const subadapters = await Promise.all(collection.getAdapters().map(async(adapter: Adapter) => {
       const metadata = await adapter.getMetadata()
       const subadapter: SubAdapter = {
         id: adapter.id,
@@ -167,19 +167,19 @@ export const getStaticProps: GetStaticProps<ListPageProps, { listId: string }> =
 
   return {
     props: {
-      listId,
+      collectionId,
       adapters,
-      metadata: collectionMetadata[listId] || null,
+      metadata: collectionMetadata[collectionId] || null,
     },
     revalidate: 60,
   }
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const listNames = await getListNames()
+  const listNames = await getCollectionNames()
 
   return {
-    paths: listNames.map((listId: string) => ({ params: { listId } })),
+    paths: listNames.map((collectionId: string) => ({ params: { collectionId } })),
     fallback: 'blocking',
   }
 }

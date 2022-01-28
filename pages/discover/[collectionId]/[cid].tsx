@@ -8,7 +8,10 @@ import { useWeb3React } from '@web3-react/core'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import { useAdapterList, newModule } from 'hooks/local-adapters'
-import { getListNames, getModulesForList, getListsForAdapter, getCIDFromSlug, getAllVerifiedAdapters, getPreviousVersions, Version } from 'utils/lists-chain'
+import {
+  getCollectionNames, getModulesForCollection, getCollectionsForAdapter, getCIDFromSlug,
+  getAllVerifiedAdapters, getPreviousVersions, Version
+} from 'utils/lists-chain'
 import AdapterPreviewList from 'components/AdapterPage/AdapterPreviewList'
 import Button from 'components/Button'
 import CodeViewer from 'components/CodeViewer'
@@ -152,7 +155,7 @@ interface ModuleDetails {
 }
 
 interface AdaptersPageProps {
-  listId: string
+  collectionId: string
   cid: string
   verified: boolean
   moduleDetails: ModuleDetails
@@ -164,7 +167,7 @@ interface AdaptersPageProps {
 }
 
 const AdapterPage: NextPage<AdaptersPageProps> = ({
-  listId, cid, verified, moduleDetails, subadapters, listModules, verifiedLists, collections, previousVersions
+  collectionId, cid, verified, moduleDetails, subadapters, listModules, verifiedLists, collections, previousVersions
 }) => {
   const plausible = usePlausible()
   const [_verified, setVerified] = useState(verified)
@@ -174,7 +177,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
   const signer = useENSName(moduleDetails.signer)
 
   // NextJS page changes might not re-initialize component
-  useEffect(() => setVerified(verified), [cid, listId])
+  useEffect(() => setVerified(verified), [cid, collectionId])
 
   const edit = (clone?: boolean) => () => {
     if (!clone) {
@@ -183,7 +186,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
           if (publication.cid === cid) {
             plausible('edit-adapter', {
               props: {
-                listId,
+                collectionId,
                 adapter: cid,
                 adapterName: moduleDetails.name,
                 newAdapter: false,
@@ -202,7 +205,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
 
     plausible('edit-adapter', {
       props: {
-        listId,
+        collectionId,
         adapter: cid,
         adapterName: moduleDetails.name,
         newAdapter: true,
@@ -226,8 +229,8 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
     { name: 'Home', path: '/' },
     { name: 'Discover', path: '/discover' },
   ]
-  if (listId !== 'adapter') {
-    breadcrumbs.push({ name: listId, path: `/discover/${listId}` })
+  if (collectionId !== 'adapter') {
+    breadcrumbs.push({ name: collectionId, path: `/discover/${collectionId}` })
   }
 
   const subadapterNames = subadapters.map((subadapter: SubAdapter) => subadapter.metadata.name || subadapter.id)
@@ -235,7 +238,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
   return (
     <CompilerProvider>
       <MetaTags
-        title={`${moduleDetails.name || ''} Adapter${listId !== 'adapter' ? ` - ${listId}` : ''}`}
+        title={`${moduleDetails.name || ''} Adapter${collectionId !== 'adapter' ? ` - ${collectionId}` : ''}`}
         description={`The ${moduleDetails.name || ''} adapter ${moduleDetails.version && `(v${moduleDetails.version})`} contains ${subadapters.length} subadapters: ${subadapterNames.join(', ')}`}
       />
 
@@ -282,7 +285,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
                 <Attribute label="CID (source)">{moduleDetails.sourceFileCid}</Attribute>
                 {moduleDetails.previousVersion && (
                   <Attribute label="Prev. Version">
-                    <Link href={`/discover/${listId}/${moduleDetails.previousVersion}`}>
+                    <Link href={`/discover/${collectionId}/${moduleDetails.previousVersion}`}>
                       <a>{moduleDetails.previousVersion}</a>
                     </Link>
                   </Attribute>
@@ -306,10 +309,10 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
             </DetailsBox>
 
 
-            {isAdmin && listId !== 'adapter' && (
+            {isAdmin && collectionId !== 'adapter' && (
               <div>
                 <VerifyForm
-                  listId={listId}
+                  listId={collectionId}
                   listModules={listModules}
                   cid={cid}
                   previousVersion={moduleDetails.previousVersion}
@@ -345,8 +348,8 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
 
 export default AdapterPage
 
-export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string }> = async (ctx: GetStaticPropsContext) => {
-  const collectionId = ctx.params!.listId as string
+export const getStaticProps: GetStaticProps<AdaptersPageProps, { collectionId: string }> = async (ctx: GetStaticPropsContext) => {
+  const collectionId = ctx.params!.collectionId as string
   let cid = ctx.params!.cid as string
 
   if (cid.indexOf('Qm') != 0) {
@@ -357,10 +360,10 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
     executionTimeout: 70,
   })
 
-  const listModules = collectionId === 'adapter' ? [] : await getModulesForList(collectionId)
+  const listModules = collectionId === 'adapter' ? [] : await getModulesForCollection(collectionId)
   const verified = listModules.indexOf(cid) !== -1
 
-  const verifiedLists = await getListsForAdapter(cid)
+  const verifiedLists = await getCollectionsForAdapter(cid)
 
   const list = sdk.getCollection('test')
   const module = await list.fetchAdapterFromIPFS(cid)
@@ -373,7 +376,7 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
 
   const sourceCode = module.sourceFile ? await sdk.ipfs.getFile(module.sourceFile) : null
 
-  const collections = await getListNames()
+  const collections = await getCollectionNames()
 
   const previousVersions = await getPreviousVersions(cid)
 
@@ -393,7 +396,7 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { listId: string 
 
   return {
     props: {
-      listId: collectionId,
+      collectionId,
       cid,
       verified,
       moduleDetails,
@@ -415,7 +418,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   for (const adapter of adapters) {
     paths.push({
       params: {
-        listId: adapter.collection,
+        collectionId: adapter.collection,
         cid: adapter.slug || adapter.cid,
       }
     })

@@ -2,7 +2,7 @@ import { NextPage, GetStaticProps } from 'next'
 import Head from 'next/head'
 import styled from 'styled-components';
 import TranquilLayout from 'components/layouts/TranquilLayout'
-import { getListNames, getModulesForList } from 'utils/lists-chain'
+import { getCollectionNames, getModulesForCollection } from 'utils/lists-chain'
 import CardList from 'components/CardList'
 import collectionMetadata from 'resources/collection-metadata'
 import Text from 'components/Text'
@@ -73,11 +73,11 @@ const DiscoverPage: NextPage<AdaptersPageProps> = ({ collections }) => {
 export default DiscoverPage
 
 export const getStaticProps: GetStaticProps<AdaptersPageProps> = async () => {
-  const listNames = await getListNames()
+  const listNames = await getCollectionNames()
 
   const collections = await Promise.all(listNames.map(async (name: string): Promise<Collection> => ({
     id: name,
-    modules: await getModulesForList(name),
+    modules: await getModulesForCollection(name),
   })))
 
   return {
