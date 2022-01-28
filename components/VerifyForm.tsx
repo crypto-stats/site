@@ -47,6 +47,7 @@ async function sendUpdate(
 const VerifyForm: React.FC<VerifyFormProps> = ({ listId, listModules, cid, previousVersion, onVerified, previousVersions }) => {
   const [pending, setPending] = useState(false)
   const [selectedCid, setSelectedCid] = useState(previousVersion)
+  const [otherCid, setOtherCid] = useState('')
   const { library } = useWeb3React()
 
   useEffect(() => {
@@ -72,9 +73,10 @@ const VerifyForm: React.FC<VerifyFormProps> = ({ listId, listModules, cid, previ
   const replace = async () => {
     setPending(true)
     try {
-      const message = `Replace ${selectedCid} with ${cid} on ${listId}`
+      const fromCid = selectedCid === 'other' ? otherCid : selectedCid
+      const message = `Replace ${fromCid} with ${cid} on ${listId}`
       const signature = await library.getSigner().signMessage(message)
-      await sendUpdate(listId, 'update', signature, cid, selectedCid)
+      await sendUpdate(listId, 'update', signature, cid, fromCid)
       onVerified(true)
     } catch (e) {}
     setPending(false)
@@ -114,7 +116,12 @@ const VerifyForm: React.FC<VerifyFormProps> = ({ listId, listModules, cid, previ
                 {version.version} ({version.cid})
               </option>
             ))}
+            <option value="other">Other</option>
           </select>
+
+          {selectedCid === 'other' && (
+            <input value={otherCid} onChange={(e: any) => setOtherCid(e.target.value)} />
+          )}
 
           <button onClick={replace} disabled={pending}>
             Replace previous adapter on {listId}
