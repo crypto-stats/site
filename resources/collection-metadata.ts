@@ -75,6 +75,27 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
       },
     ],
   },
+  'dex-volumes': {
+    name: 'DEX Volumes',
+    description: 'The current yield rates of various lending protocols and yield aggregators.',
+    forumCategory: 'protocols/apys',
+    icon: '🔁',
+    iconColor: 'palette-1',
+    queries: [
+      {
+        id: 'oneDayTotalVolumeUSD',
+        name: 'One Day Volume (USD)',
+        description: 'Total trading volume on a single day',
+        parameters: [
+          {
+            name: 'Date',
+            type: 'date',
+            description: 'The date to query volume for (UTC time)',
+          },
+        ],
+      },
+    ],
+  },
   'eth-beacon-chain': {
     name: 'Ethereum Beacon Chain',
     description: 'Various beacon chain statistics, such as the current staking APY, the total ETH staked, total ETH paid as rewards, and more',
@@ -299,7 +320,7 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
     name: 'Issuance',
     description: 'The amount of tokens issued in the past day, in USD.',
     forumCategory: 'protocols/issuance',
-    icon: '🏛',
+    icon: '🖨',
     iconColor: 'palette-1',
     queries: [
       {
