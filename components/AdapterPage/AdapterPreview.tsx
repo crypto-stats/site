@@ -117,6 +117,8 @@ const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter, openB
           <Col>
             <Text tag="p" type="label" mb="24">Metadata</Text>
             <AttributeContainer>
+              <Attribute name="ID">{details.id}</Attribute>
+
               {Object.entries(details.metadata).map(([key, val]: [string, any]) => (
                 <Attribute name={key} key={key}>
                   {typeof val === 'string' && val.indexOf('data:') === 0 ? (
