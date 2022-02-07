@@ -155,6 +155,8 @@ declare class DateLib {
     dateToTimestamp(date: string | Date): number;
     formatDate(date: Date, connector?: string): string;
     getYesterdayDate(): string;
+    getNextDay(date: string): string;
+    getPreviousDay(date: string): string;
     last7Days(date?: Date): string[];
     isBefore(date?: string, comparrison?: string): boolean;
     getDateRange(dateStart: string | Date, dateEnd: string | Date): string[];
@@ -179,7 +181,8 @@ declare class Ethers {
 }
 
 declare interface QueryOptions {
-    subgraph: string;
+    subgraph?: string;
+    subgraphId?: string;
     query: string;
     variables?: any;
     operationName?: string;
