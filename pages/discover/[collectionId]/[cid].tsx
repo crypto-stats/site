@@ -64,12 +64,17 @@ const InfoBoxGrid = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-row-gap: 24px;
+    grid-column-gap: 8px;
   }
 `
 
 const InfoBoxItem = styled.div`
   margin: 24px 0;
   padding: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   @media (min-width: 768px) {
     margin: 0;
@@ -78,7 +83,6 @@ const InfoBoxItem = styled.div`
 
 const InfoBoxValue = styled(Text)`
   margin: 8px 0 0;
-  max-width: 100px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
