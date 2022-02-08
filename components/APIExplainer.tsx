@@ -162,6 +162,7 @@ const CodeField = styled.pre`
   max-width: 100%;
   overflow-x: scroll;
   margin-bottom: 32px;
+  white-space: pre-wrap;
 `
 
 const Output = styled.pre`
@@ -171,6 +172,8 @@ const Output = styled.pre`
   background-color: #404c59;
   color: #ffffff;
   padding: 32px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 `
 
 interface APIExplainerProps {
