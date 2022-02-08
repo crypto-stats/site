@@ -32,8 +32,16 @@ interface PublishModalProps {
 
 const VERSION_NUM_REGEX = /([\d]+)\.([\d]+)\.([\d]+)/g
 
+enum STATE {
+  INIT,
+  SIGN,
+  SIGNED_PUBLISH_PENDING,
+  PUBLISHING,
+  PUBLISHED,
+}
+
 const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, editorRef }) => {
-  const [state, setState] = useState('init')
+  const [state, setState] = useState(STATE.INIT)
   const [cid, setCID] = useState<null | string>(null)
   const [hash, setHash] = useState<null | string>(null)
   const { publish: publishToIPFS, adapter, getSignableHash, save } = useAdapter(fileName)
@@ -41,22 +49,23 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
   const accountName = useENSName(account, account)
 
   const prepareSignature = async () => {
-    setState('sign')
+    setState(STATE.SIGN)
     const _hash = await getSignableHash()
     setHash(_hash)
   }
 
   const sign = async () => {
-    setState('signed-publish-pending')
+    setState(STATE.SIGNED_PUBLISH_PENDING)
     try {
       const signature = await library.getSigner().signMessage(hash)
+      setState(STATE.PUBLISHING)
 
       const { codeCID } = await publishToIPFS({ signature, hash, signer: account })
       setCID(codeCID)
-      setState('published')
+      setState(STATE.PUBLISHED)
     } catch (e) {
       console.warn(e)
-      setState('sign')
+      setState(STATE.SIGN)
     }
   }
 
@@ -94,7 +103,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
 
   const close = () => {
     onClose()
-    setState('init')
+    setState(STATE.INIT)
     setCID(null)
     setHash(null)
   }
@@ -105,11 +114,11 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
   let buttons: ModalButton[] = []
   let content = null
 
-  const disabled = state === 'signed-publish-pending'
+  const disabled = state === STATE.SIGNED_PUBLISH_PENDING
 
   if (show) {
     switch (state) {
-      case 'init':
+      case STATE.INIT:
         if (hasUpdatedVersion) {
           buttons = [
             returnButton,
@@ -137,8 +146,8 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
         }
         break
 
-      case 'sign':
-      case 'signed-publish-pending':
+      case STATE.SIGN:
+      case STATE.SIGNED_PUBLISH_PENDING:
         buttons = [returnButton]
         if (!account) {
           content = (
@@ -162,7 +171,15 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
         }
         break
 
-      case 'published':
+      case STATE.PUBLISHING:
+        content = (
+          <div>
+            <Text tag="p" color="white" type="description">Publishing to IPFS...</Text>
+          </div>
+        )
+        break
+
+      case STATE.PUBLISHED:
         title = '🎉  Adapter Successfully Published!'
         buttons = [returnButton]
         content = (
