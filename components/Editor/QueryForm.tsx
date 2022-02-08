@@ -4,6 +4,7 @@ import { useConsole } from 'hooks/console'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { LOG_LEVEL } from '@cryptostats/sdk'
+import Button from 'components/Button'
 
 const Container = styled.div`
   background-color: #444;
@@ -56,15 +57,13 @@ const Input = styled(InputField)`
   outline: none;
 `
 
-const RunButton = styled.button`
-  width: 100%;
+const RunButton = styled(Button)`
   padding: 10px 0;
   background: #D6EAFF;
   color: #0477F4;
   border: none;
   border-radius: 4px;
   text-align: center;
-  outline: none;
 
   &:hover {
     cursor: pointer;
@@ -163,7 +162,9 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, storageKey }) 
             ))}
           </>
           <RunQueryBtn>
-            <RunButton onClick={execute} disabled={state.status === STATUS.RUNNING}>Run Query</RunButton>
+            <RunButton onClick={execute} loading={state.status === STATUS.RUNNING} fullWidth>
+              Run Query
+            </RunButton>
           </RunQueryBtn>
           <Output>
             <Label>Output</Label>

@@ -1,3 +1,4 @@
+import Button from 'components/Button'
 import InputField from 'components/InputField'
 import Text from 'components/Text'
 import { usePlausible } from 'next-plausible'
@@ -60,15 +61,12 @@ const Input = styled(InputField)`
   outline: none;
 `
 
-const RunButton = styled.button`
-  width: 100%;
+const RunButton = styled(Button)`
   padding: 10px 0;
   background: #D6EAFF;
   color: #0477F4;
-  border: none;
   border-radius: 4px;
   text-align: center;
-  outline: none;
   transition: var(--transition-fast);
 
   &:hover {
@@ -161,7 +159,7 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, adapter }) => 
           ))}
         </>
         <RunQueryBtn>
-          <RunButton onClick={execute} disabled={running}>Run Query</RunButton>
+          <RunButton onClick={execute} loading={running} fullWidth>Run Query</RunButton>
         </RunQueryBtn>
         <Output>
           <Text tag="p" type="label">Output</Text>

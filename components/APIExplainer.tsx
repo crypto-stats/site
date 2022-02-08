@@ -375,7 +375,7 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
               </div>
             )}
             
-            <Button onClick={execute} disabled={executing} centered>Execute query</Button>
+            <Button onClick={execute} loading={executing} centered>Execute query</Button>
             <Text tag="p" type="label" mt="24" mb="16">Preview output</Text>
             <Output>{output}</Output>
             </div>

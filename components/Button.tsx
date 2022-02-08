@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { Edit } from 'react-feather'
 
 
@@ -19,7 +19,46 @@ const DiscordIcon: React.FC = () => (
   </svg>
 )
 
-const ButtonElement = styled.button<{ variant?: string, width?: string, size?: string, fullWidth?: boolean, centered?: boolean}>`
+interface ButtonElementProps {
+  variant?: string
+  width?: string
+  size?: string
+  fullWidth?: boolean
+  centered?: boolean
+  loading?: boolean
+}
+
+const spin = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+const spinnerSize = 24;
+
+const loadingMixin = css`
+  cursor: default;
+
+  &:before {
+    content: "";
+    width: ${spinnerSize}px;
+    height: ${spinnerSize}px;
+    border-radius: ${spinnerSize}px;
+    border: 4px solid #aaa;
+    border-color: #aaa transparent #aaa transparent;
+    animation: ${spin} 1.2s linear infinite;
+    position: absolute;
+    left: calc(50% - ${spinnerSize / 2}px);
+    top: calc(50% - ${spinnerSize / 2}px);
+    box-sizing: border-box;
+  }
+`
+
+const ButtonElement = styled.button<ButtonElementProps>`
   font-family: "Inter";
   display: flex;
   width: ${({fullWidth}) => fullWidth ? '100%' : 'auto'};
@@ -38,6 +77,7 @@ const ButtonElement = styled.button<{ variant?: string, width?: string, size?: s
   line-height: 17px;
   transition: 150ms ease;
   padding: var(--spaces-2) var(--spaces-3);
+  position: relative;
 
 
   // Primary styling
@@ -48,6 +88,12 @@ const ButtonElement = styled.button<{ variant?: string, width?: string, size?: s
     background-color: var(--color-primary);
     color: var(--color-white) !important;
   }
+
+  &:disabled, &:hover:disabled {
+    background-color: #999;
+  }
+
+  ${({ loading }) => loading ? loadingMixin : ''}
   
   ${({variant}) => variant === "outline" &&  `
       background-color: var(--color-white);
@@ -103,6 +149,7 @@ const Icon = styled.i`
 
 interface ButtonProps {
   onClick?: () => void
+  loading?: boolean
   disabled?: boolean
   fullWidth?: boolean
   className?: string
@@ -113,9 +160,10 @@ interface ButtonProps {
   centered?: boolean  
 }
 
-const Button: React.FC<ButtonProps> = ({ children, onClick, disabled, className, variant, icon, width, size, fullWidth, centered}) => {
-
-  let svgIcon;
+const Button: React.FC<ButtonProps> = ({
+  children, onClick, disabled, className, variant, icon, width, size, fullWidth, centered, loading
+}) => {
+  let svgIcon: React.ReactNode | null = null
 
   if(icon) {
     switch (icon) {
@@ -132,7 +180,17 @@ const Button: React.FC<ButtonProps> = ({ children, onClick, disabled, className,
   }
     
   return (
-    <ButtonElement onClick={onClick} disabled={disabled} className={className} width={width} variant={variant} size={size} fullWidth={fullWidth} centered={centered}>
+    <ButtonElement
+      onClick={onClick}
+      loading={loading}
+      disabled={disabled || loading}
+      className={className}
+      width={width}
+      variant={variant}
+      size={size}
+      fullWidth={fullWidth}
+      centered={centered}
+    >
       {icon &&   
         <Icon>
           {svgIcon}
