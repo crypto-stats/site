@@ -143,10 +143,10 @@
     "@babel/helper-validator-identifier" "^7.14.8"
     to-fast-properties "^2.0.0"
 
-"@cryptostats/sdk@^0.2.7":
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/@cryptostats/sdk/-/sdk-0.2.7.tgz#d71969ccf356bfc1a822e262ba718c31623c4499"
-  integrity sha512-1Wwjd1hoPJluiizD8o3i7VeSx/B8tJe6cvZV85VpVswdNF7HyvYzpqCVZWyNry5TBW3F3hFr8nw6yNrdVh+L/A==
+"@cryptostats/sdk@^0.2.8":
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/@cryptostats/sdk/-/sdk-0.2.8.tgz#b34d38d7917f4bce44cc388fd137b9d7cd5d7872"
+  integrity sha512-JkCtTJfLqa9u1m3uI6ShD5Xr0Oup0Hvij6R95BScP15brvfYiJlChTc/HXV69Z83xC1cm+f84RnKgVeJ93W+3w==
   dependencies:
     date-fns "^2.22.1"
     ethers "^5.4.4"
