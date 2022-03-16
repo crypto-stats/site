@@ -34,14 +34,13 @@ const Nav = styled.nav`
   & + & {
     margin-top: var(--spaces-4);
   }
-  
+
   @media (min-width: 1024px) {
     & + & {
       margin-top: 0;
       margin-left: var(--spaces-10);
     }
   }
-
 `
 
 const NavLink = styled.a`
@@ -57,29 +56,41 @@ const NavLink = styled.a`
 
 const Footer: React.FC = () => {
   return (
-    <FooterContainer mt="40" alignItems="center">
-      <ColumnSection columns="5">
+    <FooterContainer mt='40' alignItems='center'>
+      <ColumnSection columns='5'>
         <Logo />
-        <Text tag="p" type="description" mt="24">
-          One neutral source of truth for crypto metrics.<br />
+        <Text tag='p' type='description' mt='24'>
+          One neutral source of truth for crypto metrics.
+          <br />
           Used by everyone, managed by the community.
         </Text>
       </ColumnSection>
-      <ColumnSection columns="7">
+      <ColumnSection columns='7'>
         <NavContainer>
           <Nav>
-            <Text tag="p" type="label" mb="16">Data Metrics</Text>
-            <Link href="/discover" passHref><NavLink>Data Collections</NavLink></Link>
-            <NavLink href="https://docs.cryptostats.community/" target="_blank">Docs</NavLink>
-            <NavLink href="https://forum.cryptostats.community/" target="_blank">Forum</NavLink>
+            <Text tag='p' type='label' mb='16'>
+              Data Metrics
+            </Text>
+            <Link href='/discover' passHref>
+              <NavLink>Data Collections</NavLink>
+            </Link>
+            <NavLink href='https://docs.cryptostats.community/' target='_blank'>
+              Docs
+            </NavLink>
+            <NavLink href='https://forum.cryptostats.community/' target='_blank'>
+              Forum
+            </NavLink>
           </Nav>
           <Nav>
-            <Text tag="p" type="label" mb="16">Social</Text>
-            <NavLink href="https://twitter.com/CryptoStats_" target="_blank">Twitter</NavLink>
-            <NavLink href="/discord">Discord</NavLink>
+            <Text tag='p' type='label' mb='16'>
+              Social
+            </Text>
+            <NavLink href='https://twitter.com/CryptoStats_' target='_blank'>
+              Twitter
+            </NavLink>
+            <NavLink href='/discord'>Discord</NavLink>
           </Nav>
         </NavContainer>
-        
       </ColumnSection>
     </FooterContainer>
   )

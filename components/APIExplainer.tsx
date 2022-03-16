@@ -1,28 +1,24 @@
 import React, { useState } from 'react'
 import { LOG_LEVEL } from '@cryptostats/sdk'
-import collectionMetadata, { Parameter, Query } from 'resources/collection-metadata';
+import collectionMetadata, { Parameter, Query } from 'resources/collection-metadata'
 import styled from 'styled-components'
-import Button from './Button';
+import Button from './Button'
 import InputField from './InputField'
-import { usePlausible } from 'next-plausible';
-import { getSDK } from 'utils/sdk';
-import Text from "components/Text"
+import { usePlausible } from 'next-plausible'
+import { getSDK } from 'utils/sdk'
+import Text from 'components/Text'
 
-
-const SectionWrapper = styled.section<{noMargin?: boolean}>`
+const SectionWrapper = styled.section<{ noMargin?: boolean }>`
   padding: 32px 40px;
 
-  ${({noMargin}) => noMargin ? 'padding: 0 40px;' : ''}
+  ${({ noMargin }) => (noMargin ? 'padding: 0 40px;' : '')}
 `
 
 const SectionHighlight = styled(SectionWrapper)`
   background-color: var(--color-primary-400);
 `
 
-
-const QueryContainer = styled.div`
-
-`
+const QueryContainer = styled.div``
 
 const QueryLabel = styled.label`
   display: flex;
@@ -46,7 +42,7 @@ const CheckBtn = styled.input`
   margin-right: 14px;
 
   &:before {
-    content: "";
+    content: '';
     width: 10px;
     height: 10px;
     transform: scale(0);
@@ -68,7 +64,7 @@ const RadioBtn = styled(CheckBtn)`
 
   &:before {
     border-radius: 100%;
-  }  
+  }
 `
 const ParamInputBox = styled.div`
   display: flex;
@@ -118,10 +114,13 @@ const Switch = styled.button<{ selected: boolean }>`
   border-radius: 4px;
   margin: 2px;
 
-  ${({ selected }) => selected ? `
+  ${({ selected }) =>
+    selected
+      ? `
     border: solid 1px #ddd;
     background-color: #ffffff;
-  ` : `
+  `
+      : `
     &:hover {
       cursor: pointer;
       background-color: #dee3ed;
@@ -133,7 +132,7 @@ const SwitchTitle = styled.div<{ selected: boolean }>`
   font-size: 16px;
   margin-bottom: 8px;
   font-weight: bold;
-  color: ${({ selected }) => selected ? '#0477f4' : '#262626'};
+  color: ${({ selected }) => (selected ? '#0477f4' : '#262626')};
 `
 
 const SwitchDescription = styled.div`
@@ -241,7 +240,9 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
 
         const sdk = getSDK({
           onLog: (level: LOG_LEVEL, ...args: any[]) =>
-            appendOutput(`${LOG_LEVEL[level]}: ${args.map((arg: any) => JSON.stringify(arg)).join(' ')}`)
+            appendOutput(
+              `${LOG_LEVEL[level]}: ${args.map((arg: any) => JSON.stringify(arg)).join(' ')}`
+            ),
         })
 
         appendOutput(`Fetching ${listId} collection from on-chain & IPFS`)
@@ -268,11 +269,15 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
   return (
     <>
       <SectionWrapper noMargin>
-        <Text tag="p" type="label" mb="16">Select queries</Text>
+        <Text tag='p' type='label' mb='16'>
+          Select queries
+        </Text>
       </SectionWrapper>
 
       <SectionHighlight>
-        <Text tag="p" type="content_big">Queries &amp; Parameters</Text>
+        <Text tag='p' type='content_big'>
+          Queries &amp; Parameters
+        </Text>
         <div style={{ margin: '12px 0' }}>
           {queries.map((query: Query, i: number) => {
             const selected = selectedQuery === i
@@ -280,10 +285,16 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
             return (
               <QueryContainer key={query.id}>
                 <QueryLabel>
-                  <RadioBtn type="radio" checked={selected} value={i} onChange={selectQuery} />
+                  <RadioBtn type='radio' checked={selected} value={i} onChange={selectQuery} />
                   <div>
-                    <Text tag="p" type="content" color="primary" weight="600">{query.name} ({query.id})</Text>
-                    {query.description && <Text tag="p" type="description">{query.description}</Text>}
+                    <Text tag='p' type='content' color='primary' weight='600'>
+                      {query.name} ({query.id})
+                    </Text>
+                    {query.description && (
+                      <Text tag='p' type='description'>
+                        {query.description}
+                      </Text>
+                    )}
                   </div>
                 </QueryLabel>
 
@@ -295,19 +306,23 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
                         <ParamInput
                           name={param.name}
                           value={paramValues[i] || ''}
-                          onChange={(newVal: any) => setParamValues((_currentVals: string[]) => {
-                            const newParamList = []
-                            for (let j = 0; j < params.length; j += 1) {
-                              if (i === j) {
-                                newParamList.push(newVal)
-                              } else {
-                                newParamList.push(_currentVals[j] || null)
+                          onChange={(newVal: any) =>
+                            setParamValues((_currentVals: string[]) => {
+                              const newParamList = []
+                              for (let j = 0; j < params.length; j += 1) {
+                                if (i === j) {
+                                  newParamList.push(newVal)
+                                } else {
+                                  newParamList.push(_currentVals[j] || null)
+                                }
                               }
-                            }
-                            return newParamList
-                          })}
+                              return newParamList
+                            })
+                          }
                         />
-                        {param.description && <ParamDescription>{param.description}</ParamDescription>}
+                        {param.description && (
+                          <ParamDescription>{param.description}</ParamDescription>
+                        )}
                       </ParamInputLabel>
                     ))}
                   </ParamInputBox>
@@ -318,28 +333,35 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
         </div>
         <div style={{ marginBottom: '12px' }}>
           <QueryLabel>
-            <CheckBtn type="checkbox" checked={includeMetadata} onChange={(e: any) => setIncludeMetadata(e.target.checked)} />
+            <CheckBtn
+              type='checkbox'
+              checked={includeMetadata}
+              onChange={(e: any) => setIncludeMetadata(e.target.checked)}
+            />
             Include metadata
           </QueryLabel>
         </div>
       </SectionHighlight>
 
       <SectionWrapper>
-
-        <Text tag="p" type="label" mb="16">Select how you want to pull the data</Text>
+        <Text tag='p' type='label' mb='16'>
+          Select how you want to pull the data
+        </Text>
 
         <SwitchContainer>
           <Switch onClick={() => changeMode(MODE.REST)} selected={mode === MODE.REST}>
             <SwitchTitle selected={mode === MODE.REST}>REST API</SwitchTitle>
             <SwitchDescription>
-              The easiest way to retrieve data is the REST API provided by CryptoStats' centralized server
+              The easiest way to retrieve data is the REST API provided by CryptoStats' centralized
+              server
             </SwitchDescription>
           </Switch>
 
           <Switch onClick={() => changeMode(MODE.SDK)} selected={mode === MODE.SDK}>
             <SwitchTitle selected={mode === MODE.SDK}>CryptoStats SDK</SwitchTitle>
             <SwitchDescription>
-              Ensure uptime by loading data from the decentralized CryptoStats protocol, using the JavaScript SDK
+              Ensure uptime by loading data from the decentralized CryptoStats protocol, using the
+              JavaScript SDK
             </SwitchDescription>
           </Switch>
         </SwitchContainer>
@@ -349,20 +371,28 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
             {mode === MODE.REST ? (
               <div style={{ marginBottom: '32px' }}>
                 <>
-                  <Text tag="p" type="label" mt="24" mb="16">Request URL</Text>
+                  <Text tag='p' type='label' mt='24' mb='16'>
+                    Request URL
+                  </Text>
                   <CopyField readOnly value={url} />
                 </>
 
                 <>
-                  <Text tag="p" type="label" mt="24" mb="16">CURL</Text>
+                  <Text tag='p' type='label' mt='24' mb='16'>
+                    CURL
+                  </Text>
                   <CopyField readOnly value={`curl ${url}`} />
                 </>
               </div>
             ) : (
               <div>
-                <Text tag="p" type="label" mt="24" mb="16">1. Install CryptoStats SDK</Text>
-                <CopyField value="yarn add @cryptostats/sdk" readOnly />
-                <Text tag="p" type="label" mt="24" mb="16">2. Import SDK, fetch adapters and execute query</Text>
+                <Text tag='p' type='label' mt='24' mb='16'>
+                  1. Install CryptoStats SDK
+                </Text>
+                <CopyField value='yarn add @cryptostats/sdk' readOnly />
+                <Text tag='p' type='label' mt='24' mb='16'>
+                  2. Import SDK, fetch adapters and execute query
+                </Text>
                 <CodeField>{`const { CryptoStatsSDK } = require('@cryptostats/sdk');
 
   (async function() {
@@ -372,20 +402,29 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
     const list = sdk.getCollection('${listId}');
     await list.fetchAdapters();
 
-    const result = await list.${includeMetadata ? 'executeQueryWithMetadata' : 'executeQuery'}(${[queryId, ...paramValues].map(val => JSON.stringify(val)).join(', ')});
+    const result = await list.${includeMetadata ? 'executeQueryWithMetadata' : 'executeQuery'}(${[
+                  queryId,
+                  ...paramValues,
+                ]
+                  .map(val => JSON.stringify(val))
+                  .join(', ')});
     console.log(result);
   })()`}</CodeField>
               </div>
             )}
-            
-            <Button onClick={execute} loading={executing} centered>Execute query</Button>
-            <Text tag="p" type="label" mt="24" mb="16">Preview output</Text>
+
+            <Button onClick={execute} loading={executing} centered>
+              Execute query
+            </Button>
+            <Text tag='p' type='label' mt='24' mb='16'>
+              Preview output
+            </Text>
             <Output>{output}</Output>
-            </div>
-          )}
+          </div>
+        )}
       </SectionWrapper>
     </>
   )
 }
 
-export default APIExplainer;
+export default APIExplainer

@@ -78,13 +78,20 @@ interface PrimaryFooterProps {
   editorRef: any
 }
 
-const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers, onMarkerClick, onConsoleClick, editorRef }) => {
+const PrimaryFooter: React.FC<PrimaryFooterProps> = ({
+  fileName,
+  markers,
+  onMarkerClick,
+  onConsoleClick,
+  editorRef,
+}) => {
   const [showModal, setShowModal] = useState(false)
   const { adapter } = useAdapter(fileName)
 
-  const lastPublication = adapter?.publications && adapter.publications.length > 0
-    ? adapter!.publications[adapter!.publications.length - 1]
-    : null
+  const lastPublication =
+    adapter?.publications && adapter.publications.length > 0
+      ? adapter!.publications[adapter!.publications.length - 1]
+      : null
 
   const infos = []
   const warnings = []
@@ -121,13 +128,19 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers, onMark
             {lastPublication && (
               <Link href={`/discover/adapter/${lastPublication.cid}`} passHref>
                 <IPFSLink>
-                  Last published to IPFS as {lastPublication.cid.substr(0,6)}...{lastPublication.cid.substr(-4)}
-                  {' (v'}{lastPublication.version})
+                  Last published to IPFS as {lastPublication.cid.substr(0, 6)}...
+                  {lastPublication.cid.substr(-4)}
+                  {' (v'}
+                  {lastPublication.version})
                 </IPFSLink>
               </Link>
             )}
 
-            <PublishButton onClick={() => setShowModal(true)} disabled={errors.length > 0} className={"primary"}>
+            <PublishButton
+              onClick={() => setShowModal(true)}
+              disabled={errors.length > 0}
+              className={'primary'}
+            >
               Publish to IPFS
             </PublishButton>
           </Fragment>
@@ -143,7 +156,7 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers, onMark
         />
       )}
     </Container>
-  );
+  )
 }
 
-export default PrimaryFooter;
+export default PrimaryFooter

@@ -12,13 +12,11 @@ const Container = styled(Fill)`
   }
 `
 
-const Main = styled(Fill)`
-  
-`
+const Main = styled(Fill)``
 
 const Label = styled.div`
   font-size: 14px;
-  color: #6B6B6B;
+  color: #6b6b6b;
   letter-spacing: 1.1px;
   text-transform: uppercase;
   margin: 16px;
@@ -45,15 +43,18 @@ const PreviewPanel: React.FC = () => {
   return (
     <Container>
       <Main scrollable={true}>
-        <TabContentIntro>In order to publish your Adapter you need to test the query you wrote.</TabContentIntro>
+        <TabContentIntro>
+          In order to publish your Adapter you need to test the query you wrote.
+        </TabContentIntro>
         <Label>Queries to test</Label>
-        {list && list.adapters.map((adapter: Adapter) => (
-          <SubAdapterTest
-            key={adapter.id}
-            subadapter={adapter}
-            openByDefault={list.adapters.length === 1}
-          />
-        ))}
+        {list &&
+          list.adapters.map((adapter: Adapter) => (
+            <SubAdapterTest
+              key={adapter.id}
+              subadapter={adapter}
+              openByDefault={list.adapters.length === 1}
+            />
+          ))}
       </Main>
     </Container>
   )

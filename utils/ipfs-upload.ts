@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import pinataSDK from '@pinata/sdk'
 import { create } from 'ipfs-http-client'
 
-const filePath = '/tmp/upload.txt';
+const filePath = '/tmp/upload.txt'
 
 export async function saveToIPFS(file: string, name: string): Promise<string> {
   if (!process.env.PINATA_KEY || !process.env.PINATA_SECRET) {
@@ -19,16 +19,18 @@ export async function saveToIPFS(file: string, name: string): Promise<string> {
   }
 
   const pinata = pinataSDK(process.env.PINATA_KEY, process.env.PINATA_SECRET)
-  fs.writeFileSync(filePath, file);
-  const pinataPromise = pinata.pinFromFS(filePath, {
-    pinataMetadata: {
-      name,
-      // @ts-ignore
-      keyvalues: {
-        type: 'module',
+  fs.writeFileSync(filePath, file)
+  const pinataPromise = pinata
+    .pinFromFS(filePath, {
+      pinataMetadata: {
+        name,
+        // @ts-ignore
+        keyvalues: {
+          type: 'module',
+        },
       },
-    },
-  }).catch(failHandler('pinata'))
+    })
+    .catch(failHandler('pinata'))
 
   const graphNode = create('https://api.thegraph.com/ipfs/api/v0' as any)
   const graphPromise = graphNode.add(file)
@@ -36,10 +38,14 @@ export async function saveToIPFS(file: string, name: string): Promise<string> {
   const csNode = create('https://ipfs.cryptostats.community' as any)
   const csPromise = csNode.add(file).catch(failHandler('CryptoStats'))
 
-  const [pinataResult, graphResult, csResult] = await Promise.all([pinataPromise, graphPromise, csPromise])
+  const [pinataResult, graphResult, csResult] = await Promise.all([
+    pinataPromise,
+    graphPromise,
+    csPromise,
+  ])
 
   if (failedUpload) {
-    console.warn(`2 out of 3 uploads successful, upload to ${failedUpload} failed`);
+    console.warn(`2 out of 3 uploads successful, upload to ${failedUpload} failed`)
   }
 
   if (pinataResult.IpfsHash && graphResult.path && pinataResult.IpfsHash !== graphResult.path) {
@@ -49,5 +55,5 @@ export async function saveToIPFS(file: string, name: string): Promise<string> {
     throw new Error(`Mismatched CIDs: ${pinataResult.IpfsHash} & ${csResult.path}`)
   }
 
-  return pinataResult.IpfsHash || graphResult.path!;
+  return pinataResult.IpfsHash || graphResult.path!
 }

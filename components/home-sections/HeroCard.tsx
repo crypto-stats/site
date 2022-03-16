@@ -9,9 +9,12 @@ const CardContainer = styled(Positionable)<{ position?: Position }>`
   border: solid 1px #ddd;
   background-color: #fff;
 
-  ${({ position }) => position ? `
+  ${({ position }) =>
+    position
+      ? `
     width: 70%;
-  ` : ''}
+  `
+      : ''}
 `
 
 const CardHeader = styled.div`
@@ -57,7 +60,7 @@ const HeroCard: React.FC<HeroCardProps> = ({ title, subtitle, children, position
     <CardContainer position={position}>
       <CardHeader>
         <CardIcoName>
-          <Icon type={icon} size="small" />
+          <Icon type={icon} size='small' />
           {title}
         </CardIcoName>
         <SubtitleChip>{subtitle}</SubtitleChip>

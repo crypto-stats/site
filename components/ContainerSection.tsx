@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 
 const Container = styled.section`
   width: 100%;
@@ -11,12 +11,8 @@ interface ContainerSectionProps {
   className?: string
 }
 
-const ContainerSection: React.FC<ContainerSectionProps> = ({ children, className}) => {
-  return (
-   <Container className={className}>
-      {children}
-   </Container>
-  )
+const ContainerSection: React.FC<ContainerSectionProps> = ({ children, className }) => {
+  return <Container className={className}>{children}</Container>
 }
 
-export default ContainerSection;
+export default ContainerSection

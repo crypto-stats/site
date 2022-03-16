@@ -11,13 +11,13 @@ interface InputFieldProps {
   disabled?: boolean
 }
 
-const dateLib = (new CryptoStatsSDK()).date
+const dateLib = new CryptoStatsSDK().date
 
 const InputField: React.FC<InputFieldProps> = ({ name, value, onChange, disabled, className }) => {
   if (name.toLowerCase().indexOf('date') !== -1) {
     return (
       <DatePicker
-        dateFormat="yyyy-MM-dd"
+        dateFormat='yyyy-MM-dd'
         selected={value && value.length > 0 ? new Date(value) : null}
         className={className}
         onChange={(date: Date) => onChange(date ? dateLib.formatDate(date) : '')}

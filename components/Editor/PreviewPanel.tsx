@@ -29,23 +29,22 @@ const PreviewPanel: React.FC = () => {
 
   return (
     <Container>
-      { processing && (
-        <div>Building adapter...</div>
-      )}
+      {processing && <div>Building adapter...</div>}
       <SectionHeader>Adapter Metadata</SectionHeader>
-      <Attribute name="Name">{module.name}</Attribute>
-      <Attribute name="Version">{module.version}</Attribute>
-      <Attribute name="License">{module.license}</Attribute>
+      <Attribute name='Name'>{module.name}</Attribute>
+      <Attribute name='Version'>{module.version}</Attribute>
+      <Attribute name='License'>{module.license}</Attribute>
 
       <SectionHeader>Sub Adapters - {list?.adapters.length}</SectionHeader>
       <div>
-        {list && list.adapters.map((adapter: Adapter) => (
-          <SubAdapterPreview
-            key={adapter.id}
-            subadapter={adapter}
-            openByDefault={list.adapters.length === 1}
-          />
-        ))}
+        {list &&
+          list.adapters.map((adapter: Adapter) => (
+            <SubAdapterPreview
+              key={adapter.id}
+              subadapter={adapter}
+              openByDefault={list.adapters.length === 1}
+            />
+          ))}
       </div>
     </Container>
   )

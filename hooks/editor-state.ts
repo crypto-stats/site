@@ -29,7 +29,9 @@ export function setEditorState(key: string, val: any) {
 
 export function useEditorState<T = any>(key: string, defaultState?: T): [T, (val: T) => void] {
   const storedState = getEditorState(key)
-  const [value, setValue] = useState<T>(storedState === undefined ? defaultState || null : storedState)
+  const [value, setValue] = useState<T>(
+    storedState === undefined ? defaultState || null : storedState
+  )
 
   const setAndSave = (val: T) => {
     setValue(val)

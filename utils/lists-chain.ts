@@ -1,13 +1,16 @@
 import { CryptoStatsSDK, Module } from '@cryptostats/sdk'
 
 async function query(query: string) {
-  const req = await fetch('https://api.thegraph.com/subgraphs/name/dmihal/cryptostats-adapter-registry-test', {
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({ query }),
-    method: 'POST',
-  });
+  const req = await fetch(
+    'https://api.thegraph.com/subgraphs/name/dmihal/cryptostats-adapter-registry-test',
+    {
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query }),
+      method: 'POST',
+    }
+  )
   const json = await req.json()
   if (json.errors) {
     console.error(query)
@@ -74,7 +77,9 @@ export async function getCIDFromSlug(collectionId: string, slug: string) {
   return response.collectionAdapters.length > 0 ? response.collectionAdapters[0].adapter.id : null
 }
 
-export async function getAllVerifiedAdapters(): Promise<{ collection: string; cid: string; slug: string | null }[]> {
+export async function getAllVerifiedAdapters(): Promise<
+  { collection: string; cid: string; slug: string | null }[]
+> {
   const response = await query(`{
     collectionAdapters {
       adapter {
@@ -139,7 +144,7 @@ export async function getPreviousVersions(cid: string, numberOfIterations = 4): 
           verified: true,
           signer: version.signer.id,
           activeCollections: version.collections.map((collection: any) => collection.collection.id),
-        }))
+        })),
       ]
     }
 

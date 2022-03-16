@@ -20,17 +20,19 @@ export interface AdapterWithID extends Adapter {
   id: string
 }
 
-const getStorage = () => typeof window === 'undefined'
-  ? {}
-  : JSON.parse(window.localStorage.getItem(storageKey) || '{}')
+const getStorage = () =>
+  typeof window === 'undefined' ? {} : JSON.parse(window.localStorage.getItem(storageKey) || '{}')
 
 const getStorageItem = (id: string) => getStorage()[id] || null
 
 const setStorageItem = (id: string, value: any) => {
-  window.localStorage.setItem(storageKey, JSON.stringify({
-    ...getStorage(),
-    [id]: value,
-  }))
+  window.localStorage.setItem(
+    storageKey,
+    JSON.stringify({
+      ...getStorage(),
+      [id]: value,
+    })
+  )
   updateAdapterLists()
 }
 
@@ -48,8 +50,10 @@ export const useAdapterList = (): AdapterWithID[] => {
     return () => void adapterListUpdaters.splice(adapterListUpdaters.indexOf(update), 1)
   }, [])
 
-  const list = Object.entries(getStorage())
-    .map(([id, adapter]: [string, any]) => ({ ...adapter, id }))
+  const list = Object.entries(getStorage()).map(([id, adapter]: [string, any]) => ({
+    ...adapter,
+    id,
+  }))
 
   return list
 }
@@ -72,7 +76,7 @@ export const newModule = (code: string = sampleModule, publications: Publication
 
 export const useAdapter = (id?: string | null) => {
   const update = useState({})[1]
-  
+
   const save = (code: string, name: string | null, version: string | null) => {
     if (!id) {
       throw new Error('ID not set')
@@ -84,18 +88,23 @@ export const useAdapter = (id?: string | null) => {
     setStorageItem(id, newAdapter)
     update({})
 
-    return id;
+    return id
   }
 
-  const publish = async ({ signature, hash, signer }: { signature?: string, signer?: string | null, hash?: string | null } = {}) => {
+  const publish = async ({
+    signature,
+    hash,
+    signer,
+  }: { signature?: string; signer?: string | null; hash?: string | null } = {}) => {
     if (!id) {
       throw new Error('ID not set')
     }
 
     const adapter = getStorageItem(id)
-    const previousVersion = adapter?.publications && adapter.publications.length > 0
-      ? adapter.publications[adapter.publications.length - 1]
-      : null
+    const previousVersion =
+      adapter?.publications && adapter.publications.length > 0
+        ? adapter.publications[adapter.publications.length - 1]
+        : null
 
     if (previousVersion && adapter.version === previousVersion.version) {
       throw new Error(`Version ${adapter.version} is already published`)
@@ -114,7 +123,7 @@ export const useAdapter = (id?: string | null) => {
         signature,
         hash,
         signer,
-      })
+      }),
     })
 
     const response = await req.json()
@@ -144,9 +153,10 @@ export const useAdapter = (id?: string | null) => {
     }
 
     const adapter = getStorageItem(id)
-    const previousVersion = adapter?.publications && adapter.publications.length > 0
-      ? adapter.publications[adapter.publications.length - 1]
-      : null
+    const previousVersion =
+      adapter?.publications && adapter.publications.length > 0
+        ? adapter.publications[adapter.publications.length - 1]
+        : null
 
     if (previousVersion && adapter.version === previousVersion.version) {
       throw new Error(`Version ${adapter.version} is already published`)
@@ -162,7 +172,7 @@ export const useAdapter = (id?: string | null) => {
         version: adapter.version,
         previousVersion: previousVersion?.cid || null,
         language: 'typescript',
-      })
+      }),
     })
 
     const { hash } = await req.json()
@@ -170,7 +180,7 @@ export const useAdapter = (id?: string | null) => {
     return message
   }
 
-  const adapter = id ? getStorageItem(id) as Adapter : null
+  const adapter = id ? (getStorageItem(id) as Adapter) : null
 
   return { save, publish, adapter, getSignableHash }
 }

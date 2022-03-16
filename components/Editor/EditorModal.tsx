@@ -9,13 +9,13 @@ const ModalOverlay = styled.div<{ width?: string | number; height?: string | num
   align-items: center;
   justify-content: center;
   background-color: transparent !important;
-  
+
   &:before {
-    content: "";
+    content: '';
     position: absolute;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.7) !important;
+    background: rgba(0, 0, 0, 0.7) !important;
     backdrop-filter: blur(4px);
     z-index: 1;
   }
@@ -96,26 +96,44 @@ interface ModalProps {
   onBack?: null | (() => void)
 }
 
-const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, buttons, children, width, height, onBack }) => {
+const EditorModal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  title,
+  buttons,
+  children,
+  width,
+  height,
+  onBack,
+}) => {
   return (
     <ReactModal
       isOpen={isOpen}
       onRequestClose={onClose}
       contentLabel={title}
-      className="modal-content"
+      className='modal-content'
       overlayElement={(props: any, contentElement: any) => (
-        <ModalOverlay width={width} height={height} {...props}>{contentElement}</ModalOverlay>
+        <ModalOverlay width={width} height={height} {...props}>
+          {contentElement}
+        </ModalOverlay>
       )}
     >
       <Header>
-        <HeaderSide side="left">
-          {onBack && <HeaderButton onClick={onBack}><ChevronLeft />Back</HeaderButton>}
+        <HeaderSide side='left'>
+          {onBack && (
+            <HeaderButton onClick={onBack}>
+              <ChevronLeft />
+              Back
+            </HeaderButton>
+          )}
         </HeaderSide>
 
         {title}
 
-        <HeaderSide side="right">
-          <HeaderButton onClick={onClose}><X /></HeaderButton>
+        <HeaderSide side='right'>
+          <HeaderButton onClick={onClose}>
+            <X />
+          </HeaderButton>
         </HeaderSide>
       </Header>
 
@@ -127,7 +145,7 @@ const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, buttons, ch
             key={button.label}
             onClick={button.onClick}
             disabled={button.disabled}
-            variant={button.label === "Return to Editor" ? 'outline' : 'primary'}
+            variant={button.label === 'Return to Editor' ? 'outline' : 'primary'}
           >
             {button.label}
           </ButtonComponent>

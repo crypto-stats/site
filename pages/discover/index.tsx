@@ -1,6 +1,6 @@
 import { NextPage, GetStaticProps } from 'next'
 import Head from 'next/head'
-import styled from 'styled-components';
+import styled from 'styled-components'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import { getCollectionNames, getModulesForCollection } from 'utils/lists-chain'
 import CardList from 'components/CardList'
@@ -10,8 +10,8 @@ import Text from 'components/Text'
 const HeroWrapper = styled.div`
   margin: var(--spaces-10) 0 0;
   text-align: center;
-  
-  @media ( min-width: 768px ) {
+
+  @media (min-width: 768px) {
     max-width: 70%;
     margin-right: auto;
     margin-left: auto;
@@ -34,7 +34,7 @@ interface AdaptersPageProps {
 const DiscoverPage: NextPage<AdaptersPageProps> = ({ collections }) => {
   const collectionItems = collections
     .sort((a: Collection, b: Collection) => b.modules.length - a.modules.length)
-    .map((collection: { id: string, modules: string[] }) => {
+    .map((collection: { id: string; modules: string[] }) => {
       const metadata = collectionMetadata[collection.id]
       return {
         title: metadata?.name || collection.id,
@@ -51,14 +51,22 @@ const DiscoverPage: NextPage<AdaptersPageProps> = ({ collections }) => {
     <>
       <Head>
         <title>Discover Collections | CryptoStats</title>
-        <meta name="description" content="The most valuable crypto metrics, curated and managed by the community." />
+        <meta
+          name='description'
+          content='The most valuable crypto metrics, curated and managed by the community.'
+        />
       </Head>
       <TranquilLayout
-        page="discover"
+        page='discover'
         hero={
           <HeroWrapper>
-            <Text tag="h1" type="display">Discover our Collections</Text>
-            <Text tag="p" type="description" mt="16">The most valuable crypto metrics, <br />curated and managed by the community</Text>
+            <Text tag='h1' type='display'>
+              Discover our Collections
+            </Text>
+            <Text tag='p' type='description' mt='16'>
+              The most valuable crypto metrics, <br />
+              curated and managed by the community
+            </Text>
           </HeroWrapper>
         }
       >
@@ -75,14 +83,18 @@ export default DiscoverPage
 export const getStaticProps: GetStaticProps<AdaptersPageProps> = async () => {
   const listNames = await getCollectionNames()
 
-  const collections = await Promise.all(listNames.map(async (name: string): Promise<Collection> => ({
-    id: name,
-    modules: await getModulesForCollection(name),
-  })))
+  const collections = await Promise.all(
+    listNames.map(
+      async (name: string): Promise<Collection> => ({
+        id: name,
+        modules: await getModulesForCollection(name),
+      })
+    )
+  )
 
   return {
     props: {
-      collections
+      collections,
     },
     revalidate: 60,
   }

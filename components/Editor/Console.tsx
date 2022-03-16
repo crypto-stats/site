@@ -15,7 +15,7 @@ const ConsoleLine = styled.div<{ level: string }>`
   white-space: pre-wrap;
   word-break: break-all;
 
-  ${({ level }) => level === LOG_LEVEL.ERROR.toString() ? 'color: red;' : ''}
+  ${({ level }) => (level === LOG_LEVEL.ERROR.toString() ? 'color: red;' : '')}
 `
 
 const Console: React.FC = () => {
@@ -23,13 +23,15 @@ const Console: React.FC = () => {
   const bottomRef = useRef<any>(null)
 
   useLayoutEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" })
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [bottomRef.current, lines])
 
   return (
     <ConsoleView scrollable={true}>
       {lines.map((line: Line, i: number) => (
-        <ConsoleLine key={i} level={line.level}>{line.value}</ConsoleLine>
+        <ConsoleLine key={i} level={line.level}>
+          {line.value}
+        </ConsoleLine>
       ))}
       <div ref={bottomRef} />
     </ConsoleView>

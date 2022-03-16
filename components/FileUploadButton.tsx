@@ -1,4 +1,4 @@
-import React, { Fragment, useRef } from 'react';
+import React, { Fragment, useRef } from 'react'
 
 interface FileUploadButtonProps {
   onUploaded: (cid: string, type: string, name: string) => void
@@ -6,7 +6,11 @@ interface FileUploadButtonProps {
   className?: string
 }
 
-const FileUploadButton: React.FC<FileUploadButtonProps> = ({ onUploaded, className, onUploadStart }) => {
+const FileUploadButton: React.FC<FileUploadButtonProps> = ({
+  onUploaded,
+  className,
+  onUploadStart,
+}) => {
   const hiddenFileInput = useRef<HTMLInputElement | null>(null)
 
   const handleChange = async (event: any) => {
@@ -24,7 +28,7 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({ onUploaded, classNa
     })
     const { cid } = await req.json()
     onUploaded(cid, fileUploaded.type, fileUploaded.name)
-  };
+  }
 
   return (
     <Fragment>
@@ -32,10 +36,10 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({ onUploaded, classNa
         Upload a file
       </button>
       <input
-        type="file"
+        type='file'
         ref={hiddenFileInput}
         onChange={handleChange}
-        style={{display: 'none'}}
+        style={{ display: 'none' }}
       />
     </Fragment>
   )

@@ -3,12 +3,12 @@ import styled from 'styled-components'
 
 const HeroContainer = styled.section<{ align?: string }>`
   width: 100%;
-  text-align: ${({align})=>align};
+  text-align: ${({ align }) => align};
 `
 
 interface HeroProps {
   className?: string
-  align?: string | "left"
+  align?: string | 'left'
 }
 
 const Hero: React.FC<HeroProps> = ({ children, className, align }) => {

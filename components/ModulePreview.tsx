@@ -21,17 +21,17 @@ const Icon = styled.img`
 `
 
 interface ModulePreviewProps {
-  module: Module;
-  list: List;
+  module: Module
+  list: List
 }
 
 const ModulePreview: React.FC<ModulePreviewProps> = ({ module, list }) => {
   return (
     <ModuleCard>
-      <Attribute name="Name">{module.name}</Attribute>
-      <Attribute name="Version">{module.version}</Attribute>
-      <Attribute name="License">{module.license}</Attribute>
-      
+      <Attribute name='Name'>{module.name}</Attribute>
+      <Attribute name='Version'>{module.version}</Attribute>
+      <Attribute name='License'>{module.license}</Attribute>
+
       {list.adapters.map((adapter: Adapter) => {
         // @ts-ignore
         const { icon, ...metadata } = adapter.metadata.metadata
@@ -48,7 +48,7 @@ const ModulePreview: React.FC<ModulePreviewProps> = ({ module, list }) => {
                 <pre>{JSON.stringify(val, null, 2)}</pre>
               </Attribute>
             ))}
-            <Attribute name="Queries">
+            <Attribute name='Queries'>
               {Object.entries(adapter.queries).map(([id, fn]: [string, any]) => (
                 <QueryForm id={id} fn={fn} key={id} storageKey={`${module.name}-${id}`} />
               ))}

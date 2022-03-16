@@ -9,7 +9,7 @@ const AttributeContainer = styled.dl`
     margin-top: var(--spaces-5);
   }
 `
-const AdapterTitle = styled.div<{ open?: boolean}>`
+const AdapterTitle = styled.div<{ open?: boolean }>`
   background: white;
   height: 42px;
   display: flex;
@@ -30,13 +30,16 @@ const AdapterTitle = styled.div<{ open?: boolean}>`
     border-top: none;
   }
 
-  ${({open}) => open ? `
+  ${({ open }) =>
+    open
+      ? `
     background-color: var(--color-primary-300);
 
     > h3 {
       color: var(--color-dark-400);
     }
-  ` : `` }
+  `
+      : ``}
 `
 
 const AdapterIcon = styled.div`
@@ -52,8 +55,8 @@ const Row = styled.div`
   border: solid 1px #ddd;
   background: #ffffff;
   border-top: none;
-  
-  @media (min-width:1024px) {
+
+  @media (min-width: 1024px) {
     display: flex;
   }
 `
@@ -62,8 +65,8 @@ const Col = styled.div`
   overflow: hidden;
   border-left: solid 1px #dddddd;
   padding: 24px;
-  
-  @media (min-width:1024px) {
+
+  @media (min-width: 1024px) {
     flex: 1 0 0;
   }
 
@@ -91,33 +94,42 @@ interface AdapterPreviewProps {
 const Attribute: React.FC<{ name: string }> = ({ name, children }) => {
   return (
     <>
-      <Text tag="dt" type="label" mb="8">{name}</Text>
-      <Text tag="dd" type="pre" mb="24">{children}</Text>
+      <Text tag='dt' type='label' mb='8'>
+        {name}
+      </Text>
+      <Text tag='dd' type='pre' mb='24'>
+        {children}
+      </Text>
     </>
   )
 }
-
 
 const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter, openByDefault }) => {
   const [open, setOpen] = useState(!!openByDefault)
 
   const title = details.metadata.name
-    ? `${details.metadata.name}${details.metadata.subtitle ? ' - ' + details.metadata.subtitle : ''} (${details.id})`
+    ? `${details.metadata.name}${
+        details.metadata.subtitle ? ' - ' + details.metadata.subtitle : ''
+      } (${details.id})`
     : details.id
 
   return (
     <>
       <AdapterTitle onClick={() => setOpen(!open)} open={open}>
         <AdapterIcon style={{ backgroundImage: `url('${details.metadata.icon}')` }} />
-        <Text tag="h3" type="label">{title}</Text>
+        <Text tag='h3' type='label'>
+          {title}
+        </Text>
       </AdapterTitle>
 
       {open && (
         <Row>
           <Col>
-            <Text tag="p" type="label" mb="24">Metadata</Text>
+            <Text tag='p' type='label' mb='24'>
+              Metadata
+            </Text>
             <AttributeContainer>
-              <Attribute name="ID">{details.id}</Attribute>
+              <Attribute name='ID'>{details.id}</Attribute>
 
               {Object.entries(details.metadata).map(([key, val]: [string, any]) => (
                 <Attribute name={key} key={key}>
@@ -126,7 +138,9 @@ const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter, openB
                       <Icon src={val} />
                     </>
                   ) : (
-                    <Text tag="p" type="pre">{JSON.stringify(val, null, 2)}</Text>
+                    <Text tag='p' type='pre'>
+                      {JSON.stringify(val, null, 2)}
+                    </Text>
                   )}
                 </Attribute>
               ))}
@@ -134,18 +148,23 @@ const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter, openB
           </Col>
 
           <ColTest>
-            <Text tag="p" type="label" mb="24">Queries</Text>
-            {adapter && Object.entries(adapter.queries).map(([id, fn]: [string, any], _id: number, list: any[]) => {
-              return (
-                <QueryForm
-                  key={id}
-                  id={id}
-                  fn={fn}
-                  adapter={adapter.id}
-                  openByDefault={list.length === 1}
-                />
-              )
-            })}
+            <Text tag='p' type='label' mb='24'>
+              Queries
+            </Text>
+            {adapter &&
+              Object.entries(adapter.queries).map(
+                ([id, fn]: [string, any], _id: number, list: any[]) => {
+                  return (
+                    <QueryForm
+                      key={id}
+                      id={id}
+                      fn={fn}
+                      adapter={adapter.id}
+                      openByDefault={list.length === 1}
+                    />
+                  )
+                }
+              )}
           </ColTest>
         </Row>
       )}

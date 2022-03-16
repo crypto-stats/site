@@ -21,13 +21,18 @@ const proxyAbi = [
 
 const ZERO = '0x0000000000000000000000000000000000000000000000000000000000000000'
 
-const cidToBytes32 = (cid: string) =>
-  ethers.utils.hexlify(ethers.utils.base58.decode(cid).slice(2))
+const cidToBytes32 = (cid: string) => ethers.utils.hexlify(ethers.utils.base58.decode(cid).slice(2))
 
 const rpc = `https://speedy-nodes-nyc.moralis.io/${process.env.NEXT_PUBLIC_MORALIS_KEY}/eth/goerli`
 const registryAddress = '0xF22e79604434ea8213eb7D79fcEB854e5E4283f7'
 
-function verifyOperation(method: string, listId: string, cid: string, signature: string, previousVersion?: string) {
+function verifyOperation(
+  method: string,
+  listId: string,
+  cid: string,
+  signature: string,
+  previousVersion?: string
+) {
   let oldElement = ZERO
   let newElement = ZERO
   let message = ''
@@ -97,7 +102,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     transactions.push(newListTx.hash)
   }
 
-  const { oldElement, newElement } = verifyOperation(method, listId, cid, signature, previousVersion)
+  const { oldElement, newElement } = verifyOperation(
+    method,
+    listId,
+    cid,
+    signature,
+    previousVersion
+  )
 
   const proxyContract = new ethers.Contract(proxyAddress, proxyAbi, signer)
   const tx = await proxyContract.update(oldElement, newElement)

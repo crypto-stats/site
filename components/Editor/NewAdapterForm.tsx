@@ -42,7 +42,6 @@ const TemplateTitle = styled.div`
   font-weight: bold;
 `
 
-
 interface EmptyStateProps {
   onAdapterSelection: (fileName: string) => void
 }
@@ -71,7 +70,9 @@ const NewAdapterForm: React.FC<EmptyStateProps> = ({ onAdapterSelection }) => {
           </Template>
           <Template onClick={createTemplateClickListener(apyAdapter, 'apy')}>
             <TemplateTitle>APY Adapter</TemplateTitle>
-            <div>Adapter for calculating the APY of an asset by comparing the exchange rate on 2 dates.</div>
+            <div>
+              Adapter for calculating the APY of an asset by comparing the exchange rate on 2 dates.
+            </div>
           </Template>
         </TemplateList>
       </TemplateSection>

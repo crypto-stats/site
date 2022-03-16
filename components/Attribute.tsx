@@ -4,7 +4,7 @@ import styled from 'styled-components'
 const AttributeContainer = styled.div`
   margin: 2px 0;
 
-  &+& {
+  & + & {
     margin-top: var(--spaces-4);
   }
 `
@@ -18,7 +18,7 @@ const Value = styled.div`
   font-size: 16px;
   color: #ffffff;
   margin-top: var(--spaces-2);
-`;
+`
 
 const Attribute: React.FC<{ name: string }> = ({ name, children }) => {
   return (

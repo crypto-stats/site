@@ -1,5 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { ViewPort, Top, LeftResizable, Left, Fill, RightResizable, Bottom, BottomResizable, Right } from 'react-spaces'
+import {
+  ViewPort,
+  Top,
+  LeftResizable,
+  Left,
+  Fill,
+  RightResizable,
+  Bottom,
+  BottomResizable,
+  Right,
+} from 'react-spaces'
 import { useRouter } from 'next/router'
 import { LOG_LEVEL } from '@cryptostats/sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -31,9 +41,9 @@ import SaveMessage from './SaveMessage'
 import ImageLibrary from './ImageLibrary/ImageLibrary'
 
 const Header = styled(Top)`
-  background-image: url("/editor_logo.png");
+  background-image: url('/editor_logo.png');
   background-size: 140px;
-  background-color: #2F2F2F;
+  background-color: #2f2f2f;
   background-position: center;
   background-repeat: no-repeat;
   border-bottom: solid 1px #4a4a4d;
@@ -95,7 +105,7 @@ const WalletButton = styled(ConnectionButton)`
 `
 
 const TabContainer = styled(Top)`
-  background-color: #2F2F2F;
+  background-color: #2f2f2f;
 
   & > .spaces-space > div {
     display: flex;
@@ -156,7 +166,7 @@ const CollapseButton = styled.button<{ open?: boolean }>`
   font-weight: bold;
 
   &:before {
-    content: '${({ open }) => open ? '<' : '>'}';
+    content: '${({ open }) => (open ? '<' : '>')}';
   }
 
   &:hover {
@@ -267,11 +277,13 @@ const Editor: React.FC = () => {
         <CloseButton onClick={() => router.push('/discover')}>X Close</CloseButton>
 
         <HeaderRight>
-          <NewAdapterButton onClick={() => setNewAdapterModalOpen(true)}>New Adapter</NewAdapterButton>
+          <NewAdapterButton onClick={() => setNewAdapterModalOpen(true)}>
+            New Adapter
+          </NewAdapterButton>
           <WalletButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</WalletButton>
         </HeaderRight>
       </Header>
-      <PrimaryFill side="right">
+      <PrimaryFill side='right'>
         {leftCollapsed ? (
           <LeftCollapsed size={50}>
             <LeftFooter order={1} size={55}>
@@ -280,9 +292,9 @@ const Editor: React.FC = () => {
           </LeftCollapsed>
         ) : (
           <LeftResizable size={298}>
-            <FilterBox size={42} >
+            <FilterBox size={42}>
               <FilterField
-                placeholder="Search for your Adapters here..."
+                placeholder='Search for your Adapters here...'
                 value={filter}
                 onChange={(e: any) => setFilter(e.target.value)}
               />
@@ -296,7 +308,9 @@ const Editor: React.FC = () => {
             </Fill>
 
             <LeftSidebarFooter size={70}>
-              <Button variant="outline" onClick={() => setImageLibraryOpen(true)}>Image Library</Button>
+              <Button variant='outline' onClick={() => setImageLibraryOpen(true)}>
+                Image Library
+              </Button>
             </LeftSidebarFooter>
 
             <LeftFooter order={1} size={55}>
@@ -306,7 +320,7 @@ const Editor: React.FC = () => {
         )}
 
         <Fill>
-          <FillWithStyledResize side="left">
+          <FillWithStyledResize side='left'>
             <Fill>
               <TabContainer size={50}>
                 <Fill>
@@ -318,7 +332,7 @@ const Editor: React.FC = () => {
               </TabContainer>
 
               <Fill>
-                {(fileName && adapter) ? (
+                {fileName && adapter ? (
                   <CodeEditor
                     fileId={fileName}
                     defaultValue={adapter.code}
@@ -329,14 +343,18 @@ const Editor: React.FC = () => {
                     onValidated={(code: string, markers: any[]) => {
                       setMarkers(markers)
 
-                      if (markers.filter((marker: any) => marker.severity === MarkerSeverity.Error).length === 0) {
+                      if (
+                        markers.filter((marker: any) => marker.severity === MarkerSeverity.Error)
+                          .length === 0
+                      ) {
                         evaluate({
                           code,
                           isTS: true,
-                          onLog: (level: LOG_LEVEL, ...args: any[]) => addLine({
-                            level: level.toString(),
-                            value: args.map(formatLog).join(' '),
-                          })
+                          onLog: (level: LOG_LEVEL, ...args: any[]) =>
+                            addLine({
+                              level: level.toString(),
+                              value: args.map(formatLog).join(' '),
+                            }),
                         })
                       }
                     }}
@@ -353,7 +371,10 @@ const Editor: React.FC = () => {
                   </Top>
                   <Fill>
                     {bottomView === BottomView.ERRORS ? (
-                      <ErrorPanel markers={markers} onClose={() => setBottomView(BottomView.NONE)} />
+                      <ErrorPanel
+                        markers={markers}
+                        onClose={() => setBottomView(BottomView.NONE)}
+                      />
                     ) : (
                       <Console />
                     )}
@@ -388,9 +409,12 @@ const Editor: React.FC = () => {
       <EditorModal
         isOpen={newAdapterModalOpen}
         onClose={() => setNewAdapterModalOpen(false)}
-        title="Create new adapter"
+        title='Create new adapter'
         buttons={[
-          { label: 'Return to Editor', onClick: () => setNewAdapterModalOpen(false) },
+          {
+            label: 'Return to Editor',
+            onClick: () => setNewAdapterModalOpen(false),
+          },
           {
             label: 'Create Blank Adapter',
             onClick: () => {

@@ -15,8 +15,8 @@ export interface CollectionMetadata {
   name: string
   description?: string
   forumCategory?: string
-  icon?: string,
-  iconColor?: string,
+  icon?: string
+  iconColor?: string
   queries?: Query[]
 }
 
@@ -46,7 +46,8 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   },
   'apy-range': {
     name: 'Average APY',
-    description: 'The average yield rate of various lending protocols and yield aggregators across a period of time.',
+    description:
+      'The average yield rate of various lending protocols and yield aggregators across a period of time.',
     forumCategory: 'protocols/apys',
     icon: '📆',
     iconColor: 'palette-2',
@@ -98,7 +99,8 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   },
   'eth-beacon-chain': {
     name: 'Ethereum Beacon Chain',
-    description: 'Various beacon chain statistics, such as the current staking APY, the total ETH staked, total ETH paid as rewards, and more',
+    description:
+      'Various beacon chain statistics, such as the current staking APY, the total ETH staked, total ETH paid as rewards, and more',
     icon: '🏎',
     iconColor: 'palette-3',
     queries: [
@@ -287,7 +289,7 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
             description: 'The date to query fees for (UTC time)',
           },
         ],
-      }
+      },
     ],
   },
   'fee-range': {
@@ -313,7 +315,7 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
             description: 'The end date of the date range (exclusive, UTC time)',
           },
         ],
-      }
+      },
     ],
   },
   issuance: {
@@ -326,12 +328,14 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
       {
         id: 'issuance7DayAvgUSD',
         name: '7 day average issuance (USD)',
-        description: 'Query the USD value of assets issued per day (averaged over the previous 7 days).',
+        description:
+          'Query the USD value of assets issued per day (averaged over the previous 7 days).',
       },
       {
         id: 'issuanceRateCurrent',
         name: 'Current issuance rate',
-        description: 'The annualized issuance rate percentage (in decimal form, averaged over the previous 7 days).',
+        description:
+          'The annualized issuance rate percentage (in decimal form, averaged over the previous 7 days).',
       },
     ],
   },
@@ -374,7 +378,8 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
       {
         id: 'currentLiquidTreasuryUSD',
         name: 'Current liquid treasury balance in USD',
-        description: 'The value of transferable assets held by the tresury (typically excluding vesting assets).',
+        description:
+          'The value of transferable assets held by the tresury (typically excluding vesting assets).',
       },
       {
         id: 'currentTreasuryPortfolio',

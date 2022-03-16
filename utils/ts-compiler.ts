@@ -1,12 +1,13 @@
-import type { CompilerHost, CompilerOptions } from 'typescript';
+import type { CompilerHost, CompilerOptions } from 'typescript'
 
 export async function compileTsToJs(tsCode: string) {
   const ts = await import('typescript')
 
-  let content: string | null = null;
+  let content: string | null = null
   const compilerHost: CompilerHost = {
-    getSourceFile: (fileName, languageVersion) => ts.createSourceFile(fileName, tsCode, languageVersion),
-    getDefaultLibFileName: () => "lib.d.ts",
+    getSourceFile: (fileName, languageVersion) =>
+      ts.createSourceFile(fileName, tsCode, languageVersion),
+    getDefaultLibFileName: () => 'lib.d.ts',
     writeFile: (_fileName, _content) => {
       content = _content
     },
@@ -22,7 +23,7 @@ export async function compileTsToJs(tsCode: string) {
 
   const options: CompilerOptions = {
     module: ts.ModuleKind.CommonJS,
-    target: ts.ScriptTarget.ES2019
+    target: ts.ScriptTarget.ES2019,
   }
   const program = ts.createProgram(['file.ts'], options, compilerHost)
   program.emit()

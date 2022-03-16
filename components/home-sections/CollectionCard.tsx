@@ -29,7 +29,6 @@ const Column = styled.div`
   margin-left: var(--spaces-3);
 `
 
-
 interface CollectionCardProps {
   position: Position
   collection: string
@@ -40,9 +39,11 @@ const CollectionCard: React.FC<CollectionCardProps> = ({ position, collection })
 
   return (
     <Card position={position}>
-      <IconRound icon={metadata.icon} color={metadata.iconColor} size="small" />
+      <IconRound icon={metadata.icon} color={metadata.iconColor} size='small' />
       <Column>
-        <Text tag="p" type="content_big">{metadata.name}</Text>
+        <Text tag='p' type='content_big'>
+          {metadata.name}
+        </Text>
       </Column>
     </Card>
   )

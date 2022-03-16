@@ -4,14 +4,13 @@ import { Adapter } from '@cryptostats/sdk'
 import QueryForm from './QueryForm'
 import { useEditorState } from 'hooks/editor-state'
 
-const Container = styled.div`
-`
+const Container = styled.div``
 
 const Header = styled.div`
   border-top: solid 1px #4a4a4d;
   border-bottom: solid 1px #4a4a4d;
   padding: 16px;
-  background: #2F2F2F;
+  background: #2f2f2f;
   cursor: pointer;
 
   &:hover {
@@ -19,18 +18,24 @@ const Header = styled.div`
   }
 `
 
-const Icon = styled.img<{size?: string}>`
+const Icon = styled.img<{ size?: string }>`
   width: auto;
   margin-right: 16px;
-  
-  ${({size})=> size === "small" ? `
+
+  ${({ size }) =>
+    size === 'small'
+      ? `
     max-height: 16px;
     margin-right: 16px;
-  ` : ``}
-  ${({size})=> size === "large" ? `
+  `
+      : ``}
+  ${({ size }) =>
+    size === 'large'
+      ? `
     max-height: 32px;
     margin-right: 32px;
-  ` : ``}
+  `
+      : ``}
 `
 
 interface SubAdapterPreviewProps {
@@ -48,7 +53,9 @@ const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDe
   if (!open) {
     return (
       <Header onClick={() => setOpen(true)}>
-        {metadata.icon?.cid && <Icon size="small" src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />}
+        {metadata.icon?.cid && (
+          <Icon size='small' src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />
+        )}
         {name || subadapter.id}
         {subtitle ? ` - ${subtitle}` : null}
       </Header>
@@ -60,7 +67,9 @@ const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDe
   return (
     <Container>
       <Header onClick={() => setOpen(false)}>
-        {metadata.icon?.cid && <Icon size="small" src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />}
+        {metadata.icon?.cid && (
+          <Icon size='small' src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />
+        )}
         {name || subadapter.id}
         {subtitle ? ` - ${subtitle}` : null}
       </Header>

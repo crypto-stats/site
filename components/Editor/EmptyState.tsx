@@ -20,8 +20,8 @@ const Container = styled.div`
 `
 
 const GM = styled.h3`
-font-size: 24px;
-font-weight: bold;
+  font-size: 24px;
+  font-weight: bold;
 `
 
 const P = styled.p<{ bold?: boolean }>`
@@ -54,7 +54,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({ onCreate }) => {
         <GM>Gm</GM>
 
         <P>Create, test, and publish CryptoStats adapters. All from your browser!</P>
-        
+
         <P bold>Let's get started!</P>
 
         <Button onClick={onCreate}>Create new adapter</Button>
