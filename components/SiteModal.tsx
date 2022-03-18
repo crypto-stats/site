@@ -1,6 +1,6 @@
-import React from "react"
-import styled from "styled-components"
-import ReactModal from "react-modal"
+import React from 'react'
+import styled from 'styled-components'
+import ReactModal from 'react-modal'
 
 const ModalOverlay = styled.div`
   display: flex;
@@ -32,7 +32,7 @@ const Content = styled.div`
   padding: 32px 0;
 `
 
-ReactModal.setAppElement("#__next")
+ReactModal.setAppElement('#__next')
 
 interface ModalProps {
   isOpen: boolean
@@ -46,7 +46,7 @@ const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, children })
       isOpen={isOpen}
       onRequestClose={onClose}
       contentLabel={title}
-      className='modal-content'
+      className="modal-content"
       overlayElement={(props: any, contentElement: any) => (
         <ModalOverlay {...props}>{contentElement}</ModalOverlay>
       )}

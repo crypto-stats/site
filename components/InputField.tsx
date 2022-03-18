@@ -1,7 +1,7 @@
-import React from "react"
-import DatePicker from "react-datepicker"
-import { CryptoStatsSDK } from "@cryptostats/sdk"
-import "react-datepicker/dist/react-datepicker.css"
+import React from 'react'
+import DatePicker from 'react-datepicker'
+import { CryptoStatsSDK } from '@cryptostats/sdk'
+import 'react-datepicker/dist/react-datepicker.css'
 
 interface InputFieldProps {
   name: string
@@ -14,13 +14,13 @@ interface InputFieldProps {
 const dateLib = new CryptoStatsSDK().date
 
 const InputField: React.FC<InputFieldProps> = ({ name, value, onChange, disabled, className }) => {
-  if (name.toLowerCase().indexOf("date") !== -1) {
+  if (name.toLowerCase().indexOf('date') !== -1) {
     return (
       <DatePicker
-        dateFormat='yyyy-MM-dd'
+        dateFormat="yyyy-MM-dd"
         selected={value && value.length > 0 ? new Date(value) : null}
         className={className}
-        onChange={(date: Date) => onChange(date ? dateLib.formatDate(date) : "")}
+        onChange={(date: Date) => onChange(date ? dateLib.formatDate(date) : '')}
         disabled={disabled}
       />
     )

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react"
-import styled from "styled-components"
-import { useWeb3React } from "@web3-react/core"
-import { Version } from "utils/lists-chain"
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import { useWeb3React } from '@web3-react/core'
+import { Version } from 'utils/lists-chain'
 
 const FormContainer = styled.div`
   display: flex;
@@ -24,10 +24,10 @@ async function sendUpdate(
   cid: string,
   previousVersion?: string | null
 ) {
-  const req = await fetch("/api/update-list", {
-    method: "POST",
+  const req = await fetch('/api/update-list', {
+    method: 'POST',
     headers: {
-      "Content-type": "application/json",
+      'Content-type': 'application/json',
     },
     body: JSON.stringify({
       listId,
@@ -54,7 +54,7 @@ const VerifyForm: React.FC<VerifyFormProps> = ({
 }) => {
   const [pending, setPending] = useState(false)
   const [selectedCid, setSelectedCid] = useState(previousVersion)
-  const [otherCid, setOtherCid] = useState("")
+  const [otherCid, setOtherCid] = useState('')
   const { library } = useWeb3React()
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const VerifyForm: React.FC<VerifyFormProps> = ({
     try {
       const message = `Add ${cid} to ${listId}`
       const signature = await library.getSigner().signMessage(message)
-      await sendUpdate(listId, "add", signature, cid)
+      await sendUpdate(listId, 'add', signature, cid)
       onVerified(true)
     } catch (e) {}
     setPending(false)
@@ -80,10 +80,10 @@ const VerifyForm: React.FC<VerifyFormProps> = ({
   const replace = async () => {
     setPending(true)
     try {
-      const fromCid = selectedCid === "other" ? otherCid : selectedCid
+      const fromCid = selectedCid === 'other' ? otherCid : selectedCid
       const message = `Replace ${fromCid} with ${cid} on ${listId}`
       const signature = await library.getSigner().signMessage(message)
-      await sendUpdate(listId, "update", signature, cid, fromCid)
+      await sendUpdate(listId, 'update', signature, cid, fromCid)
       onVerified(true)
     } catch (e) {}
     setPending(false)
@@ -94,7 +94,7 @@ const VerifyForm: React.FC<VerifyFormProps> = ({
     try {
       const message = `Remove ${cid} from ${listId}`
       const signature = await library.getSigner().signMessage(message)
-      await sendUpdate(listId, "remove", signature, cid)
+      await sendUpdate(listId, 'remove', signature, cid)
       onVerified(false)
     } catch (e) {}
     setPending(false)
@@ -120,14 +120,14 @@ const VerifyForm: React.FC<VerifyFormProps> = ({
             {previousVersions.map(version => (
               <option key={version.cid} value={version.cid}>
                 {version.verified &&
-                  (version.activeCollections.indexOf(listId) !== -1 ? "✅ " : "✔️ ")}
+                  (version.activeCollections.indexOf(listId) !== -1 ? '✅ ' : '✔️ ')}
                 {version.version} ({version.cid})
               </option>
             ))}
-            <option value='other'>Other</option>
+            <option value="other">Other</option>
           </select>
 
-          {selectedCid === "other" && (
+          {selectedCid === 'other' && (
             <input value={otherCid} onChange={(e: any) => setOtherCid(e.target.value)} />
           )}
 

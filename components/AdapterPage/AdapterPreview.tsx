@@ -1,8 +1,8 @@
-import React, { useState } from "react"
-import styled from "styled-components"
-import type { Adapter } from "@cryptostats/sdk"
-import QueryForm from "./QueryForm"
-import Text from "components/Text"
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import type { Adapter } from '@cryptostats/sdk'
+import QueryForm from './QueryForm'
+import Text from 'components/Text'
 
 const AttributeContainer = styled.dl`
   & + & {
@@ -94,10 +94,10 @@ interface AdapterPreviewProps {
 const Attribute: React.FC<{ name: string }> = ({ name, children }) => {
   return (
     <>
-      <Text tag='dt' type='label' mb='8'>
+      <Text tag="dt" type="label" mb="8">
         {name}
       </Text>
-      <Text tag='dd' type='pre' mb='24'>
+      <Text tag="dd" type="pre" mb="24">
         {children}
       </Text>
     </>
@@ -109,7 +109,7 @@ const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter, openB
 
   const title = details.metadata.name
     ? `${details.metadata.name}${
-        details.metadata.subtitle ? " - " + details.metadata.subtitle : ""
+        details.metadata.subtitle ? ' - ' + details.metadata.subtitle : ''
       } (${details.id})`
     : details.id
 
@@ -117,7 +117,7 @@ const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter, openB
     <>
       <AdapterTitle onClick={() => setOpen(!open)} open={open}>
         <AdapterIcon style={{ backgroundImage: `url('${details.metadata.icon}')` }} />
-        <Text tag='h3' type='label'>
+        <Text tag="h3" type="label">
           {title}
         </Text>
       </AdapterTitle>
@@ -125,20 +125,20 @@ const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter, openB
       {open && (
         <Row>
           <Col>
-            <Text tag='p' type='label' mb='24'>
+            <Text tag="p" type="label" mb="24">
               Metadata
             </Text>
             <AttributeContainer>
-              <Attribute name='ID'>{details.id}</Attribute>
+              <Attribute name="ID">{details.id}</Attribute>
 
               {Object.entries(details.metadata).map(([key, val]: [string, any]) => (
                 <Attribute name={key} key={key}>
-                  {typeof val === "string" && val.indexOf("data:") === 0 ? (
+                  {typeof val === 'string' && val.indexOf('data:') === 0 ? (
                     <>
                       <Icon src={val} />
                     </>
                   ) : (
-                    <Text tag='p' type='pre'>
+                    <Text tag="p" type="pre">
                       {JSON.stringify(val, null, 2)}
                     </Text>
                   )}
@@ -148,7 +148,7 @@ const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter, openB
           </Col>
 
           <ColTest>
-            <Text tag='p' type='label' mb='24'>
+            <Text tag="p" type="label" mb="24">
               Queries
             </Text>
             {adapter &&

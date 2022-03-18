@@ -1,12 +1,12 @@
-import React, { useState } from "react"
-import styled from "styled-components"
-import { useENSName } from "use-ens-name"
-import { useWeb3React } from "@web3-react/core"
-import EditorModal, { Button as ModalButton } from "./EditorModal"
-import { useAdapter } from "hooks/local-adapters"
-import Button from "components/Button"
-import WalletConnections from "components/WalletConnections"
-import Text from "components/Text"
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import { useENSName } from 'use-ens-name'
+import { useWeb3React } from '@web3-react/core'
+import EditorModal, { Button as ModalButton } from './EditorModal'
+import { useAdapter } from 'hooks/local-adapters'
+import Button from 'components/Button'
+import WalletConnections from 'components/WalletConnections'
+import Text from 'components/Text'
 
 const AlignButtons = styled.div`
   display: flex;
@@ -88,8 +88,8 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
     majorVersion = `${parseInt(major) + 1}.0.0`
 
     updateVersion = (newVersion: string) => {
-      const startLineNumber = adapter!.code.substr(0, versionRegexResult.index).split("\n").length
-      const startColumn = adapter!.code.split("\n")[startLineNumber - 1].indexOf(version) + 1
+      const startLineNumber = adapter!.code.substr(0, versionRegexResult.index).split('\n').length
+      const startColumn = adapter!.code.split('\n')[startLineNumber - 1].indexOf(version) + 1
       const endColumn = startColumn + version.length
 
       const edit = {
@@ -97,7 +97,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
         text: newVersion,
       }
 
-      editorRef.current.executeEdits("version", [edit])
+      editorRef.current.executeEdits('version', [edit])
       save(adapter!.code.replace(version, newVersion), adapter!.name, newVersion)
     }
   }
@@ -109,9 +109,9 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
     setHash(null)
   }
 
-  const returnButton = { label: "Return to Editor", onClick: close }
+  const returnButton = { label: 'Return to Editor', onClick: close }
 
-  let title = "Publish Your Adapter on IPFS"
+  let title = 'Publish Your Adapter on IPFS'
   let buttons: ModalButton[] = []
   let content = null
 
@@ -121,13 +121,13 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
     switch (state) {
       case STATE.INIT:
         if (hasUpdatedVersion) {
-          buttons = [returnButton, { label: "Continue", onClick: prepareSignature, disabled }]
+          buttons = [returnButton, { label: 'Continue', onClick: prepareSignature, disabled }]
           content = (
             <div>
-              <Text tag='p' color='white' type='description'>
+              <Text tag="p" color="white" type="description">
                 Publish your adapter to IPFS to make it viewable by the community.
               </Text>
-              <Text tag='p' color='white' type='description'>
+              <Text tag="p" color="white" type="description">
                 Once your adapter is published, you can share it on the CryptoStats forum to request
                 verification.
               </Text>
@@ -137,21 +137,21 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
           buttons = [returnButton]
           content = (
             <>
-              <Text tag='p' color='white' type='description'>
-                This adapter has already been deployed with the current version{" "}
+              <Text tag="p" color="white" type="description">
+                This adapter has already been deployed with the current version{' '}
                 <strong>{adapter!.version}</strong>.
               </Text>
-              <Text tag='p' color='white' type='description' mb='24'>
+              <Text tag="p" color="white" type="description" mb="24">
                 Update the version number to allow publishing to IPFS.
               </Text>
               <AlignButtons>
-                <Button variant='outline' onClick={() => updateVersion!(patchVersion!)}>
+                <Button variant="outline" onClick={() => updateVersion!(patchVersion!)}>
                   Small update: {patchVersion}
                 </Button>
-                <Button variant='outline' onClick={() => updateVersion!(minorVersion!)}>
+                <Button variant="outline" onClick={() => updateVersion!(minorVersion!)}>
                   Medium update: {minorVersion}
                 </Button>
-                <Button variant='outline' onClick={() => updateVersion!(majorVersion!)}>
+                <Button variant="outline" onClick={() => updateVersion!(majorVersion!)}>
                   Large update: {majorVersion}
                 </Button>
               </AlignButtons>
@@ -166,7 +166,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
         if (!account) {
           content = (
             <div>
-              <Text tag='p' color='white' type='description'>
+              <Text tag="p" color="white" type="description">
                 You need to connect your Web3 wallet to sign your adapter.
               </Text>
               <WalletConnections />
@@ -175,10 +175,10 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
         } else if (!hash) {
           content = <div>Loading...</div>
         } else {
-          buttons = [returnButton, { label: "Sign adapter", onClick: sign, disabled }]
+          buttons = [returnButton, { label: 'Sign adapter', onClick: sign, disabled }]
           content = (
             <div>
-              <Text tag='p' color='white' type='description'>
+              <Text tag="p" color="white" type="description">
                 Click "Sign Adapter" to sign your adapter code from your current account (
                 {accountName}).
               </Text>
@@ -190,7 +190,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
       case STATE.PUBLISHING:
         content = (
           <div>
-            <Text tag='p' color='white' type='description'>
+            <Text tag="p" color="white" type="description">
               Publishing to IPFS...
             </Text>
           </div>
@@ -198,14 +198,14 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
         break
 
       case STATE.PUBLISHED:
-        title = "🎉  Adapter Successfully Published!"
+        title = '🎉  Adapter Successfully Published!'
         buttons = [returnButton]
         content = (
           <div>
-            <Text tag='p' color='white' type='description'>
+            <Text tag="p" color="white" type="description">
               Your adapter has been published to IPFS! You may now share the following link:
             </Text>
-            <Text tag='p' type='label' mt='24' mb='16'>
+            <Text tag="p" type="label" mt="24" mb="16">
               Adapter url
             </Text>
             <ShareUrl>https://cryptostats.community/discover/adapter/{cid}</ShareUrl>

@@ -1,8 +1,8 @@
-import React from "react"
-import styled from "styled-components"
-import { newModule } from "hooks/local-adapters"
-import { feeAdapter, apyAdapter } from "resources/templates"
-import { usePlausible } from "next-plausible"
+import React from 'react'
+import styled from 'styled-components'
+import { newModule } from 'hooks/local-adapters'
+import { feeAdapter, apyAdapter } from 'resources/templates'
+import { usePlausible } from 'next-plausible'
 
 const Container = styled.div`
   display: flex;
@@ -50,7 +50,7 @@ const NewAdapterForm: React.FC<EmptyStateProps> = ({ onAdapterSelection }) => {
   const plausible = usePlausible()
 
   const createTemplateClickListener = (code: string, template: string) => () => {
-    plausible("new-adapter", {
+    plausible('new-adapter', {
       props: {
         template,
       },
@@ -64,11 +64,11 @@ const NewAdapterForm: React.FC<EmptyStateProps> = ({ onAdapterSelection }) => {
       <TemplateSection>
         <SectionLabel>From a template</SectionLabel>
         <TemplateList>
-          <Template onClick={createTemplateClickListener(feeAdapter, "fee")}>
+          <Template onClick={createTemplateClickListener(feeAdapter, 'fee')}>
             <TemplateTitle>Fee Revenue Adapter</TemplateTitle>
             <div>Create a basic adapter for querying fee revenue from a subgraph.</div>
           </Template>
-          <Template onClick={createTemplateClickListener(apyAdapter, "apy")}>
+          <Template onClick={createTemplateClickListener(apyAdapter, 'apy')}>
             <TemplateTitle>APY Adapter</TemplateTitle>
             <div>
               Adapter for calculating the APY of an asset by comparing the exchange rate on 2 dates.

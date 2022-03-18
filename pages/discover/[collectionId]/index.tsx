@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react"
-import Head from "next/head"
-import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next"
-import { CryptoStatsSDK, Adapter } from "@cryptostats/sdk"
-import styled from "styled-components"
-import TranquilLayout from "components/layouts/TranquilLayout"
-import APIExplainer from "components/APIExplainer"
-import Button from "components/Button"
-import AdapterCardList from "components/AdapterCardList"
-import SiteModal from "components/SiteModal"
-import { getCollectionNames, getModulesForCollection } from "utils/lists-chain"
-import collectionMetadata, { CollectionMetadata } from "resources/collection-metadata"
-import { usePlausible } from "next-plausible"
-import { getSlug } from "utils/adapters"
-import Text from "components/Text"
-import IconRound from "components/IconRound"
+import React, { useEffect, useState } from 'react'
+import Head from 'next/head'
+import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next'
+import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
+import styled from 'styled-components'
+import TranquilLayout from 'components/layouts/TranquilLayout'
+import APIExplainer from 'components/APIExplainer'
+import Button from 'components/Button'
+import AdapterCardList from 'components/AdapterCardList'
+import SiteModal from 'components/SiteModal'
+import { getCollectionNames, getModulesForCollection } from 'utils/lists-chain'
+import collectionMetadata, { CollectionMetadata } from 'resources/collection-metadata'
+import { usePlausible } from 'next-plausible'
+import { getSlug } from 'utils/adapters'
+import Text from 'components/Text'
+import IconRound from 'components/IconRound'
 
 const Hero = styled.div`
   margin: var(--spaces-5) 0 0;
@@ -68,7 +68,7 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, collectionId, metadat
 
   useEffect(() => {
     if (showDataModal) {
-      plausible("open-data-modal")
+      plausible('open-data-modal')
     }
   }, [showDataModal])
 
@@ -78,7 +78,7 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, collectionId, metadat
     version: adapter.version,
     metadata: [`${adapter.subadapters.length} subadapters`],
     iconlist: adapter.subadapters.map((subadapter: SubAdapter) => ({
-      path: subadapter.icon || "", // TODO placeholder
+      path: subadapter.icon || '', // TODO placeholder
       title: subadapter.name,
     })),
     link: `/discover/${collectionId}/${adapter.slug || adapter.cid}`,
@@ -88,45 +88,45 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, collectionId, metadat
     <>
       <Head>
         <title>{metadata?.name} Collection | CryptoStats</title>
-        <meta name='description' content={metadata?.description} />
+        <meta name="description" content={metadata?.description} />
       </Head>
       <TranquilLayout
-        page='collection'
+        page="collection"
         breadcrumbs={[
-          { name: "Home", path: "/" },
-          { name: "Discover", path: "/discover" },
+          { name: 'Home', path: '/' },
+          { name: 'Discover', path: '/discover' },
         ]}
         hero={
           <Hero>
             <CollectionName>
               {metadata?.icon && <CardIcon color={metadata?.iconColor} icon={metadata?.icon} />}
               <CollectionNameDetails>
-                <Text tag='p' type='label'>
+                <Text tag="p" type="label">
                   Collection
                 </Text>
-                <Text tag='h1' type='title' mt='8'>
+                <Text tag="h1" type="title" mt="8">
                   {metadata?.name || collectionId}
                 </Text>
               </CollectionNameDetails>
             </CollectionName>
 
             {metadata?.description && (
-              <Text tag='p' type='description' mb='16'>
+              <Text tag="p" type="description" mb="16">
                 {metadata?.description}
               </Text>
             )}
 
             <CollectionDetails>
               <div>
-                <Text tag='span' type='label'>
-                  Adapters:{" "}
+                <Text tag="span" type="label">
+                  Adapters:{' '}
                 </Text>
-                <Text tag='span' type='content'>
+                <Text tag="span" type="content">
                   {adapters.length}
                 </Text>
               </div>
               <div>
-                <Button onClick={() => setShowDataModal(true)} className='primary'>
+                <Button onClick={() => setShowDataModal(true)} className="primary">
                   Use Collection Data
                 </Button>
               </div>
@@ -139,7 +139,7 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, collectionId, metadat
         </>
 
         <SiteModal
-          title='Use this data on your website'
+          title="Use this data on your website"
           isOpen={showDataModal}
           onClose={() => setShowDataModal(false)}
         >
@@ -204,6 +204,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths: listNames.map((collectionId: string) => ({ params: { collectionId } })),
-    fallback: "blocking",
+    fallback: 'blocking',
   }
 }

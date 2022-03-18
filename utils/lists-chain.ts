@@ -1,14 +1,14 @@
-import { CryptoStatsSDK, Module } from "@cryptostats/sdk"
+import { CryptoStatsSDK, Module } from '@cryptostats/sdk'
 
 async function query(query: string) {
   const req = await fetch(
-    "https://api.thegraph.com/subgraphs/name/dmihal/cryptostats-adapter-registry-test",
+    'https://api.thegraph.com/subgraphs/name/dmihal/cryptostats-adapter-registry-test',
     {
       headers: {
-        "content-type": "application/json",
+        'content-type': 'application/json',
       },
       body: JSON.stringify({ query }),
-      method: "POST",
+      method: 'POST',
     }
   )
   const json = await req.json()

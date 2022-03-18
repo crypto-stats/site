@@ -1,12 +1,12 @@
-import * as fs from "fs"
-import pinataSDK from "@pinata/sdk"
-import { create } from "ipfs-http-client"
+import * as fs from 'fs'
+import pinataSDK from '@pinata/sdk'
+import { create } from 'ipfs-http-client'
 
-const filePath = "/tmp/upload.txt"
+const filePath = '/tmp/upload.txt'
 
 export async function saveToIPFS(file: string, name: string): Promise<string> {
   if (!process.env.PINATA_KEY || !process.env.PINATA_SECRET) {
-    throw new Error("Pinata key missing")
+    throw new Error('Pinata key missing')
   }
 
   let failedUpload: string | null = null
@@ -26,17 +26,17 @@ export async function saveToIPFS(file: string, name: string): Promise<string> {
         name,
         // @ts-ignore
         keyvalues: {
-          type: "module",
+          type: 'module',
         },
       },
     })
-    .catch(failHandler("pinata"))
+    .catch(failHandler('pinata'))
 
-  const graphNode = create("https://api.thegraph.com/ipfs/api/v0" as any)
+  const graphNode = create('https://api.thegraph.com/ipfs/api/v0' as any)
   const graphPromise = graphNode.add(file)
 
-  const csNode = create("https://ipfs.cryptostats.community" as any)
-  const csPromise = csNode.add(file).catch(failHandler("CryptoStats"))
+  const csNode = create('https://ipfs.cryptostats.community' as any)
+  const csPromise = csNode.add(file).catch(failHandler('CryptoStats'))
 
   const [pinataResult, graphResult, csResult] = await Promise.all([
     pinataPromise,

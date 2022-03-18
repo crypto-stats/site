@@ -1,7 +1,7 @@
-import React from "react"
-import styled from "styled-components"
-import { Positionable, Position } from "./Positionable"
-import Icon from "components/Icon"
+import React from 'react'
+import styled from 'styled-components'
+import { Positionable, Position } from './Positionable'
+import Icon from 'components/Icon'
 
 const CardContainer = styled(Positionable)<{ position?: Position }>`
   border-radius: 10px;
@@ -14,7 +14,7 @@ const CardContainer = styled(Positionable)<{ position?: Position }>`
       ? `
     width: 70%;
   `
-      : ""}
+      : ''}
 `
 
 const CardHeader = styled.div`
@@ -60,7 +60,7 @@ const HeroCard: React.FC<HeroCardProps> = ({ title, subtitle, children, position
     <CardContainer position={position}>
       <CardHeader>
         <CardIcoName>
-          <Icon type={icon} size='small' />
+          <Icon type={icon} size="small" />
           {title}
         </CardIcoName>
         <SubtitleChip>{subtitle}</SubtitleChip>

@@ -1,8 +1,8 @@
-import React, { useState } from "react"
-import styled from "styled-components"
-import { Adapter } from "@cryptostats/sdk"
-import Attribute from "../Attribute"
-import { IPFS_GATEWAY } from "resources/constants"
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import { Adapter } from '@cryptostats/sdk'
+import Attribute from '../Attribute'
+import { IPFS_GATEWAY } from 'resources/constants'
 
 const Container = styled.div``
 
@@ -37,14 +37,14 @@ const Icon = styled.img<{ size?: string }>`
   margin-right: 16px;
 
   ${({ size }) =>
-    size === "small"
+    size === 'small'
       ? `
     max-height: 16px;
     margin-right: 16px;
   `
       : ``}
   ${({ size }) =>
-    size === "large"
+    size === 'large'
       ? `
     max-height: 32px;
     margin-right: 32px;
@@ -67,7 +67,7 @@ const SubAdapterPreview: React.FC<SubAdapterPreviewProps> = ({ subadapter, openB
     return (
       <Header onClick={() => setOpen(true)}>
         {metadata.icon?.cid && (
-          <Icon size='small' src={`${IPFS_GATEWAY}/ipfs/${metadata.icon.cid}`} />
+          <Icon size="small" src={`${IPFS_GATEWAY}/ipfs/${metadata.icon.cid}`} />
         )}
         {name || subadapter.id}
         {metadata.subtitle ? ` - ${metadata.subtitle}` : null}
@@ -79,7 +79,7 @@ const SubAdapterPreview: React.FC<SubAdapterPreviewProps> = ({ subadapter, openB
     <Container>
       <Header onClick={() => setOpen(false)}>
         {metadata.icon?.cid && (
-          <Icon size='small' src={`${IPFS_GATEWAY}/ipfs/${metadata.icon.cid}`} />
+          <Icon size="small" src={`${IPFS_GATEWAY}/ipfs/${metadata.icon.cid}`} />
         )}
         {name || subadapter.id}
         {metadata.subtitle ? ` - ${metadata.subtitle}` : null}
@@ -90,7 +90,7 @@ const SubAdapterPreview: React.FC<SubAdapterPreviewProps> = ({ subadapter, openB
           <Attribute name={key} key={key}>
             {val?.cid ? (
               <div>
-                <Icon size='large' src={`${IPFS_GATEWAY}/ipfs/${val.cid}`} />
+                <Icon size="large" src={`${IPFS_GATEWAY}/ipfs/${val.cid}`} />
               </div>
             ) : (
               <Value>{JSON.stringify(val, null, 2)}</Value>

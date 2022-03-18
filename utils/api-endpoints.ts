@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next"
+import { NextApiRequest, NextApiResponse } from 'next'
 
 export const handleErrors =
   (fn: (req: NextApiRequest, res: NextApiResponse) => Promise<void>) =>

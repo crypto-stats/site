@@ -1,8 +1,8 @@
-import React from "react"
-import styled from "styled-components"
-import { Adapter } from "@cryptostats/sdk"
-import QueryForm from "./QueryForm"
-import { useEditorState } from "hooks/editor-state"
+import React from 'react'
+import styled from 'styled-components'
+import { Adapter } from '@cryptostats/sdk'
+import QueryForm from './QueryForm'
+import { useEditorState } from 'hooks/editor-state'
 
 const Container = styled.div``
 
@@ -23,14 +23,14 @@ const Icon = styled.img<{ size?: string }>`
   margin-right: 16px;
 
   ${({ size }) =>
-    size === "small"
+    size === 'small'
       ? `
     max-height: 16px;
     margin-right: 16px;
   `
       : ``}
   ${({ size }) =>
-    size === "large"
+    size === 'large'
       ? `
     max-height: 32px;
     margin-right: 32px;
@@ -44,7 +44,7 @@ interface SubAdapterPreviewProps {
 }
 
 const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDefault }) => {
-  const [fileName] = useEditorState<string>("open-file")
+  const [fileName] = useEditorState<string>('open-file')
   const [open, setOpen] = useEditorState(`subtest-${fileName}-${subadapter.id}-open`, openByDefault)
 
   // @ts-ignore
@@ -54,7 +54,7 @@ const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDe
     return (
       <Header onClick={() => setOpen(true)}>
         {metadata.icon?.cid && (
-          <Icon size='small' src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />
+          <Icon size="small" src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />
         )}
         {name || subadapter.id}
         {subtitle ? ` - ${subtitle}` : null}
@@ -68,7 +68,7 @@ const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDe
     <Container>
       <Header onClick={() => setOpen(false)}>
         {metadata.icon?.cid && (
-          <Icon size='small' src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />
+          <Icon size="small" src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />
         )}
         {name || subadapter.id}
         {subtitle ? ` - ${subtitle}` : null}

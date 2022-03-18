@@ -1,9 +1,9 @@
-import React from "react"
-import Link from "next/link"
-import styled from "styled-components"
-import RowSection from "./RowSection"
-import ColumnSection from "./ColumnSection"
-import Text from "./Text"
+import React from 'react'
+import Link from 'next/link'
+import styled from 'styled-components'
+import RowSection from './RowSection'
+import ColumnSection from './ColumnSection'
+import Text from './Text'
 
 const FooterContainer = styled(RowSection)`
   padding: var(--spaces-12) 0;
@@ -11,7 +11,7 @@ const FooterContainer = styled(RowSection)`
 `
 
 const Logo = styled.div`
-  background-image: url("/logo-all-black.svg");
+  background-image: url('/logo-all-black.svg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -56,39 +56,39 @@ const NavLink = styled.a`
 
 const Footer: React.FC = () => {
   return (
-    <FooterContainer mt='40' alignItems='center'>
-      <ColumnSection columns='5'>
+    <FooterContainer mt="40" alignItems="center">
+      <ColumnSection columns="5">
         <Logo />
-        <Text tag='p' type='description' mt='24'>
+        <Text tag="p" type="description" mt="24">
           One neutral source of truth for crypto metrics.
           <br />
           Used by everyone, managed by the community.
         </Text>
       </ColumnSection>
-      <ColumnSection columns='7'>
+      <ColumnSection columns="7">
         <NavContainer>
           <Nav>
-            <Text tag='p' type='label' mb='16'>
+            <Text tag="p" type="label" mb="16">
               Data Metrics
             </Text>
-            <Link href='/discover' passHref>
+            <Link href="/discover" passHref>
               <NavLink>Data Collections</NavLink>
             </Link>
-            <NavLink href='https://docs.cryptostats.community/' target='_blank'>
+            <NavLink href="https://docs.cryptostats.community/" target="_blank">
               Docs
             </NavLink>
-            <NavLink href='https://forum.cryptostats.community/' target='_blank'>
+            <NavLink href="https://forum.cryptostats.community/" target="_blank">
               Forum
             </NavLink>
           </Nav>
           <Nav>
-            <Text tag='p' type='label' mb='16'>
+            <Text tag="p" type="label" mb="16">
               Social
             </Text>
-            <NavLink href='https://twitter.com/CryptoStats_' target='_blank'>
+            <NavLink href="https://twitter.com/CryptoStats_" target="_blank">
               Twitter
             </NavLink>
-            <NavLink href='/discord'>Discord</NavLink>
+            <NavLink href="/discord">Discord</NavLink>
           </Nav>
         </NavContainer>
       </ColumnSection>

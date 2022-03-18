@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from "react"
-import { Collection, Module, LOG_LEVEL } from "@cryptostats/sdk"
-import { compileTsToJs } from "utils/ts-compiler"
-import { getSDK } from "utils/sdk"
+import React, { useContext, useEffect, useState } from 'react'
+import { Collection, Module, LOG_LEVEL } from '@cryptostats/sdk'
+import { compileTsToJs } from 'utils/ts-compiler'
+import { getSDK } from 'utils/sdk'
 
 interface CompilerState {
   code: string | null
@@ -28,7 +28,7 @@ const CompilerContext = React.createContext<{
   state: DEFAULT_STATE,
 
   setState() {
-    throw new Error("Not initialized")
+    throw new Error('Not initialized')
   },
 })
 
@@ -46,7 +46,7 @@ export const useCompiler = () => {
 
     const sdk = getSDK({ onLog })
 
-    const list = sdk.getCollection("test")
+    const list = sdk.getCollection('test')
 
     try {
       let compiledCode = null

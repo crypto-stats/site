@@ -1,12 +1,12 @@
-import React, { Fragment } from "react"
-import { Web3ReactProvider } from "@web3-react/core"
-import { ethers } from "ethers"
-import type { AppProps } from "next/app"
-import Head from "next/head"
-import { createGlobalStyle } from "styled-components"
-import PlausibleProvider from "next-plausible"
-import { runOnce } from "hooks/lib"
-import { setENSCache } from "use-ens-name"
+import React, { Fragment } from 'react'
+import { Web3ReactProvider } from '@web3-react/core'
+import { ethers } from 'ethers'
+import type { AppProps } from 'next/app'
+import Head from 'next/head'
+import { createGlobalStyle } from 'styled-components'
+import PlausibleProvider from 'next-plausible'
+import { runOnce } from 'hooks/lib'
+import { setENSCache } from 'use-ens-name'
 
 const GlobalStyle = createGlobalStyle`
   :root {
@@ -109,12 +109,12 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (
     <Fragment>
       <Head>
-        <link rel='icon' type='image/x-icon' href='/favicon.png' />
-        <link rel='preconnect' href='https://fonts.googleapis.com' />
-        <link rel='preconnect' href='https://fonts.gstatic.com' />
+        <link rel="icon" type="image/x-icon" href="/favicon.png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link
-          href='https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700&display=swap'
-          rel='stylesheet'
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700&display=swap"
+          rel="stylesheet"
         />
       </Head>
 
@@ -122,7 +122,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
       <Web3ReactProvider
         getLibrary={(provider: any) => new ethers.providers.Web3Provider(provider)}
       >
-        <PlausibleProvider domain='cryptostats.community'>
+        <PlausibleProvider domain="cryptostats.community">
           <Component {...pageProps} />
         </PlausibleProvider>
       </Web3ReactProvider>

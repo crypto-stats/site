@@ -1,11 +1,11 @@
-import React, { useState } from "react"
-import Link from "next/link"
-import { useRouter } from "next/router"
-import { useENSName } from "use-ens-name"
-import styled from "styled-components"
-import { useWeb3React } from "@web3-react/core"
-import ConnectionButton from "./ConnectionButton"
-import Button from "components/Button"
+import React, { useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useENSName } from 'use-ens-name'
+import styled from 'styled-components'
+import { useWeb3React } from '@web3-react/core'
+import ConnectionButton from './ConnectionButton'
+import Button from 'components/Button'
 
 const HeaderContainer = styled.header`
   display: flex;
@@ -34,7 +34,7 @@ const HeaderMobileWrapper = styled.div`
 
 const Logo = styled.a`
   display: block;
-  background-image: url("/logo.svg");
+  background-image: url('/logo.svg');
   color: transparent;
   background-repeat: no-repeat;
   background-position: center;
@@ -58,7 +58,7 @@ const Nav = styled.nav<{ open: boolean }>`
   left: 0;
   right: 0;
   width: 100%;
-  height: ${({ open }) => (open ? "260px" : "0")};
+  height: ${({ open }) => (open ? '260px' : '0')};
   overflow: hidden;
   background: var(--color-white);
   transition: var(--transition-fast) height;
@@ -211,7 +211,7 @@ const Header: React.FC = () => {
   return (
     <HeaderContainer>
       <HeaderMobileWrapper>
-        <Link href='/' passHref>
+        <Link href="/" passHref>
           <Logo>Home</Logo>
         </Link>
 
@@ -224,28 +224,28 @@ const Header: React.FC = () => {
 
       <Nav open={menuOpen}>
         <NavItem>
-          <Link href='/discover' passHref>
-            <NavLink active={router.route.indexOf("/discover") === 0}>Discover</NavLink>
+          <Link href="/discover" passHref>
+            <NavLink active={router.route.indexOf('/discover') === 0}>Discover</NavLink>
           </Link>
         </NavItem>
         <NavItem>
-          <Link href='/how-it-works' passHref>
-            <NavLink active={router.route.indexOf("/how-it-works") === 0}>How it works</NavLink>
+          <Link href="/how-it-works" passHref>
+            <NavLink active={router.route.indexOf('/how-it-works') === 0}>How it works</NavLink>
           </Link>
         </NavItem>
         <NavItem>
-          <NavLink href='https://docs.cryptostats.community/'>Docs</NavLink>
+          <NavLink href="https://docs.cryptostats.community/">Docs</NavLink>
         </NavItem>
         <NavItem>
-          <NavLink href='https://forum.cryptostats.community/'>Forum</NavLink>
+          <NavLink href="https://forum.cryptostats.community/">Forum</NavLink>
         </NavItem>
         <NavItem>
-          <Link href='/editor' passHref>
-            <Button variant='secondary'>Create Adapter</Button>
+          <Link href="/editor" passHref>
+            <Button variant="secondary">Create Adapter</Button>
           </Link>
         </NavItem>
         <NavItem>
-          <WalletButton>{account ? name || account.substr(0, 10) : "Connect Wallet"}</WalletButton>
+          <WalletButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</WalletButton>
         </NavItem>
       </Nav>
     </HeaderContainer>

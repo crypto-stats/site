@@ -1,8 +1,8 @@
-import React from "react"
-import styled from "styled-components"
-import Link from "next/link"
-import Text from "components/Text"
-import { ArrowRight } from "react-feather"
+import React from 'react'
+import styled from 'styled-components'
+import Link from 'next/link'
+import Text from 'components/Text'
+import { ArrowRight } from 'react-feather'
 
 const ListHead = styled.div`
   background-color: white;
@@ -137,20 +137,20 @@ interface AdapterCardListProps {
 const AdapterCardList: React.FC<AdapterCardListProps> = ({ items }) => {
   return (
     <>
-      <Text tag='h3' type='subtitle' weight='400' mt='48' mb='24'>
+      <Text tag="h3" type="subtitle" weight="400" mt="48" mb="24">
         Data is pulled from these adapters
       </Text>
       <ListHead>
-        <ListHeadName tag='span' type='label'>
+        <ListHeadName tag="span" type="label">
           Adapter name
         </ListHeadName>
-        <ListHeadIcons tag='span' type='label'>
+        <ListHeadIcons tag="span" type="label">
           Protocols/Networks
         </ListHeadIcons>
-        <ListHeadVersion tag='span' type='label'>
+        <ListHeadVersion tag="span" type="label">
           Version
         </ListHeadVersion>
-        <ListHeadCta tag='span' type='label'></ListHeadCta>
+        <ListHeadCta tag="span" type="label"></ListHeadCta>
       </ListHead>
       <List>
         {items.map((item: Item) => {
@@ -160,7 +160,7 @@ const AdapterCardList: React.FC<AdapterCardListProps> = ({ items }) => {
                 <Card>
                   <Content>
                     <div>
-                      <Text tag='h3' type='content' weight='500'>
+                      <Text tag="h3" type="content" weight="500">
                         {item.title}
                       </Text>
                       {/* {item.description && <Text tag="p" type="description" mt="8">{item.description}</Text>} */}
@@ -179,13 +179,13 @@ const AdapterCardList: React.FC<AdapterCardListProps> = ({ items }) => {
                           }
                         })}
                         {item.iconlist.length > 5 && (
-                          <MoreIcons tag='span' type='content_small'>
+                          <MoreIcons tag="span" type="content_small">
                             +{item.iconlist.length - 5}
                           </MoreIcons>
                         )}
                       </IconList>
                     )}
-                    <Text tag='p' type='description'>
+                    <Text tag="p" type="description">
                       {item.version}
                     </Text>
 

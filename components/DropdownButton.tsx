@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react"
-import { ChevronDown } from "react-feather"
-import styled from "styled-components"
+import React, { useEffect, useState } from 'react'
+import { ChevronDown } from 'react-feather'
+import styled from 'styled-components'
 
 const Container = styled.div`
   position: relative;
@@ -21,7 +21,7 @@ const BaseButton = styled.button`
 `
 
 const PrimaryButton = styled(BaseButton)<{ full: boolean }>`
-  font-family: "Inter";
+  font-family: 'Inter';
   display: flex;
   border-radius: 4px;
   cursor: pointer;
@@ -34,7 +34,7 @@ const PrimaryButton = styled(BaseButton)<{ full: boolean }>`
 
   ${({ full }) =>
     full
-      ? ""
+      ? ''
       : `
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
@@ -78,8 +78,8 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({ options }) => {
   useEffect(() => {
     if (dropdownOpen) {
       const listener = () => setDropdownOpen(false)
-      window.document.body.addEventListener("click", listener)
-      return () => window.document.body.removeEventListener("click", listener)
+      window.document.body.addEventListener('click', listener)
+      return () => window.document.body.removeEventListener('click', listener)
     }
   }, [dropdownOpen])
 

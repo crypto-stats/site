@@ -1,16 +1,16 @@
-import React, { useState } from "react"
-import styled from "styled-components"
-import Link from "next/link"
-import RowSection from "components/RowSection"
-import ColumnSection from "components/ColumnSection"
-import Text from "components/Text"
-import Button from "components/Button"
-import { Light as SyntaxHighlighter } from "react-syntax-highlighter"
-import js from "react-syntax-highlighter/dist/cjs/languages/hljs/javascript"
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import Link from 'next/link'
+import RowSection from 'components/RowSection'
+import ColumnSection from 'components/ColumnSection'
+import Text from 'components/Text'
+import Button from 'components/Button'
+import { Light as SyntaxHighlighter } from 'react-syntax-highlighter'
+import js from 'react-syntax-highlighter/dist/cjs/languages/hljs/javascript'
 // @ts-ignore
-import theme from "react-syntax-highlighter/dist/cjs/styles/hljs/stackoverflow-dark"
+import theme from 'react-syntax-highlighter/dist/cjs/styles/hljs/stackoverflow-dark'
 
-SyntaxHighlighter.registerLanguage("javascript", js)
+SyntaxHighlighter.registerLanguage('javascript', js)
 
 const sdkCode = `const { CryptoStatsSDK } = require('@cryptostats/sdk');
 (async function() {
@@ -95,53 +95,53 @@ const Actions: React.FC = () => {
 
   return (
     <>
-      <RowSection mt='120'>
-        <ColumnSection from='1' to='6'>
-          <Text tag='h3' type='title_highlight' mb='40' align='center'>
+      <RowSection mt="120">
+        <ColumnSection from="1" to="6">
+          <Text tag="h3" type="title_highlight" mb="40" align="center">
             Create
           </Text>
-          <Graphic src='/editor-thumbnail.png' alt='editor' />
-          <Text tag='p' type='content_big' mt='32' mb='32'>
+          <Graphic src="/editor-thumbnail.png" alt="editor" />
+          <Text tag="p" type="content_big" mt="32" mb="32">
             Create and update the adapers that provide data to CryptoStats. Write, test and publish
             the code right in the browser!
           </Text>
-          <Link href='/editor' passHref>
-            <Button variant='outline' size='large'>
+          <Link href="/editor" passHref>
+            <Button variant="outline" size="large">
               Open the adapter editor
             </Button>
           </Link>
         </ColumnSection>
-        <ColumnSection from='8' to='13'>
-          <Text tag='h3' type='title_highlight' mb='40' align='center'>
+        <ColumnSection from="8" to="13">
+          <Text tag="h3" type="title_highlight" mb="40" align="center">
             Discover
           </Text>
-          <Graphic src='/image-collections.png' alt='Collections' />
-          <Text tag='p' type='content_big' mt='32' mb='32'>
+          <Graphic src="/image-collections.png" alt="Collections" />
+          <Text tag="p" type="content_big" mt="32" mb="32">
             Review a wide range of data metrics, covering protocols across the crypto space.
           </Text>
-          <Link href='/discover' passHref>
-            <Button variant='outline' size='large'>
+          <Link href="/discover" passHref>
+            <Button variant="outline" size="large">
               Browse data sets
             </Button>
           </Link>
         </ColumnSection>
       </RowSection>
 
-      <RowSection mt='64'>
-        <ColumnSection from='3' to='11'>
-          <Text tag='h3' type='title_highlight' mb='24' align='center'>
+      <RowSection mt="64">
+        <ColumnSection from="3" to="11">
+          <Text tag="h3" type="title_highlight" mb="24" align="center">
             Consume and use data
           </Text>
-          <Text tag='p' type='content_big' mb='32' align='center'>
+          <Text tag="p" type="content_big" mb="32" align="center">
             Use trustworthy data metrics in your website or dapp.
           </Text>
-          <Text tag='p' type='content_big' mb='32' align='center'>
+          <Text tag="p" type="content_big" mb="32" align="center">
             It's free and always will be.
           </Text>
 
           <CodeCard>
             <CodeCardHeader>
-              <Text tag='p' type='content'>
+              <Text tag="p" type="content">
                 Using the Data is easy. Try it out
               </Text>
               <div>
@@ -160,11 +160,11 @@ const Actions: React.FC = () => {
               </div>
             </CodeCardHeader>
 
-            <Syntax language='javascript' style={theme} showLineNumbers>
+            <Syntax language="javascript" style={theme} showLineNumbers>
               {codeType === CodeType.SDK ? sdkCode : restCode}
             </Syntax>
           </CodeCard>
-          <Button variant='outline' size='large' centered>
+          <Button variant="outline" size="large" centered>
             Read the docs
           </Button>
         </ColumnSection>

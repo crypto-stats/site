@@ -1,7 +1,7 @@
-import { NextApiRequest, NextApiResponse } from "next"
-import { ethers } from "ethers"
-import { handleErrors } from "utils/api-endpoints"
-import { getProxyForCollection } from "utils/lists-chain"
+import { NextApiRequest, NextApiResponse } from 'next'
+import { ethers } from 'ethers'
+import { handleErrors } from 'utils/api-endpoints'
+import { getProxyForCollection } from 'utils/lists-chain'
 
 function typeCheck(value: any, type: string, label: string) {
   if (typeof value !== type) {
@@ -10,21 +10,21 @@ function typeCheck(value: any, type: string, label: string) {
 }
 
 const registryAbi = [
-  "event CollectionCreated(bytes32 indexed collection, address proxy)",
-  "function createCollection(bytes32 collection) external returns (address proxy)",
+  'event CollectionCreated(bytes32 indexed collection, address proxy)',
+  'function createCollection(bytes32 collection) external returns (address proxy)',
 ]
 
 const proxyAbi = [
-  "function update(bytes32 oldElement, bytes32 newElement) external",
-  "function batchUpdate(bytes32[] calldata oldElements, bytes32[] calldata newElements) external",
+  'function update(bytes32 oldElement, bytes32 newElement) external',
+  'function batchUpdate(bytes32[] calldata oldElements, bytes32[] calldata newElements) external',
 ]
 
-const ZERO = "0x0000000000000000000000000000000000000000000000000000000000000000"
+const ZERO = '0x0000000000000000000000000000000000000000000000000000000000000000'
 
 const cidToBytes32 = (cid: string) => ethers.utils.hexlify(ethers.utils.base58.decode(cid).slice(2))
 
 const rpc = `https://speedy-nodes-nyc.moralis.io/${process.env.NEXT_PUBLIC_MORALIS_KEY}/eth/goerli`
-const registryAddress = "0xF22e79604434ea8213eb7D79fcEB854e5E4283f7"
+const registryAddress = '0xF22e79604434ea8213eb7D79fcEB854e5E4283f7'
 
 function verifyOperation(
   method: string,
@@ -35,22 +35,22 @@ function verifyOperation(
 ) {
   let oldElement = ZERO
   let newElement = ZERO
-  let message = ""
+  let message = ''
 
   switch (method) {
-    case "add":
+    case 'add':
       newElement = cidToBytes32(cid)
       message = `Add ${cid} to ${listId}`
       break
-    case "update":
+    case 'update':
       if (!previousVersion) {
-        throw new Error("Must provide previous version")
+        throw new Error('Must provide previous version')
       }
       newElement = cidToBytes32(cid)
       oldElement = cidToBytes32(previousVersion)
       message = `Replace ${previousVersion} with ${cid} on ${listId}`
       break
-    case "remove":
+    case 'remove':
       oldElement = cidToBytes32(cid)
       message = `Remove ${cid} from ${listId}`
       break
@@ -60,31 +60,31 @@ function verifyOperation(
 
   const signer = ethers.utils.verifyMessage(message, signature)
   if (signer.toLowerCase() !== process.env.NEXT_PUBLIC_ADMIN_ACCOUNT?.toLowerCase()) {
-    throw new Error("Signer does not match admin")
+    throw new Error('Signer does not match admin')
   }
 
   return { oldElement, newElement }
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== "POST") {
-    throw new Error("Only POST requests allowed")
+  if (req.method !== 'POST') {
+    throw new Error('Only POST requests allowed')
   }
 
   const { listId, cid, signature, method, previousVersion } = req.body
 
-  typeCheck(listId, "string", "listId")
-  typeCheck(cid, "string", "cid")
-  typeCheck(signature, "string", "signature")
-  typeCheck(method, "string", "signature")
+  typeCheck(listId, 'string', 'listId')
+  typeCheck(cid, 'string', 'cid')
+  typeCheck(signature, 'string', 'signature')
+  typeCheck(method, 'string', 'signature')
   if (previousVersion) {
-    typeCheck(previousVersion, "string", "previousVersion")
+    typeCheck(previousVersion, 'string', 'previousVersion')
   }
 
   const listIdBytes32 = ethers.utils.formatBytes32String(listId)
 
   if (!process.env.MNEMONIC) {
-    throw new Error("No mnemonic set")
+    throw new Error('No mnemonic set')
   }
 
   const provider = new ethers.providers.JsonRpcProvider(rpc)

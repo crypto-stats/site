@@ -1,20 +1,20 @@
-import type { CompilerHost, CompilerOptions } from "typescript"
+import type { CompilerHost, CompilerOptions } from 'typescript'
 
 export async function compileTsToJs(tsCode: string) {
-  const ts = await import("typescript")
+  const ts = await import('typescript')
 
   let content: string | null = null
   const compilerHost: CompilerHost = {
     getSourceFile: (fileName, languageVersion) =>
       ts.createSourceFile(fileName, tsCode, languageVersion),
-    getDefaultLibFileName: () => "lib.d.ts",
+    getDefaultLibFileName: () => 'lib.d.ts',
     writeFile: (_fileName, _content) => {
       content = _content
     },
-    getCurrentDirectory: () => "tmp",
+    getCurrentDirectory: () => 'tmp',
     getDirectories: () => [],
     getCanonicalFileName: (fileName: string) => fileName.toLowerCase(),
-    getNewLine: () => "\n",
+    getNewLine: () => '\n',
     useCaseSensitiveFileNames: () => false,
     fileExists: () => true,
     readFile: () => tsCode,
@@ -25,11 +25,11 @@ export async function compileTsToJs(tsCode: string) {
     module: ts.ModuleKind.CommonJS,
     target: ts.ScriptTarget.ES2019,
   }
-  const program = ts.createProgram(["file.ts"], options, compilerHost)
+  const program = ts.createProgram(['file.ts'], options, compilerHost)
   program.emit()
 
   if (!content) {
-    throw new Error("No output")
+    throw new Error('No output')
   }
 
   return content

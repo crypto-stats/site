@@ -1,5 +1,5 @@
-import React from "react"
-import styled from "styled-components"
+import React from 'react'
+import styled from 'styled-components'
 
 const OuterContainer = styled.div`
   width: 100%;
@@ -26,7 +26,7 @@ const GM = styled.h3`
 
 const P = styled.p<{ bold?: boolean }>`
   font-size: 18px;
-  ${({ bold }) => bold && "font-weight: bold;"}
+  ${({ bold }) => bold && 'font-weight: bold;'}
 `
 
 const Button = styled.button`

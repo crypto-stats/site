@@ -1,11 +1,11 @@
-import React from "react"
-import styled from "styled-components"
-import Link from "next/link"
-import RowSection from "components/RowSection"
-import ColumnSection from "components/ColumnSection"
-import Text from "components/Text"
-import Button from "components/Button"
-import Icon from "components/Icon"
+import React from 'react'
+import styled from 'styled-components'
+import Link from 'next/link'
+import RowSection from 'components/RowSection'
+import ColumnSection from 'components/ColumnSection'
+import Text from 'components/Text'
+import Button from 'components/Button'
+import Icon from 'components/Icon'
 
 const Block = styled(Text)`
   border-radius: 20px;
@@ -27,7 +27,7 @@ const Block = styled(Text)`
 const CSBlock = styled(Block)`
   border: solid 2px #0477f4;
   box-shadow: 0 2px 464px 9px rgba(4, 119, 244, 0.17), 0 4px 11px 1px rgba(4, 119, 244, 0.27);
-  background-image: url("/logo.svg");
+  background-image: url('/logo.svg');
   background-repeat: no-repeat;
   background-position: center;
   background-position-y: 60%;
@@ -50,12 +50,12 @@ const ArrowBox = styled.div`
 
 const Arrow = styled.div<{ dashed?: boolean }>`
   width: 0;
-  border-left: ${({ dashed }) => (dashed ? "dashed" : "solid")} 2px #0477f4;
+  border-left: ${({ dashed }) => (dashed ? 'dashed' : 'solid')} 2px #0477f4;
   position: relative;
   margin-bottom: 2px;
 
   &:before {
-    content: "";
+    content: '';
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-top: 10px solid #0477f4;
@@ -82,7 +82,7 @@ const BottomForkArrows = styled(ForkArrows)`
 
   &:before,
   &:after {
-    content: "";
+    content: '';
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-top: 10px solid #0477f4;
@@ -133,48 +133,48 @@ const IconsGrid = styled.div`
 
 const Description: React.FC = () => {
   return (
-    <RowSection alignItems='center'>
-      <ColumnSection from='2' to='6'>
-        <Text tag='h3' type='title_highlight' mb='24'>
+    <RowSection alignItems="center">
+      <ColumnSection from="2" to="6">
+        <Text tag="h3" type="title_highlight" mb="24">
           What is CryptoStats?
         </Text>
-        <Text tag='p' type='content_big' mb='16'>
+        <Text tag="p" type="content_big" mb="16">
           Data powers the world of crypto.
         </Text>
-        <Text tag='p' type='content_big' mb='16'>
+        <Text tag="p" type="content_big" mb="16">
           We believe this data should not come from closed silos, but from open, transparent
           protocols.
         </Text>
-        <Text tag='p' type='content_big' mb='16'>
+        <Text tag="p" type="content_big" mb="16">
           CryptoStats empowers any developer to contribute to an open, trustworthy dataset, and
           enables publishers to access this data for free.
         </Text>
-        <Text tag='p' type='content_big' mb='16'>
+        <Text tag="p" type="content_big" mb="16">
           CryptoStats already powers many popular websites. But we need your help to take this to
           the next level.
         </Text>
-        <Text tag='p' type='content_big' mb='16'>
+        <Text tag="p" type="content_big" mb="16">
           Want to know more?
         </Text>
-        <Link href='/discover' passHref>
-          <Button variant='outline' size='large'>
+        <Link href="/discover" passHref>
+          <Button variant="outline" size="large">
             See how it works
           </Button>
         </Link>
       </ColumnSection>
 
-      <ColumnSection from='7' to='12'>
+      <ColumnSection from="7" to="12">
         <Block>
-          <Text tag='p' type='label' align='center'>
+          <Text tag="p" type="label" align="center">
             Blockchains &amp; Protocols
           </Text>
           <IconsGrid>
-            <Icon type='ethereum' />
-            <Icon type='bitcoin' />
-            <Icon type='cardano' />
-            <Icon type='polygon' />
-            <Icon type='uniswap' />
-            <Icon type='aave' />
+            <Icon type="ethereum" />
+            <Icon type="bitcoin" />
+            <Icon type="cardano" />
+            <Icon type="polygon" />
+            <Icon type="uniswap" />
+            <Icon type="aave" />
           </IconsGrid>
         </Block>
         <ArrowBox>
@@ -182,13 +182,13 @@ const Description: React.FC = () => {
           <SideArrows />
         </ArrowBox>
         <Block>
-          <Text tag='p' type='label' align='center'>
+          <Text tag="p" type="label" align="center">
             Indexers
           </Text>
           <IconsGrid>
-            <Icon type='zerion' />
-            <Icon type='thegraph' />
-            <Icon type='coinmetrics' />
+            <Icon type="zerion" />
+            <Icon type="thegraph" />
+            <Icon type="coinmetrics" />
           </IconsGrid>
         </Block>
         <ArrowBox>
@@ -196,7 +196,7 @@ const Description: React.FC = () => {
           <TopForkArrows />
         </ArrowBox>
         <CSBlock>
-          <Text tag='p' type='label' align='center'>
+          <Text tag="p" type="label" align="center">
             Normalization &amp; Curation
           </Text>
         </CSBlock>
@@ -205,13 +205,13 @@ const Description: React.FC = () => {
           <BottomForkArrows />
         </ArrowBox>
         <Block>
-          <Text tag='p' type='label' align='center'>
+          <Text tag="p" type="label" align="center">
             Presentations
           </Text>
           <IconsGrid>
-            <img src='clients/bloomberg.png' alt='Bloomberg' style={{ height: "26px" }} />
-            <img src='clients/cryptofees.png' alt='CryptoFees' />
-            <img src='clients/cryptotester.png' alt='CryptoTesters' />
+            <img src="clients/bloomberg.png" alt="Bloomberg" style={{ height: '26px' }} />
+            <img src="clients/cryptofees.png" alt="CryptoFees" />
+            <img src="clients/cryptotester.png" alt="CryptoTesters" />
           </IconsGrid>
         </Block>
       </ColumnSection>

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react"
-import styled from "styled-components"
+import React, { useEffect, useRef, useState } from 'react'
+import styled from 'styled-components'
 
 const Container = styled.div`
   display: flex;
@@ -83,35 +83,35 @@ const EditorControls: React.FC<{ editorRef: any }> = ({ editorRef }) => {
 
   return (
     <Container>
-      <Button disabled={!undoEnabled} onClick={() => editorRef.current.trigger("controls", "undo")}>
+      <Button disabled={!undoEnabled} onClick={() => editorRef.current.trigger('controls', 'undo')}>
         <svg
-          fill='none'
-          stroke='currentColor'
-          strokeLinecap='round'
-          strokeLinejoin='round'
-          strokeWidth='2'
-          version='1.1'
-          viewBox='0 0 24 24'
-          xmlns='http://www.w3.org/2000/svg'
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          version="1.1"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <polyline transform='translate(1.2578 5.4846)' points='1 4 1 10 7 10' />
-          <path d='m21.748 14.485c-2.2082-6.2402-10.171-8.0418-14.85-3.36l-4.64 4.36' />
+          <polyline transform="translate(1.2578 5.4846)" points="1 4 1 10 7 10" />
+          <path d="m21.748 14.485c-2.2082-6.2402-10.171-8.0418-14.85-3.36l-4.64 4.36" />
         </svg>
       </Button>
 
-      <Button disabled={!redoEnabled} onClick={() => editorRef.current.trigger("controls", "redo")}>
+      <Button disabled={!redoEnabled} onClick={() => editorRef.current.trigger('controls', 'redo')}>
         <svg
-          fill='none'
-          stroke='currentColor'
-          strokeLinecap='round'
-          strokeLinejoin='round'
-          strokeWidth='2'
-          version='1.1'
-          viewBox='0 0 24 24'
-          xmlns='http://www.w3.org/2000/svg'
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          version="1.1"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <polyline transform='matrix(-1 0 0 1 22.742 5.4846)' points='1 4 1 10 7 10' />
-          <path d='m2.2522 14.485c2.2082-6.2402 10.171-8.0418 14.85-3.36l4.64 4.36' />
+          <polyline transform="matrix(-1 0 0 1 22.742 5.4846)" points="1 4 1 10 7 10" />
+          <path d="m2.2522 14.485c2.2082-6.2402 10.171-8.0418 14.85-3.36l4.64 4.36" />
         </svg>
       </Button>
     </Container>

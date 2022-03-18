@@ -8,9 +8,9 @@ export function getSourceCID(file?: string | null) {
   return result ? result[1] : null
 }
 
-const A_CODE = "a".charCodeAt(0)
-const Z_CODE = "z".charCodeAt(0)
-const SPACE_CODE = " ".charCodeAt(0)
+const A_CODE = 'a'.charCodeAt(0)
+const Z_CODE = 'z'.charCodeAt(0)
+const SPACE_CODE = ' '.charCodeAt(0)
 
 export function getSlug(name?: string | null) {
   if (!name) {
@@ -18,7 +18,7 @@ export function getSlug(name?: string | null) {
   }
 
   name = name!.toLowerCase()
-  let slug = ""
+  let slug = ''
 
   let space = false
   for (let i = 0; i < name.length; i += 1) {
@@ -28,7 +28,7 @@ export function getSlug(name?: string | null) {
       space = false
     } else if (code == SPACE_CODE) {
       if (!space) {
-        slug = slug + "-"
+        slug = slug + '-'
         space = true
       }
     }

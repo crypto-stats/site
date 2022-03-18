@@ -1,5 +1,5 @@
-import React from "react"
-import styled from "styled-components"
+import React from 'react'
+import styled from 'styled-components'
 
 const IconElement = styled.i<{ type?: string; size?: string }>`
   display: inline-block;
@@ -12,7 +12,7 @@ const IconElement = styled.i<{ type?: string; size?: string }>`
 
   ${({ size }) =>
     size &&
-    size === "small" &&
+    size === 'small' &&
     `
     width: var(--spaces-4);
     height: var(--spaces-4);
@@ -20,84 +20,84 @@ const IconElement = styled.i<{ type?: string; size?: string }>`
 
   ${({ type }) =>
     type &&
-    type === "arbitrum" &&
+    type === 'arbitrum' &&
     `
     background-image: url("/Icon/ico-arbitrum.svg");
   `}
 
   ${({ type }) =>
     type &&
-    type === "gitcoin" &&
+    type === 'gitcoin' &&
     `
     background-image: url("/Icon/ico-gitcoin.png");
   `}
 
   ${({ type }) =>
     type &&
-    type === "yearn" &&
+    type === 'yearn' &&
     `
     background-image: url("/Icon/ico-yearn.svg");
   `}
 
   ${({ type }) =>
     type &&
-    type === "ethereum" &&
+    type === 'ethereum' &&
     `
     background-image: url("/Icon/ico-eth.svg");
   `}
 
   ${({ type }) =>
     type &&
-    type === "bitcoin" &&
+    type === 'bitcoin' &&
     `
     background-image: url("/Icon/ico-btc.svg");
   `}
 
   ${({ type }) =>
     type &&
-    type === "cardano" &&
+    type === 'cardano' &&
     `
     background-image: url("/Icon/ico-ada.svg");
   `}
 
   ${({ type }) =>
     type &&
-    type === "polygon" &&
+    type === 'polygon' &&
     `
     background-image: url("/Icon/ico-matic.svg");
   `}
 
   ${({ type }) =>
     type &&
-    type === "uniswap" &&
+    type === 'uniswap' &&
     `
     background-image: url("/Icon/ico-uni.svg");
   `}
 
   ${({ type }) =>
     type &&
-    type === "aave" &&
+    type === 'aave' &&
     `
     background-image: url("/Icon/ico-ave.svg");
   `}
 
   ${({ type }) =>
     type &&
-    type === "zerion" &&
+    type === 'zerion' &&
     `
     background-image: url("/Icon/ico-zerion.png");
   `}
 
   ${({ type }) =>
     type &&
-    type === "thegraph" &&
+    type === 'thegraph' &&
     `
     background-image: url("/Icon/ico-thegraph.png");
   `}
 
   ${({ type }) =>
     type &&
-    type === "coinmetrics" &&
+    type === 'coinmetrics' &&
     `
     background-image: url("/Icon/ico-coinmetrics.png");
   `}

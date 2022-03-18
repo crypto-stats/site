@@ -1,5 +1,5 @@
-import React from "react"
-import styled from "styled-components"
+import React from 'react'
+import styled from 'styled-components'
 
 const ColumnContainer = styled.div<{
   columns?: string
@@ -24,19 +24,19 @@ const ColumnContainer = styled.div<{
         ? `
       grid-column: ${offset} / -${offset};
     `
-        : ""}
+        : ''}
 
     ${({ from, to }) =>
       from && to
         ? `
       grid-column: ${from} / ${to};
     `
-        : ""}
+        : ''}
   }
 `
 
 interface ColumnSectionProps {
-  tag?: React.ElementType | "div"
+  tag?: React.ElementType | 'div'
   className?: string
   columns?: string
   offset?: string

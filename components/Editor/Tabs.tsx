@@ -1,6 +1,6 @@
-import React from "react"
-import styled from "styled-components"
-import CloseIcon from "components/CloseIcon"
+import React from 'react'
+import styled from 'styled-components'
+import CloseIcon from 'components/CloseIcon'
 
 const TabRow = styled.div`
   display: flex;

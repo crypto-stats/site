@@ -1,11 +1,11 @@
-import { NextPage, GetStaticProps } from "next"
-import Head from "next/head"
-import styled from "styled-components"
-import TranquilLayout from "components/layouts/TranquilLayout"
-import { getCollectionNames, getModulesForCollection } from "utils/lists-chain"
-import CardList from "components/CardList"
-import collectionMetadata from "resources/collection-metadata"
-import Text from "components/Text"
+import { NextPage, GetStaticProps } from 'next'
+import Head from 'next/head'
+import styled from 'styled-components'
+import TranquilLayout from 'components/layouts/TranquilLayout'
+import { getCollectionNames, getModulesForCollection } from 'utils/lists-chain'
+import CardList from 'components/CardList'
+import collectionMetadata from 'resources/collection-metadata'
+import Text from 'components/Text'
 
 const HeroWrapper = styled.div`
   margin: var(--spaces-10) 0 0;
@@ -52,18 +52,18 @@ const DiscoverPage: NextPage<AdaptersPageProps> = ({ collections }) => {
       <Head>
         <title>Discover Collections | CryptoStats</title>
         <meta
-          name='description'
-          content='The most valuable crypto metrics, curated and managed by the community.'
+          name="description"
+          content="The most valuable crypto metrics, curated and managed by the community."
         />
       </Head>
       <TranquilLayout
-        page='discover'
+        page="discover"
         hero={
           <HeroWrapper>
-            <Text tag='h1' type='display'>
+            <Text tag="h1" type="display">
               Discover our Collections
             </Text>
-            <Text tag='p' type='description' mt='16'>
+            <Text tag="p" type="description" mt="16">
               The most valuable crypto metrics, <br />
               curated and managed by the community
             </Text>
