@@ -1,11 +1,11 @@
-import React from 'react'
-import styled from 'styled-components'
-import Link from 'next/link'
-import RowSection from 'components/RowSection'
-import ColumnSection from 'components/ColumnSection'
-import Text from 'components/Text'
-import Button from 'components/Button'
-import Icon from 'components/Icon'
+import React from "react"
+import styled from "styled-components"
+import Link from "next/link"
+import RowSection from "components/RowSection"
+import ColumnSection from "components/ColumnSection"
+import Text from "components/Text"
+import Button from "components/Button"
+import Icon from "components/Icon"
 
 const Block = styled(Text)`
   border-radius: 20px;
@@ -27,7 +27,7 @@ const Block = styled(Text)`
 const CSBlock = styled(Block)`
   border: solid 2px #0477f4;
   box-shadow: 0 2px 464px 9px rgba(4, 119, 244, 0.17), 0 4px 11px 1px rgba(4, 119, 244, 0.27);
-  background-image: url('/logo.svg');
+  background-image: url("/logo.svg");
   background-repeat: no-repeat;
   background-position: center;
   background-position-y: 60%;
@@ -50,12 +50,12 @@ const ArrowBox = styled.div`
 
 const Arrow = styled.div<{ dashed?: boolean }>`
   width: 0;
-  border-left: ${({ dashed }) => (dashed ? 'dashed' : 'solid')} 2px #0477f4;
+  border-left: ${({ dashed }) => (dashed ? "dashed" : "solid")} 2px #0477f4;
   position: relative;
   margin-bottom: 2px;
 
   &:before {
-    content: '';
+    content: "";
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-top: 10px solid #0477f4;
@@ -82,7 +82,7 @@ const BottomForkArrows = styled(ForkArrows)`
 
   &:before,
   &:after {
-    content: '';
+    content: "";
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-top: 10px solid #0477f4;
@@ -209,7 +209,7 @@ const Description: React.FC = () => {
             Presentations
           </Text>
           <IconsGrid>
-            <img src='clients/bloomberg.png' alt='Bloomberg' style={{ height: '26px' }} />
+            <img src='clients/bloomberg.png' alt='Bloomberg' style={{ height: "26px" }} />
             <img src='clients/cryptofees.png' alt='CryptoFees' />
             <img src='clients/cryptotester.png' alt='CryptoTesters' />
           </IconsGrid>

@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
-import { useImages } from 'hooks/images'
-import styled, { css, keyframes } from 'styled-components'
-import FileUploadButton from 'components/FileUploadButton'
-import { IPFS_GATEWAY } from 'resources/constants'
+import React, { useState } from "react"
+import { useImages } from "hooks/images"
+import styled, { css, keyframes } from "styled-components"
+import FileUploadButton from "components/FileUploadButton"
+import { IPFS_GATEWAY } from "resources/constants"
 
 const Cards = styled.ul`
   display: flex;
@@ -44,7 +44,7 @@ const loadingMixin = css`
   cursor: default;
 
   &:before {
-    content: '';
+    content: "";
     background: none;
     border: 6px solid #aaa;
     border-color: #aaa transparent #aaa transparent;
@@ -66,7 +66,7 @@ const UploadButton = styled(FileUploadButton)<{ uploading: boolean }>`
   padding: 20px;
 
   &:before {
-    content: '+';
+    content: "+";
     font-size: 40px;
     display: block;
     height: 80px;
@@ -80,7 +80,7 @@ const UploadButton = styled(FileUploadButton)<{ uploading: boolean }>`
     box-sizing: border-box;
   }
 
-  ${({ uploading }) => (uploading ? loadingMixin : '')}
+  ${({ uploading }) => (uploading ? loadingMixin : "")}
 `
 
 const Thumbnail = styled.div`

@@ -1,9 +1,9 @@
-import Link from 'next/link'
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import RowSection from 'components/RowSection'
-import ColumnSection from 'components/ColumnSection'
-import Text from 'components/Text'
+import Link from "next/link"
+import React, { useState } from "react"
+import styled from "styled-components"
+import RowSection from "components/RowSection"
+import ColumnSection from "components/ColumnSection"
+import Text from "components/Text"
 
 const QeA = styled.div`
   border-bottom: 1px solid var(--color-primary-800);
@@ -93,7 +93,7 @@ const FAQs: React.FC = () => {
               out {}
               <a href='https://forum.cryptostats.community'>our forum</a> to find protocols that
               need to {}
-              be added or updated on CryptoStats, and then update them in{' '}
+              be added or updated on CryptoStats, and then update them in{" "}
               <Link href='/editor'>the editor</Link>.
             </Text>
             <Text tag='p' type='description' mb='8'>

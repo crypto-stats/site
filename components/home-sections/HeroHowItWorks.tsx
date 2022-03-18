@@ -1,10 +1,10 @@
-import React from 'react'
-import Link from 'next/link'
-import styled from 'styled-components'
-import Text from 'components/Text'
-import RowSection from 'components/RowSection'
-import ColumnSection from 'components/ColumnSection'
-import Button from 'components/Button'
+import React from "react"
+import Link from "next/link"
+import styled from "styled-components"
+import Text from "components/Text"
+import RowSection from "components/RowSection"
+import ColumnSection from "components/ColumnSection"
+import Button from "components/Button"
 
 const HeroCtas = styled.div`
   width: 100%;
@@ -26,7 +26,7 @@ const Hero: React.FC = () => {
           How it works
         </Text>
         <Text tag='h2' type='content_display' mb='40'>
-          It's easy: just <strong>publish an adapter</strong> or <strong>use the Dataset</strong>{' '}
+          It's easy: just <strong>publish an adapter</strong> or <strong>use the Dataset</strong>{" "}
           created by the Comunity to create and view anything you want.
         </Text>
         <HeroCtas>

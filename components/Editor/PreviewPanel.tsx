@@ -1,9 +1,9 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Adapter } from '@cryptostats/sdk'
-import { useCompiler } from 'hooks/compiler'
-import Attribute from '../Attribute'
-import SubAdapterPreview from './SubAdapterPreview'
+import React from "react"
+import styled from "styled-components"
+import { Adapter } from "@cryptostats/sdk"
+import { useCompiler } from "hooks/compiler"
+import Attribute from "../Attribute"
+import SubAdapterPreview from "./SubAdapterPreview"
 
 const Container = styled.div`
   margin: 16px;

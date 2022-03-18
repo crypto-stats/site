@@ -1,8 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Top } from 'react-spaces'
-import CloseIcon from 'components/CloseIcon'
-import { useConsole } from 'hooks/console'
+import React from "react"
+import styled from "styled-components"
+import { Top } from "react-spaces"
+import CloseIcon from "components/CloseIcon"
+import { useConsole } from "hooks/console"
 
 const Header = styled(Top)`
   background: #2f2f2f;
@@ -65,7 +65,7 @@ const BottomTitleBar: React.FC<BottomTitleBarProps> = ({ view, onSetView }) => {
   return (
     <Header size={40}>
       <div>
-        {view === BottomView.ERRORS ? 'Errors' : 'Console'}
+        {view === BottomView.ERRORS ? "Errors" : "Console"}
         {view === BottomView.CONSOLE && <ClearButton onClick={clearConsole}>Clear</ClearButton>}
       </div>
 

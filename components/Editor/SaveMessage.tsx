@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
+import React, { useEffect, useState } from "react"
+import styled from "styled-components"
 
 const SaveMessagePopup = styled.div`
   position: absolute;
@@ -24,9 +24,9 @@ const SaveMessage: React.FC = () => {
       }
     }
 
-    window.document.addEventListener('keydown', saveBlocker, false)
+    window.document.addEventListener("keydown", saveBlocker, false)
 
-    return () => window.document.removeEventListener('keydown', saveBlocker)
+    return () => window.document.removeEventListener("keydown", saveBlocker)
   }, [])
 
   return (

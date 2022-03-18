@@ -7,7 +7,7 @@
   "proseWrap": "preserve",
   "quoteProps": "as-needed",
   "semi": false,
-  "singleQuote": true,
+  "singleQuote": false,
   "tabWidth": 2,
   "useTabs": false
 }

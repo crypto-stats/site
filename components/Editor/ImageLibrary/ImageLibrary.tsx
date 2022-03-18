@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import EditorModal from '../EditorModal'
-import ImagePreview from './ImagePreview'
-import ImageGalery from './ImageGalery'
+import React, { useEffect, useState } from "react"
+import EditorModal from "../EditorModal"
+import ImagePreview from "./ImagePreview"
+import ImageGalery from "./ImageGalery"
 
 interface ImageLibraryProps {
   open: boolean
@@ -23,7 +23,7 @@ const ImageLibrary: React.FC<ImageLibraryProps> = ({ open, close, editor }) => {
       isOpen={open}
       onClose={close}
       title='Image Library'
-      buttons={[{ label: 'Return to Editor', onClick: close }]}
+      buttons={[{ label: "Return to Editor", onClick: close }]}
       width='100%'
       height='70%'
       onBack={selectedImage ? () => setSelectedImage(null) : null}

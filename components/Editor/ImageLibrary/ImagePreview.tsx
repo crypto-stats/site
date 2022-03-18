@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
-import { IPFS_GATEWAY } from 'resources/constants'
-import DropdownButton from 'components/DropdownButton'
+import React, { useEffect, useState } from "react"
+import styled from "styled-components"
+import { IPFS_GATEWAY } from "resources/constants"
+import DropdownButton from "components/DropdownButton"
 
 const ImagePreviewContainer = styled.div`
   height: 100px;

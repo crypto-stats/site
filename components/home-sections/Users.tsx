@@ -1,8 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
-import RowSection from 'components/RowSection'
-import ColumnSection from 'components/ColumnSection'
-import Text from 'components/Text'
+import React from "react"
+import styled from "styled-components"
+import RowSection from "components/RowSection"
+import ColumnSection from "components/ColumnSection"
+import Text from "components/Text"
 
 const UsedByGrid = styled.div`
   display: flex;
@@ -33,7 +33,7 @@ const Users: React.FC = () => {
       <RowSection mt='32'>
         <ColumnSection from='2' to='12'>
           <UsedByGrid>
-            <img src='clients/bloomberg.png' alt='Bloomberg' style={{ height: '26px' }} />
+            <img src='clients/bloomberg.png' alt='Bloomberg' style={{ height: "26px" }} />
             <img src='clients/cryptofees.png' alt='CryptoFees' />
             <img src='clients/cryptotester.png' alt='CryptoTesters' />
           </UsedByGrid>

@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import type { Adapter } from '@cryptostats/sdk'
-import QueryForm from './QueryForm'
-import Text from 'components/Text'
+import React, { useState } from "react"
+import styled from "styled-components"
+import type { Adapter } from "@cryptostats/sdk"
+import QueryForm from "./QueryForm"
+import Text from "components/Text"
 
 const AttributeContainer = styled.dl`
   & + & {
@@ -109,7 +109,7 @@ const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter, openB
 
   const title = details.metadata.name
     ? `${details.metadata.name}${
-        details.metadata.subtitle ? ' - ' + details.metadata.subtitle : ''
+        details.metadata.subtitle ? " - " + details.metadata.subtitle : ""
       } (${details.id})`
     : details.id
 
@@ -133,7 +133,7 @@ const AdapterPreview: React.FC<AdapterPreviewProps> = ({ details, adapter, openB
 
               {Object.entries(details.metadata).map(([key, val]: [string, any]) => (
                 <Attribute name={key} key={key}>
-                  {typeof val === 'string' && val.indexOf('data:') === 0 ? (
+                  {typeof val === "string" && val.indexOf("data:") === 0 ? (
                     <>
                       <Icon src={val} />
                     </>

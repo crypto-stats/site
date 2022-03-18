@@ -1,8 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
-import Link from 'next/link'
-import Text from 'components/Text'
-import IconRound from 'components/IconRound'
+import React from "react"
+import styled from "styled-components"
+import Link from "next/link"
+import Text from "components/Text"
+import IconRound from "components/IconRound"
 
 const List = styled.ul`
   padding: 0;
@@ -46,7 +46,7 @@ const Card = styled.a<{ icon?: string }>`
   }
 
   @media (min-width: 768px) {
-    ${({ icon }) => (icon ? 'grid-template-columns: auto 1fr;' : 'grid-template-columns: 100%;')}
+    ${({ icon }) => (icon ? "grid-template-columns: auto 1fr;" : "grid-template-columns: 100%;")}
   }
 `
 

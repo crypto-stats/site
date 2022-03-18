@@ -1,9 +1,9 @@
-import React, { useEffect, useRef } from 'react'
-import MonacoEditor, { useMonaco } from '@monaco-editor/react'
-import { MarkerSeverity } from './Editor/types'
+import React, { useEffect, useRef } from "react"
+import MonacoEditor, { useMonaco } from "@monaco-editor/react"
+import { MarkerSeverity } from "./Editor/types"
 
 // @ts-ignore
-import sdkTypeDefs from '!raw-loader!generated/cryptostats-sdk.d.ts'
+import sdkTypeDefs from "!raw-loader!generated/cryptostats-sdk.d.ts"
 
 interface EditorProps {
   onValidated: (code: string, markers: any[]) => void
@@ -39,19 +39,19 @@ const Editor: React.FC<EditorProps> = ({
       monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
         target: monaco.languages.typescript.ScriptTarget.ES2019,
         allowNonTsExtensions: true,
-        lib: ['es2018'],
+        lib: ["es2018"],
       })
       monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
         target: monaco.languages.typescript.ScriptTarget.ES2019,
         allowNonTsExtensions: true,
-        lib: ['es2018'],
+        lib: ["es2018"],
       })
 
-      var sdkUri = 'ts:filename/sdk.d.ts'
+      var sdkUri = "ts:filename/sdk.d.ts"
       monaco.languages.typescript.javascriptDefaults.addExtraLib(sdkTypeDefs, sdkUri)
       // When resolving definitions and references, the editor will try to use created models.
       // Creating a model for the library allows "peek definition/references" commands to work with the library.
-      monaco.editor.createModel(sdkTypeDefs, 'typescript', monaco.Uri.parse(sdkUri))
+      monaco.editor.createModel(sdkTypeDefs, "typescript", monaco.Uri.parse(sdkUri))
 
       return () => monaco.editor.getModels().forEach((model: any) => model.dispose())
     }
@@ -77,7 +77,7 @@ const Editor: React.FC<EditorProps> = ({
         }
       }}
       onChange={(newCode?: string) => {
-        code.current = newCode || ''
+        code.current = newCode || ""
         if (onChange && newCode) {
           onChange(newCode)
         }

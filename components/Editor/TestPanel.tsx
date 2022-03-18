@@ -1,9 +1,9 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Fill } from 'react-spaces'
-import { Adapter } from '@cryptostats/sdk'
-import { useCompiler } from 'hooks/compiler'
-import SubAdapterTest from './SubAdapterTest'
+import React from "react"
+import styled from "styled-components"
+import { Fill } from "react-spaces"
+import { Adapter } from "@cryptostats/sdk"
+import { useCompiler } from "hooks/compiler"
+import SubAdapterTest from "./SubAdapterTest"
 
 const Container = styled(Fill)`
   > .spaces-resize-handle {

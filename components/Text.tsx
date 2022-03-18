@@ -1,5 +1,5 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from "react"
+import styled from "styled-components"
 
 const TagElement = styled.div<{
   type?: string
@@ -9,17 +9,17 @@ const TagElement = styled.div<{
   align?: string
   weight?: string
 }>`
-  font-family: 'Inter';
+  font-family: "Inter";
   margin: 0;
   padding: 0;
   font-weight: 400;
-  margin-top: ${({ mt }) => (mt ? mt : '0')}px;
-  margin-bottom: ${({ mb }) => (mb ? mb : '0')}px;
+  margin-top: ${({ mt }) => (mt ? mt : "0")}px;
+  margin-bottom: ${({ mb }) => (mb ? mb : "0")}px;
 
   ${({ align }) => align && `text-align: ${align};`}
 
   ${({ type }) =>
-    type === 'display' &&
+    type === "display" &&
     `
     font-weight: 700;
     font-size: 24px;
@@ -34,7 +34,7 @@ const TagElement = styled.div<{
   `}
 
   ${({ type }) =>
-    type === 'title' &&
+    type === "title" &&
     `
     font-weight: 600;
     font-size: 36px;
@@ -42,7 +42,7 @@ const TagElement = styled.div<{
   `}
 
   ${({ type }) =>
-    type === 'subtitle' &&
+    type === "subtitle" &&
     `
     font-weight: 500;
     font-size: 24px;
@@ -51,7 +51,7 @@ const TagElement = styled.div<{
   `}
 
   ${({ type }) =>
-    type === 'title_highlight' &&
+    type === "title_highlight" &&
     `
     font-size: 24px;
     color: #0477F4;
@@ -59,7 +59,7 @@ const TagElement = styled.div<{
   `}
 
   ${({ type }) =>
-    type === 'h3' &&
+    type === "h3" &&
     `
     font-weight: 700;
     font-size: 22px;
@@ -68,7 +68,7 @@ const TagElement = styled.div<{
   `}
 
   ${({ type }) =>
-    type === 'label' &&
+    type === "label" &&
     `
     font-size: 12px;
     color: #838383;
@@ -77,7 +77,7 @@ const TagElement = styled.div<{
   `}
 
   ${({ type }) =>
-    type === 'description' &&
+    type === "description" &&
     `
     font-size: 16px;
     color: #717D8A;
@@ -85,14 +85,14 @@ const TagElement = styled.div<{
   `}
 
   ${({ type }) =>
-    type === 'content' &&
+    type === "content" &&
     `
     font-size: 16px;
     color: #002750;
     line-height: 21px;
   `}
   ${({ type }) =>
-    type === 'content_small' &&
+    type === "content_small" &&
     `
     font-size: 14px;
     color: #002750;
@@ -100,7 +100,7 @@ const TagElement = styled.div<{
   `}
   
   ${({ type }) =>
-    type === 'content_big' &&
+    type === "content_big" &&
     `
     font-size: 18px;
     color: #002750;
@@ -108,7 +108,7 @@ const TagElement = styled.div<{
   `}
 
   ${({ type }) =>
-    type === 'content_display' &&
+    type === "content_display" &&
     `
     font-weight: 400;
     font-size: 24px;
@@ -117,7 +117,7 @@ const TagElement = styled.div<{
   `}
 
   ${({ type }) =>
-    type === 'pre' &&
+    type === "pre" &&
     `
     font-family: monospace;
     font-size: 16px;
@@ -126,15 +126,15 @@ const TagElement = styled.div<{
     word-break: break-all;
   `}
 
-  font-weight: ${({ weight }) => (weight ? weight : '')};
+  font-weight: ${({ weight }) => (weight ? weight : "")};
 
   ${({ color }) => color && `color: var(--color-${color});`}
 `
 
 interface TextProps {
-  tag?: React.ElementType | 'div'
-  mt?: string | '0'
-  mb?: string | '0'
+  tag?: React.ElementType | "div"
+  mt?: string | "0"
+  mb?: string | "0"
   type?: string
   className?: string
   color?: string

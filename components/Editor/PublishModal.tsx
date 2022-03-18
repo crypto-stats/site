@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import { useENSName } from 'use-ens-name'
-import { useWeb3React } from '@web3-react/core'
-import EditorModal, { Button as ModalButton } from './EditorModal'
-import { useAdapter } from 'hooks/local-adapters'
-import Button from 'components/Button'
-import WalletConnections from 'components/WalletConnections'
-import Text from 'components/Text'
+import React, { useState } from "react"
+import styled from "styled-components"
+import { useENSName } from "use-ens-name"
+import { useWeb3React } from "@web3-react/core"
+import EditorModal, { Button as ModalButton } from "./EditorModal"
+import { useAdapter } from "hooks/local-adapters"
+import Button from "components/Button"
+import WalletConnections from "components/WalletConnections"
+import Text from "components/Text"
 
 const AlignButtons = styled.div`
   display: flex;
@@ -88,8 +88,8 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
     majorVersion = `${parseInt(major) + 1}.0.0`
 
     updateVersion = (newVersion: string) => {
-      const startLineNumber = adapter!.code.substr(0, versionRegexResult.index).split('\n').length
-      const startColumn = adapter!.code.split('\n')[startLineNumber - 1].indexOf(version) + 1
+      const startLineNumber = adapter!.code.substr(0, versionRegexResult.index).split("\n").length
+      const startColumn = adapter!.code.split("\n")[startLineNumber - 1].indexOf(version) + 1
       const endColumn = startColumn + version.length
 
       const edit = {
@@ -97,7 +97,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
         text: newVersion,
       }
 
-      editorRef.current.executeEdits('version', [edit])
+      editorRef.current.executeEdits("version", [edit])
       save(adapter!.code.replace(version, newVersion), adapter!.name, newVersion)
     }
   }
@@ -109,9 +109,9 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
     setHash(null)
   }
 
-  const returnButton = { label: 'Return to Editor', onClick: close }
+  const returnButton = { label: "Return to Editor", onClick: close }
 
-  let title = 'Publish Your Adapter on IPFS'
+  let title = "Publish Your Adapter on IPFS"
   let buttons: ModalButton[] = []
   let content = null
 
@@ -121,7 +121,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
     switch (state) {
       case STATE.INIT:
         if (hasUpdatedVersion) {
-          buttons = [returnButton, { label: 'Continue', onClick: prepareSignature, disabled }]
+          buttons = [returnButton, { label: "Continue", onClick: prepareSignature, disabled }]
           content = (
             <div>
               <Text tag='p' color='white' type='description'>
@@ -138,7 +138,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
           content = (
             <>
               <Text tag='p' color='white' type='description'>
-                This adapter has already been deployed with the current version{' '}
+                This adapter has already been deployed with the current version{" "}
                 <strong>{adapter!.version}</strong>.
               </Text>
               <Text tag='p' color='white' type='description' mb='24'>
@@ -175,7 +175,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
         } else if (!hash) {
           content = <div>Loading...</div>
         } else {
-          buttons = [returnButton, { label: 'Sign adapter', onClick: sign, disabled }]
+          buttons = [returnButton, { label: "Sign adapter", onClick: sign, disabled }]
           content = (
             <div>
               <Text tag='p' color='white' type='description'>
@@ -198,7 +198,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
         break
 
       case STATE.PUBLISHED:
-        title = '🎉  Adapter Successfully Published!'
+        title = "🎉  Adapter Successfully Published!"
         buttons = [returnButton]
         content = (
           <div>

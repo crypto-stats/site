@@ -1,7 +1,7 @@
-import React from 'react'
-import RowSection from 'components/RowSection'
-import ColumnSection from 'components/ColumnSection'
-import Text from 'components/Text'
+import React from "react"
+import RowSection from "components/RowSection"
+import ColumnSection from "components/ColumnSection"
+import Text from "components/Text"
 
 const Investors: React.FC = () => {
   return (

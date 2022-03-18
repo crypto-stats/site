@@ -1,9 +1,9 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Fill, Top } from 'react-spaces'
-import PreviewPanel from './PreviewPanel'
-import TestPanel from './TestPanel'
-import { useEditorState } from 'hooks/editor-state'
+import React from "react"
+import styled from "styled-components"
+import { Fill, Top } from "react-spaces"
+import PreviewPanel from "./PreviewPanel"
+import TestPanel from "./TestPanel"
+import { useEditorState } from "hooks/editor-state"
 
 const Container = styled(Fill)`
   color: #ffffff;
@@ -44,7 +44,7 @@ const IconPreview = styled.i`
   display: inline-block;
   height: 16px;
   width: 16px;
-  background-image: url('/Icon/View.svg');
+  background-image: url("/Icon/View.svg");
   background-position: center;
   background-repeat: no-repeat;
   margin-right: 8px;
@@ -53,7 +53,7 @@ const IconTest = styled.i`
   display: inline-block;
   height: 16px;
   width: 16px;
-  background-image: url('/Icon/Flag.svg');
+  background-image: url("/Icon/Flag.svg");
   background-position: center;
   background-repeat: no-repeat;
   margin-right: 8px;
@@ -65,7 +65,7 @@ enum TAB {
 }
 
 const RightPanel = () => {
-  const [tab, setTab] = useEditorState('right-tab', TAB.PREVIEW)
+  const [tab, setTab] = useEditorState("right-tab", TAB.PREVIEW)
 
   return (
     <Container>

@@ -1,5 +1,5 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from "react"
+import styled from "styled-components"
 
 const NotificationBarContainer = styled.section`
   background-color: var(--color-primary-200);

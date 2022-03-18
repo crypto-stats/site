@@ -1,11 +1,11 @@
-import React, { useState, Fragment } from 'react'
-import Link from 'next/link'
-import styled from 'styled-components'
-import { XOctagon, AlertTriangle, Info } from 'react-feather'
-import { useAdapter } from 'hooks/local-adapters'
-import PublishModal from './PublishModal'
-import { MarkerSeverity } from './types'
-import Button from 'components/Button'
+import React, { useState, Fragment } from "react"
+import Link from "next/link"
+import styled from "styled-components"
+import { XOctagon, AlertTriangle, Info } from "react-feather"
+import { useAdapter } from "hooks/local-adapters"
+import PublishModal from "./PublishModal"
+import { MarkerSeverity } from "./types"
+import Button from "components/Button"
 
 const Container = styled.div`
   flex: 1;
@@ -28,7 +28,7 @@ const PublishButton = styled(Button)`
   position: relative;
 
   &:disabled:hover:before {
-    content: 'Fix all errors to allow publishing';
+    content: "Fix all errors to allow publishing";
     display: block;
     position: absolute;
     z-index: 100;
@@ -53,7 +53,7 @@ const ErrorChip = styled.button<{ color?: string }>`
   background: #222222;
   border-radius: 4px;
   padding: 4px 8px;
-  color: ${({ color }) => color || '#7c8190'};
+  color: ${({ color }) => color || "#7c8190"};
   font-size: 12px;
   margin: 4px;
   border: none;
@@ -110,13 +110,13 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({
   return (
     <Container>
       <Side>
-        <ErrorChip onClick={onMarkerClick} color={infos.length > 0 ? '#cccccc' : undefined}>
+        <ErrorChip onClick={onMarkerClick} color={infos.length > 0 ? "#cccccc" : undefined}>
           <Info size={12} /> {infos.length}
         </ErrorChip>
-        <ErrorChip onClick={onMarkerClick} color={warnings.length > 0 ? 'yellow' : undefined}>
+        <ErrorChip onClick={onMarkerClick} color={warnings.length > 0 ? "yellow" : undefined}>
           <AlertTriangle size={12} /> {warnings.length}
         </ErrorChip>
-        <ErrorChip onClick={onMarkerClick} color={errors.length > 0 ? 'red' : undefined}>
+        <ErrorChip onClick={onMarkerClick} color={errors.length > 0 ? "red" : undefined}>
           <XOctagon size={12} /> {errors.length}
         </ErrorChip>
         <ErrorChip onClick={onConsoleClick}>Console</ErrorChip>
@@ -130,7 +130,7 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({
                 <IPFSLink>
                   Last published to IPFS as {lastPublication.cid.substr(0, 6)}...
                   {lastPublication.cid.substr(-4)}
-                  {' (v'}
+                  {" (v"}
                   {lastPublication.version})
                 </IPFSLink>
               </Link>
@@ -139,7 +139,7 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({
             <PublishButton
               onClick={() => setShowModal(true)}
               disabled={errors.length > 0}
-              className={'primary'}
+              className={"primary"}
             >
               Publish to IPFS
             </PublishButton>

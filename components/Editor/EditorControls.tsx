@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
-import styled from 'styled-components'
+import React, { useEffect, useRef, useState } from "react"
+import styled from "styled-components"
 
 const Container = styled.div`
   display: flex;
@@ -83,7 +83,7 @@ const EditorControls: React.FC<{ editorRef: any }> = ({ editorRef }) => {
 
   return (
     <Container>
-      <Button disabled={!undoEnabled} onClick={() => editorRef.current.trigger('controls', 'undo')}>
+      <Button disabled={!undoEnabled} onClick={() => editorRef.current.trigger("controls", "undo")}>
         <svg
           fill='none'
           stroke='currentColor'
@@ -99,7 +99,7 @@ const EditorControls: React.FC<{ editorRef: any }> = ({ editorRef }) => {
         </svg>
       </Button>
 
-      <Button disabled={!redoEnabled} onClick={() => editorRef.current.trigger('controls', 'redo')}>
+      <Button disabled={!redoEnabled} onClick={() => editorRef.current.trigger("controls", "redo")}>
         <svg
           fill='none'
           stroke='currentColor'

@@ -1,10 +1,10 @@
-import React from 'react'
-import styled from 'styled-components'
-import Link from 'next/link'
-import RowSection from 'components/RowSection'
-import ColumnSection from 'components/ColumnSection'
-import Text from 'components/Text'
-import Button from 'components/Button'
+import React from "react"
+import styled from "styled-components"
+import Link from "next/link"
+import RowSection from "components/RowSection"
+import ColumnSection from "components/ColumnSection"
+import Text from "components/Text"
+import Button from "components/Button"
 
 const DaoSectionWrapper = styled.section`
   background-color: var(--color-primary-400);

@@ -1,9 +1,9 @@
-import Button from 'components/Button'
-import InputField from 'components/InputField'
-import Text from 'components/Text'
-import { usePlausible } from 'next-plausible'
-import React, { useState } from 'react'
-import styled from 'styled-components'
+import Button from "components/Button"
+import InputField from "components/InputField"
+import Text from "components/Text"
+import { usePlausible } from "next-plausible"
+import React, { useState } from "react"
+import styled from "styled-components"
 
 const Container = styled.div`
   background-color: var(--color-white);
@@ -104,13 +104,13 @@ interface QueryProps {
 
 const functionToParamNames = (fn: Function) => {
   const match = /\(((?:\w+, )*(?:\w+)?)\)/.exec(fn.toString())
-  return match ? match[1].split(',').map((name: string) => name.trim()) : []
+  return match ? match[1].split(",").map((name: string) => name.trim()) : []
 }
 
 const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, adapter }) => {
   const plausible = usePlausible()
   const [open, setOpen] = useState(!!openByDefault)
-  const [values, setValues] = useState([...new Array(fn.length)].map(() => ''))
+  const [values, setValues] = useState([...new Array(fn.length)].map(() => ""))
   const [running, setRunning] = useState(false)
   const [result, setResult] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -120,7 +120,7 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, adapter }) => 
   const execute = async () => {
     setRunning(true)
 
-    plausible('execute-adapter-query', {
+    plausible("execute-adapter-query", {
       props: {
         adapter,
         query: id,

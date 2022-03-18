@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from "react"
 import {
   ViewPort,
   Top,
@@ -9,39 +9,39 @@ import {
   Bottom,
   BottomResizable,
   Right,
-} from 'react-spaces'
-import { useRouter } from 'next/router'
-import { LOG_LEVEL } from '@cryptostats/sdk'
-import { useWeb3React } from '@web3-react/core'
-import styled from 'styled-components'
-import { useENSName } from 'use-ens-name'
-import Button from 'components/Button'
-import CodeEditor from 'components/CodeEditor'
-import ConnectionButton from 'components/ConnectionButton'
-import FileList from 'components/FileList'
-import { useAdapter, newModule } from 'hooks/local-adapters'
-import { useCompiler } from 'hooks/compiler'
-import { useConsole } from 'hooks/console'
-import { emptyAdapter } from 'resources/templates'
-import PrimaryFooter from './PrimaryFooter'
-import RightPanel from './RightPanel'
-import Tabs from './Tabs'
-import EmptyState from './EmptyState'
-import EditorModal from './EditorModal'
-import NewAdapterForm from './NewAdapterForm'
-import CloseIcon from 'components/CloseIcon'
-import { MarkerSeverity } from './types'
-import ErrorPanel from './ErrorPanel'
-import { usePlausible } from 'next-plausible'
-import { useEditorState } from '../../hooks/editor-state'
-import EditorControls from './EditorControls'
-import Console from './Console'
-import BottomTitleBar, { BottomView } from './BottomTitleBar'
-import SaveMessage from './SaveMessage'
-import ImageLibrary from './ImageLibrary/ImageLibrary'
+} from "react-spaces"
+import { useRouter } from "next/router"
+import { LOG_LEVEL } from "@cryptostats/sdk"
+import { useWeb3React } from "@web3-react/core"
+import styled from "styled-components"
+import { useENSName } from "use-ens-name"
+import Button from "components/Button"
+import CodeEditor from "components/CodeEditor"
+import ConnectionButton from "components/ConnectionButton"
+import FileList from "components/FileList"
+import { useAdapter, newModule } from "hooks/local-adapters"
+import { useCompiler } from "hooks/compiler"
+import { useConsole } from "hooks/console"
+import { emptyAdapter } from "resources/templates"
+import PrimaryFooter from "./PrimaryFooter"
+import RightPanel from "./RightPanel"
+import Tabs from "./Tabs"
+import EmptyState from "./EmptyState"
+import EditorModal from "./EditorModal"
+import NewAdapterForm from "./NewAdapterForm"
+import CloseIcon from "components/CloseIcon"
+import { MarkerSeverity } from "./types"
+import ErrorPanel from "./ErrorPanel"
+import { usePlausible } from "next-plausible"
+import { useEditorState } from "../../hooks/editor-state"
+import EditorControls from "./EditorControls"
+import Console from "./Console"
+import BottomTitleBar, { BottomView } from "./BottomTitleBar"
+import SaveMessage from "./SaveMessage"
+import ImageLibrary from "./ImageLibrary/ImageLibrary"
 
 const Header = styled(Top)`
-  background-image: url('/editor_logo.png');
+  background-image: url("/editor_logo.png");
   background-size: 140px;
   background-color: #2f2f2f;
   background-position: center;
@@ -166,7 +166,7 @@ const CollapseButton = styled.button<{ open?: boolean }>`
   font-weight: bold;
 
   &:before {
-    content: '${({ open }) => (open ? '<' : '>')}';
+    content: "${({ open }) => (open ? "<" : ">")}";
   }
 
   &:hover {
@@ -189,7 +189,7 @@ const LeftSidebarFooter = styled(Bottom)`
 
 const FillWithStyledResize = styled(Fill)<{ side: string }>`
   > .spaces-resize-handle {
-    ${({ side }) => 'border-' + side}: solid 2px #4a4a4d;
+    ${({ side }) => "border-" + side}: solid 2px #4a4a4d;
     box-sizing: border-box;
   }
 `
@@ -201,7 +201,7 @@ const PrimaryFill = styled(FillWithStyledResize)`
     }
 
     &:before {
-      content: 'The CryptoStats editor is not available on mobile devices 😢';
+      content: "The CryptoStats editor is not available on mobile devices 😢";
       height: 100%;
       display: flex;
       align-items: center;
@@ -215,9 +215,9 @@ const PrimaryFill = styled(FillWithStyledResize)`
 `
 
 const formatLog = (val: any) => {
-  if (val.toString() === '[object Object]') {
+  if (val.toString() === "[object Object]") {
     return JSON.stringify(val, null, 2)
-  } else if (typeof val === 'string') {
+  } else if (typeof val === "string") {
     return `"${val}"`
   }
   return val.toString()
@@ -226,11 +226,11 @@ const formatLog = (val: any) => {
 const Editor: React.FC = () => {
   const router = useRouter()
   const plausible = usePlausible()
-  const [fileName, setFileName] = useEditorState<string | null>('open-file', null)
+  const [fileName, setFileName] = useEditorState<string | null>("open-file", null)
   const [started, setStarted] = useState(false)
-  const [leftCollapsed, setLeftCollapsed] = useEditorState('left-collapsed', false)
+  const [leftCollapsed, setLeftCollapsed] = useEditorState("left-collapsed", false)
   const [newAdapterModalOpen, setNewAdapterModalOpen] = useState(false)
-  const [filter, setFilter] = useState('')
+  const [filter, setFilter] = useState("")
   const [markers, setMarkers] = useState<any[]>([])
   const [imageLibraryOpen, setImageLibraryOpen] = useState(false)
   const [bottomView, setBottomView] = useState(BottomView.NONE)
@@ -243,7 +243,7 @@ const Editor: React.FC = () => {
 
   useEffect(() => {
     if (module && adapter && (module.name !== adapter.name || module.version !== adapter.version)) {
-      const name = module.name && module.name.length > 0 ? module.name : 'Unnamed Adapter'
+      const name = module.name && module.name.length > 0 ? module.name : "Unnamed Adapter"
       save(adapter.code, name, module.version || null)
     }
   }, [module])
@@ -252,13 +252,13 @@ const Editor: React.FC = () => {
     if (router.query.adapter) {
       const { adapter, ...query } = router.query
       setFileName(adapter as string)
-      router.replace({ pathname: '/editor', query })
+      router.replace({ pathname: "/editor", query })
     }
   }, [router.query])
 
   useEffect(() => {
     if (imageLibraryOpen) {
-      plausible('open-image-library')
+      plausible("open-image-library")
     }
   }, [imageLibraryOpen])
 
@@ -270,17 +270,17 @@ const Editor: React.FC = () => {
   }
 
   return (
-    <ViewPort style={{ background: '#0f1011' }}>
+    <ViewPort style={{ background: "#0f1011" }}>
       <Header size={64} order={1}>
         <SaveMessage />
 
-        <CloseButton onClick={() => router.push('/discover')}>X Close</CloseButton>
+        <CloseButton onClick={() => router.push("/discover")}>X Close</CloseButton>
 
         <HeaderRight>
           <NewAdapterButton onClick={() => setNewAdapterModalOpen(true)}>
             New Adapter
           </NewAdapterButton>
-          <WalletButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</WalletButton>
+          <WalletButton>{account ? name || account.substr(0, 10) : "Connect Wallet"}</WalletButton>
         </HeaderRight>
       </Header>
       <PrimaryFill side='right'>
@@ -298,7 +298,7 @@ const Editor: React.FC = () => {
                 value={filter}
                 onChange={(e: any) => setFilter(e.target.value)}
               />
-              <ClearButton onClick={() => setFilter('')}>
+              <ClearButton onClick={() => setFilter("")}>
                 <CloseIcon />
               </ClearButton>
             </FilterBox>
@@ -353,7 +353,7 @@ const Editor: React.FC = () => {
                           onLog: (level: LOG_LEVEL, ...args: any[]) =>
                             addLine({
                               level: level.toString(),
-                              value: args.map(formatLog).join(' '),
+                              value: args.map(formatLog).join(" "),
                             }),
                         })
                       }
@@ -412,15 +412,15 @@ const Editor: React.FC = () => {
         title='Create new adapter'
         buttons={[
           {
-            label: 'Return to Editor',
+            label: "Return to Editor",
             onClick: () => setNewAdapterModalOpen(false),
           },
           {
-            label: 'Create Blank Adapter',
+            label: "Create Blank Adapter",
             onClick: () => {
-              plausible('new-adapter', {
+              plausible("new-adapter", {
                 props: {
-                  template: 'blank',
+                  template: "blank",
                 },
               })
 

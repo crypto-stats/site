@@ -1,6 +1,6 @@
-import React from 'react'
-import Link from 'next/link'
-import styled from 'styled-components'
+import React from "react"
+import Link from "next/link"
+import styled from "styled-components"
 
 const BreadcrumbContainer = styled.ol`
   display: flex;
@@ -13,7 +13,7 @@ const BreadcrumbItem = styled.li`
   list-style: none;
 
   &:after {
-    content: '/';
+    content: "/";
     display: inline-block;
     color: #888;
   }

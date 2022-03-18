@@ -1,4 +1,4 @@
-import React, { Fragment, useRef } from 'react'
+import React, { Fragment, useRef } from "react"
 
 interface FileUploadButtonProps {
   onUploaded: (cid: string, type: string, name: string) => void
@@ -18,8 +18,8 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
 
     onUploadStart && onUploadStart()
 
-    const req = await fetch('/api/upload-image', {
-      method: 'POST',
+    const req = await fetch("/api/upload-image", {
+      method: "POST",
       body: fileUploaded,
       headers: {
         type: fileUploaded.type,
@@ -39,7 +39,7 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
         type='file'
         ref={hiddenFileInput}
         onChange={handleChange}
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
       />
     </Fragment>
   )

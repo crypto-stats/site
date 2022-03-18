@@ -1,10 +1,10 @@
-import InputField from 'components/InputField'
-import { useEditorState } from 'hooks/editor-state'
-import { useConsole } from 'hooks/console'
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import { LOG_LEVEL } from '@cryptostats/sdk'
-import Button from 'components/Button'
+import InputField from "components/InputField"
+import { useEditorState } from "hooks/editor-state"
+import { useConsole } from "hooks/console"
+import React, { useState } from "react"
+import styled from "styled-components"
+import { LOG_LEVEL } from "@cryptostats/sdk"
+import Button from "components/Button"
 
 const Container = styled.div`
   background-color: #444;
@@ -96,7 +96,7 @@ interface QueryProps {
 
 const functionToParamNames = (fn: Function) => {
   const match = /\(((?:\w+, )*(?:\w+)?)\)/.exec(fn.toString())
-  return match ? match[1].split(',').map((name: string) => name.trim()) : []
+  return match ? match[1].split(",").map((name: string) => name.trim()) : []
 }
 
 enum STATUS {
@@ -117,7 +117,7 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, storageKey }) 
   const [open, setOpen] = useEditorState(`${storageKey}-open`, !!openByDefault)
   const [storedValues, setStoredValues] = useEditorState(
     `${storageKey}-values`,
-    JSON.stringify([...new Array(fn.length)].map(() => ''))
+    JSON.stringify([...new Array(fn.length)].map(() => ""))
   )
   const [state, setState] = useState<State>({
     status: STATUS.READY,

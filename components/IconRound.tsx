@@ -1,9 +1,9 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from "react"
+import styled from "styled-components"
 
 const IcoRound = styled.div<{ color?: string; size?: string }>`
   ${({ size }) =>
-    size && size === 'small'
+    size && size === "small"
       ? `
     width: var(--spaces-7);
     height: var(--spaces-7);
@@ -14,7 +14,7 @@ const IcoRound = styled.div<{ color?: string; size?: string }>`
   `}
 
   border-radius: 100%;
-  background-color: ${({ color }) => 'var(--color-' + color + ')'};
+  background-color: ${({ color }) => "var(--color-" + color + ")"};
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,15 +1,15 @@
-import React from 'react'
-import Link from 'next/link'
-import HeroCard from './HeroCard'
-import Text from 'components/Text'
-import RowSection from 'components/RowSection'
-import ColumnSection from 'components/ColumnSection'
-import Button from 'components/Button'
+import React from "react"
+import Link from "next/link"
+import HeroCard from "./HeroCard"
+import Text from "components/Text"
+import RowSection from "components/RowSection"
+import ColumnSection from "components/ColumnSection"
+import Button from "components/Button"
 
 const formatNum = (num: number) =>
-  num.toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
+  num.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
   })
 
 const Hero: React.FC<{ sampleData: any }> = ({ sampleData }) => {

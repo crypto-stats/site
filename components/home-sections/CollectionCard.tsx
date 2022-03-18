@@ -1,9 +1,9 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Position, Positionable } from './Positionable'
-import collectionMetadata from 'resources/collection-metadata'
-import IconRound from 'components/IconRound'
-import Text from 'components/Text'
+import React from "react"
+import styled from "styled-components"
+import { Position, Positionable } from "./Positionable"
+import collectionMetadata from "resources/collection-metadata"
+import IconRound from "components/IconRound"
+import Text from "components/Text"
 
 const Card = styled(Positionable)`
   width: 100%;

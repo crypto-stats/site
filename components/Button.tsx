@@ -1,6 +1,6 @@
-import React from 'react'
-import styled, { css, keyframes } from 'styled-components'
-import { Edit } from 'react-feather'
+import React from "react"
+import styled, { css, keyframes } from "styled-components"
+import { Edit } from "react-feather"
 
 const ForkIcon: React.FC = () => (
   <svg
@@ -53,7 +53,7 @@ const loadingMixin = css`
   cursor: default;
 
   &:before {
-    content: '';
+    content: "";
     width: ${spinnerSize}px;
     height: ${spinnerSize}px;
     border-radius: ${spinnerSize}px;
@@ -68,10 +68,10 @@ const loadingMixin = css`
 `
 
 const ButtonElement = styled.button<ButtonElementProps>`
-  font-family: 'Inter';
+  font-family: "Inter";
   display: flex;
-  width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
-  min-width: ${({ width }) => (width === 'auto' ? `auto` : `160px`)};
+  width: ${({ fullWidth }) => (fullWidth ? "100%" : "auto")};
+  min-width: ${({ width }) => (width === "auto" ? `auto` : `160px`)};
   border: none;
   border-radius: 4px;
   box-shadow: none;
@@ -102,10 +102,10 @@ const ButtonElement = styled.button<ButtonElementProps>`
     background-color: #999;
   }
 
-  ${({ loading }) => (loading ? loadingMixin : '')}
+  ${({ loading }) => (loading ? loadingMixin : "")}
 
   ${({ variant }) =>
-    variant === 'outline' &&
+    variant === "outline" &&
     `
       background-color: var(--color-white);
       color: var(--color-primary);
@@ -118,7 +118,7 @@ const ButtonElement = styled.button<ButtonElementProps>`
   `}
 
   ${({ variant }) =>
-    variant === 'secondary' &&
+    variant === "secondary" &&
     `
       background-color: var(--color-primary-200);
       color: #0477F4;
@@ -138,7 +138,7 @@ const ButtonElement = styled.button<ButtonElementProps>`
 
   ${({ size }) =>
     size &&
-    size === 'large' &&
+    size === "large" &&
     `
     padding: var(--spaces-3) var(--spaces-5);
 
@@ -193,13 +193,13 @@ const Button: React.FC<ButtonProps> = ({
 
   if (icon) {
     switch (icon) {
-      case 'Edit':
+      case "Edit":
         svgIcon = <Edit size='16' />
         break
-      case 'Fork':
+      case "Fork":
         svgIcon = <ForkIcon />
         break
-      case 'Discord':
+      case "Discord":
         svgIcon = <DiscordIcon />
         break
     }
@@ -224,7 +224,7 @@ const Button: React.FC<ButtonProps> = ({
 }
 
 Button.defaultProps = {
-  className: 'primary',
+  className: "primary",
 }
 
 export default Button

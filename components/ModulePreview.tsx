@@ -1,8 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
-import { List, Adapter, Module } from '@cryptostats/sdk'
-import Attribute from './Attribute'
-import QueryForm from './Editor/QueryForm'
+import React from "react"
+import styled from "styled-components"
+import { List, Adapter, Module } from "@cryptostats/sdk"
+import Attribute from "./Attribute"
+import QueryForm from "./Editor/QueryForm"
 
 const ModuleCard = styled.div`
   background: #e5e5e5;

@@ -1,17 +1,17 @@
-import React, { useState } from 'react'
-import { LOG_LEVEL } from '@cryptostats/sdk'
-import collectionMetadata, { Parameter, Query } from 'resources/collection-metadata'
-import styled from 'styled-components'
-import Button from './Button'
-import InputField from './InputField'
-import { usePlausible } from 'next-plausible'
-import { getSDK } from 'utils/sdk'
-import Text from 'components/Text'
+import React, { useState } from "react"
+import { LOG_LEVEL } from "@cryptostats/sdk"
+import collectionMetadata, { Parameter, Query } from "resources/collection-metadata"
+import styled from "styled-components"
+import Button from "./Button"
+import InputField from "./InputField"
+import { usePlausible } from "next-plausible"
+import { getSDK } from "utils/sdk"
+import Text from "components/Text"
 
 const SectionWrapper = styled.section<{ noMargin?: boolean }>`
   padding: 32px 40px;
 
-  ${({ noMargin }) => (noMargin ? 'padding: 0 40px;' : '')}
+  ${({ noMargin }) => (noMargin ? "padding: 0 40px;" : "")}
 `
 
 const SectionHighlight = styled(SectionWrapper)`
@@ -42,7 +42,7 @@ const CheckBtn = styled.input`
   margin-right: 14px;
 
   &:before {
-    content: '';
+    content: "";
     width: 10px;
     height: 10px;
     transform: scale(0);
@@ -132,7 +132,7 @@ const SwitchTitle = styled.div<{ selected: boolean }>`
   font-size: 16px;
   margin-bottom: 8px;
   font-weight: bold;
-  color: ${({ selected }) => (selected ? '#0477f4' : '#262626')};
+  color: ${({ selected }) => (selected ? "#0477f4" : "#262626")};
 `
 
 const SwitchDescription = styled.div`
@@ -192,37 +192,37 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
   const [selectedQuery, setSelectedQuery] = useState<null | number>(queries.length === 1 ? 0 : null)
   const [paramValues, setParamValues] = useState<string[]>([])
   const [executing, setExecuting] = useState(false)
-  const [output, setOutput] = useState('')
+  const [output, setOutput] = useState("")
   const [includeMetadata, setIncludeMetadata] = useState(false)
 
   const changeMode = (newMode: MODE) => {
     setMode(newMode)
-    setOutput('')
+    setOutput("")
   }
 
   const appendOutput = (output: string) => setOutput((_output: string) => `${_output}\n${output}`)
 
   const selectQuery = (e: any) => setSelectedQuery(parseInt(e.target.value))
 
-  let url = ''
-  let queryId = ''
+  let url = ""
+  let queryId = ""
   if (selectedQuery !== null) {
     queryId = queries![selectedQuery].id
     url = `https://api.cryptostats.community/api/v1/${listId}/${queryId}`
     if (paramValues.length > 0) {
-      url += '/' + paramValues.join(',')
+      url += "/" + paramValues.join(",")
     }
 
     if (!includeMetadata) {
-      url += '?metadata=false'
+      url += "?metadata=false"
     }
   }
 
   const execute = async () => {
     setExecuting(true)
-    setOutput('')
+    setOutput("")
 
-    plausible('execute-collection-query', {
+    plausible("execute-collection-query", {
       props: {
         mode: MODE[mode],
         listId,
@@ -236,12 +236,12 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
         const json = await req.json()
         setOutput(JSON.stringify(json, null, 2))
       } else {
-        appendOutput('Initializing CryptoStats SDK')
+        appendOutput("Initializing CryptoStats SDK")
 
         const sdk = getSDK({
           onLog: (level: LOG_LEVEL, ...args: any[]) =>
             appendOutput(
-              `${LOG_LEVEL[level]}: ${args.map((arg: any) => JSON.stringify(arg)).join(' ')}`
+              `${LOG_LEVEL[level]}: ${args.map((arg: any) => JSON.stringify(arg)).join(" ")}`
             ),
         })
 
@@ -278,7 +278,7 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
         <Text tag='p' type='content_big'>
           Queries &amp; Parameters
         </Text>
-        <div style={{ margin: '12px 0' }}>
+        <div style={{ margin: "12px 0" }}>
           {queries.map((query: Query, i: number) => {
             const selected = selectedQuery === i
             const params = query.parameters || []
@@ -305,7 +305,7 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
                         {param.name}
                         <ParamInput
                           name={param.name}
-                          value={paramValues[i] || ''}
+                          value={paramValues[i] || ""}
                           onChange={(newVal: any) =>
                             setParamValues((_currentVals: string[]) => {
                               const newParamList = []
@@ -331,7 +331,7 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
             )
           })}
         </div>
-        <div style={{ marginBottom: '12px' }}>
+        <div style={{ marginBottom: "12px" }}>
           <QueryLabel>
             <CheckBtn
               type='checkbox'
@@ -369,7 +369,7 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
         {selectedQuery !== null && (
           <div>
             {mode === MODE.REST ? (
-              <div style={{ marginBottom: '32px' }}>
+              <div style={{ marginBottom: "32px" }}>
                 <>
                   <Text tag='p' type='label' mt='24' mb='16'>
                     Request URL
@@ -402,12 +402,12 @@ const APIExplainer: React.FC<APIExplainerProps> = ({ listId }) => {
     const list = sdk.getCollection('${listId}');
     await list.fetchAdapters();
 
-    const result = await list.${includeMetadata ? 'executeQueryWithMetadata' : 'executeQuery'}(${[
+    const result = await list.${includeMetadata ? "executeQueryWithMetadata" : "executeQuery"}(${[
                   queryId,
                   ...paramValues,
                 ]
                   .map(val => JSON.stringify(val))
-                  .join(', ')});
+                  .join(", ")});
     console.log(result);
   })()`}</CodeField>
               </div>

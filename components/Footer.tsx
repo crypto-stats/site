@@ -1,9 +1,9 @@
-import React from 'react'
-import Link from 'next/link'
-import styled from 'styled-components'
-import RowSection from './RowSection'
-import ColumnSection from './ColumnSection'
-import Text from './Text'
+import React from "react"
+import Link from "next/link"
+import styled from "styled-components"
+import RowSection from "./RowSection"
+import ColumnSection from "./ColumnSection"
+import Text from "./Text"
 
 const FooterContainer = styled(RowSection)`
   padding: var(--spaces-12) 0;
@@ -11,7 +11,7 @@ const FooterContainer = styled(RowSection)`
 `
 
 const Logo = styled.div`
-  background-image: url('/logo-all-black.svg');
+  background-image: url("/logo-all-black.svg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;

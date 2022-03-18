@@ -1,8 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
-import Link from 'next/link'
-import Text from 'components/Text'
-import { ArrowRight } from 'react-feather'
+import React from "react"
+import styled from "styled-components"
+import Link from "next/link"
+import Text from "components/Text"
+import { ArrowRight } from "react-feather"
 
 const ListHead = styled.div`
   background-color: white;

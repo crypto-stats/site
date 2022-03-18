@@ -1,16 +1,16 @@
-import React from 'react'
-import styled from 'styled-components'
-import Header from '../Header'
-import Footer from '../Footer'
-import Breadcrumbs from './Breadcrumbs'
-import NotificationBar from 'components/NotificationBar'
-import Hero from 'components/Hero'
-import RowSection from 'components/RowSection'
-import ColumnSection from 'components/ColumnSection'
+import React from "react"
+import styled from "styled-components"
+import Header from "../Header"
+import Footer from "../Footer"
+import Breadcrumbs from "./Breadcrumbs"
+import NotificationBar from "components/NotificationBar"
+import Hero from "components/Hero"
+import RowSection from "components/RowSection"
+import ColumnSection from "components/ColumnSection"
 
 const LayoutContainer = styled.div<{ page?: string }>`
   ${({ page }) =>
-    page === 'adapter' || page === 'collection'
+    page === "adapter" || page === "collection"
       ? `
     background: var(--color-primary-400);
   `
@@ -19,7 +19,7 @@ const LayoutContainer = styled.div<{ page?: string }>`
 
 const HeaderContainer = styled.div<{ page?: string }>`
   ${({ page }) =>
-    page === 'adapter' || page === 'collection'
+    page === "adapter" || page === "collection"
       ? `
     box-shadow: 0 3px 18px 0 rgba(0, 0, 0, 0.05);
     background-color: #ffffff;
@@ -61,46 +61,46 @@ const TranquilLayout: React.FC<TranquilLayoutProps> = ({
 }) => {
   // Set the columns for each page
   const PageColumns = {
-    page: 'discover',
+    page: "discover",
     HeroColumns: {
-      from: '4',
-      to: '9',
+      from: "4",
+      to: "9",
     },
     BodyColumns: {
-      from: '3',
-      to: '10',
+      from: "3",
+      to: "10",
     },
     SidebarColumns: {
-      from: '10',
-      to: '13',
+      from: "10",
+      to: "13",
     },
   }
 
   switch (page) {
-    case 'discover':
-      PageColumns.page = 'discover'
-      PageColumns.HeroColumns.from = '3'
-      PageColumns.HeroColumns.to = '11'
-      PageColumns.BodyColumns.from = '3'
-      PageColumns.BodyColumns.to = '11'
+    case "discover":
+      PageColumns.page = "discover"
+      PageColumns.HeroColumns.from = "3"
+      PageColumns.HeroColumns.to = "11"
+      PageColumns.BodyColumns.from = "3"
+      PageColumns.BodyColumns.to = "11"
       break
 
-    case 'collection':
-      PageColumns.page = 'collection'
-      PageColumns.HeroColumns.from = '2'
-      PageColumns.HeroColumns.to = '12'
-      PageColumns.BodyColumns.from = '2'
-      PageColumns.BodyColumns.to = '12'
+    case "collection":
+      PageColumns.page = "collection"
+      PageColumns.HeroColumns.from = "2"
+      PageColumns.HeroColumns.to = "12"
+      PageColumns.BodyColumns.from = "2"
+      PageColumns.BodyColumns.to = "12"
       break
 
-    case 'adapter':
-      PageColumns.page = 'discover'
-      PageColumns.HeroColumns.from = '1'
-      PageColumns.HeroColumns.to = '10'
-      PageColumns.BodyColumns.from = '1'
-      PageColumns.BodyColumns.to = '10'
-      PageColumns.SidebarColumns.from = '10'
-      PageColumns.SidebarColumns.to = '13'
+    case "adapter":
+      PageColumns.page = "discover"
+      PageColumns.HeroColumns.from = "1"
+      PageColumns.HeroColumns.to = "10"
+      PageColumns.BodyColumns.from = "1"
+      PageColumns.BodyColumns.to = "10"
+      PageColumns.SidebarColumns.from = "10"
+      PageColumns.SidebarColumns.to = "13"
       break
   }
 

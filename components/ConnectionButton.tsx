@@ -1,12 +1,12 @@
-import React, { useState, useEffect, Fragment } from 'react'
-import { useWeb3React } from '@web3-react/core'
-import EditorModal from './Editor/EditorModal'
-import Button from 'components/Button'
+import React, { useState, useEffect, Fragment } from "react"
+import { useWeb3React } from "@web3-react/core"
+import EditorModal from "./Editor/EditorModal"
+import Button from "components/Button"
 import WalletConnections, {
   getForceDisconnect,
   injected,
   setForceDisconnect,
-} from './WalletConnections'
+} from "./WalletConnections"
 
 const ConnectionButton: React.FC = ({ children }) => {
   const [modalOpen, setModalOpen] = useState(false)
@@ -37,7 +37,7 @@ const ConnectionButton: React.FC = ({ children }) => {
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         title='Connect Wallet'
-        buttons={[{ label: 'Close', onClick: () => setModalOpen(false) }]}
+        buttons={[{ label: "Close", onClick: () => setModalOpen(false) }]}
       >
         {account ? (
           <div>

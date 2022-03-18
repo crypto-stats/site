@@ -1,8 +1,8 @@
-import React, { useLayoutEffect, useRef } from 'react'
-import styled from 'styled-components'
-import { Fill } from 'react-spaces'
-import { useConsole, Line } from 'hooks/console'
-import { LOG_LEVEL } from '@cryptostats/sdk'
+import React, { useLayoutEffect, useRef } from "react"
+import styled from "styled-components"
+import { Fill } from "react-spaces"
+import { useConsole, Line } from "hooks/console"
+import { LOG_LEVEL } from "@cryptostats/sdk"
 
 const ConsoleView = styled(Fill)`
   padding: 8px;
@@ -15,7 +15,7 @@ const ConsoleLine = styled.div<{ level: string }>`
   white-space: pre-wrap;
   word-break: break-all;
 
-  ${({ level }) => (level === LOG_LEVEL.ERROR.toString() ? 'color: red;' : '')}
+  ${({ level }) => (level === LOG_LEVEL.ERROR.toString() ? "color: red;" : "")}
 `
 
 const Console: React.FC = () => {
@@ -23,7 +23,7 @@ const Console: React.FC = () => {
   const bottomRef = useRef<any>(null)
 
   useLayoutEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [bottomRef.current, lines])
 
   return (

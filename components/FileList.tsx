@@ -1,6 +1,6 @@
-import React from 'react'
-import styled from 'styled-components'
-import { useAdapterList, AdapterWithID } from 'hooks/local-adapters'
+import React from "react"
+import styled from "styled-components"
+import { useAdapterList, AdapterWithID } from "hooks/local-adapters"
 
 const Container = styled.div`
   display: flex;
@@ -44,7 +44,7 @@ const ListItem = styled.li<{ selected?: boolean }>`
     color: white;
     font-weight: bold;
   `
-      : ''}
+      : ""}
 `
 
 interface FileListProps {
@@ -58,12 +58,12 @@ const FileList: React.FC<FileListProps> = ({ selected, onSelected, filter }) => 
 
   if (filter && filter.length > 0) {
     adapters = adapters.filter(
-      (a: AdapterWithID) => (a.name || 'New').toLowerCase().indexOf(filter.toLowerCase()) !== -1
+      (a: AdapterWithID) => (a.name || "New").toLowerCase().indexOf(filter.toLowerCase()) !== -1
     )
   }
 
   adapters = adapters.sort((a: AdapterWithID, b: AdapterWithID) =>
-    (a.name || 'New').localeCompare(b.name || 'New')
+    (a.name || "New").localeCompare(b.name || "New")
   )
 
   return (

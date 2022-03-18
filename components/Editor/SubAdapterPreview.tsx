@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import { Adapter } from '@cryptostats/sdk'
-import Attribute from '../Attribute'
-import { IPFS_GATEWAY } from 'resources/constants'
+import React, { useState } from "react"
+import styled from "styled-components"
+import { Adapter } from "@cryptostats/sdk"
+import Attribute from "../Attribute"
+import { IPFS_GATEWAY } from "resources/constants"
 
 const Container = styled.div``
 
@@ -37,14 +37,14 @@ const Icon = styled.img<{ size?: string }>`
   margin-right: 16px;
 
   ${({ size }) =>
-    size === 'small'
+    size === "small"
       ? `
     max-height: 16px;
     margin-right: 16px;
   `
       : ``}
   ${({ size }) =>
-    size === 'large'
+    size === "large"
       ? `
     max-height: 32px;
     margin-right: 32px;

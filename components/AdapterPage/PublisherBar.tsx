@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
-import styled from 'styled-components'
-import { useRouter } from 'next/router'
-import collectionMetadata, { DEFAULT_FORUM_CATEGORY } from 'resources/collection-metadata'
+import React, { useEffect } from "react"
+import styled from "styled-components"
+import { useRouter } from "next/router"
+import collectionMetadata, { DEFAULT_FORUM_CATEGORY } from "resources/collection-metadata"
 
 const Container = styled.div`
   display: flex;
@@ -62,20 +62,20 @@ const PublisherBar: React.FC<PublisherBarProps> = ({
 
   const params = new URLSearchParams()
   params.append(
-    'title',
-    `${previous ? 'Updated Adapter' : 'New Adapter'}${name ? ` - ${name}` : ''}${
-      version ? ` v${version}` : ''
+    "title",
+    `${previous ? "Updated Adapter" : "New Adapter"}${name ? ` - ${name}` : ""}${
+      version ? ` v${version}` : ""
     }`
   )
   params.append(
-    'body',
-    `I've published ${previous ? 'an updated adapter' : 'a new adapter'} for ${name || ''}
+    "body",
+    `I've published ${previous ? "an updated adapter" : "a new adapter"} for ${name || ""}
 
 https://cryptostats.community/discover/${collectionId}/${cid}
 `
   )
   params.append(
-    'category',
+    "category",
     collectionMetadata[collectionId as string]?.forumCategory || DEFAULT_FORUM_CATEGORY
   )
 
@@ -94,7 +94,7 @@ https://cryptostats.community/discover/${collectionId}/${cid}
           ))}
         </select>
         {} collection.
-        {collectionId !== 'adapter' && (
+        {collectionId !== "adapter" && (
           <PublishButton
             href={`https://forum.cryptostats.community/new-topic?${params.toString()}`}
             target='forum'

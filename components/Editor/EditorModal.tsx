@@ -1,8 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
-import ReactModal from 'react-modal'
-import ButtonComponent from '../Button'
-import { ChevronLeft, X } from 'react-feather'
+import React from "react"
+import styled from "styled-components"
+import ReactModal from "react-modal"
+import ButtonComponent from "../Button"
+import { ChevronLeft, X } from "react-feather"
 
 const ModalOverlay = styled.div<{ width?: string | number; height?: string | number }>`
   display: flex;
@@ -11,7 +11,7 @@ const ModalOverlay = styled.div<{ width?: string | number; height?: string | num
   background-color: transparent !important;
 
   &:before {
-    content: '';
+    content: "";
     position: absolute;
     width: 100%;
     height: 100%;
@@ -30,8 +30,8 @@ const ModalOverlay = styled.div<{ width?: string | number; height?: string | num
     display: flex;
     flex-direction: column;
     ${({ width, height }) => `
-      ${width ? `width: ${width};` : ''}
-      ${height ? `height: ${height};` : ''}
+      ${width ? `width: ${width};` : ""}
+      ${height ? `height: ${height};` : ""}
     `}
   }
 `
@@ -78,7 +78,7 @@ const HeaderButton = styled.button`
   }
 `
 
-ReactModal.setAppElement('#__next')
+ReactModal.setAppElement("#__next")
 
 export interface Button {
   label: string
@@ -145,7 +145,7 @@ const EditorModal: React.FC<ModalProps> = ({
             key={button.label}
             onClick={button.onClick}
             disabled={button.disabled}
-            variant={button.label === 'Return to Editor' ? 'outline' : 'primary'}
+            variant={button.label === "Return to Editor" ? "outline" : "primary"}
           >
             {button.label}
           </ButtonComponent>

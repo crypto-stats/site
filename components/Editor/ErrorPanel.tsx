@@ -1,6 +1,6 @@
-import React from 'react'
-import { Fill } from 'react-spaces'
-import styled from 'styled-components'
+import React from "react"
+import { Fill } from "react-spaces"
+import styled from "styled-components"
 
 const MarkerList = styled.ul`
   color: #c8c8c8;
