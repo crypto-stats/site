@@ -1,17 +1,17 @@
-import { useState } from 'react'
+import { useState } from "react"
 
 let state: { [key: string]: any } | null = null
 
-const storageKey = 'editor-state'
+const storageKey = "editor-state"
 
 export function getEditorState(key: string) {
   if (!state) {
-    const isServer = typeof window === 'undefined'
+    const isServer = typeof window === "undefined"
     if (isServer) {
       return null
     }
 
-    state = JSON.parse(window.localStorage.getItem(storageKey) || '{}')
+    state = JSON.parse(window.localStorage.getItem(storageKey) || "{}")
   }
 
   return key in state! ? state![key] : undefined

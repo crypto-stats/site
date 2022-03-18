@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState } from "react"
 
 export interface Line {
   level: string
@@ -20,7 +20,7 @@ const CompilerContext = React.createContext<{
   state: DEFAULT_STATE,
 
   setState() {
-    throw new Error('Not initialized')
+    throw new Error("Not initialized")
   },
 })
 

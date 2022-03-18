@@ -1,13 +1,13 @@
-import React, { useState, useEffect, Fragment } from 'react'
-import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next'
-import styled from 'styled-components'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
-import { useENSName, setRPC } from 'use-ens-name'
-import { useWeb3React } from '@web3-react/core'
-import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
-import TranquilLayout from 'components/layouts/TranquilLayout'
-import { useAdapterList, newModule } from 'hooks/local-adapters'
+import React, { useState, useEffect, Fragment } from "react"
+import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next"
+import styled from "styled-components"
+import { useRouter } from "next/router"
+import Link from "next/link"
+import { useENSName, setRPC } from "use-ens-name"
+import { useWeb3React } from "@web3-react/core"
+import { CryptoStatsSDK, Adapter } from "@cryptostats/sdk"
+import TranquilLayout from "components/layouts/TranquilLayout"
+import { useAdapterList, newModule } from "hooks/local-adapters"
 import {
   getCollectionNames,
   getModulesForCollection,
@@ -16,19 +16,19 @@ import {
   getAllVerifiedAdapters,
   getPreviousVersions,
   Version,
-} from 'utils/lists-chain'
-import AdapterPreviewList from 'components/AdapterPage/AdapterPreviewList'
-import Button from 'components/Button'
-import CodeViewer from 'components/CodeViewer'
-import VerifyForm from 'components/VerifyForm'
-import { CompilerProvider } from 'hooks/compiler'
-import PublisherBar from 'components/AdapterPage/PublisherBar'
-import MetaTags from 'components/MetaTags'
-import Text from 'components/Text'
-import { getENSCache } from 'utils/ens'
-import { usePlausible } from 'next-plausible'
+} from "utils/lists-chain"
+import AdapterPreviewList from "components/AdapterPage/AdapterPreviewList"
+import Button from "components/Button"
+import CodeViewer from "components/CodeViewer"
+import VerifyForm from "components/VerifyForm"
+import { CompilerProvider } from "hooks/compiler"
+import PublisherBar from "components/AdapterPage/PublisherBar"
+import MetaTags from "components/MetaTags"
+import Text from "components/Text"
+import { getENSCache } from "utils/ens"
+import { usePlausible } from "next-plausible"
 
-setRPC('https://api.mycryptoapi.com/eth')
+setRPC("https://api.mycryptoapi.com/eth")
 
 const VerifiedTick = styled.span`
   display: inline-flex;
@@ -45,7 +45,7 @@ const VerifiedTick = styled.span`
   justify-content: center;
 
   :before {
-    content: '✓';
+    content: "✓";
   }
 `
 
@@ -126,7 +126,7 @@ const AdapterInfo = styled.div`
 `
 
 const Attribute: React.FC<{ label: string }> = ({ label, children }) => {
-  if (label && label === 'Author') {
+  if (label && label === "Author") {
     return (
       <InfoBoxAuthor>
         <Text tag='p' type='label'>
@@ -144,7 +144,7 @@ const Attribute: React.FC<{ label: string }> = ({ label, children }) => {
       <Text tag='p' type='label'>
         {label}
       </Text>
-      {label === 'Collections' ? (
+      {label === "Collections" ? (
         <InfoBoxValueFullWidth tag='p' type='content_small'>
           {children}
         </InfoBoxValueFullWidth>
@@ -212,7 +212,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
       for (const adapter of adapters) {
         for (const publication of adapter.publications || []) {
           if (publication.cid === cid) {
-            plausible('edit-adapter', {
+            plausible("edit-adapter", {
               props: {
                 collectionId,
                 adapter: cid,
@@ -222,7 +222,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
             })
 
             router.push({
-              pathname: '/editor',
+              pathname: "/editor",
               query: { adapter: adapter.id },
             })
             return
@@ -231,7 +231,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
       }
     }
 
-    plausible('edit-adapter', {
+    plausible("edit-adapter", {
       props: {
         collectionId,
         adapter: cid,
@@ -247,9 +247,9 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         )
       : moduleDetails.sourceCode || moduleDetails.code
 
-    const adapterId = newModule(newCode, [{ cid, version: moduleDetails.version || '0.0.0' }])
+    const adapterId = newModule(newCode, [{ cid, version: moduleDetails.version || "0.0.0" }])
     router.push({
-      pathname: '/editor',
+      pathname: "/editor",
       query: { adapter: adapterId },
     })
   }
@@ -258,10 +258,10 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
     account && account.toLowerCase() === process.env.NEXT_PUBLIC_ADMIN_ACCOUNT?.toLowerCase()
 
   const breadcrumbs = [
-    { name: 'Home', path: '/' },
-    { name: 'Discover', path: '/discover' },
+    { name: "Home", path: "/" },
+    { name: "Discover", path: "/discover" },
   ]
-  if (collectionId !== 'adapter') {
+  if (collectionId !== "adapter") {
     breadcrumbs.push({ name: collectionId, path: `/discover/${collectionId}` })
   }
 
@@ -272,12 +272,12 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
   return (
     <CompilerProvider>
       <MetaTags
-        title={`${moduleDetails.name || ''} Adapter${
-          collectionId !== 'adapter' ? ` - ${collectionId}` : ''
+        title={`${moduleDetails.name || ""} Adapter${
+          collectionId !== "adapter" ? ` - ${collectionId}` : ""
         }`}
-        description={`The ${moduleDetails.name || ''} adapter ${
+        description={`The ${moduleDetails.name || ""} adapter ${
           moduleDetails.version && `(v${moduleDetails.version})`
-        } contains ${subadapters.length} subadapters: ${subadapterNames.join(', ')}`}
+        } contains ${subadapters.length} subadapters: ${subadapterNames.join(", ")}`}
       />
 
       <TranquilLayout
@@ -346,7 +346,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
                         <Link href={`/discover/${list}`} key={list}>
                           <a>{list}</a>
                         </Link>
-                        {i !== verifiedLists.length - 1 && ', '}
+                        {i !== verifiedLists.length - 1 && ", "}
                       </Fragment>
                     ))}
                   </Attribute>
@@ -357,7 +357,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
               )}
             </DetailsBox>
 
-            {isAdmin && collectionId !== 'adapter' && (
+            {isAdmin && collectionId !== "adapter" && (
               <div>
                 <VerifyForm
                   listId={collectionId}
@@ -414,7 +414,7 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { collectionId: s
   const collectionId = ctx.params!.collectionId as string
   let cid = ctx.params!.cid as string
 
-  if (cid.indexOf('Qm') != 0) {
+  if (cid.indexOf("Qm") != 0) {
     cid = await getCIDFromSlug(collectionId, cid)
   }
 
@@ -422,12 +422,12 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { collectionId: s
     executionTimeout: 70,
   })
 
-  const listModules = collectionId === 'adapter' ? [] : await getModulesForCollection(collectionId)
+  const listModules = collectionId === "adapter" ? [] : await getModulesForCollection(collectionId)
   const verified = listModules.indexOf(cid) !== -1
 
   const verifiedLists = await getCollectionsForAdapter(cid)
 
-  const list = sdk.getCollection('test')
+  const list = sdk.getCollection("test")
   const module = await list.fetchAdapterFromIPFS(cid)
 
   // TODO: only do this if verified
@@ -493,6 +493,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths,
-    fallback: 'blocking',
+    fallback: "blocking",
   }
 }

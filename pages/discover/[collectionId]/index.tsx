@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react'
-import Head from 'next/head'
-import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next'
-import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
-import styled from 'styled-components'
-import TranquilLayout from 'components/layouts/TranquilLayout'
-import APIExplainer from 'components/APIExplainer'
-import Button from 'components/Button'
-import AdapterCardList from 'components/AdapterCardList'
-import SiteModal from 'components/SiteModal'
-import { getCollectionNames, getModulesForCollection } from 'utils/lists-chain'
-import collectionMetadata, { CollectionMetadata } from 'resources/collection-metadata'
-import { usePlausible } from 'next-plausible'
-import { getSlug } from 'utils/adapters'
-import Text from 'components/Text'
-import IconRound from 'components/IconRound'
+import React, { useEffect, useState } from "react"
+import Head from "next/head"
+import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next"
+import { CryptoStatsSDK, Adapter } from "@cryptostats/sdk"
+import styled from "styled-components"
+import TranquilLayout from "components/layouts/TranquilLayout"
+import APIExplainer from "components/APIExplainer"
+import Button from "components/Button"
+import AdapterCardList from "components/AdapterCardList"
+import SiteModal from "components/SiteModal"
+import { getCollectionNames, getModulesForCollection } from "utils/lists-chain"
+import collectionMetadata, { CollectionMetadata } from "resources/collection-metadata"
+import { usePlausible } from "next-plausible"
+import { getSlug } from "utils/adapters"
+import Text from "components/Text"
+import IconRound from "components/IconRound"
 
 const Hero = styled.div`
   margin: var(--spaces-5) 0 0;
@@ -68,7 +68,7 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, collectionId, metadat
 
   useEffect(() => {
     if (showDataModal) {
-      plausible('open-data-modal')
+      plausible("open-data-modal")
     }
   }, [showDataModal])
 
@@ -78,7 +78,7 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, collectionId, metadat
     version: adapter.version,
     metadata: [`${adapter.subadapters.length} subadapters`],
     iconlist: adapter.subadapters.map((subadapter: SubAdapter) => ({
-      path: subadapter.icon || '', // TODO placeholder
+      path: subadapter.icon || "", // TODO placeholder
       title: subadapter.name,
     })),
     link: `/discover/${collectionId}/${adapter.slug || adapter.cid}`,
@@ -93,8 +93,8 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, collectionId, metadat
       <TranquilLayout
         page='collection'
         breadcrumbs={[
-          { name: 'Home', path: '/' },
-          { name: 'Discover', path: '/discover' },
+          { name: "Home", path: "/" },
+          { name: "Discover", path: "/discover" },
         ]}
         hero={
           <Hero>
@@ -119,7 +119,7 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, collectionId, metadat
             <CollectionDetails>
               <div>
                 <Text tag='span' type='label'>
-                  Adapters:{' '}
+                  Adapters:{" "}
                 </Text>
                 <Text tag='span' type='content'>
                   {adapters.length}
@@ -204,6 +204,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths: listNames.map((collectionId: string) => ({ params: { collectionId } })),
-    fallback: 'blocking',
+    fallback: "blocking",
   }
 }

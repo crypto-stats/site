@@ -1,11 +1,11 @@
-import { NextPage, GetStaticProps } from 'next'
-import Head from 'next/head'
-import styled from 'styled-components'
-import TranquilLayout from 'components/layouts/TranquilLayout'
-import { getCollectionNames, getModulesForCollection } from 'utils/lists-chain'
-import CardList from 'components/CardList'
-import collectionMetadata from 'resources/collection-metadata'
-import Text from 'components/Text'
+import { NextPage, GetStaticProps } from "next"
+import Head from "next/head"
+import styled from "styled-components"
+import TranquilLayout from "components/layouts/TranquilLayout"
+import { getCollectionNames, getModulesForCollection } from "utils/lists-chain"
+import CardList from "components/CardList"
+import collectionMetadata from "resources/collection-metadata"
+import Text from "components/Text"
 
 const HeroWrapper = styled.div`
   margin: var(--spaces-10) 0 0;

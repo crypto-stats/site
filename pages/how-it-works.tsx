@@ -1,15 +1,15 @@
-import { NextPage } from 'next'
-import Head from 'next/head'
-import styled from 'styled-components'
-import Header from 'components/Header'
-import Footer from 'components/Footer'
-import HeroHowItWorks from 'components/home-sections/HeroHowItWorks'
-import RowSection from 'components/RowSection'
-import ColumnSection from 'components/ColumnSection'
-import Text from 'components/Text'
+import { NextPage } from "next"
+import Head from "next/head"
+import styled from "styled-components"
+import Header from "components/Header"
+import Footer from "components/Footer"
+import HeroHowItWorks from "components/home-sections/HeroHowItWorks"
+import RowSection from "components/RowSection"
+import ColumnSection from "components/ColumnSection"
+import Text from "components/Text"
 
 const HeaderBackground = styled.div`
-  background-image: url('hiw_bg_head.png');
+  background-image: url("hiw_bg_head.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -48,11 +48,11 @@ const HowItWorks: NextPage = () => {
           <Text tag='p' type='content_big' mb='16'>
             Using the CryptoStats online, in browser, javascript editor (1) it's all you need to
             write and test your adapter. Choose from pre-made templates to speed up your coding or
-            use our powerfull SDK for easy pulling of data from different sources.{' '}
+            use our powerfull SDK for easy pulling of data from different sources.{" "}
           </Text>
           <Text tag='p' type='content_big' mb='16'>
             Then Publish and Sign your adapter whit your ETH Wallet (2) to publish it on IPFS (3)
-            and you are all set!{' '}
+            and you are all set!{" "}
           </Text>
         </ColumnSection>
         <ColumnSection from='7' to='12'>

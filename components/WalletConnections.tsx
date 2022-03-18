@@ -1,8 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
-import { useWeb3React } from '@web3-react/core'
-import { InjectedConnector } from '@web3-react/injected-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
+import React from "react"
+import styled from "styled-components"
+import { useWeb3React } from "@web3-react/core"
+import { InjectedConnector } from "@web3-react/injected-connector"
+import { WalletConnectConnector } from "@web3-react/walletconnect-connector"
 
 export const injected = new InjectedConnector({})
 
@@ -34,9 +34,9 @@ const ConnectorButton = styled.button<{ background: string }>`
   }
 
   &:before {
-    content: '';
+    content: "";
     display: block;
-    background: url('${({ background }) => background}');
+    background: url("${({ background }) => background}");
     width: 86px;
     height: 86px;
     background-repeat: no-repeat;
@@ -45,10 +45,10 @@ const ConnectorButton = styled.button<{ background: string }>`
   }
 `
 
-export const getForceDisconnect = () => window.localStorage.getItem('force-disconnect') === 'true'
+export const getForceDisconnect = () => window.localStorage.getItem("force-disconnect") === "true"
 
 export const setForceDisconnect = (val: boolean) =>
-  window.localStorage.setItem('force-disconnect', val.toString())
+  window.localStorage.setItem("force-disconnect", val.toString())
 
 const WalletConnections: React.FC = () => {
   const { activate } = useWeb3React()

@@ -1,4 +1,4 @@
-const { withPlausibleProxy } = require('next-plausible')
+const { withPlausibleProxy } = require("next-plausible")
 
 let config = {
   webpack: config => {
@@ -6,14 +6,14 @@ let config = {
       ...config,
       module: {
         ...config.module,
-        noParse: [require.resolve('typescript/lib/typescript.js')],
+        noParse: [require.resolve("typescript/lib/typescript.js")],
       },
     }
   },
 }
 
 config = withPlausibleProxy({
-  customDomain: 'https://analytics.cryptostats.community',
+  customDomain: "https://analytics.cryptostats.community",
 })(config)
 
 module.exports = config

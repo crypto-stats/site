@@ -1,11 +1,11 @@
-import { NextPage, GetStaticProps } from 'next'
-import { setRPC, useENSName } from 'use-ens-name'
-import styled from 'styled-components'
-import { CryptoStatsSDK } from '@cryptostats/sdk'
-import TranquilLayout from 'components/layouts/TranquilLayout'
-import { getENSCache } from 'utils/ens'
+import { NextPage, GetStaticProps } from "next"
+import { setRPC, useENSName } from "use-ens-name"
+import styled from "styled-components"
+import { CryptoStatsSDK } from "@cryptostats/sdk"
+import TranquilLayout from "components/layouts/TranquilLayout"
+import { getENSCache } from "utils/ens"
 
-setRPC('https://api.mycryptoapi.com/eth')
+setRPC("https://api.mycryptoapi.com/eth")
 
 const Row = styled.div`
   display: flex;
@@ -16,9 +16,9 @@ const Row = styled.div`
 
 const Col = styled.div<{ flex?: number; min?: number; align?: string }>`
   overflow: hidden;
-  ${({ flex }) => (flex ? `flex: ${flex};` : '')}
-  ${({ min }) => (min ? `min-width: ${min}px;` : '')}
-  ${({ align }) => (align ? `text-align: ${align};` : '')}
+  ${({ flex }) => (flex ? `flex: ${flex};` : "")}
+  ${({ min }) => (min ? `min-width: ${min}px;` : "")}
+  ${({ align }) => (align ? `text-align: ${align};` : "")}
   text-overflow: ellipsis;
 `
 
@@ -92,7 +92,7 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps> = async () => {
       totalVerifiedAdapters
     }
   }`
-  const { signers } = await sdk.graph.query('dmihal/cryptostats-adapter-registry-test', query)
+  const { signers } = await sdk.graph.query("dmihal/cryptostats-adapter-registry-test", query)
 
   const ensCache = await getENSCache(signers.map((signer: any) => signer.id))
 

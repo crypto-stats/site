@@ -1,4 +1,4 @@
-import { getENSName } from 'use-ens-name'
+import { getENSName } from "use-ens-name"
 
 export async function getENSCache(addresses: string[]) {
   const names = await Promise.all(

@@ -1,1 +1,1 @@
-export const IPFS_GATEWAY = 'https://gateway.pinata.cloud/'
+export const IPFS_GATEWAY = "https://gateway.pinata.cloud/"

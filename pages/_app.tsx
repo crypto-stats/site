@@ -1,12 +1,12 @@
-import React, { Fragment } from 'react'
-import { Web3ReactProvider } from '@web3-react/core'
-import { ethers } from 'ethers'
-import type { AppProps } from 'next/app'
-import Head from 'next/head'
-import { createGlobalStyle } from 'styled-components'
-import PlausibleProvider from 'next-plausible'
-import { runOnce } from 'hooks/lib'
-import { setENSCache } from 'use-ens-name'
+import React, { Fragment } from "react"
+import { Web3ReactProvider } from "@web3-react/core"
+import { ethers } from "ethers"
+import type { AppProps } from "next/app"
+import Head from "next/head"
+import { createGlobalStyle } from "styled-components"
+import PlausibleProvider from "next-plausible"
+import { runOnce } from "hooks/lib"
+import { setENSCache } from "use-ens-name"
 
 const GlobalStyle = createGlobalStyle`
   :root {

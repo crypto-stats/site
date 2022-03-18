@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react"
 // @ts-ignore
-import sampleModule from '!raw-loader!../components/sample-module.txt'
+import sampleModule from "!raw-loader!../components/sample-module.txt"
 
-const storageKey = 'localAdapters'
+const storageKey = "localAdapters"
 
 interface Publication {
   cid: string
@@ -21,7 +21,7 @@ export interface AdapterWithID extends Adapter {
 }
 
 const getStorage = () =>
-  typeof window === 'undefined' ? {} : JSON.parse(window.localStorage.getItem(storageKey) || '{}')
+  typeof window === "undefined" ? {} : JSON.parse(window.localStorage.getItem(storageKey) || "{}")
 
 const getStorageItem = (id: string) => getStorage()[id] || null
 
@@ -65,7 +65,7 @@ export const newModule = (code: string = sampleModule, publications: Publication
 
   const adapter: Adapter = {
     code,
-    name: 'New Module',
+    name: "New Module",
     publications,
     version: null,
   }
@@ -79,7 +79,7 @@ export const useAdapter = (id?: string | null) => {
 
   const save = (code: string, name: string | null, version: string | null) => {
     if (!id) {
-      throw new Error('ID not set')
+      throw new Error("ID not set")
     }
 
     const adapter = getStorageItem(id)
@@ -97,7 +97,7 @@ export const useAdapter = (id?: string | null) => {
     signer,
   }: { signature?: string; signer?: string | null; hash?: string | null } = {}) => {
     if (!id) {
-      throw new Error('ID not set')
+      throw new Error("ID not set")
     }
 
     const adapter = getStorageItem(id)
@@ -110,16 +110,16 @@ export const useAdapter = (id?: string | null) => {
       throw new Error(`Version ${adapter.version} is already published`)
     }
 
-    const req = await fetch('/api/upload-adapter', {
-      method: 'POST',
+    const req = await fetch("/api/upload-adapter", {
+      method: "POST",
       headers: {
-        'Content-type': 'application/json',
+        "Content-type": "application/json",
       },
       body: JSON.stringify({
         code: adapter.code,
         version: adapter.version,
         previousVersion: previousVersion?.cid || null,
-        language: 'typescript',
+        language: "typescript",
         signature,
         hash,
         signer,
@@ -149,7 +149,7 @@ export const useAdapter = (id?: string | null) => {
 
   const getSignableHash = async () => {
     if (!id) {
-      throw new Error('ID not set')
+      throw new Error("ID not set")
     }
 
     const adapter = getStorageItem(id)
@@ -162,16 +162,16 @@ export const useAdapter = (id?: string | null) => {
       throw new Error(`Version ${adapter.version} is already published`)
     }
 
-    const req = await fetch('/api/prepare-adapter', {
-      method: 'POST',
+    const req = await fetch("/api/prepare-adapter", {
+      method: "POST",
       headers: {
-        'Content-type': 'application/json',
+        "Content-type": "application/json",
       },
       body: JSON.stringify({
         code: adapter.code,
         version: adapter.version,
         previousVersion: previousVersion?.cid || null,
-        language: 'typescript',
+        language: "typescript",
       }),
     })
 
