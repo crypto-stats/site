@@ -25,6 +25,11 @@ import { usePlausible } from 'next-plausible'
 
 setRPC('https://api.mycryptoapi.com/eth')
 
+const collectionAdmins = process.env.NEXT_PUBLIC_COLLECTION_ADMINS
+  ? JSON.parse(process.env.NEXT_PUBLIC_COLLECTION_ADMINS.toLowerCase())
+  : {}
+
+
 const VerifiedTick = styled.span`
   display: inline-flex;
   background: var(--color-primary);
@@ -227,7 +232,10 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
     })
   }
 
-  const isAdmin = account && account.toLowerCase() === process.env.NEXT_PUBLIC_ADMIN_ACCOUNT?.toLowerCase()
+  const isAdmin = account && (
+    account.toLowerCase() === process.env.NEXT_PUBLIC_ADMIN_ACCOUNT?.toLowerCase()
+    || collectionAdmins[collectionId].indexOf(account.toLowerCase()) !== -1
+  )
 
   const breadcrumbs = [
     { name: 'Home', path: '/' },
