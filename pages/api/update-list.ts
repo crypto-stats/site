@@ -21,11 +21,11 @@ const proxyAbi = [
 
 const ZERO = '0x0000000000000000000000000000000000000000000000000000000000000000'
 
-const cidToBytes32 = (cid: string) =>
-  ethers.utils.hexlify(ethers.utils.base58.decode(cid).slice(2))
+const cidToBytes32 = (cid: string) => ethers.utils.hexlify(ethers.utils.base58.decode(cid).slice(2))
 
 const rpc = `https://goerli.infura.io/v3/${process.env.INFURA_KEY}`
 const registryAddress = '0xF22e79604434ea8213eb7D79fcEB854e5E4283f7'
+
 
 const collectionAdmins = process.env.NEXT_PUBLIC_COLLECTION_ADMINS
   ? JSON.parse(process.env.NEXT_PUBLIC_COLLECTION_ADMINS.toLowerCase())
@@ -39,7 +39,13 @@ function isSignerValid(signer: string, collectionId: string) {
   return signer.toLowerCase() !== process.env.NEXT_PUBLIC_ADMIN_ACCOUNT?.toLowerCase()
 }
 
-function verifyOperation(method: string, collectionId: string, cid: string, signature: string, previousVersion?: string) {
+function verifyOperation(
+  method: string,
+  listId: string,
+  cid: string,
+  signature: string,
+  previousVersion?: string
+) {
   let oldElement = ZERO
   let newElement = ZERO
   let message = ''
@@ -109,7 +115,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     transactions.push(newListTx.hash)
   }
 
-  const { oldElement, newElement } = verifyOperation(method, listId, cid, signature, previousVersion)
+  const { oldElement, newElement } = verifyOperation(
+    method,
+    listId,
+    cid,
+    signature,
+    previousVersion
+  )
 
   const proxyContract = new ethers.Contract(proxyAddress, proxyAbi, signer)
   const tx = await proxyContract.update(oldElement, newElement)

@@ -15,7 +15,7 @@ const Block = styled(Text)`
   margin: 0 7px;
   overflow: hidden;
   min-height: 80px;
-  opacity: .7;
+  opacity: 0.7;
   transition: var(--transition-fast);
 
   &:hover {
@@ -45,12 +45,12 @@ const ArrowBox = styled.div`
   display: flex;
   justify-content: center;
   margin: var(--spaces-3) 0;
-  opacity: .65;
+  opacity: 0.65;
 `
 
 const Arrow = styled.div<{ dashed?: boolean }>`
   width: 0;
-  border-left: ${({ dashed }) => dashed ? 'dashed' : 'solid'} 2px #0477f4;
+  border-left: ${({ dashed }) => (dashed ? 'dashed' : 'solid')} 2px #0477f4;
   position: relative;
   margin-bottom: 2px;
 
@@ -80,7 +80,8 @@ const BottomForkArrows = styled(ForkArrows)`
   bottom: 0;
   margin-bottom: 2px;
 
-  &:before, &:after {
+  &:before,
+  &:after {
     content: '';
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
@@ -120,7 +121,7 @@ const IconsGrid = styled.div`
   & > i + i {
     margin-left: var(--spaces-4);
   }
-  
+
   & > img {
     max-height: 40px;
     width: auto;
@@ -134,29 +135,39 @@ const Description: React.FC = () => {
   return (
     <RowSection alignItems="center">
       <ColumnSection from="2" to="6">
-        <Text tag="h3" type="title_highlight" mb="24">What is CryptoStats?</Text>
+        <Text tag="h3" type="title_highlight" mb="24">
+          What is CryptoStats?
+        </Text>
         <Text tag="p" type="content_big" mb="16">
           Data powers the world of crypto.
         </Text>
         <Text tag="p" type="content_big" mb="16">
-          We believe this data should not come from closed silos, but from open, transparent protocols.
+          We believe this data should not come from closed silos, but from open, transparent
+          protocols.
         </Text>
         <Text tag="p" type="content_big" mb="16">
           CryptoStats empowers any developer to contribute to an open, trustworthy dataset, and
           enables publishers to access this data for free.
         </Text>
         <Text tag="p" type="content_big" mb="16">
-          CryptoStats already powers many popular websites. But we need your help to take this to the next level.
+          CryptoStats already powers many popular websites. But we need your help to take this to
+          the next level.
         </Text>
-        <Text tag="p" type="content_big" mb="16">Want to know more?</Text>
+        <Text tag="p" type="content_big" mb="16">
+          Want to know more?
+        </Text>
         <Link href="/discover" passHref>
-          <Button variant="outline" size="large">See how it works</Button>
+          <Button variant="outline" size="large">
+            See how it works
+          </Button>
         </Link>
       </ColumnSection>
 
       <ColumnSection from="7" to="12">
         <Block>
-          <Text tag="p" type="label" align="center">Blockchains &amp; Protocols</Text>
+          <Text tag="p" type="label" align="center">
+            Blockchains &amp; Protocols
+          </Text>
           <IconsGrid>
             <Icon type="ethereum" />
             <Icon type="bitcoin" />
@@ -171,7 +182,9 @@ const Description: React.FC = () => {
           <SideArrows />
         </ArrowBox>
         <Block>
-          <Text tag="p" type="label" align="center">Indexers</Text>
+          <Text tag="p" type="label" align="center">
+            Indexers
+          </Text>
           <IconsGrid>
             <Icon type="zerion" />
             <Icon type="thegraph" />
@@ -183,16 +196,20 @@ const Description: React.FC = () => {
           <TopForkArrows />
         </ArrowBox>
         <CSBlock>
-          <Text tag="p" type="label" align="center">Normalization &amp; Curation</Text>
+          <Text tag="p" type="label" align="center">
+            Normalization &amp; Curation
+          </Text>
         </CSBlock>
         <ArrowBox>
           <Arrow />
           <BottomForkArrows />
         </ArrowBox>
         <Block>
-          <Text tag="p" type="label" align="center">Presentations</Text>
+          <Text tag="p" type="label" align="center">
+            Presentations
+          </Text>
           <IconsGrid>
-            <img src="clients/bloomberg.png" alt="Bloomberg" style={{height: "26px"}}/>
+            <img src="clients/bloomberg.png" alt="Bloomberg" style={{ height: '26px' }} />
             <img src="clients/cryptofees.png" alt="CryptoFees" />
             <img src="clients/cryptotester.png" alt="CryptoTesters" />
           </IconsGrid>

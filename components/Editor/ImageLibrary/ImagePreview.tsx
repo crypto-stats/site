@@ -46,9 +46,9 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({ editor, cid, type, close })
 
       const metadataNames: MetadataName[] = []
 
-      let result;
+      let result
       do {
-        result = NAME_REGEX.exec(value);
+        result = NAME_REGEX.exec(value)
         if (result) {
           metadataNames.push({
             code: result[0],
@@ -57,7 +57,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({ editor, cid, type, close })
             position: result.index,
           })
         }
-      } while (result);
+      } while (result)
 
       setMetadataNames(metadataNames)
     }
@@ -71,18 +71,18 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({ editor, cid, type, close })
       const currentCode = model.getValue()
       const slicePoint = name.position + name.code.length
       const newCode = `${currentCode.slice(0, slicePoint)}
-${name.whitespace}icon: sdk.ipfs.getDataURILoader('${cid}', '${type}'),${currentCode.slice(slicePoint)}`
+${name.whitespace}icon: sdk.ipfs.getDataURILoader('${cid}', '${type}'),${currentCode.slice(
+        slicePoint
+      )}`
 
       model.setValue(newCode)
       close()
-    }
+    },
   }))
 
   return (
     <Container>
-      <ImagePreviewContainer
-        style={{ backgroundImage: `url('${IPFS_GATEWAY}/ipfs/${cid}')` }}
-      />
+      <ImagePreviewContainer style={{ backgroundImage: `url('${IPFS_GATEWAY}/ipfs/${cid}')` }} />
 
       <div>{cid}</div>
       <div>({type})</div>

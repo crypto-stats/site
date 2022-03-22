@@ -61,17 +61,15 @@ interface BottomTitleBarProps {
 
 const BottomTitleBar: React.FC<BottomTitleBarProps> = ({ view, onSetView }) => {
   const { clear: clearConsole } = useConsole()
-  
+
   return (
     <Header size={40}>
       <div>
         {view === BottomView.ERRORS ? 'Errors' : 'Console'}
-        {view === BottomView.CONSOLE && (
-          <ClearButton onClick={clearConsole}>Clear</ClearButton>
-        )}
+        {view === BottomView.CONSOLE && <ClearButton onClick={clearConsole}>Clear</ClearButton>}
       </div>
 
-      <CloseButton onClick={() => onSetView(BottomView.NONE) }>
+      <CloseButton onClick={() => onSetView(BottomView.NONE)}>
         <CloseIcon />
       </CloseButton>
     </Header>

@@ -9,7 +9,7 @@ interface CompilerState {
   list: Collection | null
   module: Module | null
   error: string | null
-  processing: boolean 
+  processing: boolean
 }
 
 const DEFAULT_STATE = {
@@ -22,12 +22,14 @@ const DEFAULT_STATE = {
 }
 
 const CompilerContext = React.createContext<{
-  state: CompilerState,
+  state: CompilerState
   setState(state: CompilerState): void
 }>({
   state: DEFAULT_STATE,
 
-  setState() { throw new Error('Not initialized') },
+  setState() {
+    throw new Error('Not initialized')
+  },
 })
 
 interface EvaluateParams {
@@ -66,13 +68,14 @@ export const useCompiler = () => {
 export const CompilerProvider: React.FC = ({ children }) => {
   const [state, _setState] = useState<CompilerState>(DEFAULT_STATE)
 
-  const setState = (newState: CompilerState) => _setState((oldState: CompilerState) => {
-    if (oldState.list && oldState.list !== newState.list) {
-      oldState.list.cleanupModules()
-    }
+  const setState = (newState: CompilerState) =>
+    _setState((oldState: CompilerState) => {
+      if (oldState.list && oldState.list !== newState.list) {
+        oldState.list.cleanupModules()
+      }
 
-    return newState
-  })
+      return newState
+    })
 
   useEffect(() => {
     return () => {
@@ -82,7 +85,5 @@ export const CompilerProvider: React.FC = ({ children }) => {
     }
   }, [])
 
-  return (
-    <CompilerContext.Provider value={{ state, setState }}>{children}</CompilerContext.Provider>
-  )
+  return <CompilerContext.Provider value={{ state, setState }}>{children}</CompilerContext.Provider>
 }

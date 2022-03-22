@@ -44,7 +44,14 @@ async function sendUpdate(
   }
 }
 
-const VerifyForm: React.FC<VerifyFormProps> = ({ listId, listModules, cid, previousVersion, onVerified, previousVersions }) => {
+const VerifyForm: React.FC<VerifyFormProps> = ({
+  listId,
+  listModules,
+  cid,
+  previousVersion,
+  onVerified,
+  previousVersions,
+}) => {
   const [pending, setPending] = useState(false)
   const [selectedCid, setSelectedCid] = useState(previousVersion)
   const [otherCid, setOtherCid] = useState('')
@@ -112,7 +119,8 @@ const VerifyForm: React.FC<VerifyFormProps> = ({ listId, listModules, cid, previ
           <select value={selectedCid || undefined} onChange={e => setSelectedCid(e.target.value)}>
             {previousVersions.map(version => (
               <option key={version.cid} value={version.cid}>
-                {version.verified && (version.activeCollections.indexOf(listId) !== -1 ? '✅ ' : '✔️ ')}
+                {version.verified &&
+                  (version.activeCollections.indexOf(listId) !== -1 ? '✅ ' : '✔️ ')}
                 {version.version} ({version.cid})
               </option>
             ))}

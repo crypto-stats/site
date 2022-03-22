@@ -9,9 +9,9 @@ const ModalOverlay = styled.div`
   z-index: 10;
 
   & .modal-content {
-    background: #FFFFFF;
-    border: 1px solid #DDDDDD;
-    box-shadow: 0 8px 10px 0 rgba(0,0,0,0.12);
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.12);
     border-radius: 6px;
     margin: 40px 40px 0;
     max-width: 800px;
@@ -57,4 +57,4 @@ const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, children })
   )
 }
 
-export default EditorModal;
+export default EditorModal

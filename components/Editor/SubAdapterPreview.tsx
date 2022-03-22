@@ -4,8 +4,7 @@ import { Adapter } from '@cryptostats/sdk'
 import Attribute from '../Attribute'
 import { IPFS_GATEWAY } from 'resources/constants'
 
-const Container = styled.div`
-`
+const Container = styled.div``
 
 const Header = styled.div`
   border-top: solid 1px #4a4a4d;
@@ -33,18 +32,24 @@ const Value = styled.pre`
   font-size: 14px;
 `
 
-const Icon = styled.img<{size?: string}>`
+const Icon = styled.img<{ size?: string }>`
   width: auto;
   margin-right: 16px;
-  
-  ${({size})=> size === "small" ? `
+
+  ${({ size }) =>
+    size === 'small'
+      ? `
     max-height: 16px;
     margin-right: 16px;
-  ` : ``}
-  ${({size})=> size === "large" ? `
+  `
+      : ``}
+  ${({ size }) =>
+    size === 'large'
+      ? `
     max-height: 32px;
     margin-right: 32px;
-  ` : ``}
+  `
+      : ``}
 `
 
 interface SubAdapterPreviewProps {
@@ -61,7 +66,9 @@ const SubAdapterPreview: React.FC<SubAdapterPreviewProps> = ({ subadapter, openB
   if (!open) {
     return (
       <Header onClick={() => setOpen(true)}>
-        {metadata.icon?.cid && <Icon size="small" src={`${IPFS_GATEWAY}/ipfs/${metadata.icon.cid}`} />}
+        {metadata.icon?.cid && (
+          <Icon size="small" src={`${IPFS_GATEWAY}/ipfs/${metadata.icon.cid}`} />
+        )}
         {name || subadapter.id}
         {metadata.subtitle ? ` - ${metadata.subtitle}` : null}
       </Header>
@@ -71,7 +78,9 @@ const SubAdapterPreview: React.FC<SubAdapterPreviewProps> = ({ subadapter, openB
   return (
     <Container>
       <Header onClick={() => setOpen(false)}>
-        {metadata.icon?.cid && <Icon size="small" src={`${IPFS_GATEWAY}/ipfs/${metadata.icon.cid}`} />}
+        {metadata.icon?.cid && (
+          <Icon size="small" src={`${IPFS_GATEWAY}/ipfs/${metadata.icon.cid}`} />
+        )}
         {name || subadapter.id}
         {metadata.subtitle ? ` - ${metadata.subtitle}` : null}
       </Header>

@@ -43,7 +43,7 @@ const Logo = styled.a`
   height: 29px;
   cursor: pointer;
   margin: var(--spaces-2) 0;
-  
+
   @media (min-width: 1024px) {
     margin: var(--spaces-4) auto;
     margin: 0 0 0 0;
@@ -58,7 +58,7 @@ const Nav = styled.nav<{ open: boolean }>`
   left: 0;
   right: 0;
   width: 100%;
-  height: ${({ open }) => open ? '260px' : '0'};
+  height: ${({ open }) => (open ? '260px' : '0')};
   overflow: hidden;
   background: var(--color-white);
   transition: var(--transition-fast) height;
@@ -91,7 +91,6 @@ const NavItem = styled.div`
       margin-left: var(--spaces-4);
     }
   }
-
 `
 
 const NavLink = styled.a<{ active?: boolean }>`
@@ -112,7 +111,9 @@ const NavLink = styled.a<{ active?: boolean }>`
     margin: 20px 0;
   }
 
-  ${({ active }) => active && `
+  ${({ active }) =>
+    active &&
+    `
     font-weight: 700;
     color: var(--color-primary);
 
@@ -165,21 +166,23 @@ const Hamburger = styled.button<{ open: boolean }>`
     -o-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
   }
-  & span:nth-child(1){
+  & span:nth-child(1) {
     top: 0px;
     left: 0px;
   }
-  & span:nth-child(2){
+  & span:nth-child(2) {
     top: 13px;
     left: 0px;
     opacity: 1;
   }
-  & span:nth-child(3){
+  & span:nth-child(3) {
     bottom: 0px;
     left: 0px;
   }
 
-  ${({ open }) => open ? `
+  ${({ open }) =>
+    open
+      ? `
     & span:nth-child(1){
       -webkit-transform: translateY(12px) rotate(45deg);
       -ms-transform: translateY(12px) rotate(45deg);
@@ -195,7 +198,8 @@ const Hamburger = styled.button<{ open: boolean }>`
       -o-transform: translateY(-12px) rotate(-45deg);
       transform: translateY(-12px) rotate(-45deg);
     }
-  ` : ``}
+  `
+      : ``}
 `
 
 const Header: React.FC = () => {

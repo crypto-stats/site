@@ -14,12 +14,14 @@ const DEFAULT_STATE = {
 }
 
 const CompilerContext = React.createContext<{
-  state: ConsoleState,
+  state: ConsoleState
   setState(state: ConsoleState | ((state: ConsoleState) => ConsoleState)): void
 }>({
   state: DEFAULT_STATE,
 
-  setState() { throw new Error('Not initialized') },
+  setState() {
+    throw new Error('Not initialized')
+  },
 })
 
 export const useConsole = () => {
@@ -37,7 +39,5 @@ export const useConsole = () => {
 export const ConsoleProvider: React.FC = ({ children }) => {
   const [state, setState] = useState<ConsoleState>(DEFAULT_STATE)
 
-  return (
-    <CompilerContext.Provider value={{ state, setState }}>{children}</CompilerContext.Provider>
-  )
+  return <CompilerContext.Provider value={{ state, setState }}>{children}</CompilerContext.Provider>
 }

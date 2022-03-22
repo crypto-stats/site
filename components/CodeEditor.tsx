@@ -8,12 +8,18 @@ import sdkTypeDefs from '!raw-loader!generated/cryptostats-sdk.d.ts'
 interface EditorProps {
   onValidated: (code: string, markers: any[]) => void
   onChange?: (code: string) => void
-  defaultValue: string;
-  fileId: string;
+  defaultValue: string
+  fileId: string
   onMount?: (editor: any, monaco: any) => void
 }
 
-const Editor: React.FC<EditorProps> = ({ onValidated, onChange, defaultValue, fileId, onMount }) => {
+const Editor: React.FC<EditorProps> = ({
+  onValidated,
+  onChange,
+  defaultValue,
+  fileId,
+  onMount,
+}) => {
   const code = useRef(defaultValue)
   const monaco = useMonaco()
 
@@ -22,26 +28,26 @@ const Editor: React.FC<EditorProps> = ({ onValidated, onChange, defaultValue, fi
       // validation settings
       monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
         noSemanticValidation: false,
-        noSyntaxValidation: false
+        noSyntaxValidation: false,
       })
       monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
         noSemanticValidation: false,
-        noSyntaxValidation: false
+        noSyntaxValidation: false,
       })
 
       // compiler options
       monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
         target: monaco.languages.typescript.ScriptTarget.ES2019,
         allowNonTsExtensions: true,
-        lib: ["es2018"],
+        lib: ['es2018'],
       })
       monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
         target: monaco.languages.typescript.ScriptTarget.ES2019,
         allowNonTsExtensions: true,
-        lib: ["es2018"],
+        lib: ['es2018'],
       })
 
-      var sdkUri = 'ts:filename/sdk.d.ts';
+      var sdkUri = 'ts:filename/sdk.d.ts'
       monaco.languages.typescript.javascriptDefaults.addExtraLib(sdkTypeDefs, sdkUri)
       // When resolving definitions and references, the editor will try to use created models.
       // Creating a model for the library allows "peek definition/references" commands to work with the library.

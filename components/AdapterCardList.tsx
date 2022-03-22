@@ -4,8 +4,6 @@ import Link from 'next/link'
 import Text from 'components/Text'
 import { ArrowRight } from 'react-feather'
 
-
-
 const ListHead = styled.div`
   background-color: white;
   border: 1px solid #ddd;
@@ -17,7 +15,7 @@ const ListHead = styled.div`
   grid-template-rows: auto auto auto 0;
   row-gap: 16px;
   align-items: center;
-  
+
   @media (min-width: 768px) {
     column-gap: 32px;
     grid-template-columns: 4fr 3fr 1fr 1fr;
@@ -105,16 +103,16 @@ const Content = styled(ListHead)`
   border-radius: 0;
   border-top-color: transparent;
   transition: var(--transition-fast);
-  
+
   &:hover {
     color: var(--color-primary);
     background-color: var(--color-primary-300);
   }
-  
+
   &:hover h3 {
     color: var(--color-primary);
   }
-  
+
   @media (min-width: 768px) {
     padding: var(--spaces-2) var(--spaces-4);
   }
@@ -126,9 +124,9 @@ export interface Item {
   subtitle?: string | null
   description?: string | null
   icon?: string
-  iconColor?: string 
+  iconColor?: string
   metadata?: string[]
-  iconlist?: { path: string, title: string }[]
+  iconlist?: { path: string; title: string }[]
   link: string
 }
 
@@ -139,11 +137,19 @@ interface AdapterCardListProps {
 const AdapterCardList: React.FC<AdapterCardListProps> = ({ items }) => {
   return (
     <>
-      <Text tag="h3" type="subtitle" weight="400" mt="48" mb="24">Data is pulled from these adapters</Text>
+      <Text tag="h3" type="subtitle" weight="400" mt="48" mb="24">
+        Data is pulled from these adapters
+      </Text>
       <ListHead>
-        <ListHeadName tag="span" type="label">Adapter name</ListHeadName>
-        <ListHeadIcons tag="span" type="label">Protocols/Networks</ListHeadIcons>
-        <ListHeadVersion tag="span" type="label">Version</ListHeadVersion>
+        <ListHeadName tag="span" type="label">
+          Adapter name
+        </ListHeadName>
+        <ListHeadIcons tag="span" type="label">
+          Protocols/Networks
+        </ListHeadIcons>
+        <ListHeadVersion tag="span" type="label">
+          Version
+        </ListHeadVersion>
         <ListHeadCta tag="span" type="label"></ListHeadCta>
       </ListHead>
       <List>
@@ -154,15 +160,16 @@ const AdapterCardList: React.FC<AdapterCardListProps> = ({ items }) => {
                 <Card>
                   <Content>
                     <div>
-                      <Text tag="h3" type="content" weight="500">{item.title}</Text>
+                      <Text tag="h3" type="content" weight="500">
+                        {item.title}
+                      </Text>
                       {/* {item.description && <Text tag="p" type="description" mt="8">{item.description}</Text>} */}
                     </div>
 
                     {item.iconlist && (
                       <IconList>
-                        {item.iconlist.map((icon: { path: string, title: string }, i: number) => {
-                          
-                          if(i < 5 ) {
+                        {item.iconlist.map((icon: { path: string; title: string }, i: number) => {
+                          if (i < 5) {
                             return (
                               <IconListIcon
                                 key={i}
@@ -170,14 +177,17 @@ const AdapterCardList: React.FC<AdapterCardListProps> = ({ items }) => {
                               />
                             )
                           }
-                        }
+                        })}
+                        {item.iconlist.length > 5 && (
+                          <MoreIcons tag="span" type="content_small">
+                            +{item.iconlist.length - 5}
+                          </MoreIcons>
                         )}
-                        {
-                          item.iconlist.length > 5 && <MoreIcons tag="span" type="content_small">+{item.iconlist.length - 5}</MoreIcons>
-                        }
                       </IconList>
                     )}
-                    <Text tag="p" type="description">{item.version}</Text>
+                    <Text tag="p" type="description">
+                      {item.version}
+                    </Text>
 
                     <CtaAffordance>
                       <ArrowRight />

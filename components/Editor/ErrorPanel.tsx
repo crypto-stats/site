@@ -43,7 +43,9 @@ const ErrorPanel: React.FC<ErrorPanelProps> = ({ markers }) => {
         <MarkerList>
           {markers.map(marker => (
             <MarkerRow key={`${marker.startLineNumber}-${marker.startColumn}-${marker.code}`}>
-              <Line>[{marker.startLineNumber}:{marker.startColumn}]</Line>
+              <Line>
+                [{marker.startLineNumber}:{marker.startColumn}]
+              </Line>
               {marker.message}
             </MarkerRow>
           ))}

@@ -2,7 +2,11 @@ import React, { useState, useEffect, Fragment } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import EditorModal from './Editor/EditorModal'
 import Button from 'components/Button'
-import WalletConnections, { getForceDisconnect, injected, setForceDisconnect } from './WalletConnections'
+import WalletConnections, {
+  getForceDisconnect,
+  injected,
+  setForceDisconnect,
+} from './WalletConnections'
 
 const ConnectionButton: React.FC = ({ children }) => {
   const [modalOpen, setModalOpen] = useState(false)
@@ -10,7 +14,7 @@ const ConnectionButton: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (!active && !getForceDisconnect()) {
-      injected.isAuthorized().then((isAuthorized) => {
+      injected.isAuthorized().then(isAuthorized => {
         if (isAuthorized) {
           activate(injected, undefined, true)
         }
@@ -25,7 +29,7 @@ const ConnectionButton: React.FC = ({ children }) => {
 
   return (
     <Fragment>
-      <Button variant="outline" onClick={() => setModalOpen(true)} >
+      <Button variant="outline" onClick={() => setModalOpen(true)}>
         {children}
       </Button>
 
@@ -50,4 +54,4 @@ const ConnectionButton: React.FC = ({ children }) => {
   )
 }
 
-export default ConnectionButton;
+export default ConnectionButton

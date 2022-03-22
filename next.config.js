@@ -1,7 +1,7 @@
-const { withPlausibleProxy } = require('next-plausible');
+const { withPlausibleProxy } = require('next-plausible')
 
 let config = {
-  webpack: (config) => {
+  webpack: config => {
     return {
       ...config,
       module: {

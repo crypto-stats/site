@@ -21,8 +21,8 @@ const Icon = styled.img`
 `
 
 interface ModulePreviewProps {
-  module: Module;
-  list: List;
+  module: Module
+  list: List
 }
 
 const ModulePreview: React.FC<ModulePreviewProps> = ({ module, list }) => {
@@ -31,7 +31,7 @@ const ModulePreview: React.FC<ModulePreviewProps> = ({ module, list }) => {
       <Attribute name="Name">{module.name}</Attribute>
       <Attribute name="Version">{module.version}</Attribute>
       <Attribute name="License">{module.license}</Attribute>
-      
+
       {list.adapters.map((adapter: Adapter) => {
         // @ts-ignore
         const { icon, ...metadata } = adapter.metadata.metadata

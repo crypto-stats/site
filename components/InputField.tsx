@@ -11,7 +11,7 @@ interface InputFieldProps {
   disabled?: boolean
 }
 
-const dateLib = (new CryptoStatsSDK()).date
+const dateLib = new CryptoStatsSDK().date
 
 const InputField: React.FC<InputFieldProps> = ({ name, value, onChange, disabled, className }) => {
   if (name.toLowerCase().indexOf('date') !== -1) {

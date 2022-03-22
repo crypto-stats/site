@@ -69,9 +69,10 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
     }
   }
 
-  const lastPublication = adapter?.publications && adapter.publications.length > 0
-    ? adapter!.publications[adapter!.publications.length - 1]
-    : null
+  const lastPublication =
+    adapter?.publications && adapter.publications.length > 0
+      ? adapter!.publications[adapter!.publications.length - 1]
+      : null
   const hasUpdatedVersion = !lastPublication || adapter?.version !== lastPublication.version
 
   let patchVersion: string | null = null
@@ -120,26 +121,39 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
     switch (state) {
       case STATE.INIT:
         if (hasUpdatedVersion) {
-          buttons = [
-            returnButton,
-            { label: 'Continue', onClick: prepareSignature, disabled },
-        ]
+          buttons = [returnButton, { label: 'Continue', onClick: prepareSignature, disabled }]
           content = (
             <div>
-              <Text tag="p" color="white" type="description">Publish your adapter to IPFS to make it viewable by the community.</Text>
-              <Text tag="p" color="white" type="description">Once your adapter is published, you can share it on the CryptoStats forum to request verification.</Text>
+              <Text tag="p" color="white" type="description">
+                Publish your adapter to IPFS to make it viewable by the community.
+              </Text>
+              <Text tag="p" color="white" type="description">
+                Once your adapter is published, you can share it on the CryptoStats forum to request
+                verification.
+              </Text>
             </div>
           )
         } else {
           buttons = [returnButton]
           content = (
             <>
-              <Text tag="p" color="white" type="description">This adapter has already been deployed with the current version <strong>{adapter!.version}</strong>.</Text>
-              <Text tag="p" color="white" type="description" mb="24">Update the version number to allow publishing to IPFS.</Text>
+              <Text tag="p" color="white" type="description">
+                This adapter has already been deployed with the current version{' '}
+                <strong>{adapter!.version}</strong>.
+              </Text>
+              <Text tag="p" color="white" type="description" mb="24">
+                Update the version number to allow publishing to IPFS.
+              </Text>
               <AlignButtons>
-                <Button variant="outline" onClick={() => updateVersion!(patchVersion!)}>Small update: {patchVersion}</Button>
-                <Button variant="outline" onClick={() => updateVersion!(minorVersion!)}>Medium update: {minorVersion}</Button>
-                <Button variant="outline" onClick={() => updateVersion!(majorVersion!)}>Large update: {majorVersion}</Button>
+                <Button variant="outline" onClick={() => updateVersion!(patchVersion!)}>
+                  Small update: {patchVersion}
+                </Button>
+                <Button variant="outline" onClick={() => updateVersion!(minorVersion!)}>
+                  Medium update: {minorVersion}
+                </Button>
+                <Button variant="outline" onClick={() => updateVersion!(majorVersion!)}>
+                  Large update: {majorVersion}
+                </Button>
               </AlignButtons>
             </>
           )
@@ -152,20 +166,22 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
         if (!account) {
           content = (
             <div>
-              <Text tag="p" color="white" type="description">You need to connect your Web3 wallet to sign your adapter.</Text>
+              <Text tag="p" color="white" type="description">
+                You need to connect your Web3 wallet to sign your adapter.
+              </Text>
               <WalletConnections />
             </div>
           )
         } else if (!hash) {
           content = <div>Loading...</div>
         } else {
-          buttons = [
-            returnButton,
-            { label: 'Sign adapter', onClick: sign, disabled },
-          ]
+          buttons = [returnButton, { label: 'Sign adapter', onClick: sign, disabled }]
           content = (
             <div>
-              <Text tag="p" color="white" type="description">Click "Sign Adapter" to sign your adapter code from your current account ({accountName}).</Text>
+              <Text tag="p" color="white" type="description">
+                Click "Sign Adapter" to sign your adapter code from your current account (
+                {accountName}).
+              </Text>
             </div>
           )
         }
@@ -174,7 +190,9 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
       case STATE.PUBLISHING:
         content = (
           <div>
-            <Text tag="p" color="white" type="description">Publishing to IPFS...</Text>
+            <Text tag="p" color="white" type="description">
+              Publishing to IPFS...
+            </Text>
           </div>
         )
         break
@@ -184,8 +202,12 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
         buttons = [returnButton]
         content = (
           <div>
-            <Text tag="p" color="white" type="description">Your adapter has been published to IPFS! You may now share the following link:</Text>
-            <Text tag="p" type="label" mt="24" mb="16">Adapter url</Text>
+            <Text tag="p" color="white" type="description">
+              Your adapter has been published to IPFS! You may now share the following link:
+            </Text>
+            <Text tag="p" type="label" mt="24" mb="16">
+              Adapter url
+            </Text>
             <ShareUrl>https://cryptostats.community/discover/adapter/{cid}</ShareUrl>
           </div>
         )
@@ -194,12 +216,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
   }
 
   return (
-    <EditorModal
-      isOpen={show}
-      onClose={close}
-      title={title}
-      buttons={buttons}
-    >
+    <EditorModal isOpen={show} onClose={close} title={title} buttons={buttons}>
       {content}
     </EditorModal>
   )

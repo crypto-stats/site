@@ -48,13 +48,13 @@ interface BreadcrumbsProps {
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ breadcrumbs }) => {
   return (
     <BreadcrumbContainer>
-      {breadcrumbs.map((({ name, path }: { name: string, path: string }) => (
+      {breadcrumbs.map(({ name, path }: { name: string; path: string }) => (
         <BreadcrumbItem key={path}>
           <Link href={path} passHref>
             <BreadcrumbLink>{name}</BreadcrumbLink>
           </Link>
         </BreadcrumbItem>
-      )))}
+      ))}
     </BreadcrumbContainer>
   )
 }

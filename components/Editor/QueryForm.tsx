@@ -59,8 +59,8 @@ const Input = styled(InputField)`
 
 const RunButton = styled(Button)`
   padding: 10px 0;
-  background: #D6EAFF;
-  color: #0477F4;
+  background: #d6eaff;
+  color: #0477f4;
   border: none;
   border-radius: 4px;
   text-align: center;
@@ -68,7 +68,7 @@ const RunButton = styled(Button)`
   &:hover {
     cursor: pointer;
     color: #fff;
-    background-color: #0477F4;
+    background-color: #0477f4;
   }
 `
 
@@ -88,8 +88,8 @@ const Error = styled.div`
 `
 
 interface QueryProps {
-  id: string;
-  fn: (...params: any[]) => Promise<any>;
+  id: string
+  fn: (...params: any[]) => Promise<any>
   openByDefault?: boolean
   storageKey: string
 }
@@ -115,7 +115,10 @@ interface State {
 const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, storageKey }) => {
   const { addLine } = useConsole()
   const [open, setOpen] = useEditorState(`${storageKey}-open`, !!openByDefault)
-  const [storedValues, setStoredValues] = useEditorState(`${storageKey}-values`, JSON.stringify([...new Array(fn.length)].map(() => '')))
+  const [storedValues, setStoredValues] = useEditorState(
+    `${storageKey}-values`,
+    JSON.stringify([...new Array(fn.length)].map(() => ''))
+  )
   const [state, setState] = useState<State>({
     status: STATUS.READY,
   })
@@ -168,9 +171,7 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, storageKey }) 
           </RunQueryBtn>
           <Output>
             <Label>Output</Label>
-            {state.error && (
-              <Error>Error: {state.error}</Error>
-            )}
+            {state.error && <Error>Error: {state.error}</Error>}
             {state.status === STATUS.DONE && (
               <Result>{JSON.stringify(state.result, null, 2)}</Result>
             )}

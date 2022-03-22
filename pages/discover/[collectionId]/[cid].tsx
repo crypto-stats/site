@@ -9,8 +9,13 @@ import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import { useAdapterList, newModule } from 'hooks/local-adapters'
 import {
-  getCollectionNames, getModulesForCollection, getCollectionsForAdapter, getCIDFromSlug,
-  getAllVerifiedAdapters, getPreviousVersions, Version
+  getCollectionNames,
+  getModulesForCollection,
+  getCollectionsForAdapter,
+  getCIDFromSlug,
+  getAllVerifiedAdapters,
+  getPreviousVersions,
+  Version,
 } from 'utils/lists-chain'
 import AdapterPreviewList from 'components/AdapterPage/AdapterPreviewList'
 import Button from 'components/Button'
@@ -51,20 +56,20 @@ const VerifiedTick = styled.span`
 
 const DetailsBox = styled.div`
   border-radius: 5px;
-  background: #FFFFFF;
-  border: 1px solid #DDDDDD;
-  box-shadow: 0 3px 4px 0 rgba(0,36,75,0.07);
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  box-shadow: 0 3px 4px 0 rgba(0, 36, 75, 0.07);
 `
 
 const InfoBoxHeader = styled.div`
   padding: 16px 24px;
-  border-bottom: 1px solid #D8D8D8;
+  border-bottom: 1px solid #d8d8d8;
 `
 
 const InfoBoxGrid = styled.div`
-  background-color: #F9FAFB;
+  background-color: #f9fafb;
   padding: 24px;
-  
+
   @media (min-width: 768px) {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -112,11 +117,11 @@ const AdapterActionBtns = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: var(--spaces-3);
-  margin-bottom:  var(--spaces-4);
+  margin-bottom: var(--spaces-4);
 `
 
 const InfoNumber = styled.span`
-  font-weight: 400; 
+  font-weight: 400;
   font-size: 18px;
   color: gray;
 `
@@ -125,23 +130,34 @@ const AdapterInfo = styled.div`
   margin-top: var(--spaces-6);
 `
 
-
-
-
 const Attribute: React.FC<{ label: string }> = ({ label, children }) => {
-  if(label && label === "Author") {
+  if (label && label === 'Author') {
     return (
       <InfoBoxAuthor>
-        <Text tag="p" type="label">{label}</Text>
-        <InfoBoxValue tag="p" type="content_small">{children}</InfoBoxValue>
+        <Text tag="p" type="label">
+          {label}
+        </Text>
+        <InfoBoxValue tag="p" type="content_small">
+          {children}
+        </InfoBoxValue>
       </InfoBoxAuthor>
     )
   }
 
   return (
     <InfoBoxItem>
-      <Text tag="p" type="label">{label}</Text>
-      {label === "Collections"? <InfoBoxValueFullWidth tag="p" type="content_small">{children}</InfoBoxValueFullWidth> : <InfoBoxValue tag="p" type="content_small">{children}</InfoBoxValue>}
+      <Text tag="p" type="label">
+        {label}
+      </Text>
+      {label === 'Collections' ? (
+        <InfoBoxValueFullWidth tag="p" type="content_small">
+          {children}
+        </InfoBoxValueFullWidth>
+      ) : (
+        <InfoBoxValue tag="p" type="content_small">
+          {children}
+        </InfoBoxValue>
+      )}
     </InfoBoxItem>
   )
 }
@@ -176,7 +192,15 @@ interface AdaptersPageProps {
 }
 
 const AdapterPage: NextPage<AdaptersPageProps> = ({
-  collectionId, cid, verified, moduleDetails, subadapters, listModules, verifiedLists, collections, previousVersions
+  collectionId,
+  cid,
+  verified,
+  moduleDetails,
+  subadapters,
+  listModules,
+  verifiedLists,
+  collections,
+  previousVersions,
 }) => {
   const plausible = usePlausible()
   const [_verified, setVerified] = useState(verified)
@@ -222,7 +246,10 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
     })
 
     const newCode = moduleDetails.name
-      ? (moduleDetails.sourceCode || moduleDetails.code).replace(moduleDetails.name, `${moduleDetails.name} - Clone`)
+      ? (moduleDetails.sourceCode || moduleDetails.code).replace(
+          moduleDetails.name,
+          `${moduleDetails.name} - Clone`
+        )
       : moduleDetails.sourceCode || moduleDetails.code
 
     const adapterId = newModule(newCode, [{ cid, version: moduleDetails.version || '0.0.0' }])
@@ -245,35 +272,50 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
     breadcrumbs.push({ name: collectionId, path: `/discover/${collectionId}` })
   }
 
-  const subadapterNames = subadapters.map((subadapter: SubAdapter) => subadapter.metadata.name || subadapter.id)
-  
+  const subadapterNames = subadapters.map(
+    (subadapter: SubAdapter) => subadapter.metadata.name || subadapter.id
+  )
+
   return (
     <CompilerProvider>
       <MetaTags
-        title={`${moduleDetails.name || ''} Adapter${collectionId !== 'adapter' ? ` - ${collectionId}` : ''}`}
-        description={`The ${moduleDetails.name || ''} adapter ${moduleDetails.version && `(v${moduleDetails.version})`} contains ${subadapters.length} subadapters: ${subadapterNames.join(', ')}`}
+        title={`${moduleDetails.name || ''} Adapter${
+          collectionId !== 'adapter' ? ` - ${collectionId}` : ''
+        }`}
+        description={`The ${moduleDetails.name || ''} adapter ${
+          moduleDetails.version && `(v${moduleDetails.version})`
+        } contains ${subadapters.length} subadapters: ${subadapterNames.join(', ')}`}
       />
 
       <TranquilLayout
         page="adapter"
-        notificationBar={!_verified && account?.toLowerCase() === moduleDetails.signer?.toLowerCase() && (
-          <PublisherBar
-            address={account!}
-            collections={collections}
-            name={moduleDetails.name}
-            version={moduleDetails.version}
-            previous={moduleDetails.previousVersion}
-          />
-        )}
+        notificationBar={
+          !_verified &&
+          account?.toLowerCase() === moduleDetails.signer?.toLowerCase() && (
+            <PublisherBar
+              address={account!}
+              collections={collections}
+              name={moduleDetails.name}
+              version={moduleDetails.version}
+              previous={moduleDetails.previousVersion}
+            />
+          )
+        }
         breadcrumbs={breadcrumbs}
         hero={
           <AdapterInfo>
-            <Text tag="p" type="label">Adapter</Text>
+            <Text tag="p" type="label">
+              Adapter
+            </Text>
             <Text tag="h1" type="title" mt="8" mb="16">
               {moduleDetails.name || cid}
               {_verified && <VerifiedTick />}
             </Text>
-            {moduleDetails.description && <Text tag="h2" type="description">{moduleDetails.description}</Text>}
+            {moduleDetails.description && (
+              <Text tag="h2" type="description">
+                {moduleDetails.description}
+              </Text>
+            )}
           </AdapterInfo>
         }
         sidebar={
@@ -288,7 +330,9 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
             </AdapterActionBtns>
             <DetailsBox>
               <InfoBoxHeader>
-                <Text tag="p" type="label">Adapter Info</Text>
+                <Text tag="p" type="label">
+                  Adapter Info
+                </Text>
               </InfoBoxHeader>
               <InfoBoxGrid>
                 <Attribute label="Version">{moduleDetails.version}</Attribute>
@@ -320,7 +364,6 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
               )}
             </DetailsBox>
 
-
             {isAdmin && collectionId !== 'adapter' && (
               <div>
                 <VerifyForm
@@ -337,18 +380,30 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         }
       >
         <SectionContainer>
-          <Text tag="h3" type="subtitle">Sub-Adapters <InfoNumber>{subadapters.length}</InfoNumber></Text>
-          <Text tag="p" type="description" mt="8">Preview and test each sub adapter.</Text>
+          <Text tag="h3" type="subtitle">
+            Sub-Adapters <InfoNumber>{subadapters.length}</InfoNumber>
+          </Text>
+          <Text tag="p" type="description" mt="8">
+            Preview and test each sub adapter.
+          </Text>
           <AdapterPreviewList staticDetails={subadapters} code={moduleDetails.code} />
         </SectionContainer>
         <SectionContainer>
-          <Text tag="h3" type="subtitle">Adapter Code</Text>
-          <Text tag="p" type="description" mt="8">Check the entire code written for the Adapter.</Text>
-          <CodeViewer js={moduleDetails.code} ts={moduleDetails.sourceCode} />    
+          <Text tag="h3" type="subtitle">
+            Adapter Code
+          </Text>
+          <Text tag="p" type="description" mt="8">
+            Check the entire code written for the Adapter.
+          </Text>
+          <CodeViewer js={moduleDetails.code} ts={moduleDetails.sourceCode} />
         </SectionContainer>
         <div>
-          <Text tag="h3" type="subtitle" mt="100" align="center">It's something off?</Text>
-          <Text tag="p" type="description" mt="16" mb="24" align="center">Report it to the discussion board on Discord, we will take care of it.</Text>
+          <Text tag="h3" type="subtitle" mt="100" align="center">
+            It's something off?
+          </Text>
+          <Text tag="p" type="description" mt="16" mb="24" align="center">
+            Report it to the discussion board on Discord, we will take care of it.
+          </Text>
           <Link href="https://discord.gg/ZunfyPuB6A">
             <Button centered>Join Discord Community</Button>
           </Link>
@@ -360,7 +415,9 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
 
 export default AdapterPage
 
-export const getStaticProps: GetStaticProps<AdaptersPageProps, { collectionId: string }> = async (ctx: GetStaticPropsContext) => {
+export const getStaticProps: GetStaticProps<AdaptersPageProps, { collectionId: string }> = async (
+  ctx: GetStaticPropsContext
+) => {
   const collectionId = ctx.params!.collectionId as string
   let cid = ctx.params!.cid as string
 
@@ -381,10 +438,12 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { collectionId: s
   const module = await list.fetchAdapterFromIPFS(cid)
 
   // TODO: only do this if verified
-  const subadapters = await Promise.all(list.getAdapters().map(async (adapter: Adapter) => {
-    const metadata = await adapter.getMetadata()
-    return { id: adapter.id, metadata }
-  }))
+  const subadapters = await Promise.all(
+    list.getAdapters().map(async (adapter: Adapter) => {
+      const metadata = await adapter.getMetadata()
+      return { id: adapter.id, metadata }
+    })
+  )
 
   const sourceCode = module.sourceFile ? await sdk.ipfs.getFile(module.sourceFile) : null
 
@@ -400,7 +459,10 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { collectionId: s
     signer: module.signer,
     previousVersion: module.previousVersion,
     sourceFileCid: module.sourceFile,
-    description: module.description || (subadapters.length === 1 && subadapters[0].metadata.description) || null,
+    description:
+      module.description ||
+      (subadapters.length === 1 && subadapters[0].metadata.description) ||
+      null,
     sourceCode,
   }
 
@@ -432,7 +494,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
       params: {
         collectionId: adapter.collection,
         cid: adapter.slug || adapter.cid,
-      }
+      },
     })
   }
 

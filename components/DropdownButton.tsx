@@ -21,7 +21,7 @@ const BaseButton = styled.button`
 `
 
 const PrimaryButton = styled(BaseButton)<{ full: boolean }>`
-  font-family: "Inter";
+  font-family: 'Inter';
   display: flex;
   border-radius: 4px;
   cursor: pointer;
@@ -32,7 +32,10 @@ const PrimaryButton = styled(BaseButton)<{ full: boolean }>`
   line-height: 17px;
   transition: 150ms ease;
 
-  ${({ full }) => full ? '' : `
+  ${({ full }) =>
+    full
+      ? ''
+      : `
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   `}
@@ -89,7 +92,11 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({ options }) => {
       <PrimaryButton full={!hasMultiple} onClick={options[0].onClick}>
         {options[0].label}
       </PrimaryButton>
-      {hasMultiple && <DropdownArrow onClick={() => setDropdownOpen(!dropdownOpen)} ><ChevronDown /></DropdownArrow>}
+      {hasMultiple && (
+        <DropdownArrow onClick={() => setDropdownOpen(!dropdownOpen)}>
+          <ChevronDown />
+        </DropdownArrow>
+      )}
       {dropdownOpen && (
         <Dropdown>
           {options.slice(1).map((option: Option) => (

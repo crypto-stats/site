@@ -38,13 +38,13 @@ const spin = keyframes`
   to {
     transform: rotate(360deg);
   }
-`;
+`
 
 const loadingMixin = css`
   cursor: default;
 
   &:before {
-    content: "";
+    content: '';
     background: none;
     border: 6px solid #aaa;
     border-color: #aaa transparent #aaa transparent;
@@ -80,7 +80,7 @@ const UploadButton = styled(FileUploadButton)<{ uploading: boolean }>`
     box-sizing: border-box;
   }
 
-  ${({ uploading }) => uploading ? loadingMixin : ''}
+  ${({ uploading }) => (uploading ? loadingMixin : '')}
 `
 
 const Thumbnail = styled.div`
@@ -91,13 +91,13 @@ const Thumbnail = styled.div`
 `
 
 interface ImageGaleryProps {
-  onSelectedImage: (image: { cid: string, type: string }) => void
+  onSelectedImage: (image: { cid: string; type: string }) => void
 }
 
 const ImageGalery: React.FC<ImageGaleryProps> = ({ onSelectedImage }) => {
   const [images, addImage] = useImages()
   const [uploading, setUploading] = useState(false)
-  
+
   return (
     <div>
       <Cards>

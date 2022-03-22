@@ -21,7 +21,7 @@ const List = styled.ul`
 
 const ListItem = styled.li<{ selected?: boolean }>`
   font-size: 14px;
-  color: #C8C8C8;
+  color: #c8c8c8;
   letter-spacing: 0;
   list-style: none;
   margin: 0;
@@ -37,11 +37,14 @@ const ListItem = styled.li<{ selected?: boolean }>`
     cursor: pointer;
   }
 
-  ${(props) => props.selected ? `
+  ${props =>
+    props.selected
+      ? `
     background: #7e90b43b;
     color: white;
     font-weight: bold;
-  ` : ''}
+  `
+      : ''}
 `
 
 interface FileListProps {
@@ -54,11 +57,13 @@ const FileList: React.FC<FileListProps> = ({ selected, onSelected, filter }) => 
   let adapters = useAdapterList()
 
   if (filter && filter.length > 0) {
-    adapters = adapters.filter((a: AdapterWithID) => (a.name || 'New').toLowerCase().indexOf(filter.toLowerCase()) !== -1)
+    adapters = adapters.filter(
+      (a: AdapterWithID) => (a.name || 'New').toLowerCase().indexOf(filter.toLowerCase()) !== -1
+    )
   }
 
-  adapters = adapters.sort(
-    (a: AdapterWithID, b: AdapterWithID) => (a.name || 'New').localeCompare(b.name || 'New')
+  adapters = adapters.sort((a: AdapterWithID, b: AdapterWithID) =>
+    (a.name || 'New').localeCompare(b.name || 'New')
   )
 
   return (
@@ -77,7 +82,7 @@ const FileList: React.FC<FileListProps> = ({ selected, onSelected, filter }) => 
         ))}
       </List>
     </Container>
-  );
+  )
 }
 
 export default FileList

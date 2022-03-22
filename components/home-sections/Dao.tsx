@@ -17,12 +17,17 @@ const Dao: React.FC = () => {
     <DaoSectionWrapper>
       <RowSection>
         <ColumnSection from="3" to="11">
-          <Text tag="h3" type="title_highlight" mb="40" align="center">CryptoStat Community</Text>
+          <Text tag="h3" type="title_highlight" mb="40" align="center">
+            CryptoStat Community
+          </Text>
           <Text tag="p" type="content_big" mt="40" mb="40" align="center">
-            All data and infrastructure maintained by the community.<br /> Join us and help build a world of open, transparent data.
+            All data and infrastructure maintained by the community.
+            <br /> Join us and help build a world of open, transparent data.
           </Text>
           <Link href="https://discord.gg/VzyAtUk78f">
-            <Button variant="outline" size="large" icon="Discord" centered>Join the Discord</Button>
+            <Button variant="outline" size="large" icon="Discord" centered>
+              Join the Discord
+            </Button>
           </Link>
         </ColumnSection>
       </RowSection>

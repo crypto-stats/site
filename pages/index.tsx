@@ -38,7 +38,10 @@ const Home: NextPage<HomePageProps> = ({ sampleData }) => {
     <>
       <Head>
         <title>Homepage | CryptoStats</title>
-        <meta name="description" content="It's easy: just publish an adapter or use the Dataset created by the Comunity to create and view anything you want." />
+        <meta
+          name="description"
+          content="It's easy: just publish an adapter or use the Dataset created by the Comunity to create and view anything you want."
+        />
       </Head>
       <HomeBackgroundHead>
         <RowSection>
@@ -64,7 +67,6 @@ const Home: NextPage<HomePageProps> = ({ sampleData }) => {
 export default Home
 
 export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
-
   const sdk = getSDK()
   const yesterday = sdk.date.offsetDaysFormatted(sdk.date.formatDate(new Date()), -1)
 

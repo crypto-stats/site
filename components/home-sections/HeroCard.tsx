@@ -9,9 +9,12 @@ const CardContainer = styled(Positionable)<{ position?: Position }>`
   border: solid 1px #ddd;
   background-color: #fff;
 
-  ${({ position }) => position ? `
+  ${({ position }) =>
+    position
+      ? `
     width: 70%;
-  ` : ''}
+  `
+      : ''}
 `
 
 const CardHeader = styled.div`

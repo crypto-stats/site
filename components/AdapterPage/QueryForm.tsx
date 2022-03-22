@@ -20,10 +20,13 @@ const TopBar = styled.div<{ open?: boolean }>`
   border-radius: 4px;
   border: solid 1px var(--color-primary-800);
 
-  ${({ open }) => open ? `
+  ${({ open }) =>
+    open
+      ? `
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
-  ` : ``}
+  `
+      : ``}
 
   &:hover {
     cursor: pointer;
@@ -63,8 +66,8 @@ const Input = styled(InputField)`
 
 const RunButton = styled(Button)`
   padding: 10px 0;
-  background: #D6EAFF;
-  color: #0477F4;
+  background: #d6eaff;
+  color: #0477f4;
   border-radius: 4px;
   text-align: center;
   transition: var(--transition-fast);
@@ -72,7 +75,7 @@ const RunButton = styled(Button)`
   &:hover {
     cursor: pointer;
     color: #fff;
-    background-color: #0477F4;
+    background-color: #0477f4;
   }
 `
 
@@ -92,10 +95,9 @@ const Error = styled.div`
   color: red;
 `
 
-
 interface QueryProps {
-  id: string;
-  fn: (...params: any[]) => Promise<any>;
+  id: string
+  fn: (...params: any[]) => Promise<any>
   adapter: string
   openByDefault?: boolean
 }
@@ -138,38 +140,46 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, adapter }) => 
 
   return (
     <Container>
-      <TopBar onClick={() => setOpen(!open)} open={open}>{id}</TopBar>
+      <TopBar onClick={() => setOpen(!open)} open={open}>
+        {id}
+      </TopBar>
       {open && (
         <QueryFormContainer>
-        <>
-          {[...new Array(fn.length)].map((_: any, index: number) => (
-            <InputBlock key={index}>
-              <Text tag="p" type="label">{functionNames[index]}</Text>
-              <Input
-                value={values[index]}
-                name={functionNames[index]}
-                disabled={running}
-                onChange={(newValue: string) => {
-                  const newValues = [...values]
-                  newValues[index] = newValue
-                  setValues(newValues)
-                }}
-              />
-            </InputBlock>
-          ))}
-        </>
-        <RunQueryBtn>
-          <RunButton onClick={execute} loading={running} fullWidth>Run Query</RunButton>
-        </RunQueryBtn>
-        <Output>
-          <Text tag="p" type="label">Output</Text>
-          {error ? (
-            <Error>Error: {error}</Error>
-          ) : (
-            <Result>{JSON.stringify(result, null, 2)}</Result>
-          )}
-        </Output>
-      </QueryFormContainer>
+          <>
+            {[...new Array(fn.length)].map((_: any, index: number) => (
+              <InputBlock key={index}>
+                <Text tag="p" type="label">
+                  {functionNames[index]}
+                </Text>
+                <Input
+                  value={values[index]}
+                  name={functionNames[index]}
+                  disabled={running}
+                  onChange={(newValue: string) => {
+                    const newValues = [...values]
+                    newValues[index] = newValue
+                    setValues(newValues)
+                  }}
+                />
+              </InputBlock>
+            ))}
+          </>
+          <RunQueryBtn>
+            <RunButton onClick={execute} loading={running} fullWidth>
+              Run Query
+            </RunButton>
+          </RunQueryBtn>
+          <Output>
+            <Text tag="p" type="label">
+              Output
+            </Text>
+            {error ? (
+              <Error>Error: {error}</Error>
+            ) : (
+              <Result>{JSON.stringify(result, null, 2)}</Result>
+            )}
+          </Output>
+        </QueryFormContainer>
       )}
     </Container>
   )

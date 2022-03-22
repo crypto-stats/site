@@ -8,9 +8,8 @@ import styled from 'styled-components'
 import Text from 'components/Text'
 import Button from 'components/Button'
 
-
-SyntaxHighlighter.registerLanguage('javascript', js);
-SyntaxHighlighter.registerLanguage('typescript', ts);
+SyntaxHighlighter.registerLanguage('javascript', js)
+SyntaxHighlighter.registerLanguage('typescript', ts)
 
 const CodeViewerContainer = styled.div`
   margin-top: 24px;
@@ -36,38 +35,46 @@ const ChangeSource = styled.div`
 `
 
 interface CodeViewerProps {
-  js: string;
-  ts?: string | null;
+  js: string
+  ts?: string | null
 }
 
 const CodeViewer: React.FC<CodeViewerProps> = ({ js, ts }) => {
   const [showSource, setShowSource] = useState(true)
-  
+
   return (
     <>
-    <CodeViewerContainer>
-      <CodeViewerHead>
-        <Text tag="h4" type="content">Source code</Text>
-        {ts && (
-          <ChangeSource>
-            <Text tag="span" type="description">Showing {showSource ? 'TS source. ' : 'compiled JS. '}</Text>
-            <Button variant="outline" onClick={() => setShowSource(!showSource)}>
-              Show {showSource ? 'compiled JS' : 'TS source'}
-            </Button>
-          </ChangeSource>
-        )}
-      </CodeViewerHead>
-      <SyntaxHighlighter
-        language={ts && showSource ? 'typescript' : 'javascript'}
-        style={theme}
-        lineNumberStyle={{color:"#ababab"}}
-        customStyle={{fontSize: "14px", backgroundColor: "#F9FAFF", lineHeight: "1.4", paddingTop: "0px !important"}}
-        showLineNumbers
-      >
-        {ts && showSource ? ts : js}
-      </SyntaxHighlighter>
-    </CodeViewerContainer>
-      
+      <CodeViewerContainer>
+        <CodeViewerHead>
+          <Text tag="h4" type="content">
+            Source code
+          </Text>
+          {ts && (
+            <ChangeSource>
+              <Text tag="span" type="description">
+                Showing {showSource ? 'TS source. ' : 'compiled JS. '}
+              </Text>
+              <Button variant="outline" onClick={() => setShowSource(!showSource)}>
+                Show {showSource ? 'compiled JS' : 'TS source'}
+              </Button>
+            </ChangeSource>
+          )}
+        </CodeViewerHead>
+        <SyntaxHighlighter
+          language={ts && showSource ? 'typescript' : 'javascript'}
+          style={theme}
+          lineNumberStyle={{ color: '#ababab' }}
+          customStyle={{
+            fontSize: '14px',
+            backgroundColor: '#F9FAFF',
+            lineHeight: '1.4',
+            paddingTop: '0px !important',
+          }}
+          showLineNumbers
+        >
+          {ts && showSource ? ts : js}
+        </SyntaxHighlighter>
+      </CodeViewerContainer>
     </>
   )
 }

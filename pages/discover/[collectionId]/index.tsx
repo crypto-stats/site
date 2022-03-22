@@ -12,7 +12,7 @@ import { getCollectionNames, getModulesForCollection } from 'utils/lists-chain'
 import collectionMetadata, { CollectionMetadata } from 'resources/collection-metadata'
 import { usePlausible } from 'next-plausible'
 import { getSlug } from 'utils/adapters'
-import Text from "components/Text"
+import Text from 'components/Text'
 import IconRound from 'components/IconRound'
 
 const Hero = styled.div`
@@ -57,7 +57,7 @@ interface AdapterData {
 }
 
 interface ListPageProps {
-  collectionId: string,
+  collectionId: string
   adapters: AdapterData[]
   metadata: CollectionMetadata | null
 }
@@ -92,26 +92,43 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, collectionId, metadat
       </Head>
       <TranquilLayout
         page="collection"
-        breadcrumbs={[{ name: 'Home', path: '/' }, { name: 'Discover', path: '/discover' }]}
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Discover', path: '/discover' },
+        ]}
         hero={
           <Hero>
             <CollectionName>
               {metadata?.icon && <CardIcon color={metadata?.iconColor} icon={metadata?.icon} />}
               <CollectionNameDetails>
-                <Text tag="p" type="label">Collection</Text>
-                <Text tag="h1" type="title" mt="8">{metadata?.name || collectionId}</Text>
+                <Text tag="p" type="label">
+                  Collection
+                </Text>
+                <Text tag="h1" type="title" mt="8">
+                  {metadata?.name || collectionId}
+                </Text>
               </CollectionNameDetails>
             </CollectionName>
 
-            {metadata?.description && <Text tag="p" type="description" mb="16">{metadata?.description}</Text>}
-            
+            {metadata?.description && (
+              <Text tag="p" type="description" mb="16">
+                {metadata?.description}
+              </Text>
+            )}
+
             <CollectionDetails>
               <div>
-                <Text tag="span" type="label">Adapters: </Text>
-                <Text tag="span" type="content">{adapters.length}</Text>
+                <Text tag="span" type="label">
+                  Adapters:{' '}
+                </Text>
+                <Text tag="span" type="content">
+                  {adapters.length}
+                </Text>
               </div>
               <div>
-                <Button onClick={() => setShowDataModal(true)} className="primary">Use Collection Data</Button>
+                <Button onClick={() => setShowDataModal(true)} className="primary">
+                  Use Collection Data
+                </Button>
               </div>
             </CollectionDetails>
           </Hero>
@@ -126,7 +143,7 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, collectionId, metadat
           isOpen={showDataModal}
           onClose={() => setShowDataModal(false)}
         >
-          <APIExplainer listId={collectionId}/>
+          <APIExplainer listId={collectionId} />
         </SiteModal>
       </TranquilLayout>
     </>
@@ -135,35 +152,42 @@ const DiscoverPage: NextPage<ListPageProps> = ({ adapters, collectionId, metadat
 
 export default DiscoverPage
 
-export const getStaticProps: GetStaticProps<ListPageProps, { collectionId: string }> = async (ctx: GetStaticPropsContext) => {
+export const getStaticProps: GetStaticProps<ListPageProps, { collectionId: string }> = async (
+  ctx: GetStaticPropsContext
+) => {
   const collectionId = ctx.params!.collectionId as string
   const adapterCids = await getModulesForCollection(collectionId)
   const sdk = new CryptoStatsSDK({})
 
-  const adapters = await Promise.all(adapterCids.map(async (cid: string): Promise<AdapterData> => {
-    const collection = sdk.getCollection(cid)
-    const module = await collection.fetchAdapterFromIPFS(cid)
+  const adapters = await Promise.all(
+    adapterCids.map(async (cid: string): Promise<AdapterData> => {
+      const collection = sdk.getCollection(cid)
+      const module = await collection.fetchAdapterFromIPFS(cid)
 
-    const subadapters = await Promise.all(collection.getAdapters().map(async(adapter: Adapter) => {
-      const metadata = await adapter.getMetadata()
-      const subadapter: SubAdapter = {
-        id: adapter.id,
-        name: metadata.name || adapter.id,
-        icon: metadata.icon || null,
-        description: metadata.description || null,
+      const subadapters = await Promise.all(
+        collection.getAdapters().map(async (adapter: Adapter) => {
+          const metadata = await adapter.getMetadata()
+          const subadapter: SubAdapter = {
+            id: adapter.id,
+            name: metadata.name || adapter.id,
+            icon: metadata.icon || null,
+            description: metadata.description || null,
+          }
+          return subadapter
+        })
+      )
+
+      return {
+        cid,
+        name: module.name || cid,
+        version: module.version,
+        slug: getSlug(module.name),
+        description:
+          module.description || (subadapters.length === 1 && subadapters[0].description) || null,
+        subadapters,
       }
-      return subadapter
-    }))
-
-    return {
-      cid,
-      name: module.name || cid,
-      version: module.version,
-      slug: getSlug(module.name),
-      description: module.description || (subadapters.length === 1 && subadapters[0].description) || null,
-      subadapters,
-    }
-  }))
+    })
+  )
 
   return {
     props: {

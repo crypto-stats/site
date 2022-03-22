@@ -5,7 +5,8 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "generate-editor-context": "yarn api-extractor run --local"
+    "generate-editor-context": "yarn api-extractor run --local",
+    "prettier": "prettier --write ."
   },
   "dependencies": {
     "@cryptostats/sdk": "^0.2.8",
@@ -43,6 +44,7 @@
     "@types/react-dom": "17.0.3",
     "@types/styled-components": "5.1.9",
     "babel-plugin-styled-components": "^1.12.0",
+    "prettier": "^2.6.0",
     "raw-loader": "^4.0.2"
   },
   "license": "MIT"

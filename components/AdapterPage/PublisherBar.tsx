@@ -37,7 +37,13 @@ interface PublisherBarProps {
   previous?: string | null
 }
 
-const PublisherBar: React.FC<PublisherBarProps> = ({ address, collections, name, version, previous }) => {
+const PublisherBar: React.FC<PublisherBarProps> = ({
+  address,
+  collections,
+  name,
+  version,
+  previous,
+}) => {
   const router = useRouter()
 
   const { cid, collectionId } = router.query
@@ -55,12 +61,23 @@ const PublisherBar: React.FC<PublisherBarProps> = ({ address, collections, name,
   }
 
   const params = new URLSearchParams()
-  params.append('title', `${previous ? 'Updated Adapter' : 'New Adapter'}${name ? ` - ${name}` : ''}${version ? ` v${version}` : ''}`)
-  params.append('body', `I've published ${previous ? 'an updated adapter' : 'a new adapter'} for ${name || ''}
+  params.append(
+    'title',
+    `${previous ? 'Updated Adapter' : 'New Adapter'}${name ? ` - ${name}` : ''}${
+      version ? ` v${version}` : ''
+    }`
+  )
+  params.append(
+    'body',
+    `I've published ${previous ? 'an updated adapter' : 'a new adapter'} for ${name || ''}
 
 https://cryptostats.community/discover/${collectionId}/${cid}
-`)
-  params.append('category', collectionMetadata[collectionId as string]?.forumCategory || DEFAULT_FORUM_CATEGORY)
+`
+  )
+  params.append(
+    'category',
+    collectionMetadata[collectionId as string]?.forumCategory || DEFAULT_FORUM_CATEGORY
+  )
 
   return (
     <Container>
@@ -71,19 +88,23 @@ https://cryptostats.community/discover/${collectionId}/${cid}
         <select value={collectionId} onChange={navigate}>
           <option value="adapter">(collection)</option>
           {collections.map((collection: string) => (
-            <option key={collection} value={collection}>{collection}</option>
+            <option key={collection} value={collection}>
+              {collection}
+            </option>
           ))}
         </select>
         {} collection.
-
         {collectionId !== 'adapter' && (
-          <PublishButton href={`https://forum.cryptostats.community/new-topic?${params.toString()}`} target="forum">
+          <PublishButton
+            href={`https://forum.cryptostats.community/new-topic?${params.toString()}`}
+            target="forum"
+          >
             Publish on Forum
           </PublishButton>
         )}
       </div>
     </Container>
-  );
+  )
 }
 
 export default PublisherBar

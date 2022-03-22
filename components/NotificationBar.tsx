@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 
 const NotificationBarContainer = styled.section`
   background-color: var(--color-primary-200);
@@ -19,22 +19,18 @@ const NotificationBarInner = styled.section`
   @media (min-width: 1200px) {
     padding: 0;
   }
-
-
 `
 
 interface NotificationBarProps {
   className?: string
 }
 
-const NotificationBar: React.FC<NotificationBarProps> = ({ children, className}) => {
+const NotificationBar: React.FC<NotificationBarProps> = ({ children, className }) => {
   return (
     <NotificationBarContainer className={className}>
-      <NotificationBarInner>
-        {children}
-      </NotificationBarInner>
+      <NotificationBarInner>{children}</NotificationBarInner>
     </NotificationBarContainer>
   )
 }
 
-export default NotificationBar;
+export default NotificationBar

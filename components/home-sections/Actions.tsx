@@ -38,8 +38,8 @@ const CodeCard = styled.div`
   border-radius: 10px;
   background-color: #fff;
   overflow: hidden;
-  background: #404C59;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.04), 0 10px 35px 16px rgba(0,36,75,0.05);
+  background: #404c59;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04), 0 10px 35px 16px rgba(0, 36, 75, 0.05);
   margin-bottom: var(--spaces-6);
 `
 
@@ -58,11 +58,14 @@ const Syntax = styled(SyntaxHighlighter)`
 `
 
 const Toggle = styled.button`
-  ${({ disabled }) => disabled ? `
+  ${({ disabled }) =>
+    disabled
+      ? `
     background-color: #d6eaff;
     color: #0477f4;
     font-weight: 600;
-  ` : `
+  `
+      : `
     color: #4e4e4e;
     background-color: #eef1f7;
     cursor: pointer;
@@ -91,38 +94,69 @@ const Actions: React.FC = () => {
   const [codeType, setCodeType] = useState(CodeType.SDK)
 
   return (
-    <> 
+    <>
       <RowSection mt="120">
         <ColumnSection from="1" to="6">
-          <Text tag="h3" type="title_highlight" mb="40" align="center">Create</Text>
+          <Text tag="h3" type="title_highlight" mb="40" align="center">
+            Create
+          </Text>
           <Graphic src="/editor-thumbnail.png" alt="editor" />
-          <Text tag="p" type="content_big" mt="32" mb="32">Create and update the adapers that provide data to CryptoStats. Write, test and publish the code right in the browser!</Text>
+          <Text tag="p" type="content_big" mt="32" mb="32">
+            Create and update the adapers that provide data to CryptoStats. Write, test and publish
+            the code right in the browser!
+          </Text>
           <Link href="/editor" passHref>
-            <Button variant="outline" size="large">Open the adapter editor</Button>
+            <Button variant="outline" size="large">
+              Open the adapter editor
+            </Button>
           </Link>
         </ColumnSection>
         <ColumnSection from="8" to="13">
-          <Text tag="h3" type="title_highlight" mb="40" align="center">Discover</Text>
+          <Text tag="h3" type="title_highlight" mb="40" align="center">
+            Discover
+          </Text>
           <Graphic src="/image-collections.png" alt="Collections" />
-          <Text tag="p" type="content_big" mt="32" mb="32">Review a wide range of data metrics, covering protocols across the crypto space.</Text>
+          <Text tag="p" type="content_big" mt="32" mb="32">
+            Review a wide range of data metrics, covering protocols across the crypto space.
+          </Text>
           <Link href="/discover" passHref>
-            <Button variant="outline" size="large">Browse data sets</Button>
+            <Button variant="outline" size="large">
+              Browse data sets
+            </Button>
           </Link>
         </ColumnSection>
       </RowSection>
 
       <RowSection mt="64">
         <ColumnSection from="3" to="11">
-          <Text tag="h3" type="title_highlight" mb="24" align="center">Consume and use data</Text>
-          <Text tag="p" type="content_big" mb="32" align="center">Use trustworthy data metrics in your website or dapp.</Text>
-          <Text tag="p" type="content_big" mb="32" align="center">It's free and always will be.</Text>
+          <Text tag="h3" type="title_highlight" mb="24" align="center">
+            Consume and use data
+          </Text>
+          <Text tag="p" type="content_big" mb="32" align="center">
+            Use trustworthy data metrics in your website or dapp.
+          </Text>
+          <Text tag="p" type="content_big" mb="32" align="center">
+            It's free and always will be.
+          </Text>
 
           <CodeCard>
             <CodeCardHeader>
-              <Text tag="p" type="content">Using the Data is easy. Try it out</Text>
+              <Text tag="p" type="content">
+                Using the Data is easy. Try it out
+              </Text>
               <div>
-                <Toggle disabled={codeType === CodeType.SDK} onClick={() => setCodeType(CodeType.SDK)}>CryptoStats SDK</Toggle>
-                <Toggle disabled={codeType === CodeType.REST} onClick={() => setCodeType(CodeType.REST)}>REST API</Toggle>
+                <Toggle
+                  disabled={codeType === CodeType.SDK}
+                  onClick={() => setCodeType(CodeType.SDK)}
+                >
+                  CryptoStats SDK
+                </Toggle>
+                <Toggle
+                  disabled={codeType === CodeType.REST}
+                  onClick={() => setCodeType(CodeType.REST)}
+                >
+                  REST API
+                </Toggle>
               </div>
             </CodeCardHeader>
 
@@ -130,7 +164,9 @@ const Actions: React.FC = () => {
               {codeType === CodeType.SDK ? sdkCode : restCode}
             </Syntax>
           </CodeCard>
-          <Button variant="outline" size="large" centered>Read the docs</Button>
+          <Button variant="outline" size="large" centered>
+            Read the docs
+          </Button>
         </ColumnSection>
       </RowSection>
     </>

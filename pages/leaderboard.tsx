@@ -14,11 +14,11 @@ const Row = styled.div`
   align-items: center;
 `
 
-const Col = styled.div<{ flex?: number, min?: number, align?: string }>`
+const Col = styled.div<{ flex?: number; min?: number; align?: string }>`
   overflow: hidden;
-  ${({ flex }) => flex ? `flex: ${flex};` : ''}
-  ${({ min }) => min ? `min-width: ${min}px;` : ''}
-  ${({ align }) => align ? `text-align: ${align};` : ''}
+  ${({ flex }) => (flex ? `flex: ${flex};` : '')}
+  ${({ min }) => (min ? `min-width: ${min}px;` : '')}
+  ${({ align }) => (align ? `text-align: ${align};` : '')}
   text-overflow: ellipsis;
 `
 
@@ -34,10 +34,16 @@ const SignerRow: React.FC<{ signer: Signer }> = ({ signer }) => {
   return (
     <Row>
       <Col flex={1}>
-        <a href={`https://etherscan.io/address/${signer.id}`} target="etherscan">{ensName || signer.id}</a>
+        <a href={`https://etherscan.io/address/${signer.id}`} target="etherscan">
+          {ensName || signer.id}
+        </a>
       </Col>
-      <Col min={140} align="right">{signer.activeVerifiedAdapters}</Col>
-      <Col min={140} align="right">{signer.totalVerifiedAdapters}</Col>
+      <Col min={140} align="right">
+        {signer.activeVerifiedAdapters}
+      </Col>
+      <Col min={140} align="right">
+        {signer.totalVerifiedAdapters}
+      </Col>
     </Row>
   )
 }
@@ -59,8 +65,12 @@ const LeaderboardPage: NextPage<AdaptersPageProps> = ({ signers }) => {
       <div>
         <Row>
           <Col flex={1}>User</Col>
-          <Col min={140} align="right">Active Adapters</Col>
-          <Col min={140} align="right">Total Adapters</Col>
+          <Col min={140} align="right">
+            Active Adapters
+          </Col>
+          <Col min={140} align="right">
+            Total Adapters
+          </Col>
         </Row>
         {signers.map(signer => (
           <SignerRow key={signer.id} signer={signer} />
