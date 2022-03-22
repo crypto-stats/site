@@ -41,7 +41,7 @@ function isSignerValid(signer: string, collectionId: string) {
 
 function verifyOperation(
   method: string,
-  listId: string,
+  collectionId: string,
   cid: string,
   signature: string,
   previousVersion?: string
