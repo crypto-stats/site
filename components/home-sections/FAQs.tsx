@@ -75,12 +75,10 @@ const FAQs: React.FC = () => {
             </Text>
             <Text tag="p" type="description" mb="8">
               The Graph provides indexing infrastructure: powerful servers and large databases that
-              can {}
-              process the large amount of data produced by crypto protocols. CryptoStats, on the
-              otherhand, {}
-              has no infrastructure of it's own. CryptoStats aggregates data from indexers like The
-              Graph, {}
-              combines it, and provides trust assurances that the data is as accuate as possible.
+              can process the large amount of data produced by crypto protocols. CryptoStats, on the
+              otherhand, has no infrastructure of it's own. CryptoStats aggregates data from indexers
+              like The Graph, combines it, and provides trust assurances that the data is as accurate
+              as possible.
             </Text>
           </Question>
 
