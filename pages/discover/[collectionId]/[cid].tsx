@@ -234,7 +234,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
 
   const isAdmin = account && (
     account.toLowerCase() === process.env.NEXT_PUBLIC_ADMIN_ACCOUNT?.toLowerCase()
-    || collectionAdmins[collectionId].indexOf(account.toLowerCase()) !== -1
+    || (collectionAdmins[collectionId] || []).indexOf(account.toLowerCase()) !== -1
   )
 
   const breadcrumbs = [
