@@ -1,7 +1,7 @@
 import React from 'react'
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext, NextPage } from 'next'
 import { CryptoStatsSDK } from '@cryptostats/sdk'
-import DiffViewer from "components/DiffViewer"
+import DiffViewer from 'components/DiffViewer'
 import RowSection from 'components/RowSection'
 import ColumnSection from 'components/ColumnSection'
 import Header from 'components/Header'
@@ -20,9 +20,7 @@ interface DiffPageProps {
 
 const DiffPage: NextPage<DiffPageProps> = ({ fileA, fileB }) => {
   if (!fileA || !fileB) {
-    return (
-      <div>Could not load source code</div>
-    )
+    return <div>Could not load source code</div>
   }
 
   return (
@@ -37,20 +35,18 @@ const DiffPage: NextPage<DiffPageProps> = ({ fileA, fileB }) => {
       </RowSection>
 
       <DiffContainer>
-        <DiffViewer
-          fileA={fileA}
-          fileB={fileB}
-        />
+        <DiffViewer fileA={fileA} fileB={fileB} />
       </DiffContainer>
       <Footer />
     </>
-      )
-    }
+  )
+}
 
-    export default DiffPage
+export default DiffPage
 
-
-export const getStaticProps: GetStaticProps<DiffPageProps, { cidA: string, cidB: string }> = async (ctx: GetStaticPropsContext) => {
+export const getStaticProps: GetStaticProps<DiffPageProps, { cidA: string; cidB: string }> = async (
+  ctx: GetStaticPropsContext
+) => {
   const cidA = ctx.params!.cidA as string
   const cidB = ctx.params!.cidB as string
 
@@ -69,8 +65,6 @@ export const getStaticProps: GetStaticProps<DiffPageProps, { cidA: string, cidB:
     moduleA.sourceFile ? await sdk.ipfs.getFile(moduleA.sourceFile) : null,
     moduleB.sourceFile ? await sdk.ipfs.getFile(moduleB.sourceFile) : null,
   ])
-
-  console.log({fileA, fileB})
 
   return {
     props: {

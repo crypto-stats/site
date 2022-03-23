@@ -26,13 +26,15 @@ const cidToBytes32 = (cid: string) => ethers.utils.hexlify(ethers.utils.base58.d
 const rpc = `https://goerli.infura.io/v3/${process.env.INFURA_KEY}`
 const registryAddress = '0xF22e79604434ea8213eb7D79fcEB854e5E4283f7'
 
-
 const collectionAdmins = process.env.NEXT_PUBLIC_COLLECTION_ADMINS
   ? JSON.parse(process.env.NEXT_PUBLIC_COLLECTION_ADMINS.toLowerCase())
   : {}
 
 function isSignerValid(signer: string, collectionId: string) {
-  if (collectionAdmins[collectionId] && collectionAdmins[collectionId].indexOf(signer.toLowerCase()) !== -1) {
+  if (
+    collectionAdmins[collectionId] &&
+    collectionAdmins[collectionId].indexOf(signer.toLowerCase()) !== -1
+  ) {
     return true
   }
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { ReactGhLikeDiff } from 'react-gh-like-diff'
-import 'react-gh-like-diff/dist/css/diff2html.min.css';
+import 'react-gh-like-diff/dist/css/diff2html.min.css'
 
 interface DiffViewerProps {
   fileA: string
@@ -8,8 +8,6 @@ interface DiffViewerProps {
 }
 
 const DiffViewer: React.FC<DiffViewerProps> = ({ fileA, fileB }) => {
-  console.log(fileA, fileB)
-
   return (
     <ReactGhLikeDiff
       past={fileA}
