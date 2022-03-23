@@ -5,12 +5,16 @@ import { MarkerSeverity } from './Editor/types'
 // @ts-ignore
 import sdkTypeDefs from '!raw-loader!generated/cryptostats-sdk.d.ts'
 
+// @ts-ignore
+import graphTypeDefs from '!raw-loader!generated/graph-ts.d.ts'
+
 interface EditorProps {
   onValidated: (code: string, markers: any[]) => void
   onChange?: (code: string) => void
   defaultValue: string
   fileId: string
   onMount?: (editor: any, monaco: any) => void
+  isSubgraph: boolean
 }
 
 const Editor: React.FC<EditorProps> = ({
@@ -19,6 +23,7 @@ const Editor: React.FC<EditorProps> = ({
   defaultValue,
   fileId,
   onMount,
+  isSubgraph,
 }) => {
   const code = useRef(defaultValue)
   const monaco = useMonaco()
@@ -48,10 +53,18 @@ const Editor: React.FC<EditorProps> = ({
       })
 
       var sdkUri = 'ts:filename/sdk.d.ts'
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(sdkTypeDefs, sdkUri)
+      monaco.languages.typescript.javascriptDefaults.addExtraLib(
+        isSubgraph ? graphTypeDefs : sdkTypeDefs,
+        sdkUri
+      )
+
       // When resolving definitions and references, the editor will try to use created models.
       // Creating a model for the library allows "peek definition/references" commands to work with the library.
-      monaco.editor.createModel(sdkTypeDefs, 'typescript', monaco.Uri.parse(sdkUri))
+      monaco.editor.createModel(
+        isSubgraph ? graphTypeDefs : sdkTypeDefs,
+        'typescript',
+        monaco.Uri.parse(sdkUri)
+      )
 
       return () => monaco.editor.getModels().forEach((model: any) => model.dispose())
     }

@@ -39,6 +39,7 @@ import Console from './Console'
 import BottomTitleBar, { BottomView } from './BottomTitleBar'
 import SaveMessage from './SaveMessage'
 import ImageLibrary from './ImageLibrary/ImageLibrary'
+import { useASCompiler } from 'hooks/useASCompiler'
 
 const Header = styled(Top)`
   background-image: url('/editor_logo.png');
@@ -233,10 +234,12 @@ const Editor: React.FC = () => {
   const [filter, setFilter] = useState('')
   const [markers, setMarkers] = useState<any[]>([])
   const [imageLibraryOpen, setImageLibraryOpen] = useState(false)
+  const [subgraph, setSubgraph] = useState(false)
   const [bottomView, setBottomView] = useState(BottomView.NONE)
   const editorRef = useRef<any>(null)
   const { save, adapter } = useAdapter(fileName)
   const { evaluate, module } = useCompiler()
+  const { evaluate: evaluateAS } = useASCompiler()
   const { addLine } = useConsole()
   const { account } = useWeb3React()
   const name = useENSName(account)
@@ -326,6 +329,13 @@ const Editor: React.FC = () => {
                 <Fill>
                   <Tabs current={adapter?.name} onClose={() => setFileName(null)} />
                 </Fill>
+                <Right size={20}>
+                  <input
+                    type="checkbox"
+                    checked={subgraph}
+                    onChange={(e: any) => setSubgraph(e.target.checked)}
+                  />
+                </Right>
                 <Right size={100}>
                   <EditorControls editorRef={editorRef} />
                 </Right>
@@ -336,12 +346,18 @@ const Editor: React.FC = () => {
                   <CodeEditor
                     fileId={fileName}
                     defaultValue={adapter.code}
+                    isSubgraph={subgraph}
                     onMount={(editor: any) => {
                       editorRef.current = editor
                     }}
                     onChange={(code: string) => save(code, adapter.name, adapter.version)}
                     onValidated={(code: string, markers: any[]) => {
                       setMarkers(markers)
+
+                      if (subgraph) {
+                        evaluateAS({ code })
+                        return
+                      }
 
                       if (
                         markers.filter((marker: any) => marker.severity === MarkerSeverity.Error)
@@ -395,6 +411,7 @@ const Editor: React.FC = () => {
               onMarkerClick={() => setBottomView(BottomView.ERRORS)}
               onConsoleClick={() => setBottomView(BottomView.CONSOLE)}
               editorRef={editorRef}
+              isSubgraph={subgraph}
             />
           </PrimaryFooterContainer>
         </Fill>
