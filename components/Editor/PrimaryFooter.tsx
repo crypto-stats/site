@@ -72,7 +72,7 @@ const ErrorChip = styled.button<{ color?: string }>`
 `
 
 interface PrimaryFooterProps {
-  fileName: string | null
+  fileName?: string | null
   markers: any[]
   onMarkerClick: () => void
   onConsoleClick: () => void

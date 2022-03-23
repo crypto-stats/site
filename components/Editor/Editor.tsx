@@ -18,7 +18,7 @@ import { useENSName } from 'use-ens-name'
 import Button from 'components/Button'
 import CodeEditor from 'components/CodeEditor'
 import ConnectionButton from 'components/ConnectionButton'
-import FileList from 'components/FileList'
+import FileList, { FileType } from 'components/FileList'
 import { useAdapter, newModule } from 'hooks/local-adapters'
 import { useCompiler } from 'hooks/compiler'
 import { useConsole } from 'hooks/console'
@@ -40,6 +40,7 @@ import BottomTitleBar, { BottomView } from './BottomTitleBar'
 import SaveMessage from './SaveMessage'
 import ImageLibrary from './ImageLibrary/ImageLibrary'
 import { useASCompiler } from 'hooks/useASCompiler'
+import { newSubgraph, useLocalSubgraph } from 'hooks/useLocalSubgraph'
 
 const Header = styled(Top)`
   background-image: url('/editor_logo.png');
@@ -227,17 +228,22 @@ const formatLog = (val: any) => {
 const Editor: React.FC = () => {
   const router = useRouter()
   const plausible = usePlausible()
-  const [fileName, setFileName] = useEditorState<string | null>('open-file', null)
+  const [openFile, setOpenFile] = useEditorState<{ fileName: string; fileType: FileType } | null>(
+    'open-file',
+    null
+  )
   const [started, setStarted] = useState(false)
   const [leftCollapsed, setLeftCollapsed] = useEditorState('left-collapsed', false)
   const [newAdapterModalOpen, setNewAdapterModalOpen] = useState(false)
   const [filter, setFilter] = useState('')
   const [markers, setMarkers] = useState<any[]>([])
   const [imageLibraryOpen, setImageLibraryOpen] = useState(false)
-  const [subgraph, setSubgraph] = useState(false)
   const [bottomView, setBottomView] = useState(BottomView.NONE)
   const editorRef = useRef<any>(null)
-  const { save, adapter } = useAdapter(fileName)
+  const { save, adapter } = useAdapter(openFile?.fileName)
+  const { subgraph, saveSchema } = useLocalSubgraph(
+    openFile?.fileType === FileType.Subgraph ? openFile.fileName : null
+  )
   const { evaluate, module } = useCompiler()
   const { evaluate: evaluateAS } = useASCompiler()
   const { addLine } = useConsole()
@@ -254,7 +260,7 @@ const Editor: React.FC = () => {
   useEffect(() => {
     if (router.query.adapter) {
       const { adapter, ...query } = router.query
-      setFileName(adapter as string)
+      setOpenFile({ fileName: adapter as string, fileType: FileType.Adapter })
       router.replace({ pathname: '/editor', query })
     }
   }, [router.query])
@@ -307,7 +313,13 @@ const Editor: React.FC = () => {
             </FilterBox>
 
             <Fill scrollable={true}>
-              <FileList selected={fileName} onSelected={setFileName} filter={filter} />
+              <FileList
+                selected={openFile?.fileName}
+                onSelected={(fileName: string, fileType: FileType) =>
+                  setOpenFile({ fileName, fileType })
+                }
+                filter={filter}
+              />
             </Fill>
 
             <LeftSidebarFooter size={70}>
@@ -327,34 +339,35 @@ const Editor: React.FC = () => {
             <Fill>
               <TabContainer size={50}>
                 <Fill>
-                  <Tabs current={adapter?.name} onClose={() => setFileName(null)} />
+                  <Tabs current={adapter?.name} onClose={() => setOpenFile(null)} />
                 </Fill>
-                <Right size={20}>
-                  <input
-                    type="checkbox"
-                    checked={subgraph}
-                    onChange={(e: any) => setSubgraph(e.target.checked)}
-                  />
-                </Right>
                 <Right size={100}>
                   <EditorControls editorRef={editorRef} />
                 </Right>
               </TabContainer>
 
               <Fill>
-                {fileName && adapter ? (
+                {openFile && (openFile.fileType === FileType.Adapter ? adapter : subgraph) ? (
                   <CodeEditor
-                    fileId={fileName}
-                    defaultValue={adapter.code}
-                    isSubgraph={subgraph}
+                    fileId={openFile.fileName}
+                    defaultValue={
+                      openFile.fileType === FileType.Adapter ? adapter!.code : subgraph!.schema
+                    }
+                    isSubgraph={openFile?.fileType === FileType.Subgraph}
                     onMount={(editor: any) => {
                       editorRef.current = editor
                     }}
-                    onChange={(code: string) => save(code, adapter.name, adapter.version)}
+                    onChange={(code: string) => {
+                      if (openFile.fileType === FileType.Adapter) {
+                        save(code, adapter!.name, adapter!.version)
+                      } else {
+                        saveSchema(code)
+                      }
+                    }}
                     onValidated={(code: string, markers: any[]) => {
                       setMarkers(markers)
 
-                      if (subgraph) {
+                      if (openFile.fileType === FileType.Subgraph) {
                         evaluateAS({ code })
                         return
                       }
@@ -406,12 +419,12 @@ const Editor: React.FC = () => {
 
           <PrimaryFooterContainer size={55}>
             <PrimaryFooter
-              fileName={fileName}
+              fileName={openFile?.fileName}
               markers={markers}
               onMarkerClick={() => setBottomView(BottomView.ERRORS)}
               onConsoleClick={() => setBottomView(BottomView.CONSOLE)}
               editorRef={editorRef}
-              isSubgraph={subgraph}
+              isSubgraph={openFile?.fileType === FileType.Subgraph}
             />
           </PrimaryFooterContainer>
         </Fill>
@@ -441,7 +454,20 @@ const Editor: React.FC = () => {
                 },
               })
 
-              setFileName(newModule(emptyAdapter))
+              setOpenFile({ fileName: newModule(emptyAdapter), fileType: FileType.Adapter })
+              setNewAdapterModalOpen(false)
+            },
+          },
+          {
+            label: 'Create Blank Subgraph',
+            onClick: () => {
+              plausible('new-subgraph', {
+                props: {
+                  template: 'blank',
+                },
+              })
+
+              setOpenFile({ fileName: newSubgraph(), fileType: FileType.Subgraph })
               setNewAdapterModalOpen(false)
             },
           },
@@ -449,7 +475,7 @@ const Editor: React.FC = () => {
       >
         <NewAdapterForm
           onAdapterSelection={(fileName: string) => {
-            setFileName(fileName)
+            setOpenFile({ fileName, fileType: FileType.Adapter })
             setNewAdapterModalOpen(false)
           }}
         />

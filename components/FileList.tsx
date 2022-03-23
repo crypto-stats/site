@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useAdapterList, AdapterWithID } from 'hooks/local-adapters'
+import { SubgraphWithID, useSubgraphList } from 'hooks/useLocalSubgraph'
 
 const Container = styled.div`
   display: flex;
@@ -47,14 +48,20 @@ const ListItem = styled.li<{ selected?: boolean }>`
       : ''}
 `
 
+export enum FileType {
+  Adapter,
+  Subgraph,
+}
+
 interface FileListProps {
   selected?: string | null
-  onSelected: (id: string) => void
+  onSelected: (id: string, type: FileType) => void
   filter?: string
 }
 
 const FileList: React.FC<FileListProps> = ({ selected, onSelected, filter }) => {
   let adapters = useAdapterList()
+  let subgraphs = useSubgraphList()
 
   if (filter && filter.length > 0) {
     adapters = adapters.filter(
@@ -75,9 +82,23 @@ const FileList: React.FC<FileListProps> = ({ selected, onSelected, filter }) => 
           <ListItem
             selected={selected === adapter.id}
             key={adapter.id}
-            onClick={() => onSelected(adapter.id)}
+            onClick={() => onSelected(adapter.id, FileType.Adapter)}
           >
             {adapter.name}
+          </ListItem>
+        ))}
+      </List>
+
+      <Label>Subgraphs ({subgraphs.length})</Label>
+
+      <List>
+        {subgraphs.map((subgraph: SubgraphWithID) => (
+          <ListItem
+            selected={selected === subgraph.id}
+            key={subgraph.id}
+            onClick={() => onSelected(subgraph.id, FileType.Subgraph)}
+          >
+            {subgraph.name}
           </ListItem>
         ))}
       </List>
