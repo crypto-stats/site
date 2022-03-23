@@ -38,7 +38,7 @@ function isSignerValid(signer: string, collectionId: string) {
     return true
   }
 
-  return signer.toLowerCase() !== process.env.NEXT_PUBLIC_ADMIN_ACCOUNT?.toLowerCase()
+  return signer.toLowerCase() === process.env.NEXT_PUBLIC_ADMIN_ACCOUNT?.toLowerCase()
 }
 
 function verifyOperation(
