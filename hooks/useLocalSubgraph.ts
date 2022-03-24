@@ -3,7 +3,7 @@ import { useGeneratedSubgraphFiles } from './useGeneratedSubgraphFiles'
 
 const storageKey = 'localSubgraphs'
 
-const DEFAULT_MAPPING = 'mapping.ts'
+export const DEFAULT_MAPPING = 'mapping.ts'
 
 interface Publication {
   cid: string
@@ -164,10 +164,60 @@ export const useLocalSubgraph = (id?: string | null) => {
     return message
   }
 
+  const generateManifest = async () => {
+    const yaml = await import('js-yaml')
+    const result = yaml.dump({
+      specVersion: '0.0.3',
+      description: 'Test description',
+      dataSources: [
+        {
+          kind: 'ethereum/contract',
+          name: 'EthRegistrarController',
+          network: 'mainnet',
+          source: {
+            abi: 'EthRegistrarController',
+            address: '0x283Af0B28c62C092C9727F1Ee09c02CA627EB7F5',
+            startBlock: 10606502,
+          },
+          mapping: {
+            abis: [
+              {
+                file: {
+                  '/': '/ipfs/Qmb6zHLHHGd1wpe2CuyVijkPrxG1M9VZKwK7aGhY1o3xKf',
+                },
+                name: 'EthRegistrarController',
+              },
+            ],
+            apiVersion: '0.0.4',
+            entities: ['ENS'],
+            eventHandlers: [
+              {
+                event: 'NameRegistered(string,indexed bytes32,indexed address,uint256,uint256)',
+                handler: 'handleNameRegisteredByController',
+              },
+              {
+                event: 'NameRenewed(string,indexed bytes32,uint256,uint256)',
+                handler: 'handleNameRenewedByController',
+              },
+            ],
+            file: {
+              '/': '/ipfs/QmPittEtZ99BY6fCH9tunh7XpMR7G1VSjT6Lt98yoUEXpv',
+            },
+            kind: 'ethereum/events',
+            language: 'wasm/assemblyscript',
+          },
+        },
+      ],
+      schema: {
+        file: '/ipfs/QmYBHk8b26Y1QLUz4PnfuptfrDPxf4F6dWPiPUikdK5jig',
+      },
+    })
+    return result
+  }
+
   const subgraph = id ? (getStorageItem(id) as SubgraphData) : null
 
   const generatedFiles = useGeneratedSubgraphFiles(subgraph?.schema, subgraph?.contracts)
-  console.log(generatedFiles)
 
   return {
     subgraph,
@@ -176,5 +226,6 @@ export const useLocalSubgraph = (id?: string | null) => {
     saveMapping,
     publish,
     getSignableHash,
+    generateManifest,
   }
 }

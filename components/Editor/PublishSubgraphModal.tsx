@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import EditorModal, { Button as ModalButton } from './EditorModal'
-import { useAdapter } from 'hooks/local-adapters'
 import Text from 'components/Text'
 import { compileAs } from 'utils/as-compiler'
 import { publishSubgraph } from 'utils/publish-subgraph'
+import { DEFAULT_MAPPING, useLocalSubgraph } from 'hooks/useLocalSubgraph'
 
 const ShareUrl = styled.div`
   padding: 16px;
@@ -33,7 +33,7 @@ enum STATE {
 const PublishSubgraphModal: React.FC<PublishModalProps> = ({ fileName, onClose, show }) => {
   const [state, setState] = useState(STATE.INIT)
   const [cid, setCID] = useState<null | string>(null)
-  const { adapter } = useAdapter(fileName)
+  const { subgraph, generateManifest } = useLocalSubgraph(fileName)
 
   const close = () => {
     onClose()
@@ -42,15 +42,18 @@ const PublishSubgraphModal: React.FC<PublishModalProps> = ({ fileName, onClose, 
   }
 
   useEffect(() => {
-    console.log(adapter?.code)
-    if (show && adapter?.code) {
+    if (show && subgraph?.schema) {
       setState(STATE.COMPILING)
-      compileAs(adapter.code).then(output => {
-        console.log({ output })
-        setState(STATE.SIGNED_PUBLISH_PENDING)
-      })
+      generateManifest().then(manifest => console.log(manifest))
+
+      if (subgraph.mappings[DEFAULT_MAPPING]) {
+        compileAs(subgraph.mappings[DEFAULT_MAPPING]).then(output => {
+          console.log({ output })
+          setState(STATE.SIGNED_PUBLISH_PENDING)
+        })
+      }
     }
-  }, [adapter?.code, show])
+  }, [subgraph?.schema, show])
 
   const returnButton = { label: 'Return to Editor', onClick: close }
 
