@@ -112,6 +112,10 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
         <link rel="icon" type="image/x-icon" href="/favicon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
       </Head>
 
       <GlobalStyle />
