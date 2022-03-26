@@ -102,9 +102,9 @@ export const useSubgraph = () => {
   }
 
   const publish = async ({
-    signature,
-    hash,
-    signer,
+    // signature,
+    // hash,
+    // signer,
   }: { signature?: string; signer?: string | null; hash?: string | null } = {}) => {
     // if (!id) {
     //   throw new Error('ID not set')

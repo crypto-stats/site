@@ -3,7 +3,7 @@ import { Collection, Module, LOG_LEVEL } from '@cryptostats/sdk'
 import { compileTsToJs } from 'utils/ts-compiler'
 import { getSDK } from 'utils/sdk'
 
-import { getDiagnostics } from 'graphql-language-service-interface'
+// import { getDiagnostics } from 'graphql-language-service-interface'
 
 interface CompilerState {
   code: string | null

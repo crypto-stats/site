@@ -181,7 +181,7 @@ const Editor: React.FC = () => {
   const [bottomView, setBottomView] = useState(BottomView.NONE)
   const editorRef = useRef<any>(null)
 
-  const { evaluate, module } = useCompiler()
+  const { evaluate } = useCompiler()
   const { addLine } = useConsole()
   const { account } = useWeb3React()
   const name = useENSName(account)
@@ -347,7 +347,7 @@ const Editor: React.FC = () => {
           },
         ]}>
         <NewAdapterForm
-          onAdapterSelection={(fileName: string) => {
+          onAdapterSelection={(_fileName: string) => {
             // setMappingFileName(fileName)
             setNewAdapterModalOpen(false)
           }}
