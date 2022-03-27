@@ -28,7 +28,7 @@ import Text from 'components/Text'
 import { getENSCache } from 'utils/ens'
 import { usePlausible } from 'next-plausible'
 
-setRPC('https://api.mycryptoapi.com/eth')
+setRPC('https://mainnet-nethermind.blockscout.com/')
 
 const collectionAdmins = process.env.NEXT_PUBLIC_COLLECTION_ADMINS
   ? JSON.parse(process.env.NEXT_PUBLIC_COLLECTION_ADMINS.toLowerCase())
