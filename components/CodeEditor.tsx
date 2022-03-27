@@ -11,6 +11,7 @@ interface EditorProps {
   defaultValue: string
   fileId: string
   onMount?: (editor: any, monaco: any) => void
+  defaultLanguage?: 'typescript' | 'graphql'
 }
 
 const Editor: React.FC<EditorProps> = ({
@@ -19,6 +20,7 @@ const Editor: React.FC<EditorProps> = ({
   defaultValue,
   fileId,
   onMount,
+  defaultLanguage = 'typescript',
 }) => {
   const code = useRef(defaultValue)
   const monaco = useMonaco()
@@ -64,12 +66,13 @@ const Editor: React.FC<EditorProps> = ({
   return (
     <MonacoEditor
       theme="vs-dark"
-      defaultLanguage="typescript"
+      defaultLanguage={defaultLanguage}
       defaultValue={defaultValue}
       path={fileId}
       options={{
         tabSize: 2,
         insertSpaces: true,
+        minimap: { enabled: false },
       }}
       onMount={(editor: any) => {
         if (onMount) {

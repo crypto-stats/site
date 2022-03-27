@@ -11,7 +11,7 @@ import { setENSCache } from 'use-ens-name'
 const GlobalStyle = createGlobalStyle`
   :root {
 
-    // Colors 
+    // Colors
     --color-primary: #0477F4;
     --color-primary-100: #BDD0F6;
     --color-primary-200: #D6EAFF;
@@ -27,7 +27,7 @@ const GlobalStyle = createGlobalStyle`
     --color-dark-500: #282D36;
     --color-dark-600: #505050;
     --color-dark-700: #878787;
- 
+
     --color-palette-1: #D0E0FF;
     --color-palette-2: #FFE3D0;
     --color-palette-3: #FFFDD0;
@@ -120,8 +120,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
 
       <GlobalStyle />
       <Web3ReactProvider
-        getLibrary={(provider: any) => new ethers.providers.Web3Provider(provider)}
-      >
+        getLibrary={(provider: any) => new ethers.providers.Web3Provider(provider)}>
         <PlausibleProvider domain="cryptostats.community">
           <Component {...pageProps} />
         </PlausibleProvider>
