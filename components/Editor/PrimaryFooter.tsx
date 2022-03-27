@@ -6,6 +6,7 @@ import { useAdapter } from 'hooks/local-adapters'
 import PublishModal from './PublishModal'
 import { MarkerSeverity } from './types'
 import Button from 'components/Button'
+import PublishSubgraphModal from './PublishSubgraphModal'
 
 const Container = styled.div`
   flex: 1;
@@ -71,11 +72,12 @@ const ErrorChip = styled.button<{ color?: string }>`
 `
 
 interface PrimaryFooterProps {
-  fileName: string | null
+  fileName?: string | null
   markers: any[]
   onMarkerClick: () => void
   onConsoleClick: () => void
   editorRef: any
+  isSubgraph: boolean
 }
 
 const PrimaryFooter: React.FC<PrimaryFooterProps> = ({
@@ -83,6 +85,7 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({
   markers,
   onMarkerClick,
   onConsoleClick,
+  isSubgraph,
   editorRef,
 }) => {
   const [showModal, setShowModal] = useState(false)
@@ -138,23 +141,30 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({
 
             <PublishButton
               onClick={() => setShowModal(true)}
-              disabled={errors.length > 0}
+              disabled={isSubgraph && errors.length > 0}
               className={'primary'}
             >
-              Publish to IPFS
+              Publish {isSubgraph ? 'subgraph' : 'to IPFS'}
             </PublishButton>
           </Fragment>
         )}
       </Side>
 
-      {fileName && (
-        <PublishModal
-          fileName={fileName}
-          show={showModal}
-          onClose={() => setShowModal(false)}
-          editorRef={editorRef}
-        />
-      )}
+      {fileName &&
+        (isSubgraph ? (
+          <PublishSubgraphModal
+            fileName={fileName}
+            show={showModal}
+            onClose={() => setShowModal(false)}
+          />
+        ) : (
+          <PublishModal
+            fileName={fileName}
+            show={showModal}
+            onClose={() => setShowModal(false)}
+            editorRef={editorRef}
+          />
+        ))}
     </Container>
   )
 }
