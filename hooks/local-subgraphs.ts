@@ -1,29 +1,41 @@
 import { useEffect, useState } from 'react'
-// @ts-ignore
-import sampleModule from '!raw-loader!../components/sample-module.txt'
 
 const storageKey = 'localSubgraphs'
+
+export const DEFAULT_MAPPING = 'mapping.ts'
 
 interface Publication {
   cid: string
   version: string
 }
 
-export interface FileData {
-  code: string
+export interface Contract {
+  name: string
+  addresses: { [chain: string]: string }
+  startBlocks: { [chain: string]: number }
+  abi: string
+  customAbi: boolean
+  events: { signature: string; handler: string }[]
+}
+
+export interface SubgraphData {
   name: string | null
+  // For now, we only use one mapping (DEFAULT_MAPPING), but it's coded this way to be forward-compatable
+  mappings: { [name: string]: string }
+  schema: string
   version: string | null
+  contracts: Contract[]
   publications: Publication[]
 }
 
-export interface AdapterWithID extends Adapter {
+export interface SubgraphWithID extends SubgraphData {
   id: string
 }
 
 const getStorage = () =>
   typeof window === 'undefined' ? {} : JSON.parse(window.localStorage.getItem(storageKey) || '{}')
 
-export const getStorageItem = (id: string) => getStorage()[id] || null
+const getStorageItem = (id: string) => getStorage()[id] || null
 
 const setStorageItem = (id: string, value: any) => {
   window.localStorage.setItem(
@@ -40,7 +52,7 @@ const adapterListUpdaters: Function[] = []
 
 const updateAdapterLists = () => adapterListUpdaters.map(updater => updater())
 
-export const useAdapterList = (): AdapterWithID[] => {
+export const useSubgraphList = (): SubgraphWithID[] => {
   const _update = useState({})[1]
   const update = () => _update({})
 
@@ -60,126 +72,62 @@ export const useAdapterList = (): AdapterWithID[] => {
 
 const randomId = () => Math.floor(Math.random() * 1000000).toString(16)
 
-interface NewModuleProps {
-  code: string
-  publications?: Publication[]
-  name?: string
-}
-
-export const newModule = ({
-  name = 'New Module',
-  code = sampleModule,
-  publications = [],
-}: NewModuleProps) => {
+export const newSubgraph = (mapping = '', schema = '', publications: Publication[] = []) => {
   const id = randomId()
 
-  const adapter: FileData = {
-    code,
-    name,
+  const subgraph: SubgraphData = {
+    mappings: { [DEFAULT_MAPPING]: mapping },
+    schema,
+    name: 'New Subgraph',
+    contracts: [],
     publications,
     version: null,
   }
 
-  setStorageItem(id, adapter)
+  setStorageItem(id, subgraph)
   return id
 }
 
-export const useSubgraph = () => {
+export const useLocalSubgraph = (id?: string | null) => {
   const update = useState({})[1]
 
-  const save = (id: string, code: string, name: string | null, version: string | null) => {
+  const saveSchema = (schema: string) => {
     if (!id) {
       throw new Error('ID not set')
     }
 
     const adapter = getStorageItem(id)
 
-    const newAdapter: Adapter = { ...adapter, code, name, version }
+    const newAdapter: SubgraphData = { ...adapter, schema }
     setStorageItem(id, newAdapter)
     update({})
 
     return id
   }
 
-  const publish = async ({
-    // signature,
-    // hash,
-    // signer,
-  }: { signature?: string; signer?: string | null; hash?: string | null } = {}) => {
-    // if (!id) {
-    //   throw new Error('ID not set')
-    // }
-    // const adapter = getStorageItem(id)
-    // const previousVersion =
-    //   adapter?.publications && adapter.publications.length > 0
-    //     ? adapter.publications[adapter.publications.length - 1]
-    //     : null
-    // if (previousVersion && adapter.version === previousVersion.version) {
-    //   throw new Error(`Version ${adapter.version} is already published`)
-    // }
-    // const req = await fetch('/api/upload-adapter', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     code: adapter.code,
-    //     version: adapter.version,
-    //     previousVersion: previousVersion?.cid || null,
-    //     language: 'typescript',
-    //     signature,
-    //     hash,
-    //     signer,
-    //   }),
-    // })
-    // const response = await req.json()
-    // if (!response.success) {
-    //   throw new Error(response.error)
-    // }
-    // const newAdapter: Adapter = {
-    //   ...adapter,
-    //   code: adapter.code,
-    //   name: adapter.name,
-    //   publications: [
-    //     ...(adapter.publications || []),
-    //     { cid: response.codeCID, version: adapter.version, signature },
-    //   ],
-    // }
-    // setStorageItem(id, newAdapter)
-    // update({})
-    // return response
+  const saveMapping = (fileName: string, mapping: string) => {
+    if (!id) {
+      throw new Error('ID not set')
+    }
+
+    const adapter = getStorageItem(id)
+
+    const newSubgraph: SubgraphData = {
+      ...adapter,
+      mappings: { ...adapter.mappings, [fileName]: mapping },
+    }
+
+    setStorageItem(id, newSubgraph)
+    update({})
+
+    return id
   }
 
-  const getSignableHash = async () => {
-    // if (!id) {
-    //   throw new Error('ID not set')
-    // }
-    // const adapter = getStorageItem(id)
-    // const previousVersion =
-    //   adapter?.publications && adapter.publications.length > 0
-    //     ? adapter.publications[adapter.publications.length - 1]
-    //     : null
-    // if (previousVersion && adapter.version === previousVersion.version) {
-    //   throw new Error(`Version ${adapter.version} is already published`)
-    // }
-    // const req = await fetch('/api/prepare-adapter', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     code: adapter.code,
-    //     version: adapter.version,
-    //     previousVersion: previousVersion?.cid || null,
-    //     language: 'typescript',
-    //   }),
-    // })
-    // const { hash } = await req.json()
-    // const message = `CryptoStats Adapter Hash: ${hash}`
-    // return message
+  const subgraph = id ? (getStorageItem(id) as SubgraphData) : null
+
+  return {
+    subgraph,
+    saveSchema,
+    saveMapping,
   }
-
-  const getDataFile = (id: string) => getStorageItem(id)
-
-  return { save, publish, getSignableHash, getDataFile }
 }
