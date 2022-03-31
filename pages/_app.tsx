@@ -120,7 +120,8 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
 
       <GlobalStyle />
       <Web3ReactProvider
-        getLibrary={(provider: any) => new ethers.providers.Web3Provider(provider)}>
+        getLibrary={(provider: any) => new ethers.providers.Web3Provider(provider)}
+      >
         <PlausibleProvider domain="cryptostats.community">
           <Component {...pageProps} />
         </PlausibleProvider>

@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { ViewPort, Top, Fill, Bottom, BottomResizable, Right } from 'react-spaces'
 import { useRouter } from 'next/router'
-import { LOG_LEVEL } from '@cryptostats/sdk'
 import { useWeb3React } from '@web3-react/core'
 import styled from 'styled-components'
 import { useENSName } from 'use-ens-name'
 import CodeEditor from 'components/CodeEditor'
 import ConnectionButton from 'components/ConnectionButton'
-import { useSubgraph, newModule, getStorageItem, FileData } from 'hooks/local-subgraphs'
-import { useCompiler } from 'hooks/compiler'
-import { useConsole } from 'hooks/console'
-import { emptyMapping, emptySchema } from 'resources/templates'
+import { useLocalSubgraph, newSubgraph, DEFAULT_MAPPING } from 'hooks/local-subgraphs'
 import PrimaryFooter from './PrimaryFooter'
 import { Tabs, TabState } from './Tabs'
 import EditorModal from './EditorModal'
@@ -18,12 +14,12 @@ import NewAdapterForm from './NewAdapterForm'
 import { MarkerSeverity } from './types'
 import ErrorPanel from './ErrorPanel'
 import { usePlausible } from 'next-plausible'
-import { useEditorState } from '../../hooks/editor-state'
 import EditorControls from './EditorControls'
 import Console from './Console'
 import BottomTitleBar, { BottomView } from './BottomTitleBar'
 import SaveMessage from './SaveMessage'
 import ImageLibrary from './ImageLibrary/ImageLibrary'
+import { useEditorState } from 'hooks/editor-state'
 
 const Header = styled(Top)`
   background-image: url('/editor_logo.png');
@@ -130,49 +126,38 @@ const PrimaryFill = styled(FillWithStyledResize)`
   }
 `
 
-const formatLog = (val: any) => {
-  if (val.toString() === '[object Object]') {
-    return JSON.stringify(val, null, 2)
-  } else if (typeof val === 'string') {
-    return `"${val}"`
-  }
-  return val.toString()
-}
+const SCHEMA_FILE_NAME = 'schema.graphql'
 
 const Editor: React.FC = () => {
   const router = useRouter()
   const plausible = usePlausible()
-  const [subgraphFiles, setSubgraphFiles] = useEditorState<TabState[] | []>(
-    'test',
-    [
-      { type: 'schema', fileId: null, open: true, focused: true },
-      { type: 'mapping', fileId: null, open: true, focused: false },
-    ],
-    'subgraph-editor-state'
-  )
-  const { save } = useSubgraph()
+  const [file, setFile] = useEditorState<string | null>('subgraph-file')
+  const [tab, setTab] = useState(SCHEMA_FILE_NAME)
 
-  const openTabs = (subgraphFiles || [])
-    .filter(sgf => sgf.open)
-    .map(ot => ({ ...ot, ...(ot.fileId && { fileData: getStorageItem(ot.fileId) as FileData }) }))
-  const focusedTab = openTabs?.find(sgf => sgf.focused)!
+  const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(file)
 
-  useEffect(() => {
-    setSubgraphFiles((prev: TabState[]) =>
-      prev.map(pi =>
-        pi.open && !pi.fileId
-          ? {
-              ...pi,
-              fileId: newModule(
-                pi?.type === 'schema'
-                  ? { code: emptySchema, name: 'New Schema' }
-                  : { code: emptyMapping, name: 'New Mapping' }
-              ),
-            }
-          : pi
-      )
-    )
-  }, [])
+  const subgraphFiles: (TabState & { value: string })[] = subgraph
+    ? [
+        {
+          type: 'schema',
+          name: 'Schema',
+          fileId: SCHEMA_FILE_NAME,
+          open: true,
+          focused: tab === SCHEMA_FILE_NAME,
+          value: subgraph.schema,
+        },
+        {
+          type: 'mapping',
+          name: 'Mapping',
+          fileId: DEFAULT_MAPPING,
+          open: true,
+          focused: tab !== SCHEMA_FILE_NAME,
+          value: subgraph.mappings[DEFAULT_MAPPING],
+        },
+      ]
+    : []
+
+  const focusedTab = subgraphFiles.find(sgf => sgf.focused)!
 
   const [started, setStarted] = useState(false)
   const [newAdapterModalOpen, setNewAdapterModalOpen] = useState(false)
@@ -181,8 +166,6 @@ const Editor: React.FC = () => {
   const [bottomView, setBottomView] = useState(BottomView.NONE)
   const editorRef = useRef<any>(null)
 
-  const { evaluate } = useCompiler()
-  const { addLine } = useConsole()
   const { account } = useWeb3React()
   const name = useENSName(account)
 
@@ -207,9 +190,6 @@ const Editor: React.FC = () => {
     return null
   }
 
-  const saveCode = (code: string) =>
-    save(focusedTab.fileId!, code, focusedTab.fileData!.name, focusedTab.fileData!.version)
-
   return (
     <ViewPort style={{ background: '#0f1011' }}>
       <Header size={64} order={1}>
@@ -231,13 +211,9 @@ const Editor: React.FC = () => {
               <TabContainer size={50}>
                 <Fill>
                   <Tabs
-                    openTabs={openTabs}
-                    current={focusedTab.fileData?.name}
-                    onSelect={fileId =>
-                      setSubgraphFiles(prev =>
-                        prev.map(p => ({ ...p, focused: p.fileId === fileId }))
-                      )
-                    }
+                    openTabs={subgraphFiles}
+                    current={tab}
+                    onSelect={fileId => setTab(fileId || SCHEMA_FILE_NAME)}
                   />
                 </Fill>
                 <Right size={100}>
@@ -246,36 +222,30 @@ const Editor: React.FC = () => {
               </TabContainer>
 
               <Fill>
-                {focusedTab?.fileData ? (
+                {subgraph ? (
                   <CodeEditor
                     defaultLanguage={focusedTab.type === 'schema' ? 'graphql' : 'typescript'}
-                    fileId={focusedTab.fileId!}
-                    defaultValue={focusedTab?.fileData?.code}
+                    fileId={tab}
+                    defaultValue={focusedTab.value}
                     onMount={(editor: any) => {
                       editorRef.current = editor
                     }}
-                    onChange={saveCode}
-                    onValidated={(code: string, markers: any[]) => {
+                    onChange={(code: string) =>
+                      tab === SCHEMA_FILE_NAME ? saveSchema(code) : saveMapping(tab, code)
+                    }
+                    onValidated={(_code: string, markers: any[]) => {
                       setMarkers(markers)
 
                       if (
                         markers.filter((marker: any) => marker.severity === MarkerSeverity.Error)
                           .length === 0
                       ) {
-                        evaluate({
-                          code,
-                          isTS: true,
-                          onLog: (level: LOG_LEVEL, ...args: any[]) =>
-                            addLine({
-                              level: level.toString(),
-                              value: args.map(formatLog).join(' '),
-                            }),
-                        })
+                        // Evaluate code
                       }
                     }}
                   />
                 ) : (
-                  <div>test</div>
+                  <div style={{ color: 'white' }}>Empty state</div>
                 )}
               </Fill>
 
@@ -304,9 +274,9 @@ const Editor: React.FC = () => {
           </FillWithStyledResize>
 
           <PrimaryFooterContainer size={55}>
-            {focusedTab?.fileData ? (
+            {subgraph ? (
               <PrimaryFooter
-                fileName={focusedTab?.fileData.name}
+                fileName={tab}
                 markers={markers}
                 onMarkerClick={() => setBottomView(BottomView.ERRORS)}
                 onConsoleClick={() => setBottomView(BottomView.CONSOLE)}
@@ -333,19 +303,20 @@ const Editor: React.FC = () => {
             onClick: () => setNewAdapterModalOpen(false),
           },
           {
-            label: 'Create Blank Adapter',
+            label: 'Create Blank Subgraph',
             onClick: () => {
-              plausible('new-adapter', {
+              plausible('new-subgraph', {
                 props: {
                   template: 'blank',
                 },
               })
 
-              // setMappingFileName(newModule(emptyMapping))
+              setFile(newSubgraph())
               setNewAdapterModalOpen(false)
             },
           },
-        ]}>
+        ]}
+      >
         <NewAdapterForm
           onAdapterSelection={(_fileName: string) => {
             // setMappingFileName(fileName)

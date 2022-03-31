@@ -58,7 +58,7 @@ export const useGqlCompiler = () => {
       const module = list.addAdaptersWithCode(compiledCode || code)
 
       setState({ ...DEFAULT_STATE, code, module, compiledCode, list })
-    } catch (e) {
+    } catch (e: any) {
       console.warn(e)
       setState({ ...DEFAULT_STATE, error: e.message })
     }

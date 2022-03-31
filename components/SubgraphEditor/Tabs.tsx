@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import CloseIcon from 'components/CloseIcon'
-import { FileData } from 'hooks/local-subgraphs'
 
 const TabRow = styled.div`
   display: flex;
@@ -42,6 +41,7 @@ const CloseButton = styled.button`
 
 export interface TabState {
   type: 'schema' | 'mapping'
+  name?: string
   fileId?: string | null
   open: boolean
   focused: boolean
@@ -51,7 +51,7 @@ interface TabsProps {
   current?: string | null
   onClose?: (fileId?: string) => void
   onSelect: (fileId?: string) => void
-  openTabs: (TabState & { fileData?: FileData })[]
+  openTabs: TabState[]
 }
 
 export const Tabs = ({ onClose, openTabs, onSelect }: TabsProps) => {
@@ -59,7 +59,7 @@ export const Tabs = ({ onClose, openTabs, onSelect }: TabsProps) => {
     <TabRow>
       {openTabs.map(ot => (
         <Tab key={ot.fileId} $focused={ot.focused} onClick={() => onSelect(ot.fileId!)}>
-          <div>{ot.fileData?.name || ''}</div>
+          <div>{ot.name || ot.fileId || 'File'}</div>
           {ot.focused && onClose && (
             <CloseButton onClick={() => onClose(ot.fileId!)}>
               <CloseIcon />
