@@ -4,6 +4,7 @@ import { MarkerSeverity } from './Editor/types'
 
 // @ts-ignore
 import sdkTypeDefs from '!raw-loader!generated/cryptostats-sdk.d.ts'
+import graphTypeDefs from '!raw-loader!generated/graph-ts-sdk.d.ts'
 
 interface EditorProps {
   onValidated: (code: string, markers: any[]) => void
@@ -54,6 +55,11 @@ const Editor: React.FC<EditorProps> = ({
       // When resolving definitions and references, the editor will try to use created models.
       // Creating a model for the library allows "peek definition/references" commands to work with the library.
       monaco.editor.createModel(sdkTypeDefs, 'typescript', monaco.Uri.parse(sdkUri))
+
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(
+        graphTypeDefs,
+        'file:///node_modules/@graphprotocol/graph-ts/index.d.ts'
+      );
 
       return () => monaco.editor.getModels().forEach((model: any) => model.dispose())
     }
