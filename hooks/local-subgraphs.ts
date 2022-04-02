@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { deploySubgraph } from 'utils/deploy-subgraph'
 
 const storageKey = 'localSubgraphs'
 
@@ -124,25 +125,17 @@ export const useLocalSubgraph = (id?: string | null) => {
   }
 
   const deploy = async (subgraphName: string, deployKey: string) => {
-    const req = await fetch('/api/graph/deploy', {
-      method: 'POST',
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        method: 'subgraph_deploy',
-        params: {
-          name: subgraphName,
-          ipfs_hash: 'QmRfdqUX3boZxUHeDV17i1iBjL9AWq93FxXP12TfUKpvDj',
-        },
-        id: 2,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + deployKey,
-      },
-    })
+    if (!subgraph) {
+      throw new Error(`No subgraph loaded`)
+    }
 
-    const json = await req.json()
-    return json
+    try {
+      for await (const status of deploySubgraph(subgraph, { subgraphName, deployKey })) {
+        console.log(status)
+      }
+    } catch (e: any) {
+      console.error(e)
+    }
   }
 
   const subgraph = id ? (getStorageItem(id) as SubgraphData) : null
