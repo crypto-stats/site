@@ -1,4 +1,4 @@
-import { SubgraphData } from 'hooks/local-subgraphs'
+import { DEFAULT_MAPPING, SubgraphData } from 'hooks/local-subgraphs'
 
 export enum STATUS {
   INITIALIZING,
@@ -7,10 +7,16 @@ export enum STATUS {
   COMPLETE,
 }
 
-async function uploadToIPFS(file: string, name: string) {
+async function uploadToIPFS(file: string | Uint8Array, name: string) {
+  const body = file instanceof Uint8Array ? {
+    file: Buffer.from(file).toString('base64'),
+    encoding: 'base64',
+    name,
+  } : { file, name }
+
   const req = await fetch('/api/graph/upload-file', {
     method: 'POST',
-    body: JSON.stringify({ file, name }),
+    body: JSON.stringify(body),
     headers: {
       'Content-Type': 'application/json',
     },
@@ -59,12 +65,15 @@ export async function* deploySubgraph(
   }
 
   const yaml = await import('js-yaml')
+  const { compileAs } = await import('./as-compiler')
 
   yield {
     status: STATUS.IPFS_UPLOAD,
   }
 
-  const mappingCID = 'QmcL62o6kSWPShvLjd39VsTmHtiyABrTXD1fPdPobBHDsu'
+  const compiled = await compileAs(subgraph.mappings[DEFAULT_MAPPING])
+
+  const mappingCID = await uploadToIPFS(compiled, 'mapping.wasm')
 
   const dataSources: any[] = []
 

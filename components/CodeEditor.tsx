@@ -4,6 +4,7 @@ import { MarkerSeverity } from './Editor/types'
 
 // @ts-ignore
 import sdkTypeDefs from '!raw-loader!generated/cryptostats-sdk.d.ts'
+// @ts-ignore
 import graphTypeDefs from '!raw-loader!generated/graph-ts-sdk.d.ts'
 
 interface EditorProps {
