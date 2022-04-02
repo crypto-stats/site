@@ -1,18 +1,10 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { useENSName } from 'use-ens-name'
-import { useWeb3React } from '@web3-react/core'
 import EditorModal, { Button as ModalButton } from './EditorModal'
-import { useAdapter } from 'hooks/local-adapters'
-import Button from 'components/Button'
-import WalletConnections from 'components/WalletConnections'
 import Text from 'components/Text'
+import { useLocalSubgraph } from 'hooks/local-subgraphs'
 
-const AlignButtons = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`
+const subgraphName = 'dmihal/test-graph'
 
 const ShareUrl = styled.div`
   padding: 16px;
@@ -30,75 +22,31 @@ interface PublishModalProps {
   editorRef: any
 }
 
-const VERSION_NUM_REGEX = /([\d]+)\.([\d]+)\.([\d]+)/g
-
 enum STATE {
   INIT,
-  SIGN,
-  SIGNED_PUBLISH_PENDING,
-  PUBLISHING,
-  PUBLISHED,
+  DEPLOY_PENDING,
+  DEPLOYING,
+  DEPLOYED,
 }
 
-const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, editorRef }) => {
+const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) => {
   const [state, setState] = useState(STATE.INIT)
   const [cid, setCID] = useState<null | string>(null)
-  const [hash, setHash] = useState<null | string>(null)
-  const { publish: publishToIPFS, adapter, getSignableHash, save } = useAdapter(fileName)
-  const { account, library } = useWeb3React()
-  const accountName = useENSName(account, account)
+  const { deploy: deployToNode } = useLocalSubgraph(fileName)
 
-  const prepareSignature = async () => {
-    setState(STATE.SIGN)
-    const _hash = await getSignableHash()
-    setHash(_hash)
+  const prepareDeployment = async () => {
+    setState(STATE.DEPLOY_PENDING)
   }
 
-  const sign = async () => {
-    setState(STATE.SIGNED_PUBLISH_PENDING)
+  const deploy = async () => {
     try {
-      const signature = await library.getSigner().signMessage(hash)
-      setState(STATE.PUBLISHING)
+      setState(STATE.DEPLOYING)
 
-      const { codeCID } = await publishToIPFS({ signature, hash, signer: account })
-      setCID(codeCID)
-      setState(STATE.PUBLISHED)
+      await deployToNode(subgraphName, process.env.NEXT_PUBLIC_GRAPH_KEY!)
+      setState(STATE.DEPLOYED)
     } catch (e) {
       console.warn(e)
-      setState(STATE.SIGN)
-    }
-  }
-
-  const lastPublication =
-    adapter?.publications && adapter.publications.length > 0
-      ? adapter!.publications[adapter!.publications.length - 1]
-      : null
-  const hasUpdatedVersion = !lastPublication || adapter?.version !== lastPublication.version
-
-  let patchVersion: string | null = null
-  let minorVersion: string | null = null
-  let majorVersion: string | null = null
-  let updateVersion: ((newVersion: string) => void) | null = null
-  const versionRegexResult = show && !hasUpdatedVersion && VERSION_NUM_REGEX.exec(adapter!.code)
-  if (versionRegexResult) {
-    const [version, major, minor, patch] = versionRegexResult
-
-    patchVersion = `${major}.${minor}.${parseInt(patch) + 1}`
-    minorVersion = `${major}.${parseInt(minor) + 1}.0`
-    majorVersion = `${parseInt(major) + 1}.0.0`
-
-    updateVersion = (newVersion: string) => {
-      const startLineNumber = adapter!.code.substr(0, versionRegexResult.index).split('\n').length
-      const startColumn = adapter!.code.split('\n')[startLineNumber - 1].indexOf(version) + 1
-      const endColumn = startColumn + version.length
-
-      const edit = {
-        range: { endColumn, endLineNumber: startLineNumber, startColumn, startLineNumber },
-        text: newVersion,
-      }
-
-      editorRef.current.executeEdits('version', [edit])
-      save(adapter!.code.replace(version, newVersion), adapter!.name, newVersion)
+      setState(STATE.DEPLOY_PENDING)
     }
   }
 
@@ -106,7 +54,6 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
     onClose()
     setState(STATE.INIT)
     setCID(null)
-    setHash(null)
   }
 
   const returnButton = { label: 'Return to Editor', onClick: close }
@@ -115,90 +62,46 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
   let buttons: ModalButton[] = []
   let content = null
 
-  const disabled = state === STATE.SIGNED_PUBLISH_PENDING
-
   if (show) {
     switch (state) {
       case STATE.INIT:
-        if (hasUpdatedVersion) {
-          buttons = [returnButton, { label: 'Continue', onClick: prepareSignature, disabled }]
-          content = (
-            <div>
-              <Text tag="p" color="white" type="description">
-                Publish your adapter to IPFS to make it viewable by the community.
-              </Text>
-              <Text tag="p" color="white" type="description">
-                Once your adapter is published, you can share it on the CryptoStats forum to request
-                verification.
-              </Text>
-            </div>
-          )
-        } else {
-          buttons = [returnButton]
-          content = (
-            <>
-              <Text tag="p" color="white" type="description">
-                This adapter has already been deployed with the current version{' '}
-                <strong>{adapter!.version}</strong>.
-              </Text>
-              <Text tag="p" color="white" type="description" mb="24">
-                Update the version number to allow publishing to IPFS.
-              </Text>
-              <AlignButtons>
-                <Button variant="outline" onClick={() => updateVersion!(patchVersion!)}>
-                  Small update: {patchVersion}
-                </Button>
-                <Button variant="outline" onClick={() => updateVersion!(minorVersion!)}>
-                  Medium update: {minorVersion}
-                </Button>
-                <Button variant="outline" onClick={() => updateVersion!(majorVersion!)}>
-                  Large update: {majorVersion}
-                </Button>
-              </AlignButtons>
-            </>
-          )
-        }
-        break
-
-      case STATE.SIGN:
-      case STATE.SIGNED_PUBLISH_PENDING:
-        buttons = [returnButton]
-        if (!account) {
-          content = (
-            <div>
-              <Text tag="p" color="white" type="description">
-                You need to connect your Web3 wallet to sign your adapter.
-              </Text>
-              <WalletConnections />
-            </div>
-          )
-        } else if (!hash) {
-          content = <div>Loading...</div>
-        } else {
-          buttons = [returnButton, { label: 'Sign adapter', onClick: sign, disabled }]
-          content = (
-            <div>
-              <Text tag="p" color="white" type="description">
-                Click "Sign Adapter" to sign your adapter code from your current account (
-                {accountName}).
-              </Text>
-            </div>
-          )
-        }
-        break
-
-      case STATE.PUBLISHING:
+        buttons = [returnButton, { label: 'Continue', onClick: prepareDeployment }]
         content = (
           <div>
             <Text tag="p" color="white" type="description">
-              Publishing to IPFS...
+              Publish your adapter to IPFS to make it viewable by the community.
+            </Text>
+            <Text tag="p" color="white" type="description">
+              Once your adapter is published, you can share it on the CryptoStats forum to request
+              verification.
             </Text>
           </div>
         )
         break
 
-      case STATE.PUBLISHED:
-        title = '🎉  Adapter Successfully Published!'
+      case STATE.DEPLOY_PENDING:
+        buttons = [returnButton, { label: 'Sign adapter', onClick: deploy }]
+        content = (
+          <div>
+            <Text tag="p" color="white" type="description">
+              Click "Publish" to deploy your subgraph.
+            </Text>
+          </div>
+        )
+        break
+
+      case STATE.DEPLOYING:
+        content = (
+          <div>
+            <Text tag="p" color="white" type="description">
+              Deploying...
+            </Text>
+          </div>
+        )
+        break
+
+      case STATE.DEPLOYED:
+        title = '🎉  Subgraph Successfully Deployed!'
         buttons = [returnButton]
         content = (
           <div>

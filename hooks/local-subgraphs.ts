@@ -123,10 +123,33 @@ export const useLocalSubgraph = (id?: string | null) => {
     return id
   }
 
+  const deploy = async (subgraphName: string, deployKey: string) => {
+    const req = await fetch('/api/graph/deploy', {
+      method: 'POST',
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        method: 'subgraph_deploy',
+        params: {
+          name: subgraphName,
+          ipfs_hash: 'QmRfdqUX3boZxUHeDV17i1iBjL9AWq93FxXP12TfUKpvDj',
+        },
+        id: 2,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + deployKey,
+      },
+    })
+
+    const json = await req.json()
+    return json
+  }
+
   const subgraph = id ? (getStorageItem(id) as SubgraphData) : null
 
   return {
     subgraph,
+    deploy,
     saveSchema,
     saveMapping,
   }
