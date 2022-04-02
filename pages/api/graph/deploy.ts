@@ -10,8 +10,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return
   }
 
-  console.log(req.body)
-
   fetch('https://api.thegraph.com/deploy/', {
     method: 'POST',
     body: JSON.stringify(req.body),

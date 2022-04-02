@@ -1,4 +1,4 @@
-import { SubgraphData } from "hooks/local-subgraphs";
+import { SubgraphData } from 'hooks/local-subgraphs'
 
 export enum STATUS {
   INITIALIZING,
@@ -44,67 +44,78 @@ async function deployHosted(name: string, cid: string, deployKey: string) {
   return json.result
 }
 
-export async function* deploySubgraph(_subgraph: SubgraphData, {
-  subgraphName,
-  deployKey,
-}: {
-  subgraphName: string,
-  deployKey: string,
-}) {
+export async function* deploySubgraph(
+  subgraph: SubgraphData,
+  {
+    subgraphName,
+    deployKey,
+  }: {
+    subgraphName: string
+    deployKey: string
+  }
+) {
   yield {
     status: STATUS.INITIALIZING,
   }
 
   const yaml = await import('js-yaml')
 
-  const manifestString = yaml.dump({
-    specVersion: '0.0.2',
-    description: 'Test description',
-    dataSources: [
-      {
-        kind: 'ethereum/contract',
-        name: 'UniV2Factory',
-        network: 'mainnet',
-        source: {
-          abi: 'UniV2Factory',
-          address: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
-          startBlock: 10000835,
-        },
-        mapping: {
-          abis: [
-            {
-              file: {
-                '/': '/ipfs/QmZ55G1yYFzde8Vcq4cpLfNgPSEibpLi9aYCqS1jEvCKQ9',
-              },
-              name: 'UniV2Factory',
-            },
-          ],
-          apiVersion: '0.0.5',
-          entities: ['Pair'],
-          eventHandlers: [
-            {
-              event: 'PairCreated(indexed address,indexed address,address,uint256)',
-              handler: 'handlePairCreated',
-            },
-          ],
-          file: {
-            '/': '/ipfs/QmcL62o6kSWPShvLjd39VsTmHtiyABrTXD1fPdPobBHDsu',
-          },
-          kind: 'ethereum/events',
-          language: 'wasm/assemblyscript',
-        },
-      },
-    ],
-    schema: {
-      file: {
-        '/': '/ipfs/QmehbLm5pEPQqDAdTdGid4zqe49FHUUq2MHEtHLiW2DiLd',
-      },
-    },
-  })
-
   yield {
     status: STATUS.IPFS_UPLOAD,
   }
+
+  const mappingCID = 'QmcL62o6kSWPShvLjd39VsTmHtiyABrTXD1fPdPobBHDsu'
+
+  const dataSources: any[] = []
+
+  for (const contract of subgraph.contracts) {
+    const cid = await uploadToIPFS(JSON.stringify(contract.abi), `${contract.name}.json`)
+
+    dataSources.push({
+      kind: 'ethereum/contract',
+      name: contract.name,
+      network: 'mainnet',
+      source: {
+        abi: contract.name,
+        address: contract.addresses['1'],
+        startBlock: contract.startBlocks['1'],
+      },
+      mapping: {
+        abis: [
+          {
+            file: {
+              '/': `/ipfs/${cid}`,
+            },
+            name: contract.name,
+          },
+        ],
+        apiVersion: '0.0.5',
+        entities: ['Pair'],
+        eventHandlers: contract.events.map((event: { signature: string; handler: string }) => ({
+          event: event.signature,
+          handler: event.handler,
+        })),
+        file: {
+          '/': `/ipfs/${mappingCID}`,
+        },
+        kind: 'ethereum/events',
+        language: 'wasm/assemblyscript',
+      },
+    })
+  }
+
+  const schemaCID = await uploadToIPFS(subgraph.schema, 'schema.graphql')
+
+  const manifestString = yaml.dump({
+    specVersion: '0.0.2',
+    description: 'Test description',
+    dataSources,
+    schema: {
+      file: {
+        '/': `/ipfs/${schemaCID}`,
+      },
+    },
+  })
 
   const manifestCID = await uploadToIPFS(manifestString, 'manifest.yaml')
 

@@ -14,7 +14,7 @@ export interface Contract {
   name: string
   addresses: { [chain: string]: string }
   startBlocks: { [chain: string]: number }
-  abi: string
+  abi: any
   customAbi: boolean
   events: { signature: string; handler: string }[]
 }
@@ -80,7 +80,35 @@ export const newSubgraph = (mapping = '', schema = '', publications: Publication
     mappings: { [DEFAULT_MAPPING]: mapping },
     schema,
     name: 'New Subgraph',
-    contracts: [],
+    contracts: [
+      {
+        name: 'UniV2Factory',
+        addresses: {
+          '1': '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
+        },
+        startBlocks: { '1': 10000835 },
+        abi: [
+          {
+            anonymous: false,
+            inputs: [
+              { indexed: true, internalType: 'address', name: 'token0', type: 'address' },
+              { indexed: true, internalType: 'address', name: 'token1', type: 'address' },
+              { indexed: false, internalType: 'address', name: 'pair', type: 'address' },
+              { indexed: false, internalType: 'uint256', name: '', type: 'uint256' },
+            ],
+            name: 'PairCreated',
+            type: 'event',
+          },
+        ],
+        customAbi: false,
+        events: [
+          {
+            signature: 'PairCreated(indexed address,indexed address,address,uint256)',
+            handler: 'handlePairCreated',
+          },
+        ],
+      },
+    ],
     publications,
     version: null,
   }
