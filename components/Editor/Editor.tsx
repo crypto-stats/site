@@ -12,12 +12,9 @@ import {
 } from 'react-spaces'
 import { useRouter } from 'next/router'
 import { LOG_LEVEL } from '@cryptostats/sdk'
-import { useWeb3React } from '@web3-react/core'
 import styled from 'styled-components'
-import { useENSName } from 'use-ens-name'
 import Button from 'components/Button'
 import CodeEditor from 'components/CodeEditor'
-import ConnectionButton from 'components/ConnectionButton'
 import FileList from 'components/FileList'
 import { useAdapter, newModule } from 'hooks/local-adapters'
 import { useCompiler } from 'hooks/compiler'
@@ -39,26 +36,7 @@ import Console from './Console'
 import BottomTitleBar, { BottomView } from './BottomTitleBar'
 import SaveMessage from './SaveMessage'
 import ImageLibrary from './ImageLibrary/ImageLibrary'
-
-const Header = styled(Top)`
-  background-image: url('/editor_logo.png');
-  background-size: 140px;
-  background-color: #2f2f2f;
-  background-position: center;
-  background-repeat: no-repeat;
-  border-bottom: solid 1px #4a4a4d;
-  display: flex;
-  justify-content: space-between;
-`
-
-const HeaderRight = styled.div`
-  display: flex;
-  align-items: center;
-
-  @media (max-width: 700px) {
-    display: none;
-  }
-`
+import { Header, HeaderRight, WalletButton } from 'components/layouts'
 
 const CloseButton = styled.button`
   background: none;
@@ -86,21 +64,6 @@ const NewAdapterButton = styled.button`
 
   &:hover {
     background: #0477f430;
-  }
-`
-
-const WalletButton = styled(ConnectionButton)`
-  height: 35px;
-  border-radius: 5px;
-  border: solid 1px #7b7b7b;
-  background-color: #535353;
-  padding: 0 10px;
-  color: #eeeeee;
-  margin-right: 10px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #404040;
   }
 `
 
@@ -238,8 +201,6 @@ const Editor: React.FC = () => {
   const { save, adapter } = useAdapter(fileName)
   const { evaluate, module } = useCompiler()
   const { addLine } = useConsole()
-  const { account } = useWeb3React()
-  const name = useENSName(account)
 
   useEffect(() => {
     if (module && adapter && (module.name !== adapter.name || module.version !== adapter.version)) {
@@ -280,7 +241,7 @@ const Editor: React.FC = () => {
           <NewAdapterButton onClick={() => setNewAdapterModalOpen(true)}>
             New Adapter
           </NewAdapterButton>
-          <WalletButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</WalletButton>
+          <WalletButton />
         </HeaderRight>
       </Header>
       <PrimaryFill side="right">
@@ -428,8 +389,7 @@ const Editor: React.FC = () => {
               setNewAdapterModalOpen(false)
             },
           },
-        ]}
-      >
+        ]}>
         <NewAdapterForm
           onAdapterSelection={(fileName: string) => {
             setFileName(fileName)
