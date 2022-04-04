@@ -131,10 +131,10 @@ const SCHEMA_FILE_NAME = 'schema.graphql'
 const Editor: React.FC = () => {
   const router = useRouter()
   const plausible = usePlausible()
-  const [file, setFile] = useEditorState<string | null>('subgraph-file')
+  const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file')
   const [tab, setTab] = useState(SCHEMA_FILE_NAME)
 
-  const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(file)
+  const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId)
 
   const subgraphFiles: (TabState & { value: string })[] = subgraph
     ? [
@@ -276,7 +276,7 @@ const Editor: React.FC = () => {
           <PrimaryFooterContainer size={55}>
             {subgraph ? (
               <PrimaryFooter
-                fileName={tab}
+                fileName={subgraphId}
                 markers={markers}
                 onMarkerClick={() => setBottomView(BottomView.ERRORS)}
                 onConsoleClick={() => setBottomView(BottomView.CONSOLE)}
@@ -311,7 +311,7 @@ const Editor: React.FC = () => {
                 },
               })
 
-              setFile(newSubgraph())
+              setSubgraphId(newSubgraph())
               setNewAdapterModalOpen(false)
             },
           },

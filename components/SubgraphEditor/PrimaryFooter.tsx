@@ -1,11 +1,10 @@
-import React, { useState, Fragment } from 'react'
-import Link from 'next/link'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { XOctagon, AlertTriangle, Info } from 'react-feather'
-import { useAdapter } from 'hooks/local-adapters'
 import PublishModal from './PublishModal'
 import { MarkerSeverity } from './types'
 import Button from 'components/Button'
+import { useLocalSubgraph } from 'hooks/local-subgraphs'
 
 const Container = styled.div`
   flex: 1;
@@ -42,11 +41,6 @@ const PublishButton = styled(Button)`
     border-radius: 4px;
     color: #cccccc;
   }
-`
-
-const IPFSLink = styled.a`
-  color: #eee;
-  font-size: 12px;
 `
 
 const ErrorChip = styled.button<{ color?: string }>`
@@ -86,12 +80,7 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({
   editorRef,
 }) => {
   const [showModal, setShowModal] = useState(false)
-  const { adapter } = useAdapter(fileName)
-
-  const lastPublication =
-    adapter?.publications && adapter.publications.length > 0
-      ? adapter!.publications[adapter!.publications.length - 1]
-      : null
+  const { subgraph } = useLocalSubgraph(fileName)
 
   const infos = []
   const warnings = []
@@ -123,27 +112,14 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({
       </Side>
 
       <Side>
-        {adapter && (
-          <Fragment>
-            {lastPublication && (
-              <Link href={`/discover/adapter/${lastPublication.cid}`} passHref>
-                <IPFSLink>
-                  Last published to IPFS as {lastPublication.cid.substr(0, 6)}...
-                  {lastPublication.cid.substr(-4)}
-                  {' (v'}
-                  {lastPublication.version})
-                </IPFSLink>
-              </Link>
-            )}
-
-            <PublishButton
-              onClick={() => setShowModal(true)}
-              disabled={errors.length > 0}
-              className={'primary'}
-            >
-              Publish to IPFS
-            </PublishButton>
-          </Fragment>
+        {subgraph && (
+          <PublishButton
+            onClick={() => setShowModal(true)}
+            disabled={errors.length > 0}
+            className="primary"
+          >
+            Publish &amp; Deploy
+          </PublishButton>
         )}
       </Side>
 

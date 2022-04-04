@@ -4,7 +4,7 @@ import { create } from 'ipfs-http-client'
 
 const filePath = '/tmp/upload.txt'
 
-export async function saveToIPFS(file: string, name: string): Promise<string> {
+export async function saveToIPFS(file: string | Buffer, name: string): Promise<string> {
   if (!process.env.PINATA_KEY || !process.env.PINATA_SECRET) {
     throw new Error('Pinata key missing')
   }
