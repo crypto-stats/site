@@ -7,7 +7,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new Error('Only POST requests allowed')
   }
 
-  const cid = await saveToIPFS(req.body.file, req.body.name)
+  let file: string | Buffer = req.body.file
+
+  if (req.body.encoding === 'base64') {
+    file = Buffer.from(file as string, 'base64')
+  }
+
+  const cid = await saveToIPFS(file, req.body.name)
 
   res.json({ success: true, cid })
 }
