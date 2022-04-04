@@ -3,6 +3,7 @@ import { CryptoStatsSDK } from '@cryptostats/sdk'
 export function getSDK(options?: any) {
   const sdk = new CryptoStatsSDK({
     moralisKey: process.env.NEXT_PUBLIC_MORALIS_KEY,
+    executionTimeout: 100,
     ...options,
   })
 
