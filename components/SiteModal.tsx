@@ -30,6 +30,8 @@ const Content = styled.div`
   max-height: 70vh;
   overflow: auto;
   padding: 32px 0;
+  display: flex;
+  flex-direction: column;
 `
 
 ReactModal.setAppElement('#__next')
@@ -40,7 +42,7 @@ interface ModalProps {
   title: string
 }
 
-const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
+const SiteModal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
   return (
     <ReactModal
       isOpen={isOpen}
@@ -57,4 +59,4 @@ const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, children })
   )
 }
 
-export default EditorModal
+export default SiteModal
