@@ -1,11 +1,15 @@
 // @ts-ignore
 import asc from 'assemblyscript/asc'
 // @ts-ignore
-const context = require.context('!raw-loader!node_modules/@graphprotocol/graph-ts', true, /node_modules\/@graphprotocol\/graph-ts.+\.ts$/);
-const files: any = {};
+const context = require.context(
+  '!raw-loader!node_modules/@graphprotocol/graph-ts',
+  true,
+  /node_modules\/@graphprotocol\/graph-ts.+\.ts$/
+)
+const files: any = {}
 
 for (let filename of context.keys()) {
-  files[filename] = context(filename);
+  files[filename] = context(filename)
 }
 
 export async function compileAs(tsCode: string) {
@@ -35,6 +39,38 @@ export async function compileAs(tsCode: string) {
   if (result.error) {
     throw new Error(result.stderr.toString())
   }
-console.log(result)
+
   return output.binary
+}
+
+export async function loadAsBytecode(bytecode: Uint8Array) {
+  const imports = {
+    env: {
+      memoryBase: 0,
+      tableBase: 0,
+      memory: new WebAssembly.Memory({
+        initial: 256,
+        maximum: 512,
+      }),
+      table: new WebAssembly.Table({
+        initial: 0,
+        maximum: 0,
+        element: 'anyfunc',
+      }),
+      abort: () => null,
+    },
+    conversion: {
+      'typeConversion.bytesToHex': () => null,
+      'typeConversion.bigIntToString': () => null,
+    },
+    numbers: {
+      'bigDecimal.toString': () => null,
+    },
+    index: {
+      'store.set': () => null,
+    },
+  }
+
+  const module = await WebAssembly.instantiate(bytecode, imports)
+  return module
 }
