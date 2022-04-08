@@ -9,11 +9,13 @@ interface InputFieldProps {
   onChange: (val: string) => void
   className?: string
   disabled?: boolean
+  placeholder?: string
 }
 
 const dateLib = new CryptoStatsSDK().date
 
-const InputField: React.FC<InputFieldProps> = ({ name, value, onChange, disabled, className }) => {
+const InputField = (props: InputFieldProps) => {
+  const { name, value, onChange, disabled, className, placeholder } = props
   if (name.toLowerCase().indexOf('date') !== -1) {
     return (
       <DatePicker
@@ -32,7 +34,7 @@ const InputField: React.FC<InputFieldProps> = ({ name, value, onChange, disabled
       className={className}
       onChange={(e: any) => onChange(e.target.value)}
       disabled={disabled}
-      placeholder={name}
+      placeholder={placeholder || name}
     />
   )
 }

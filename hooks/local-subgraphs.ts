@@ -15,7 +15,7 @@ export interface Contract {
   addresses: { [chain: string]: string }
   startBlocks: { [chain: string]: number }
   abi: any
-  customAbi: boolean
+  source: 'etherscan' | 'custom'
   events: { signature: string; handler: string }[]
 }
 
@@ -87,7 +87,7 @@ export const newSubgraph = (mapping = '', schema = '', publications: Publication
           '1': '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
         },
         startBlocks: { '1': 10000835 },
-        abi: [
+        abi: JSON.stringify([
           {
             anonymous: false,
             inputs: [
@@ -99,8 +99,8 @@ export const newSubgraph = (mapping = '', schema = '', publications: Publication
             name: 'PairCreated',
             type: 'event',
           },
-        ],
-        customAbi: false,
+        ]),
+        source: 'etherscan',
         events: [
           {
             signature: 'PairCreated(indexed address,indexed address,address,uint256)',

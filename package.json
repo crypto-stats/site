@@ -1,6 +1,9 @@
 {
   "name": "cryptostats-site",
   "private": true,
+  "engines": {
+    "node": "16.14.2"
+  },
   "scripts": {
     "dev": "next",
     "build": "next build",
@@ -10,9 +13,6 @@
   },
   "dependencies": {
     "@cryptostats/sdk": "^0.2.8",
-    "@fortawesome/fontawesome-svg-core": "^6.1.1",
-    "@fortawesome/free-solid-svg-icons": "^6.1.1",
-    "@fortawesome/react-fontawesome": "^0.1.18",
     "@graphprotocol/graph-ts": "^0.26.0",
     "@monaco-editor/react": "^4.2.1",
     "@pinata/sdk": "^1.1.23",
@@ -36,11 +36,13 @@
     "react-gh-like-diff": "^2.0.2",
     "react-is": "^17.0.2",
     "react-modal": "^3.14.3",
+    "react-select": "^5.2.2",
     "react-spaces": "^0.2.6",
     "react-syntax-highlighter": "^15.4.4",
     "styled-components": "^5.2.3",
     "typescript": "^4.3.5",
-    "use-ens-name": "^0.1.8"
+    "use-ens-name": "^0.1.8",
+    "yarn": "^1.22.18"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.18.9",
