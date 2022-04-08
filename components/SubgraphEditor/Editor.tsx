@@ -150,6 +150,17 @@ const Editor: React.FC = () => {
     return null
   }
 
+  const logExports = async () => {
+    const { compileAs, loadAsBytecode } = await import('utils/as-compiler')
+    const bytecode = await compileAs(subgraph!.mappings[DEFAULT_MAPPING])
+    const module = await loadAsBytecode(bytecode)
+    const exports = WebAssembly.Module.exports(module.module)
+    const functions = exports
+      .filter(_export => _export.kind === 'function')
+      .map(_export => _export.name)
+    console.log(functions)
+  }
+
   return (
     <ViewPort style={{ background: '#0f1011' }}>
       <Header size={64} order={1}>
@@ -175,6 +186,7 @@ const Editor: React.FC = () => {
                     current={tab}
                     onSelect={fileId => setTab(fileId || SCHEMA_FILE_NAME)}
                   />
+                  <button onClick={logExports}>Log exports</button>
                 </Fill>
                 <Right size={100}>
                   <EditorControls editorRef={editorRef} />
