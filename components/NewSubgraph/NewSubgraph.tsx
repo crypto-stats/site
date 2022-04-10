@@ -102,7 +102,8 @@ export const NewSubgraph = () => {
   const [mappingFunctionNames, setMappingFunctionNames] = useState<string[]>([])
   const router = useRouter()
 
-  const abi = useEtherscanAbi({ address: contractAddress })
+  const { abi } = useEtherscanAbi({ address: contractAddress })
+
   useEffect(() => {
     const isContractAlreadyFetched = selectedContracts.find(
       sc => sc.addresses[CHAIN_ID] === contractAddress
@@ -113,8 +114,8 @@ export const NewSubgraph = () => {
         {
           name: '',
           addresses: { [CHAIN_ID]: contractAddress },
-          abi: abi.result,
-          startBlocks: { [CHAIN_ID]: 10000835 },
+          abi: abi,
+          startBlocks: {},
           source: 'etherscan',
           events: [],
           ...(Number(abi.status) !== 1 && { errorMessage: abi.result }),

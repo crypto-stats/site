@@ -1,9 +1,10 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import Select from 'react-select'
 
 import { Contract } from 'hooks/local-subgraphs'
 import Button from '../Button'
+import { useEtherscanDeployBlock } from 'hooks/useEtherscanAbi'
 
 const Root = styled.div`
   background-color: #25252a;
@@ -98,7 +99,7 @@ function parseEventsFromAbi(abi: any[]) {
 
 export const SelectedContract = (props: SelectedContractProps) => {
   const {
-    contract: { addresses, name, source, errorMessage, abi },
+    contract: { addresses, name, source, errorMessage, abi, startBlocks },
     updateContract,
     mappingFunctionNames,
   } = props
@@ -108,6 +109,17 @@ export const SelectedContract = (props: SelectedContractProps) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const [eventHandlers, setEventHandlers] = useState([])
 
+  const { deployBlock } = useEtherscanDeployBlock(startBlocks[CHAIN_ID] ? null : addresses[CHAIN_ID])
+
+  useEffect(() => {
+    if (deployBlock && deployBlock !== startBlocks[CHAIN_ID]) {
+      updateContract(addresses[CHAIN_ID], {
+        ...props.contract,
+        startBlocks: { [CHAIN_ID]: deployBlock },
+      })
+    }
+  }, [deployBlock])
+
   const handleFileUploadChange = (e: any) => {
     const [file] = e.target.files
     const reader = new FileReader()
@@ -115,7 +127,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
     reader.onload = function (evt: any) {
       updateContract(addresses[CHAIN_ID], {
         ...props.contract,
-        abi: evt.target.result,
+        abi: JSON.parse(evt.target.result),
         source: 'custom',
         errorMessage: null,
       })
@@ -132,6 +144,9 @@ export const SelectedContract = (props: SelectedContractProps) => {
       <Header>
         <span className="contract-title">{name || 'No name'}</span>
         <span className="address">{addresses[CHAIN_ID]}</span>
+        {startBlocks[CHAIN_ID] ? (
+          <span className="address">Deployed on block {startBlocks[CHAIN_ID]}</span>
+        ) : null}
         <StatusContainer>
           <span className="status-message">
             {errorMessage
