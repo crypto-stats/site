@@ -22,6 +22,13 @@ export function getSDK(options?: any) {
     )
   }
 
+  if (process.env.NEXT_PUBLIC_ALCHEMY_ETH_KEY) {
+    const rpc = `https://eth-mainnet.alchemyapi.io/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ETH_KEY}`
+    sdk.ethers.addProvider('ethereum', rpc, { archive: true })
+  } else {
+    console.error('Alchemy key not set')
+  }
+
   if (process.env.NEXT_PUBLIC_OPTIMISM_RPC) {
     sdk.ethers.addProvider('optimism', process.env.NEXT_PUBLIC_OPTIMISM_RPC, { archive: true })
   }
