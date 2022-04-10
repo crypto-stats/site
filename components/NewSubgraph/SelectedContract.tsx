@@ -87,8 +87,8 @@ interface SelectedContractProps {
   mappingFunctionNames: string[]
 }
 
-function parseEventsFromAbi(abi) {
-  return JSON.parse(abi)
+function parseEventsFromAbi(abi: any[]) {
+  return abi
     .filter(el => el.type === 'event')
     .map(
       e =>

@@ -153,7 +153,7 @@ const Editor: React.FC = () => {
       .filter(_export => _export.kind === 'function')
       .map(_export => _export.name)
     console.log(functions)
-  }, [subgraph!.mappings[DEFAULT_MAPPING]])
+  }, [subgraph?.mappings[DEFAULT_MAPPING]])
 
   useEffect(() => {
     setStarted(true)

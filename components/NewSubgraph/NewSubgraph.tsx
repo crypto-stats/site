@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
-import { compileAs, loadAsBytecode } from 'utils/as-compiler'
 
 import InputField from 'components/InputField'
 import { WalletButton, Header, HeaderRight } from 'components/layouts'
@@ -100,6 +99,7 @@ export const NewSubgraph = () => {
   const [selectedContracts, setSelectedContracts] = useState<ExtendedContract[]>(
     subgraph?.contracts || []
   )
+  const [mappingFunctionNames, setMappingFunctionNames] = useState<string[]>([])
   const router = useRouter()
 
   const abi = useEtherscanAbi({ address: contractAddress })
@@ -123,12 +123,20 @@ export const NewSubgraph = () => {
     }
   }, [abi])
 
-  const mappingFunctionNames = (async () => {
-    const bytecode = await compileAs(subgraph!.mappings[DEFAULT_MAPPING])
+  const loadFunctionsFromMappingCode = async (code: string) => {
+    const { compileAs, loadAsBytecode } = await import('utils/as-compiler')
+    const bytecode = await compileAs(code)
     const module = await loadAsBytecode(bytecode)
     const exports = WebAssembly.Module.exports(module.module)
-    return exports.filter(_export => _export.kind === 'function').map(_export => _export.name)
-  })()
+    const functionNames = exports.filter(_export => _export.kind === 'function').map(_export => _export.name)
+    setMappingFunctionNames(functionNames)
+  }
+
+  useEffect(() => {
+    if (subgraph?.mappings[DEFAULT_MAPPING]) {
+      loadFunctionsFromMappingCode(subgraph.mappings[DEFAULT_MAPPING])
+    }
+  }, [subgraph?.mappings[DEFAULT_MAPPING]])
 
   useEffect(() => {
     setStarted(true)
@@ -159,7 +167,7 @@ export const NewSubgraph = () => {
 
         <InputLabel>Protocols</InputLabel>
         <ContractInput
-          placeholder="Past here the contract address"
+          placeholder="Paste here the contract address"
           name="contractAddress"
           value={contractAddress}
           onChange={setContractAddress}
@@ -170,6 +178,7 @@ export const NewSubgraph = () => {
             key={sc.addresses[CHAIN_ID]}
             contract={sc}
             updateContract={updateSelectedContract}
+            mappingFunctionNames={mappingFunctionNames}
           />
         ))}
 
@@ -186,3 +195,5 @@ export const NewSubgraph = () => {
     </Root>
   )
 }
+
+export default NewSubgraph
