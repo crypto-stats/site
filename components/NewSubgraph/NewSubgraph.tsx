@@ -5,8 +5,7 @@ import { useRouter } from 'next/router'
 import InputField from 'components/InputField'
 import { WalletButton, Header, HeaderRight } from 'components/layouts'
 import { InputLabel } from './InputLabel'
-import { useEtherscanAbi } from 'hooks/useEtherscanAbi'
-import { Contract, useLocalSubgraph, DEFAULT_MAPPING } from 'hooks/local-subgraphs'
+import { Contract, useLocalSubgraph, DEFAULT_MAPPING, newSubgraph } from 'hooks/local-subgraphs'
 import { useEditorState } from 'hooks/editor-state'
 import { SelectedContract } from './SelectedContract'
 import Button from '../Button'
@@ -89,11 +88,13 @@ const ButtonsContainer = styled.div`
 
 export type ExtendedContract = Contract & { errorMessage?: string }
 
+const ADDRESS_REGEX = /^0x[0-9a-f]{40}$/i
+
 export const NewSubgraph = () => {
   const CHAIN_ID = '1'
 
-  const [subgraphId] = useEditorState<string | null>('subgraph-file')
-  const { subgraph } = useLocalSubgraph(subgraphId)
+  const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file')
+  const { subgraph, saveContracts } = useLocalSubgraph(subgraphId)
   const [contractAddress, setContractAddress] = useState('')
   const [started, setStarted] = useState(false)
   const [selectedContracts, setSelectedContracts] = useState<ExtendedContract[]>(
@@ -102,34 +103,32 @@ export const NewSubgraph = () => {
   const [mappingFunctionNames, setMappingFunctionNames] = useState<string[]>([])
   const router = useRouter()
 
-  const { abi } = useEtherscanAbi({ address: contractAddress })
-
   useEffect(() => {
-    const isContractAlreadyFetched = selectedContracts.find(
-      sc => sc.addresses[CHAIN_ID] === contractAddress
-    )
-    if (abi && !isContractAlreadyFetched) {
+    if (ADDRESS_REGEX.test(contractAddress)) {
       setSelectedContracts(prev => [
         ...prev,
         {
           name: '',
           addresses: { [CHAIN_ID]: contractAddress },
-          abi: abi,
+          abi: null,
           startBlocks: {},
           source: 'etherscan',
           events: [],
-          ...(Number(abi.status) !== 1 && { errorMessage: abi.result }),
         },
       ])
+
+      setContractAddress('')
     }
-  }, [abi])
+  }, [contractAddress])
 
   const loadFunctionsFromMappingCode = async (code: string) => {
     const { compileAs, loadAsBytecode } = await import('utils/as-compiler')
     const bytecode = await compileAs(code)
     const module = await loadAsBytecode(bytecode)
     const exports = WebAssembly.Module.exports(module.module)
-    const functionNames = exports.filter(_export => _export.kind === 'function').map(_export => _export.name)
+    const functionNames = exports
+      .filter(_export => _export.kind === 'function')
+      .map(_export => _export.name)
     setMappingFunctionNames(functionNames)
   }
 
@@ -154,6 +153,17 @@ export const NewSubgraph = () => {
     if (confirm('Are you sure you wanna exit without saving?')) {
       return router.back()
     }
+  }
+
+  const save = () => {
+    let id = subgraphId
+    if (subgraph) {
+      saveContracts(selectedContracts)
+    } else {
+      id = newSubgraph({ contracts: selectedContracts })
+    }
+    setSubgraphId(id)
+    router.push('/editor/subgraph')
   }
 
   return (
@@ -188,7 +198,7 @@ export const NewSubgraph = () => {
             Exit
           </Button>
 
-          <Button fullWidth={false} variant="outline" className="save">
+          <Button fullWidth={false} variant="outline" className="save" onClick={save}>
             Save
           </Button>
         </ButtonsContainer>

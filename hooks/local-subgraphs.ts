@@ -73,42 +73,26 @@ export const useSubgraphList = (): SubgraphWithID[] => {
 
 const randomId = () => Math.floor(Math.random() * 1000000).toString(16)
 
-export const newSubgraph = (mapping = '', schema = '', publications: Publication[] = []) => {
+interface NewSubgraphParams {
+  mapping?: string
+  schema?: string
+  publications?: Publication[]
+  contracts?: Contract[]
+}
+
+export const newSubgraph = ({
+  mapping = '',
+  schema = '',
+  publications = [],
+  contracts = [],
+}: NewSubgraphParams) => {
   const id = randomId()
 
   const subgraph: SubgraphData = {
     mappings: { [DEFAULT_MAPPING]: mapping },
     schema,
     name: 'New Subgraph',
-    contracts: [
-      {
-        name: 'UniV2Factory',
-        addresses: {
-          '1': '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
-        },
-        startBlocks: { '1': 10000835 },
-        abi: JSON.stringify([
-          {
-            anonymous: false,
-            inputs: [
-              { indexed: true, internalType: 'address', name: 'token0', type: 'address' },
-              { indexed: true, internalType: 'address', name: 'token1', type: 'address' },
-              { indexed: false, internalType: 'address', name: 'pair', type: 'address' },
-              { indexed: false, internalType: 'uint256', name: '', type: 'uint256' },
-            ],
-            name: 'PairCreated',
-            type: 'event',
-          },
-        ]),
-        source: 'etherscan',
-        events: [
-          {
-            signature: 'PairCreated(indexed address,indexed address,address,uint256)',
-            handler: 'handlePairCreated',
-          },
-        ],
-      },
-    ],
+    contracts,
     publications,
     version: null,
   }
@@ -152,6 +136,24 @@ export const useLocalSubgraph = (id?: string | null) => {
     return id
   }
 
+  const saveContracts = (contracts: Contract[]) => {
+    if (!id) {
+      throw new Error('ID not set')
+    }
+
+    const adapter = getStorageItem(id)
+
+    const newSubgraph: SubgraphData = {
+      ...adapter,
+      contracts,
+    }
+
+    setStorageItem(id, newSubgraph)
+    update({})
+
+    return id
+  }
+
   const deploy = async (subgraphName: string, deployKey: string) => {
     if (!subgraph) {
       throw new Error(`No subgraph loaded`)
@@ -171,6 +173,7 @@ export const useLocalSubgraph = (id?: string | null) => {
   return {
     subgraph,
     deploy,
+    saveContracts,
     saveSchema,
     saveMapping,
   }

@@ -4,7 +4,6 @@ import Select from 'react-select'
 
 import { Contract } from 'hooks/local-subgraphs'
 import Button from '../Button'
-import { useEtherscanDeployBlock } from 'hooks/useEtherscanAbi'
 
 const Root = styled.div`
   background-color: #25252a;
@@ -99,6 +98,7 @@ function parseEventsFromAbi(abi: any[]) {
 
 export const SelectedContract = (props: SelectedContractProps) => {
   const {
+    contract,
     contract: { addresses, name, source, errorMessage, abi, startBlocks },
     updateContract,
     mappingFunctionNames,
@@ -109,16 +109,25 @@ export const SelectedContract = (props: SelectedContractProps) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const [eventHandlers, setEventHandlers] = useState([])
 
-  const { deployBlock } = useEtherscanDeployBlock(startBlocks[CHAIN_ID] ? null : addresses[CHAIN_ID])
+  const fetchMetadata = async () => {
+    const metadataReq = await fetch(`/api/etherscan/${contract.addresses[CHAIN_ID]}/metadata`)
+    const metadata = await metadataReq.json()
 
-  useEffect(() => {
-    if (deployBlock && deployBlock !== startBlocks[CHAIN_ID]) {
+    if (metadata.isContract) {
       updateContract(addresses[CHAIN_ID], {
-        ...props.contract,
-        startBlocks: { [CHAIN_ID]: deployBlock },
+        ...contract,
+        abi: metadata.abi,
+        startBlocks: { [CHAIN_ID]: metadata.deployBlock },
+        name: metadata.name,
       })
     }
-  }, [deployBlock])
+  }
+
+  useEffect(() => {
+    if (!contract.abi && contract.source === 'etherscan') {
+      fetchMetadata()
+    }
+  }, [contract.addresses, contract.abi, contract.source])
 
   const handleFileUploadChange = (e: any) => {
     const [file] = e.target.files
@@ -137,7 +146,6 @@ export const SelectedContract = (props: SelectedContractProps) => {
 
   const showUploadButton = errorMessage || source === 'custom'
   const eventsFromAbi = abi ? parseEventsFromAbi(abi) : []
-  console.log({ abi })
 
   return (
     <Root>
