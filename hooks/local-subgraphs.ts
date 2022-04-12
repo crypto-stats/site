@@ -85,7 +85,7 @@ export const newSubgraph = ({
   schema = '',
   publications = [],
   contracts = [],
-}: NewSubgraphParams) => {
+}: NewSubgraphParams = {}) => {
   const id = randomId()
 
   const subgraph: SubgraphData = {

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import Select from 'react-select'
 
@@ -60,24 +60,24 @@ const EventRow = styled.div`
   margin-bottom: 16px;
 `
 
-const customStyles = {
-  container: (provided: any) => ({ ...provided, width: 'calc(50% - 8px)' }),
-  option: (provided, state) => ({
-    ...provided,
-  }),
-  control: provided => ({
-    ...provided,
+// const customStyles = {
+//   container: (provided: any) => ({ ...provided, width: 'calc(50% - 8px)' }),
+//   option: (provided, state) => ({
+//     ...provided,
+//   }),
+//   control: provided => ({
+//     ...provided,
 
-    backgroundColor: 'var(--color-dark-800)',
-    border: `1px var(--color-dark-800)`,
-  }),
-  singleValue: provided => ({
-    ...provided,
-    color: 'var(--color-white)',
-  }),
-  indicatorSeparator: () => {},
-  indicatorsContainer: () => ({ '&:hover': { color: 'var(--color-white)' } }),
-}
+//     backgroundColor: 'var(--color-dark-800)',
+//     border: `1px var(--color-dark-800)`,
+//   }),
+//   singleValue: provided => ({
+//     ...provided,
+//     color: 'var(--color-white)',
+//   }),
+//   indicatorSeparator: () => {},
+//   indicatorsContainer: () => ({ '&:hover': { color: 'var(--color-white)' } }),
+// }
 
 const CHAIN_ID = 1
 
@@ -89,10 +89,12 @@ interface SelectedContractProps {
 
 function parseEventsFromAbi(abi: any[]) {
   return abi
-    .filter(el => el.type === 'event')
+    .filter((el: any) => el.type === 'event')
     .map(
       e =>
-        `${e.name}(${e.inputs.map(ei => `${ei.indexed ? 'indexed ' : ''}${ei.type}`).join(', ')})`
+        `${e.name}(${e.inputs
+          .map((ei: any) => `${ei.indexed ? 'indexed ' : ''}${ei.type}`)
+          .join(', ')})`
     )
 }
 
@@ -107,7 +109,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
   console.log(props.contract)
 
   const inputRef = useRef<HTMLInputElement>(null)
-  const [eventHandlers, setEventHandlers] = useState([])
+  // const [eventHandlers, setEventHandlers] = useState([])
 
   const fetchMetadata = async () => {
     const metadataReq = await fetch(`/api/etherscan/${contract.addresses[CHAIN_ID]}/metadata`)
