@@ -12,8 +12,15 @@ for (let filename of context.keys()) {
   files[filename] = context(filename)
 }
 
-export async function compileAs(tsCode: string) {
-  const sources: any = { [`input.ts`]: tsCode }
+interface CompilerOptions {
+  libraries?: { [name: string]: string }
+}
+
+export async function compileAs(tsCode: string, { libraries }: CompilerOptions = {}) {
+  const sources: any = {
+    ...libraries,
+    'input.ts': tsCode,
+  }
   var argv = ['--outFile', 'binary', '--textFile', 'text']
 
   const output: any = {}

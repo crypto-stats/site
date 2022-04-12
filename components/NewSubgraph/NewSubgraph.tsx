@@ -9,6 +9,7 @@ import { Contract, useLocalSubgraph, DEFAULT_MAPPING, newSubgraph } from 'hooks/
 import { useEditorState } from 'hooks/editor-state'
 import { SelectedContract } from './SelectedContract'
 import Button from '../Button'
+import { generateContractFile } from 'utils/graph-file-generator'
 
 const Root = styled.div`
   background-color: '#2F3237';

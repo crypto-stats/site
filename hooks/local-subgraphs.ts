@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { deploySubgraph } from 'utils/deploy-subgraph'
 
 const storageKey = 'localSubgraphs'
@@ -102,7 +102,14 @@ export const newSubgraph = ({
 }
 
 export const useLocalSubgraph = (id?: string | null) => {
-  const update = useState({})[1]
+  const _update = useState({})[1]
+  const subgraphRef = useRef<null | SubgraphData>(null)
+
+  const update = (newSubgraph: SubgraphData) => {
+    setStorageItem(id!, newSubgraph)
+    subgraphRef.current = newSubgraph
+    _update({})
+  }
 
   const saveSchema = (schema: string) => {
     if (!id) {
@@ -112,8 +119,8 @@ export const useLocalSubgraph = (id?: string | null) => {
     const adapter = getStorageItem(id)
 
     const newAdapter: SubgraphData = { ...adapter, schema }
-    setStorageItem(id, newAdapter)
-    update({})
+
+    update(newAdapter)
 
     return id
   }
@@ -130,8 +137,7 @@ export const useLocalSubgraph = (id?: string | null) => {
       mappings: { ...adapter.mappings, [fileName]: mapping },
     }
 
-    setStorageItem(id, newSubgraph)
-    update({})
+    update(newSubgraph)
 
     return id
   }
@@ -148,17 +154,17 @@ export const useLocalSubgraph = (id?: string | null) => {
       contracts,
     }
 
-    setStorageItem(id, newSubgraph)
-    update({})
+    update(newSubgraph)
 
     return id
   }
 
   const deploy = async (subgraphName: string, deployKey: string) => {
-    if (!subgraph) {
+    if (!id) {
       throw new Error(`No subgraph loaded`)
     }
 
+    const subgraph = getStorageItem(id) as SubgraphData
     try {
       for await (const status of deploySubgraph(subgraph, { subgraphName, deployKey })) {
         console.log(status)
@@ -168,10 +174,12 @@ export const useLocalSubgraph = (id?: string | null) => {
     }
   }
 
-  const subgraph = id ? (getStorageItem(id) as SubgraphData) : null
+  useEffect(() => {
+    subgraphRef.current = id ? (getStorageItem(id) as SubgraphData) : null
+  }, [id])
 
   return {
-    subgraph,
+    subgraph: subgraphRef.current,
     deploy,
     saveContracts,
     saveSchema,

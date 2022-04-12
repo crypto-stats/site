@@ -1,4 +1,5 @@
 import { DEFAULT_MAPPING, SubgraphData } from 'hooks/local-subgraphs'
+import { generateContractFile } from './graph-file-generator'
 
 export enum STATUS {
   INITIALIZING,
@@ -8,11 +9,14 @@ export enum STATUS {
 }
 
 async function uploadToIPFS(file: string | Uint8Array, name: string) {
-  const body = file instanceof Uint8Array ? {
-    file: Buffer.from(file).toString('base64'),
-    encoding: 'base64',
-    name,
-  } : { file, name }
+  const body =
+    file instanceof Uint8Array
+      ? {
+          file: Buffer.from(file).toString('base64'),
+          encoding: 'base64',
+          name,
+        }
+      : { file, name }
 
   const req = await fetch('/api/graph/upload-file', {
     method: 'POST',
@@ -71,7 +75,14 @@ export async function* deploySubgraph(
     status: STATUS.IPFS_UPLOAD,
   }
 
-  const compiled = await compileAs(subgraph.mappings[DEFAULT_MAPPING])
+  const libraries: { [name: string]: string } = {}
+
+  for (const contract of subgraph.contracts) {
+    const code = await generateContractFile(contract.abi)
+    libraries[`contracts/${contract.name}.ts`] = code
+  }
+
+  const compiled = await compileAs(subgraph.mappings[DEFAULT_MAPPING], { libraries })
 
   const mappingCID = await uploadToIPFS(compiled, 'mapping.wasm')
 

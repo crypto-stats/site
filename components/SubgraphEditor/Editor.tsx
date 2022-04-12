@@ -18,6 +18,7 @@ import SaveMessage from './SaveMessage'
 import ImageLibrary from './ImageLibrary/ImageLibrary'
 import { useEditorState } from 'hooks/editor-state'
 import { WalletButton, Header, HeaderRight } from 'components/layouts'
+import { useGeneratedFiles } from 'hooks/useGeneratedFiles'
 
 const CloseButton = styled.button`
   background: none;
@@ -129,6 +130,8 @@ const Editor: React.FC = () => {
   const [bottomView, setBottomView] = useState(BottomView.NONE)
   const editorRef = useRef<any>(null)
 
+  const extraLibs = useGeneratedFiles(subgraph)
+
   // useEffect(() => {
   //   if (router.query.adapter) {
   //     const { adapter, ...query } = router.query
@@ -200,6 +203,7 @@ const Editor: React.FC = () => {
                     defaultLanguage={focusedTab.type === 'schema' ? 'graphql' : 'typescript'}
                     fileId={tab}
                     defaultValue={focusedTab.value}
+                    extraLibs={extraLibs}
                     onMount={(editor: any) => {
                       editorRef.current = editor
                     }}
@@ -288,7 +292,8 @@ const Editor: React.FC = () => {
               setNewAdapterModalOpen(false)
             },
           },
-        ]}>
+        ]}
+      >
         <NewAdapterForm
           onAdapterSelection={(_fileName: string) => {
             // setMappingFileName(fileName)

@@ -14,7 +14,10 @@ interface EditorProps {
   fileId: string
   onMount?: (editor: any, monaco: any) => void
   defaultLanguage?: 'typescript' | 'graphql'
+  extraLibs?: { content: string; filePath: string }[]
 }
+
+const sdkUri = 'ts:filename/sdk.d.ts'
 
 const Editor: React.FC<EditorProps> = ({
   onValidated,
@@ -23,6 +26,7 @@ const Editor: React.FC<EditorProps> = ({
   fileId,
   onMount,
   defaultLanguage = 'typescript',
+  extraLibs = [],
 }) => {
   const code = useRef(defaultValue)
   const monaco = useMonaco()
@@ -51,20 +55,30 @@ const Editor: React.FC<EditorProps> = ({
         lib: ['es2018'],
       })
 
-      var sdkUri = 'ts:filename/sdk.d.ts'
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(sdkTypeDefs, sdkUri)
       // When resolving definitions and references, the editor will try to use created models.
       // Creating a model for the library allows "peek definition/references" commands to work with the library.
       monaco.editor.createModel(sdkTypeDefs, 'typescript', monaco.Uri.parse(sdkUri))
 
-      monaco.languages.typescript.typescriptDefaults.addExtraLib(
-        graphTypeDefs,
-        'file:///node_modules/@graphprotocol/graph-ts/index.d.ts'
-      );
-
       return () => monaco.editor.getModels().forEach((model: any) => model.dispose())
     }
   }, [monaco])
+
+  useEffect(() => {
+    if (monaco) {
+      console.log('setlibs', extraLibs)
+      const libs = [
+        { content: sdkTypeDefs, filePath: sdkUri },
+        {
+          content: graphTypeDefs,
+          filePath: 'file:///node_modules/@graphprotocol/graph-ts/index.d.ts',
+        },
+        ...extraLibs,
+      ]
+      console.log(libs)
+      monaco.languages.typescript.typescriptDefaults.setExtraLibs(libs)
+      // monaco.languages.typescript.typescriptDefaults.addExtraLib(libs)
+    }
+  }, [monaco, extraLibs])
 
   useEffect(() => {
     code.current = defaultValue
