@@ -1,9 +1,6 @@
 {
   "name": "cryptostats-site",
   "private": true,
-  "engines": {
-    "node": "16.14.2"
-  },
   "scripts": {
     "dev": "next",
     "build": "next build",
@@ -41,8 +38,7 @@
     "react-syntax-highlighter": "^15.4.4",
     "styled-components": "^5.2.3",
     "typescript": "^4.3.5",
-    "use-ens-name": "^0.1.8",
-    "yarn": "^1.22.18"
+    "use-ens-name": "^0.1.8"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.18.9",
