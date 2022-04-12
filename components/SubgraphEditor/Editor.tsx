@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { ViewPort, Top, Fill, Bottom, BottomResizable, Right } from 'react-spaces'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
@@ -130,7 +130,8 @@ const Editor: React.FC = () => {
   const [bottomView, setBottomView] = useState(BottomView.NONE)
   const editorRef = useRef<any>(null)
 
-  const extraLibs = useGeneratedFiles(subgraph)
+  // Generating files is computationally expensive, don't waste resources if the schema tab is open
+  const extraLibs = useGeneratedFiles(focusedTab?.type === 'schema' ? null : subgraph)
 
   // useEffect(() => {
   //   if (router.query.adapter) {
@@ -145,18 +146,6 @@ const Editor: React.FC = () => {
       plausible('open-image-library')
     }
   }, [imageLibraryOpen])
-
-  const logExports = useCallback(async () => {
-    const { compileAs, loadAsBytecode } = await import('utils/as-compiler')
-    const bytecode = await compileAs(subgraph!.mappings[DEFAULT_MAPPING])
-    const module = await loadAsBytecode(bytecode)
-    const exports = WebAssembly.Module.exports(module.module)
-    console.log(exports)
-    const functions = exports
-      .filter(_export => _export.kind === 'function')
-      .map(_export => _export.name)
-    console.log(functions)
-  }, [subgraph?.mappings[DEFAULT_MAPPING]])
 
   useEffect(() => {
     setStarted(true)
@@ -190,7 +179,6 @@ const Editor: React.FC = () => {
                     current={tab}
                     onSelect={fileId => setTab(fileId || SCHEMA_FILE_NAME)}
                   />
-                  <button onClick={logExports}>Log exports</button>
                 </Fill>
                 <Right size={100}>
                   <EditorControls editorRef={editorRef} />

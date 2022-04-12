@@ -11,3 +11,18 @@ export async function generateContractFile(abi: any) {
 
   return [...codegen.generateModuleImports(), ...codegen.generateTypes()].join('\n')
 }
+
+export async function generateSchemaFile(schemaCode: string) {
+  const [gql, { default: SchemaCodeGenerator }] = await Promise.all([
+    import('graphql/language'),
+    // @ts-ignore
+    import('@graphprotocol/graph-cli/src/codegen/schema'),
+  ])
+
+  const ast = immutable.fromJS(gql.parse(schemaCode))
+  console.log(ast)
+
+  const generator = new SchemaCodeGenerator({ ast })
+
+  return [...generator.generateModuleImports(), ...generator.generateTypes()].join('\n')
+}

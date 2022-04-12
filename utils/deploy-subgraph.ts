@@ -1,5 +1,5 @@
 import { DEFAULT_MAPPING, SubgraphData } from 'hooks/local-subgraphs'
-import { generateContractFile } from './graph-file-generator'
+import { generateContractFile, generateSchemaFile } from './graph-file-generator'
 
 export enum STATUS {
   INITIALIZING,
@@ -81,6 +81,8 @@ export async function* deploySubgraph(
     const code = await generateContractFile(contract.abi)
     libraries[`contracts/${contract.name}.ts`] = code
   }
+
+  libraries['schema/index.ts'] = await generateSchemaFile(subgraph.schema)
 
   const compiled = await compileAs(subgraph.mappings[DEFAULT_MAPPING], { libraries })
 

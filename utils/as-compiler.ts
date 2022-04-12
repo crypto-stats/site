@@ -18,18 +18,28 @@ interface CompilerOptions {
 
 export async function compileAs(tsCode: string, { libraries }: CompilerOptions = {}) {
   const sources: any = {
-    ...libraries,
     'input.ts': tsCode,
   }
   var argv = ['--outFile', 'binary', '--textFile', 'text']
 
   const output: any = {}
-  const result = await asc.main(argv.concat(Object.keys(sources)), {
+  const result = await asc.main([...argv, ...Object.keys(sources)], {
     readFile: (name: string) => {
       console.log(`Loading ${name}`)
       if (name in sources) {
         return sources[name]
       }
+      if (libraries && name in libraries) {
+        return libraries[name]
+      }
+      if (
+        libraries &&
+        name.startsWith('node_modules/') &&
+        name.substring('node_modules/'.length) in libraries
+      ) {
+        return libraries[name.substring('node_modules/'.length)]
+      }
+
       const path = name.charAt(0) === '/' ? name.substring(1) : name
       if (path in files) {
         return files[path].default
