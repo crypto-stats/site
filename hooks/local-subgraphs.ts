@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { deploySubgraph } from 'utils/deploy-subgraph'
+import { DeployStatus, deploySubgraph } from 'utils/deploy-subgraph'
+export { STATUS } from 'utils/deploy-subgraph'
 
 const storageKey = 'localSubgraphs'
 
@@ -104,6 +105,7 @@ export const newSubgraph = ({
 export const useLocalSubgraph = (id?: string | null) => {
   const _update = useState({})[1]
   const subgraphRef = useRef<null | SubgraphData>(null)
+  const [deployStatus, setDeployStatus] = useState<null | DeployStatus>(null)
 
   const update = (newSubgraph: SubgraphData) => {
     setStorageItem(id!, newSubgraph)
@@ -167,7 +169,7 @@ export const useLocalSubgraph = (id?: string | null) => {
     const subgraph = getStorageItem(id) as SubgraphData
     try {
       for await (const status of deploySubgraph(subgraph, { subgraphName, deployKey })) {
-        console.log(status)
+        setDeployStatus(status)
       }
     } catch (e: any) {
       console.error(e)
@@ -180,6 +182,7 @@ export const useLocalSubgraph = (id?: string | null) => {
 
   return {
     subgraph: subgraphRef.current,
+    deployStatus,
     deploy,
     saveContracts,
     saveSchema,

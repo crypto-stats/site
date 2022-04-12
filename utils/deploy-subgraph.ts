@@ -54,6 +54,12 @@ async function deployHosted(name: string, cid: string, deployKey: string) {
   return json.result
 }
 
+export interface DeployStatus {
+  status: STATUS
+  file?: string
+  url?: string
+}
+
 export async function* deploySubgraph(
   subgraph: SubgraphData,
   {
@@ -63,7 +69,7 @@ export async function* deploySubgraph(
     subgraphName: string
     deployKey: string
   }
-) {
+): AsyncGenerator<DeployStatus> {
   yield {
     status: STATUS.INITIALIZING,
   }
@@ -86,11 +92,21 @@ export async function* deploySubgraph(
 
   const compiled = await compileAs(subgraph.mappings[DEFAULT_MAPPING], { libraries })
 
+  yield {
+    status: STATUS.IPFS_UPLOAD,
+    file: 'Mapping',
+  }
+
   const mappingCID = await uploadToIPFS(compiled, 'mapping.wasm')
 
   const dataSources: any[] = []
 
   for (const contract of subgraph.contracts) {
+    yield {
+      status: STATUS.IPFS_UPLOAD,
+      file: `${contract.name} Contract`,
+    }
+
     const cid = await uploadToIPFS(JSON.stringify(contract.abi), `${contract.name}.json`)
 
     dataSources.push({
@@ -126,6 +142,11 @@ export async function* deploySubgraph(
     })
   }
 
+  yield {
+    status: STATUS.IPFS_UPLOAD,
+    file: 'Schema',
+  }
+
   const schemaCID = await uploadToIPFS(subgraph.schema, 'schema.graphql')
 
   const manifestString = yaml.dump({
@@ -139,6 +160,11 @@ export async function* deploySubgraph(
     },
   })
 
+  yield {
+    status: STATUS.IPFS_UPLOAD,
+    file: 'Manifest',
+  }
+
   const manifestCID = await uploadToIPFS(manifestString, 'manifest.yaml')
 
   yield {
@@ -149,6 +175,6 @@ export async function* deploySubgraph(
 
   yield {
     status: STATUS.COMPLETE,
-    data: deployResult,
+    url: deployResult.playground,
   }
 }
