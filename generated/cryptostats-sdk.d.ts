@@ -214,14 +214,26 @@ declare class Ethers {
   getProvider(network: string): any
 }
 
-declare interface QueryOptions {
-  subgraph?: string
-  subgraphId?: string
-  query: string
-  variables?: any
-  operationName?: string
-  node?: string
+declare interface BaseQueryOptions {
+  subgraph?: string;
+  subgraphId?: string;
+  query: string;
+  variables?: any;
+  operationName?: string;
+  node?: string;
 }
+
+declare interface SubgraphQueryOptions extends BaseQueryOptions {
+  subgraph: string;
+}
+declare interface SubgraphIDQueryOptions extends BaseQueryOptions {
+  subgraphId: string;
+}
+declare interface GraphQLQueryOptions extends BaseQueryOptions {
+  url: string;
+}
+
+declare type QueryOptions = SubgraphQueryOptions | SubgraphIDQueryOptions | GraphQLQueryOptions;
 
 declare class Graph {
   private http

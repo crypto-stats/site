@@ -9,7 +9,7 @@
     "prettier": "prettier --write ."
   },
   "dependencies": {
-    "@cryptostats/sdk": "^0.2.8",
+    "@cryptostats/sdk": "^0.2.11",
     "@monaco-editor/react": "^4.2.1",
     "@pinata/sdk": "^1.1.23",
     "@types/react-modal": "^3.12.1",
