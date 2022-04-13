@@ -26,7 +26,7 @@ import Text from 'components/Text'
 import { getENSCache } from 'utils/ens'
 import EditModal from 'components/AdapterPage/EditModal'
 
-setRPC('https://mainnet-nethermind.blockscout.com/')
+setRPC('https://rpc.flashbots.net/')
 
 const collectionAdmins = process.env.NEXT_PUBLIC_COLLECTION_ADMINS
   ? JSON.parse(process.env.NEXT_PUBLIC_COLLECTION_ADMINS.toLowerCase())

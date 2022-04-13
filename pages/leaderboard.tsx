@@ -5,7 +5,7 @@ import { CryptoStatsSDK } from '@cryptostats/sdk'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import { getENSCache } from 'utils/ens'
 
-setRPC('https://mainnet-nethermind.blockscout.com/')
+setRPC('https://rpc.flashbots.net/')
 
 const Row = styled.div`
   display: flex;

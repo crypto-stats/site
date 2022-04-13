@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useENSName } from 'use-ens-name'
+import { setRPC, useENSName } from 'use-ens-name'
 import styled from 'styled-components'
 import { useWeb3React } from '@web3-react/core'
 import ConnectionButton from './ConnectionButton'
 import Button from 'components/Button'
+
+setRPC('https://rpc.flashbots.net/')
 
 const HeaderContainer = styled.header`
   display: flex;
