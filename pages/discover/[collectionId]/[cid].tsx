@@ -352,7 +352,10 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         isOpen={showVersions}
         onClose={() => setShowVersions(false)}
       >
-        <HistoryModal historicalVersions={previousVersions} />
+        <HistoryModal
+          historicalVersions={previousVersions}
+          currentCID={cid}
+        />
       </SiteModal>
     </CompilerProvider>
   )
