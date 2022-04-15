@@ -16,9 +16,11 @@ const DiffContainer = styled.div`
 interface DiffPageProps {
   fileA: string | null
   fileB: string | null
+  fileAName: string | null
+  fileBName: string | null
 }
 
-const DiffPage: NextPage<DiffPageProps> = ({ fileA, fileB }) => {
+const DiffPage: NextPage<DiffPageProps> = ({ fileA, fileAName, fileB, fileBName }) => {
   if (!fileA || !fileB) {
     return <div>Could not load source code</div>
   }
@@ -35,7 +37,7 @@ const DiffPage: NextPage<DiffPageProps> = ({ fileA, fileB }) => {
       </RowSection>
 
       <DiffContainer>
-        <DiffViewer fileA={fileA} fileB={fileB} />
+        <DiffViewer fileA={fileA} fileAName={fileAName} fileB={fileB} fileBName={fileBName} />
       </DiffContainer>
       <Footer />
     </>
@@ -69,7 +71,9 @@ export const getStaticProps: GetStaticProps<DiffPageProps, { cidA: string; cidB:
   return {
     props: {
       fileA,
+      fileAName: moduleA.name,
       fileB,
+      fileBName: moduleB.name,
     },
   }
 }
