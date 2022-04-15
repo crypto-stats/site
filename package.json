@@ -5,10 +5,11 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "generate-editor-context": "yarn api-extractor run --local"
+    "generate-editor-context": "yarn api-extractor run --local",
+    "prettier": "prettier --write ."
   },
   "dependencies": {
-    "@cryptostats/sdk": "^0.2.0",
+    "@cryptostats/sdk": "^0.2.11",
     "@monaco-editor/react": "^4.2.1",
     "@pinata/sdk": "^1.1.23",
     "@types/react-modal": "^3.12.1",
@@ -26,13 +27,14 @@
     "react-datepicker": "^4.5.0",
     "react-dom": "^17.0.2",
     "react-feather": "^2.0.9",
+    "react-gh-like-diff": "^2.0.2",
     "react-is": "^17.0.2",
     "react-modal": "^3.14.3",
     "react-spaces": "^0.2.6",
     "react-syntax-highlighter": "^15.4.4",
     "styled-components": "^5.2.3",
     "typescript": "^4.3.5",
-    "use-ens-name": "^0.1.3"
+    "use-ens-name": "^0.1.8"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.18.9",
@@ -42,6 +44,7 @@
     "@types/react-dom": "17.0.3",
     "@types/styled-components": "5.1.9",
     "babel-plugin-styled-components": "^1.12.0",
+    "prettier": "^2.6.0",
     "raw-loader": "^4.0.2"
   },
   "license": "MIT"

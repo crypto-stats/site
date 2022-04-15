@@ -6,27 +6,32 @@ const ModalOverlay = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 10;
 
   & .modal-content {
-    border: solid 1px #444;
-    border-radius: 5px;
     background: #ffffff;
-    color: #000000;
-    margin: 40px;
+    border: 1px solid #dddddd;
+    box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+    margin: 40px 40px 0;
     max-width: 800px;
   }
 `
 
 const Header = styled.h1`
+  margin: 0;
   font-size: 18px;
   font-weight: 600;
-  padding: 8px;
+  padding: 32px 40px;
+  border-bottom: 1px solid #ddd;
 `
 
 const Content = styled.div`
   max-height: 70vh;
-  padding: 10px 30px;
   overflow: auto;
+  padding: 32px 0;
+  display: flex;
+  flex-direction: column;
 `
 
 ReactModal.setAppElement('#__next')
@@ -37,7 +42,7 @@ interface ModalProps {
   title: string
 }
 
-const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
+const SiteModal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
   return (
     <ReactModal
       isOpen={isOpen}
@@ -49,10 +54,9 @@ const EditorModal: React.FC<ModalProps> = ({ isOpen, onClose, title, children })
       )}
     >
       <Header>{title}</Header>
-
       <Content>{children}</Content>
     </ReactModal>
   )
 }
 
-export default EditorModal;
+export default SiteModal

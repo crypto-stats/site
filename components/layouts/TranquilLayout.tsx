@@ -3,108 +3,44 @@ import styled from 'styled-components'
 import Header from '../Header'
 import Footer from '../Footer'
 import Breadcrumbs from './Breadcrumbs'
+import NotificationBar from 'components/NotificationBar'
+import Hero from 'components/Hero'
+import RowSection from 'components/RowSection'
+import ColumnSection from 'components/ColumnSection'
 
-const LayoutContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  background: #f9fafb;
+const LayoutContainer = styled.div<{ page?: string }>`
+  ${({ page }) =>
+    page === 'adapter' || page === 'collection'
+      ? `
+    background: var(--color-primary-400);
+  `
+      : ``}
 `
 
-const Top = styled.div`
-  box-shadow: 0 3px 18px 0 rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: #ffffff;
-
-  & h1 {
-    font-size: 36px;
-    font-weight: 600;
-    color: #002750;
-  }
-`
-
-const TopInner = styled.div`
-  max-width: 1248px;
-  width: calc(100% - 12px);
-`
-
-const MainContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  padding: 10px 0 40px;
-`
-
-const Main = styled.main`
-  max-width: 720px;
-  width: 0;
-  margin: 20px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-`
-
-const TopContent = styled.div`
-  display: flex;
-  min-height: 200px;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-`
-
-const HeroContainer = styled.div`
-  flex: 1;
+const HeaderContainer = styled.div<{ page?: string }>`
+  ${({ page }) =>
+    page === 'adapter' || page === 'collection'
+      ? `
+    box-shadow: 0 3px 18px 0 rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+  `
+      : ``}
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0 0 32px;
 `
 
 const Sidebar = styled.div`
-  width: 288px;
-  position: relative;
+  margin-bottom: 40px;
 
-  @media (max-width: 768px) {
-    margin-top: 12px;
-    width: unset;
+  @media (min-width: 768px) {
+    margin-bottom: 0;
+    position: sticky;
+    top: calc(150px + var(--spaces-4));
+    bottom: var(--spaces-4);
+    transform: translateY(-150px);
   }
-`
-
-const Spacer = styled.div`
-  width: 288px;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`
-
-const SidebarInner = styled.div`
-  position: absolute;
-  top: 20px;
-  left: 0;
-  right: 0;
-
-  @media (max-width: 768px) {
-    position: unset;
-  }
-`
-
-const NotificationBarContainer = styled.div`
-  background-color: #d6eaff;
-  height: 60px;
-  margin: 0 -2000px;
-  display: flex;
-  justify-content: center;
-`
-
-const NotificationBarInner = styled.div`
-  max-width: 1248px;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  padding: 0 6px;
-  box-sizing: border-box;
 `
 
 interface TranquilLayoutProps {
@@ -112,39 +48,107 @@ interface TranquilLayoutProps {
   sidebar?: React.ReactNode
   breadcrumbs?: { name: string; path: string }[]
   notificationBar?: React.ReactNode
+  page?: string
 }
 
-const TranquilLayout: React.FC<TranquilLayoutProps> = ({ children, hero, sidebar, breadcrumbs, notificationBar }) => {
+const TranquilLayout: React.FC<TranquilLayoutProps> = ({
+  children,
+  hero,
+  sidebar,
+  breadcrumbs,
+  notificationBar,
+  page,
+}) => {
+  // Set the columns for each page
+  const PageColumns = {
+    page: 'discover',
+    HeroColumns: {
+      from: '4',
+      to: '9',
+    },
+    BodyColumns: {
+      from: '3',
+      to: '10',
+    },
+    SidebarColumns: {
+      from: '10',
+      to: '13',
+    },
+  }
+
+  switch (page) {
+    case 'discover':
+      PageColumns.page = 'discover'
+      PageColumns.HeroColumns.from = '3'
+      PageColumns.HeroColumns.to = '11'
+      PageColumns.BodyColumns.from = '3'
+      PageColumns.BodyColumns.to = '11'
+      break
+
+    case 'collection':
+      PageColumns.page = 'collection'
+      PageColumns.HeroColumns.from = '2'
+      PageColumns.HeroColumns.to = '12'
+      PageColumns.BodyColumns.from = '2'
+      PageColumns.BodyColumns.to = '12'
+      break
+
+    case 'adapter':
+      PageColumns.page = 'discover'
+      PageColumns.HeroColumns.from = '1'
+      PageColumns.HeroColumns.to = '10'
+      PageColumns.BodyColumns.from = '1'
+      PageColumns.BodyColumns.to = '10'
+      PageColumns.SidebarColumns.from = '10'
+      PageColumns.SidebarColumns.to = '13'
+      break
+  }
+
   return (
-    <LayoutContainer>
-      <Top>
-        <TopInner>
-          <Header />
+    <LayoutContainer page={page}>
+      {/* Header + Hero */}
+      <HeaderContainer page={page}>
+        <RowSection>
+          <ColumnSection columns="12">
+            <Header />
+          </ColumnSection>
+        </RowSection>
 
-          {notificationBar && (
-            <NotificationBarContainer>
-              <NotificationBarInner>{notificationBar}</NotificationBarInner>
-            </NotificationBarContainer>
-          )}
+        {notificationBar && (
+          <RowSection fullWidth>
+            <ColumnSection columns="12">
+              <NotificationBar>{notificationBar}</NotificationBar>
+            </ColumnSection>
+          </RowSection>
+        )}
 
-          {breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs} />}
+        <RowSection>
+          <ColumnSection columns="12">
+            {breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs} />}
+          </ColumnSection>
+        </RowSection>
 
-          <TopContent>
-            <HeroContainer>{hero}</HeroContainer>
+        <RowSection>
+          <ColumnSection from={PageColumns.HeroColumns.from} to={PageColumns.HeroColumns.to}>
+            <Hero>{hero}</Hero>
+          </ColumnSection>
+        </RowSection>
+      </HeaderContainer>
 
-            {sidebar && (
-              <Sidebar>
-                <SidebarInner>{sidebar}</SidebarInner>
-              </Sidebar>
-            )}
-          </TopContent>
-        </TopInner>
-      </Top>
-      
-      <MainContainer>
-        <Main>{children}</Main>
-        {sidebar && <Spacer />}
-      </MainContainer>
+      <RowSection>
+        <ColumnSection
+          tag="main"
+          from={PageColumns.BodyColumns.from}
+          to={PageColumns.BodyColumns.to}
+        >
+          {children}
+        </ColumnSection>
+        {sidebar && (
+          <ColumnSection from={PageColumns.SidebarColumns.from} to={PageColumns.SidebarColumns.to}>
+            <Sidebar>{sidebar}</Sidebar>
+          </ColumnSection>
+        )}
+      </RowSection>
 
       <Footer />
     </LayoutContainer>

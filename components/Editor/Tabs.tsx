@@ -9,19 +9,18 @@ const TabRow = styled.div`
 
 const Tab = styled.div`
   display: flex;
-  border-right: solid 1px #dddddd;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: medium;
   color: #ffffff;
-  background: #4a4a4d;
+  background: #212121;
   align-items: center;
-  padding: 4px 12px;
+  padding: 0 16px;
 `
 
 const CloseButton = styled.button`
   border: none;
   background: transparent;
-  margin-left: 10px;
+  margin-left: 24px;
   cursor: pointer;
   width: 20px;
   height: 20px;

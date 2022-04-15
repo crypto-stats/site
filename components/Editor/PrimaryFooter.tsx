@@ -20,7 +20,7 @@ const Side = styled.div`
 
 const PublishButton = styled(Button)`
   height: 35px;
-  margin: 0 4px 0 32px;
+  margin: 0 16px 0 32px;
   padding: 9px 20px;
   border-radius: 4px;
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.5);
@@ -74,15 +74,24 @@ interface PrimaryFooterProps {
   fileName: string | null
   markers: any[]
   onMarkerClick: () => void
+  onConsoleClick: () => void
+  editorRef: any
 }
 
-const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers, onMarkerClick }) => {
+const PrimaryFooter: React.FC<PrimaryFooterProps> = ({
+  fileName,
+  markers,
+  onMarkerClick,
+  onConsoleClick,
+  editorRef,
+}) => {
   const [showModal, setShowModal] = useState(false)
   const { adapter } = useAdapter(fileName)
 
-  const lastPublication = adapter?.publications && adapter.publications.length > 0
-    ? adapter!.publications[adapter!.publications.length - 1]
-    : null
+  const lastPublication =
+    adapter?.publications && adapter.publications.length > 0
+      ? adapter!.publications[adapter!.publications.length - 1]
+      : null
 
   const infos = []
   const warnings = []
@@ -110,6 +119,7 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers, onMark
         <ErrorChip onClick={onMarkerClick} color={errors.length > 0 ? 'red' : undefined}>
           <XOctagon size={12} /> {errors.length}
         </ErrorChip>
+        <ErrorChip onClick={onConsoleClick}>Console</ErrorChip>
       </Side>
 
       <Side>
@@ -118,13 +128,19 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers, onMark
             {lastPublication && (
               <Link href={`/discover/adapter/${lastPublication.cid}`} passHref>
                 <IPFSLink>
-                  Last published to IPFS as {lastPublication.cid.substr(0,6)}...{lastPublication.cid.substr(-4)}
-                  {' (v'}{lastPublication.version})
+                  Last published to IPFS as {lastPublication.cid.substr(0, 6)}...
+                  {lastPublication.cid.substr(-4)}
+                  {' (v'}
+                  {lastPublication.version})
                 </IPFSLink>
               </Link>
             )}
 
-            <PublishButton onClick={() => setShowModal(true)} disabled={errors.length > 0}>
+            <PublishButton
+              onClick={() => setShowModal(true)}
+              disabled={errors.length > 0}
+              className={'primary'}
+            >
               Publish to IPFS
             </PublishButton>
           </Fragment>
@@ -136,10 +152,11 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({ fileName, markers, onMark
           fileName={fileName}
           show={showModal}
           onClose={() => setShowModal(false)}
+          editorRef={editorRef}
         />
       )}
     </Container>
-  );
+  )
 }
 
-export default PrimaryFooter;
+export default PrimaryFooter

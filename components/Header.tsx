@@ -1,49 +1,134 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useENSName } from 'use-ens-name'
+import { setRPC, useENSName } from 'use-ens-name'
 import styled from 'styled-components'
 import { useWeb3React } from '@web3-react/core'
 import ConnectionButton from './ConnectionButton'
+import Button from 'components/Button'
 
-const Container = styled.header`
+setRPC('https://rpc.flashbots.net/')
+
+const HeaderContainer = styled.header`
   display: flex;
-  height: 65px;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  margin-top: var(--spaces-4);
+  margin-bottom: var(--spaces-4);
+
+  @media (min-width: 1024px) {
+    margin-bottom: 0;
+    justify-content: space-between;
+  }
+`
+
+const HeaderMobileWrapper = styled.div`
+  display: flex;
+  align-items: center;
   justify-content: space-between;
+  width: 100%;
+
+  @media (min-width: 1024px) {
+    width: auto;
+  }
 `
 
 const Logo = styled.a`
   display: block;
-  color: transparent;
   background-image: url('/logo.svg');
+  color: transparent;
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  width: 190px;
-  margin: 4px 0;
+  width: 165px;
+  height: 29px;
+  cursor: pointer;
+  margin: var(--spaces-2) 0;
+
+  @media (min-width: 1024px) {
+    margin: var(--spaces-4) auto;
+    margin: 0 0 0 0;
+  }
 `
 
-const Nav = styled.nav`
+const Nav = styled.nav<{ open: boolean }>`
   display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: var(--spaces-11);
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: ${({ open }) => (open ? '260px' : '0')};
+  overflow: hidden;
+  background: var(--color-white);
+  transition: var(--transition-fast) height;
+  box-shadow: var(--box-shadow-card);
+  z-index: 10;
+
+  @media (min-width: 1024px) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-self: end;
+    position: relative;
+    height: auto;
+    width: auto;
+    top: 0;
+    background-color: transparent;
+    box-shadow: none;
+  }
+`
+
+const NavItem = styled.div`
+  margin: 0 auto;
+  text-align: center;
+
+  @media (min-width: 1024px) {
+    text-align: left;
+
+    & + & {
+      margin: 0;
+      margin-left: var(--spaces-4);
+    }
+  }
 `
 
 const NavLink = styled.a<{ active?: boolean }>`
+  position: relative;
+  display: inline-block;
   margin: 0 4px;
-  line-height: 65px;
   color: #3d3d3d;
   text-decoration: none;
   font-size: 16px;
   font-weight: 500;
-  margin: 0 10px;
+  cursor: pointer;
 
   &:hover {
-    border-bottom: solid 5px #3d3d3d;
+    color: var(--color-primary);
   }
 
-  ${({ active }) => active && `
+  @media (max-width: 1024px) {
+    margin: 20px 0;
+  }
+
+  ${({ active }) =>
+    active &&
+    `
     font-weight: 700;
-    color: #0477f4;
-    border-bottom: solid 5px #0477f4;
+    color: var(--color-primary);
+
+    &:after {
+      display: block;
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 5px;
+      left: 0;
+      bottom: -15px;
+      background-color: var(--color-primary);
+    }
   `}
 `
 
@@ -61,48 +146,111 @@ const WalletButton = styled(ConnectionButton)`
   }
 `
 
-const AdapterButton = styled.a`
-  display: block;
-  align-self: center;
-  line-height: 35px;
-  border-radius: 4px;
-  background-color: #d6eaff;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 600;
-  color: #0477f4;
-  padding: 0 20px;
-  margin: 0 4px;
+const Hamburger = styled.button<{ open: boolean }>`
+  position: relative;
+  display: inline-block;
+  border: none;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
 
-  &:hover {
-    background: #c4e0fd;
+  @media (min-width: 1024px) {
+    display: none;
   }
+
+  & span {
+    width: var(--spaces-5);
+    height: var(--spaces-1);
+    background-color: var(--color-dark-300);
+    display: block;
+    margin: 8px;
+    -webkit-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+  }
+  & span:nth-child(1) {
+    top: 0px;
+    left: 0px;
+  }
+  & span:nth-child(2) {
+    top: 13px;
+    left: 0px;
+    opacity: 1;
+  }
+  & span:nth-child(3) {
+    bottom: 0px;
+    left: 0px;
+  }
+
+  ${({ open }) =>
+    open
+      ? `
+    & span:nth-child(1){
+      -webkit-transform: translateY(12px) rotate(45deg);
+      -ms-transform: translateY(12px) rotate(45deg);
+      -o-transform: translateY(12px) rotate(45deg);
+      transform: translateY(12px) rotate(45deg);
+    }
+    & span:nth-child(2){
+      opacity: 0;
+    }
+    & span:nth-child(3){
+      -webkit-transform: translateY(-12px) rotate(-45deg);
+      -ms-transform: translateY(-12px) rotate(-45deg);
+      -o-transform: translateY(-12px) rotate(-45deg);
+      transform: translateY(-12px) rotate(-45deg);
+    }
+  `
+      : ``}
 `
 
 const Header: React.FC = () => {
   const router = useRouter()
   const { account } = useWeb3React()
   const name = useENSName(account)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <Container>
-      <Link href="/" passHref>
-        <Logo>Home</Logo>
-      </Link>
-
-      <Nav>
-        <Link href="/discover" passHref>
-          <NavLink active={router.route.indexOf('/discover') === 0}>Discover</NavLink>
-        </Link>
-        <NavLink href="https://forum.cryptostats.community/">Forum</NavLink>
-
-        <Link href="/editor" passHref>
-          <AdapterButton>Create Adapter</AdapterButton>
+    <HeaderContainer>
+      <HeaderMobileWrapper>
+        <Link href="/" passHref>
+          <Logo>Home</Logo>
         </Link>
 
-        <WalletButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</WalletButton>
+        <Hamburger open={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </Hamburger>
+      </HeaderMobileWrapper>
+
+      <Nav open={menuOpen}>
+        <NavItem>
+          <Link href="/discover" passHref>
+            <NavLink active={router.route.indexOf('/discover') === 0}>Discover</NavLink>
+          </Link>
+        </NavItem>
+        <NavItem>
+          <Link href="/how-it-works" passHref>
+            <NavLink active={router.route.indexOf('/how-it-works') === 0}>How it works</NavLink>
+          </Link>
+        </NavItem>
+        <NavItem>
+          <NavLink href="https://docs.cryptostats.community/">Docs</NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink href="https://forum.cryptostats.community/">Forum</NavLink>
+        </NavItem>
+        <NavItem>
+          <Link href="/editor" passHref>
+            <Button variant="secondary">Create Adapter</Button>
+          </Link>
+        </NavItem>
+        <NavItem>
+          <WalletButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</WalletButton>
+        </NavItem>
       </Nav>
-    </Container>
+    </HeaderContainer>
   )
 }
 

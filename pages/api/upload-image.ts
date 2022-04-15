@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import { NextApiRequest, NextApiResponse } from 'next'
 import pinataSDK from '@pinata/sdk'
 
-const filePath = '/tmp/upload.bin';
+const filePath = '/tmp/upload.bin'
 
 async function saveToIPFS(stream: any, name: string, type: string): Promise<string> {
   if (!process.env.PINATA_KEY || !process.env.PINATA_SECRET) {
@@ -10,13 +10,13 @@ async function saveToIPFS(stream: any, name: string, type: string): Promise<stri
   }
 
   const pinata = pinataSDK(process.env.PINATA_KEY, process.env.PINATA_SECRET)
-  const fileStream = fs.createWriteStream(filePath);
-  stream.pipe(fileStream);
+  const fileStream = fs.createWriteStream(filePath)
+  stream.pipe(fileStream)
   const response = await pinata.pinFromFS(filePath, {
     pinataMetadata: { name, type, category: 'image' },
-  });
+  })
 
-  return response.IpfsHash;
+  return response.IpfsHash
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

@@ -1,130 +1,175 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
-import HeroCard from './HeroCard'
-import CollectionCard from './CollectionCard'
+import RowSection from 'components/RowSection'
+import ColumnSection from 'components/ColumnSection'
+import Text from 'components/Text'
+import Button from 'components/Button'
+import { Light as SyntaxHighlighter } from 'react-syntax-highlighter'
+import js from 'react-syntax-highlighter/dist/cjs/languages/hljs/javascript'
+// @ts-ignore
+import theme from 'react-syntax-highlighter/dist/cjs/styles/hljs/stackoverflow-dark'
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
+SyntaxHighlighter.registerLanguage('javascript', js)
+
+const sdkCode = `const { CryptoStatsSDK } = require('@cryptostats/sdk');
+(async function() {
+  const sdk = new CryptoStatsSDK({
+    moralisKey: '<your key>',
+  });
+  const list = sdk.getList('fees');
+  await list.fetchAdapters();
+
+  const result = await list.executeQuery('oneDayTotalFees', '2022-01-01');
+  console.log(result);
+})();`
+
+const restCode = `const url = 'https://api.cryptostats.community/api/v1/fees/oneDayTotalFees/2022-01-01';
+const response = await fetch(url);
+const json = await response.json();
+console.log(json);`
+
+const Graphic = styled.img`
+  width: 100%;
+  height: auto;
 `
 
-const Column = styled.div`
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-  padding: 30px;
+const CodeCard = styled.div`
+  border-radius: 10px;
+  background-color: #fff;
+  overflow: hidden;
+  background: #404c59;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04), 0 10px 35px 16px rgba(0, 36, 75, 0.05);
+  margin-bottom: var(--spaces-6);
 `
 
-const SectionHeader = styled.h3`
-  font-size: 24px;
-  font-weight: bold;
-  color: #002750;
+const CodeCardHeader = styled.div`
+  border: solid 1px #ddd;
+  background: white;
+  padding: var(--spaces-3) var(--spaces-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `
 
-const Row = styled.div`
-  display: flex;
-  flex: 1;
+const Syntax = styled(SyntaxHighlighter)`
+  margin: 0;
+  padding: var(--spaces-4) !important;
+`
 
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: stretch;
+const Toggle = styled.button`
+  ${({ disabled }) =>
+    disabled
+      ? `
+    background-color: #d6eaff;
+    color: #0477f4;
+    font-weight: 600;
+  `
+      : `
+    color: #4e4e4e;
+    background-color: #eef1f7;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #d6eaff;
+    }
+  `}
+  font-size: 12px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  padding: 6px 16px;
+
+  & + & {
+    margin-left: var(--spaces-3);
   }
 `
 
-const Description = styled.p`
-  flex: 1;
-`
-
-const Graphic = styled.div<{ background?: string }>`
-  aspect-ratio: 3 / 2;
-  position: relative;
-  background-size: 80%;
-  background-position: center;
-  background-repeat: no-repeat;
-
-  ${({ background }) => background && `background-image: url('${background}');`}
-`
-
-const BottomRow = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-self: center;
-  width: 700px;
-  max-width: 100%;
-  margin: 4px 8px;
-`
-
-const Button = styled.a`
-  display: block;
-  background: transparent;
-  padding: 4px 12px;
-  border: solid 1px #0477f4;
-  color: #0477f4;
-  text-decoration: none;
-  align-self: center;
-  margin: 20px;
-
-  &:hover {
-    background: #c5e1ff;
-  }
-`
+enum CodeType {
+  SDK,
+  REST,
+}
 
 const Actions: React.FC = () => {
+  const [codeType, setCodeType] = useState(CodeType.SDK)
+
   return (
-    <Container>
-      <Row>
-        <Column>
-          <SectionHeader>Create</SectionHeader>
-
-          <Description>
-            Create and update the adapers that provide data to CryptoStats.
-            <br />
-            Write, test and publish the code right in the browser!
-          </Description>
-
-          <Graphic background="/editor-thumbnail.png"/>
-
+    <>
+      <RowSection mt="120">
+        <ColumnSection from="1" to="6">
+          <Text tag="h3" type="title_highlight" mb="40" align="center">
+            Create
+          </Text>
+          <Graphic src="/editor-thumbnail.png" alt="editor" />
+          <Text tag="p" type="content_big" mt="32" mb="32">
+            Create and update the adapers that provide data to CryptoStats. Write, test and publish
+            the code right in the browser!
+          </Text>
           <Link href="/editor" passHref>
-            <Button>Open the adapter editor</Button>
+            <Button variant="outline" size="large">
+              Open the adapter editor
+            </Button>
           </Link>
-        </Column>
-
-        <Column>
-          <SectionHeader>Discover</SectionHeader>
-
-          <Description>
+        </ColumnSection>
+        <ColumnSection from="8" to="13">
+          <Text tag="h3" type="title_highlight" mb="40" align="center">
+            Discover
+          </Text>
+          <Graphic src="/image-collections.png" alt="Collections" />
+          <Text tag="p" type="content_big" mt="32" mb="32">
             Review a wide range of data metrics, covering protocols across the crypto space.
-          </Description>
-
-          <Graphic>
-            <CollectionCard position="TopLeft" title="DAO Treasury Balance" />
-            <CollectionCard position="Center" title="Lending Rate" />
-            <CollectionCard position="BottomRight" title="Total Fee Revenue" />
-          </Graphic>
-
+          </Text>
           <Link href="/discover" passHref>
-            <Button>Browse data sets</Button>
+            <Button variant="outline" size="large">
+              Browse data sets
+            </Button>
           </Link>
-        </Column>
-      </Row>
+        </ColumnSection>
+      </RowSection>
 
-      <BottomRow>
-        <SectionHeader>Consume and use data</SectionHeader>
-        <Description>
-          Use trustworthy data metrics in your website or dapp.
-          <br />
-          It's free and always will be
-        </Description>
-        
-        <HeroCard title="Uniswap Fees" subtitle="Preview">
-          <div>Adapter name</div>
-          <div>Uniswap</div>
-        </HeroCard>
+      <RowSection mt="64">
+        <ColumnSection from="3" to="11">
+          <Text tag="h3" type="title_highlight" mb="24" align="center">
+            Consume and use data
+          </Text>
+          <Text tag="p" type="content_big" mb="32" align="center">
+            Use trustworthy data metrics in your website or dapp.
+          </Text>
+          <Text tag="p" type="content_big" mb="32" align="center">
+            It's free and always will be.
+          </Text>
 
-        <Button href="#">Read the docs</Button>
-      </BottomRow>
-    </Container>
+          <CodeCard>
+            <CodeCardHeader>
+              <Text tag="p" type="content">
+                Using the Data is easy. Try it out
+              </Text>
+              <div>
+                <Toggle
+                  disabled={codeType === CodeType.SDK}
+                  onClick={() => setCodeType(CodeType.SDK)}
+                >
+                  CryptoStats SDK
+                </Toggle>
+                <Toggle
+                  disabled={codeType === CodeType.REST}
+                  onClick={() => setCodeType(CodeType.REST)}
+                >
+                  REST API
+                </Toggle>
+              </div>
+            </CodeCardHeader>
+
+            <Syntax language="javascript" style={theme} showLineNumbers>
+              {codeType === CodeType.SDK ? sdkCode : restCode}
+            </Syntax>
+          </CodeCard>
+          <Button variant="outline" size="large" centered>
+            Read the docs
+          </Button>
+        </ColumnSection>
+      </RowSection>
+    </>
   )
 }
 

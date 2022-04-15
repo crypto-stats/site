@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 
 export interface HistoricalVersion {
   cid: string
-  version: string
+  version: string | null
 }
 
 interface AdapterHistoryProps {
@@ -20,7 +20,7 @@ const AdapterHistory: React.FC<AdapterHistoryProps> = ({ historicalVersions }) =
         {historicalVersions.map((version: HistoricalVersion) => (
           <li key={version.cid}>
             <Link href={`/discover/${router.query.listId}/${version.cid}`}>
-              <a>{version.version}</a>
+              <a>{version.version || 'Unversioned'}</a>
             </Link>
           </li>
         ))}

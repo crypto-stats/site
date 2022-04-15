@@ -1,81 +1,56 @@
 import React from 'react'
 import styled from 'styled-components'
+import Link from 'next/link'
+import RowSection from 'components/RowSection'
+import ColumnSection from 'components/ColumnSection'
+import Text from 'components/Text'
+import Button from 'components/Button'
+import Icon from 'components/Icon'
 
-const Container = styled.div`
-  height: 776px;
-  display: flex;
-  align-items: center;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: stretch;
-    margin: 40px 20px;
-    height: unset;
-  }
-`
-
-const Column = styled.div`
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-`
-
-const Diagram = styled.div`
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-  align-self: stretch;
-`
-
-const SectionHeader = styled.h3`
-  font-size: 24px;
-  font-weight: bold;
-  color: #002750;
-`
-
-const Row = styled.div`
-  display: flex;
-  flex: 1;
-`
-
-const Block = styled.div`
+const Block = styled(Text)`
   border-radius: 20px;
-  box-shadow: 0 2px 11px 1px rgba(0, 0, 0, 0.13);
-  text-align: center;
-  color: #838383;
+  border: 1px solid var(--color-primary-800);
   flex: 1;
-  padding: 12px;
+  padding: 24px;
   margin: 0 7px;
   overflow: hidden;
+  min-height: 80px;
+  opacity: 0.7;
+  transition: var(--transition-fast);
 
-  @media (max-width: 768px) {
-    font-size: 12px;
+  &:hover {
+    opacity: 1;
+    box-shadow: 0 2px 14px 1px rgba(0, 0, 0, 0.13);
   }
 `
 
 const CSBlock = styled(Block)`
-  border: solid 3px #0477f4;
+  border: solid 2px #0477f4;
   box-shadow: 0 2px 464px 9px rgba(4, 119, 244, 0.17), 0 4px 11px 1px rgba(4, 119, 244, 0.27);
   background-image: url('/logo.svg');
   background-repeat: no-repeat;
   background-position: center;
+  background-position-y: 60%;
+  opacity: 1;
 
-  @media (max-width: 768px) {
-    min-height: 60px;
-    background-position-y: 70%;
+  &:hover {
+    opacity: 1;
+    box-shadow: 0 2px 464px 9px rgba(4, 119, 244, 0.17), 0 4px 11px 1px rgba(4, 119, 244, 0.27);
   }
 `
 
 const ArrowBox = styled.div`
-  height: 60px;
+  height: var(--spaces-8);
   position: relative;
   display: flex;
   justify-content: center;
+  margin: var(--spaces-3) 0;
+  opacity: 0.65;
 `
 
 const Arrow = styled.div<{ dashed?: boolean }>`
   width: 0;
-  border-left: ${({ dashed }) => dashed ? 'dashed' : 'solid'} 2px #0477f4;
+  border-left: ${({ dashed }) => (dashed ? 'dashed' : 'solid')} 2px #0477f4;
   position: relative;
   margin-bottom: 2px;
 
@@ -105,7 +80,8 @@ const BottomForkArrows = styled(ForkArrows)`
   bottom: 0;
   margin-bottom: 2px;
 
-  &:before, &:after {
+  &:before,
+  &:after {
     content: '';
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
@@ -135,40 +111,112 @@ const TopForkArrows = styled(ForkArrows)`
   bottom: 50%;
 `
 
-const Hero: React.FC = () => {
+const IconsGrid = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: var(--spaces-4);
+
+  & > i + i {
+    margin-left: var(--spaces-4);
+  }
+
+  & > img {
+    max-height: 40px;
+    width: auto;
+  }
+  & > img + img {
+    margin-left: var(--spaces-4);
+  }
+`
+
+const Description: React.FC = () => {
   return (
-    <Container>
-      <Column>
-        <SectionHeader>What is CryptoStats?</SectionHeader>
+    <RowSection alignItems="center">
+      <ColumnSection from="2" to="6">
+        <Text tag="h3" type="title_highlight" mb="24">
+          What is CryptoStats?
+        </Text>
+        <Text tag="p" type="content_big" mb="16">
+          Data powers the world of crypto.
+        </Text>
+        <Text tag="p" type="content_big" mb="16">
+          We believe this data should not come from closed silos, but from open, transparent
+          protocols.
+        </Text>
+        <Text tag="p" type="content_big" mb="16">
+          CryptoStats empowers any developer to contribute to an open, trustworthy dataset, and
+          enables publishers to access this data for free.
+        </Text>
+        <Text tag="p" type="content_big" mb="16">
+          CryptoStats already powers many popular websites. But we need your help to take this to
+          the next level.
+        </Text>
+        <Text tag="p" type="content_big" mb="16">
+          Want to know more?
+        </Text>
+        <Link href="/discover" passHref>
+          <Button variant="outline" size="large">
+            See how it works
+          </Button>
+        </Link>
+      </ColumnSection>
 
-        <p>CryptoStats is a decentralized protocol for trustworthy data metrics for the crypto ecosystem.</p>
-        <p>Verified adapters pull data from various indexers, normalize it, and make it freely available to all.</p>
-      </Column>
-
-      <Diagram>
-        <Block>Blockchains</Block>
+      <ColumnSection from="7" to="12">
+        <Block>
+          <Text tag="p" type="label" align="center">
+            Blockchains &amp; Protocols
+          </Text>
+          <IconsGrid>
+            <Icon type="ethereum" />
+            <Icon type="bitcoin" />
+            <Icon type="cardano" />
+            <Icon type="polygon" />
+            <Icon type="uniswap" />
+            <Icon type="aave" />
+          </IconsGrid>
+        </Block>
         <ArrowBox>
           <Arrow dashed />
           <SideArrows />
         </ArrowBox>
-        <Block>Indexers</Block>
+        <Block>
+          <Text tag="p" type="label" align="center">
+            Indexers
+          </Text>
+          <IconsGrid>
+            <Icon type="zerion" />
+            <Icon type="thegraph" />
+            <Icon type="coinmetrics" />
+          </IconsGrid>
+        </Block>
         <ArrowBox>
           <Arrow dashed />
           <TopForkArrows />
         </ArrowBox>
-        <CSBlock>Normalization &amp; Curation</CSBlock>
+        <CSBlock>
+          <Text tag="p" type="label" align="center">
+            Normalization &amp; Curation
+          </Text>
+        </CSBlock>
         <ArrowBox>
           <Arrow />
           <BottomForkArrows />
         </ArrowBox>
-        <Row>
-          <Block>Presentation</Block>
-          <Block>Presentation</Block>
-          <Block>Presentation</Block>
-        </Row>
-      </Diagram>
-    </Container>
+        <Block>
+          <Text tag="p" type="label" align="center">
+            Presentations
+          </Text>
+          <IconsGrid>
+            <img src="clients/bloomberg.png" alt="Bloomberg" style={{ height: '26px' }} />
+            <img src="clients/cryptofees.png" alt="CryptoFees" />
+            <img src="clients/cryptotester.png" alt="CryptoTesters" />
+          </IconsGrid>
+        </Block>
+      </ColumnSection>
+    </RowSection>
   )
 }
 
-export default Hero
+export default Description

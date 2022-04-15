@@ -1,9 +1,8 @@
-import React, { useRef, useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import { Fill, BottomResizable, Top } from 'react-spaces'
+import { Fill } from 'react-spaces'
 import { Adapter } from '@cryptostats/sdk'
 import { useCompiler } from 'hooks/compiler'
-import { useConsole, Line } from 'hooks/console'
 import SubAdapterTest from './SubAdapterTest'
 
 const Container = styled(Fill)`
@@ -13,53 +12,25 @@ const Container = styled(Fill)`
   }
 `
 
-const Main = styled(Fill)`
-  padding: 16px;
+const Main = styled(Fill)``
+
+const Label = styled.div`
+  font-size: 14px;
+  color: #6b6b6b;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  margin: 16px;
 `
 
-const ConsoleTop = styled(Top)`
-  background: #2f2f2f;
-  display: flex;
-  align-items: center;
-  padding: 0 8px;
-  justify-content: space-between;
-`
-
-const ClearButton = styled.button`
-  height: 20px;
-  padding: 3px 0 2px;
-  border-radius: 4px;
-  border: solid 1px #ffffff;
-  background-color: transparent;
-  margin: 16px 0 6px;
-  color: white;
-  padding: 2px 16px;
-
-  &:hover {
-    background: #363636;
-  }
-`
-
-const ConsoleView = styled(Fill)`
-  padding: 8px;
-`
-
-const ConsoleLine = styled.div`
-  font-family: monospace;
-  white-space: pre-wrap;
-  word-break: break-all;
+const TabContentIntro = styled.div`
+  font-size: 14px;
+  color: #808080;
+  line-height: 19px;
+  margin: 16px 16px 24px;
 `
 
 const PreviewPanel: React.FC = () => {
   const { module, list, processing } = useCompiler()
-  const { lines, clear: clearConsole } = useConsole()
-  const bottomRef = useRef<any>(null)
-
-  useEffect(() => {
-    if (bottomRef) {
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" })
-    }
-  }, [bottomRef, lines])
 
   if (!module) {
     if (processing) {
@@ -72,29 +43,19 @@ const PreviewPanel: React.FC = () => {
   return (
     <Container>
       <Main scrollable={true}>
-        {list && list.adapters.map((adapter: Adapter) => (
-          <SubAdapterTest
-            key={adapter.id}
-            subadapter={adapter}
-            openByDefault={list.adapters.length === 1}
-          />
-        ))}
-      </Main>
-
-      <BottomResizable size={100}>
-        <ConsoleTop size={40}>
-          Console
-          <div>
-            <ClearButton onClick={clearConsole}>Clear</ClearButton>
-          </div>
-        </ConsoleTop>
-        <ConsoleView scrollable={true}>
-          {lines.map((line: Line, i: number) => (
-            <ConsoleLine key={i}>{line.value}</ConsoleLine>
+        <TabContentIntro>
+          In order to publish your Adapter you need to test the query you wrote.
+        </TabContentIntro>
+        <Label>Queries to test</Label>
+        {list &&
+          list.adapters.map((adapter: Adapter) => (
+            <SubAdapterTest
+              key={adapter.id}
+              subadapter={adapter}
+              openByDefault={list.adapters.length === 1}
+            />
           ))}
-          <div ref={bottomRef} />
-        </ConsoleView>
-      </BottomResizable>
+      </Main>
     </Container>
   )
 }

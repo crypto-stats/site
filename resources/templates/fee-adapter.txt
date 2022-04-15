@@ -1,4 +1,4 @@
-export const name = 'New Fee Adapter';
+export const name = 'Sample Fees';
 export const version = '0.0.1';
 export const license = 'MIT';
 
@@ -18,10 +18,8 @@ export function setup(sdk: Context) {
     }`;
 
     const data = await sdk.graph.query('sample/sample-subgraph', query, {
-      variables: {
-        startOfDayBlock: startOfDayBlock,
-        endOfDayBlock: endOfDayBlock,
-      },
+      startOfDayBlock: startOfDayBlock,
+      endOfDayBlock: endOfDayBlock,
     });
 
     const totalFeesNative = data.endOfDay.totalFees - data.startOfDay.totalFees;
@@ -45,9 +43,9 @@ export function setup(sdk: Context) {
       blockchain: 'Ethereum',
       source: 'The Graph Protocol',
       website: 'https://example.com',
-      protocolLaunch: '2021-08-11',
+      protocolLaunch: '2021-08-11', // Data should be available from this date, onwards
       tokenTicker: 'TOK',
-      tokenCoingecko: 'sample-id',
+      tokenCoingecko: 'sample-id', // The CoinGecko API ID
       events: [
         {
           date: '2021-08-05',

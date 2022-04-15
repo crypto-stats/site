@@ -8,7 +8,7 @@ export const useImages = () => {
   useEffect(() => {
     const existingStorage = JSON.parse(window.localStorage.getItem(storageKey) || '[]')
     setList(existingStorage)
-  }, []);
+  }, [])
 
   const addImage = (cid: string, type: string, name: string) => {
     const newList = JSON.parse(window.localStorage.getItem(storageKey) || '[]')

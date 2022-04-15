@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { Adapter } from '@cryptostats/sdk'
 import QueryForm from './QueryForm'
+import { useEditorState } from 'hooks/editor-state'
 
-const Container = styled.div`
-`
+const Container = styled.div``
 
 const Header = styled.div`
   border-top: solid 1px #4a4a4d;
@@ -18,20 +18,44 @@ const Header = styled.div`
   }
 `
 
+const Icon = styled.img<{ size?: string }>`
+  width: auto;
+  margin-right: 16px;
+
+  ${({ size }) =>
+    size === 'small'
+      ? `
+    max-height: 16px;
+    margin-right: 16px;
+  `
+      : ``}
+  ${({ size }) =>
+    size === 'large'
+      ? `
+    max-height: 32px;
+    margin-right: 32px;
+  `
+      : ``}
+`
+
 interface SubAdapterPreviewProps {
   subadapter: Adapter
   openByDefault: boolean
 }
 
 const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDefault }) => {
-  const [open, setOpen] = useState(openByDefault)
+  const [fileName] = useEditorState<string>('open-file')
+  const [open, setOpen] = useEditorState(`subtest-${fileName}-${subadapter.id}-open`, openByDefault)
 
   // @ts-ignore
-  const { name, subtitle } = subadapter.metadata.metadata
+  const { name, subtitle, ...metadata } = subadapter.metadata.metadata
 
   if (!open) {
     return (
       <Header onClick={() => setOpen(true)}>
+        {metadata.icon?.cid && (
+          <Icon size="small" src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />
+        )}
         {name || subadapter.id}
         {subtitle ? ` - ${subtitle}` : null}
       </Header>
@@ -43,6 +67,9 @@ const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDe
   return (
     <Container>
       <Header onClick={() => setOpen(false)}>
+        {metadata.icon?.cid && (
+          <Icon size="small" src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />
+        )}
         {name || subadapter.id}
         {subtitle ? ` - ${subtitle}` : null}
       </Header>
@@ -52,6 +79,7 @@ const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDe
           <QueryForm
             key={queryName}
             id={queryName}
+            storageKey={`subtest-${fileName}-${subadapter.id}-${queryName}`}
             fn={fn}
             openByDefault={queries.length === 1}
           />

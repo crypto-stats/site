@@ -14,13 +14,21 @@ export interface Query {
 export interface CollectionMetadata {
   name: string
   description?: string
+  forumCategory?: string
+  icon?: string
+  iconColor?: string
   queries?: Query[]
 }
+
+export const DEFAULT_FORUM_CATEGORY = 'protocols/other-collections'
 
 const collectionMetadata: { [id: string]: CollectionMetadata } = {
   'apy-current': {
     name: 'Current APY',
     description: 'The current yield rates of various lending protocols and yield aggregators.',
+    forumCategory: 'protocols/apys',
+    icon: '🗓',
+    iconColor: 'palette-1',
     queries: [
       {
         id: 'apyCurrent',
@@ -38,7 +46,11 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   },
   'apy-range': {
     name: 'Average APY',
-    description: 'The average yield rate of various lending protocols and yield aggregators across a period of time.',
+    description:
+      'The average yield rate of various lending protocols and yield aggregators across a period of time.',
+    forumCategory: 'protocols/apys',
+    icon: '📆',
+    iconColor: 'palette-2',
     queries: [
       {
         id: 'apyOverDateRange',
@@ -64,9 +76,33 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
       },
     ],
   },
+  'dex-volumes': {
+    name: 'DEX Volumes',
+    description: 'The current yield rates of various lending protocols and yield aggregators.',
+    forumCategory: 'protocols/apys',
+    icon: '🔁',
+    iconColor: 'palette-1',
+    queries: [
+      {
+        id: 'oneDayTotalVolumeUSD',
+        name: 'One Day Volume (USD)',
+        description: 'Total trading volume on a single day',
+        parameters: [
+          {
+            name: 'Date',
+            type: 'date',
+            description: 'The date to query volume for (UTC time)',
+          },
+        ],
+      },
+    ],
+  },
   'eth-beacon-chain': {
     name: 'Ethereum Beacon Chain',
-    description: 'Various beacon chain statistics, such as the current staking APY, the total ETH staked, total ETH paid as rewards, and more',
+    description:
+      'Various beacon chain statistics, such as the current staking APY, the total ETH staked, total ETH paid as rewards, and more',
+    icon: '🏎',
+    iconColor: 'palette-3',
     queries: [
       {
         id: 'currentAPY',
@@ -98,6 +134,8 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   'eth-burned': {
     name: 'ETH Burned',
     description: 'The amount of ETH burned by EIP-1559',
+    icon: '🔥',
+    iconColor: 'palette-2',
     queries: [
       {
         id: 'tokensBurnedTotal',
@@ -218,6 +256,8 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   'eth-staking-pools': {
     name: 'ETH Staking Pools',
     description: 'The current APY and total ETH staked of various staking providers',
+    icon: '💎',
+    iconColor: 'palette-1',
     queries: [
       {
         id: 'totalStakedETH',
@@ -234,6 +274,9 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   fees: {
     name: 'Fee Revenue',
     description: 'Total fees paid to a protocol on a given day.',
+    forumCategory: 'protocols/fees',
+    icon: '💰',
+    iconColor: 'palette-8',
     queries: [
       {
         id: 'oneDayTotalFees',
@@ -246,12 +289,15 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
             description: 'The date to query fees for (UTC time)',
           },
         ],
-      }
+      },
     ],
   },
   'fee-range': {
     name: 'Fee Revenue over Date Range',
     description: 'Total fees paid to a protocol across a date range.',
+    forumCategory: 'protocols/fees',
+    icon: '💰',
+    iconColor: 'palette-5',
     queries: [
       {
         id: 'dateRangeTotalFees',
@@ -269,28 +315,36 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
             description: 'The end date of the date range (exclusive, UTC time)',
           },
         ],
-      }
+      },
     ],
   },
   issuance: {
     name: 'Issuance',
     description: 'The amount of tokens issued in the past day, in USD.',
+    forumCategory: 'protocols/issuance',
+    icon: '🖨',
+    iconColor: 'palette-1',
     queries: [
       {
         id: 'issuance7DayAvgUSD',
         name: '7 day average issuance (USD)',
-        description: 'Query the USD value of assets issued per day (averaged over the previous 7 days).',
+        description:
+          'Query the USD value of assets issued per day (averaged over the previous 7 days).',
       },
       {
         id: 'issuanceRateCurrent',
         name: 'Current issuance rate',
-        description: 'The annualized issuance rate (averaged over the previous 7 days).',
+        description:
+          'The annualized issuance rate percentage (in decimal form, averaged over the previous 7 days).',
       },
     ],
   },
   'l2-fees': {
     name: 'Layer-2 Fees',
     description: 'The USD transaction fees for basic transactions on Ethereum layer-2s.',
+    forumCategory: 'protocols/tx-fees',
+    icon: '🌀',
+    iconColor: 'palette-6',
     queries: [
       {
         id: 'feeTransferEth',
@@ -312,6 +366,9 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
   treasuries: {
     name: 'DAO Treasuries',
     description: 'The total value and assets currently held in DAO treasuries.',
+    forumCategory: 'protocols/treasuries',
+    icon: '🏛',
+    iconColor: 'palette-1',
     queries: [
       {
         id: 'currentTreasuryUSD',
@@ -321,7 +378,8 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
       {
         id: 'currentLiquidTreasuryUSD',
         name: 'Current liquid treasury balance in USD',
-        description: 'The value of transferable assets held by the tresury (typically excluding vesting assets).',
+        description:
+          'The value of transferable assets held by the tresury (typically excluding vesting assets).',
       },
       {
         id: 'currentTreasuryPortfolio',
@@ -332,6 +390,26 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
         id: 'recentProposals',
         name: 'Recent governance proposals',
       },
+    ],
+  },
+  'web3-revenue': {
+    name: 'Web3 Revenues',
+    description: 'Total revenues paid to data-centric Web3 protocols.',
+    icon: '🕸',
+    iconColor: 'palette-1',
+    queries: [
+      {
+        id: 'oneDayTotalFees',
+        name: 'One day total fees',
+        description: 'Query the USD value of all fees paid to a protocol on a given calendar date.',
+        parameters: [
+          {
+            name: 'Date',
+            type: 'date',
+            description: 'The date to query fees for (UTC time)',
+          },
+        ],
+      }
     ],
   },
 }

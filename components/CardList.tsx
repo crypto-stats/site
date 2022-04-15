@@ -1,51 +1,62 @@
 import React from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
-
-const Container = styled.div`
-  margin: 2px 0;
-`
+import Text from 'components/Text'
+import IconRound from 'components/IconRound'
 
 const List = styled.ul`
-  margin: 0;
   padding: 0;
+
+  @media (min-width: 768px) {
+    margin: 0 var(--spaces-7);
+  }
 `
 
 const ListItem = styled.li`
-  margin: 12px 0;
   list-style: none;
+
+  & + & {
+    margin-top: var(--spaces-4);
+  }
 `
 
-const Card = styled.a`
-  display: block;
+const Card = styled.a<{ icon?: string }>`
+  display: grid;
+  grid-template-columns: 100%;
+  grid-gap: 0 var(--spaces-5);
+  min-height: 240px;
+  padding: var(--spaces-6);
+  background-color: var(--color-white);
   box-sizing: border-box;
-  padding: 40px;
   text-decoration: none;
-  min-height: 244px;
-  border-radius: 5px;
-  border: solid 1px #ddd;
-  background-color: #ffffff;
-  color: #002750;
+  border-radius: var(--spaces-2);
+  border: 1px solid var(--color-primary-800);
+  box-shadow: var(--box-shadow-card);
+  transition: var(--transition-fast);
+  align-items: center;
+  cursor: pointer;
 
   &:hover {
-    color: #0477f4;
-    border: solid 1px #0477f4;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
   }
 
-  &:hover h2 {
-    color: #0477f4;
+  &:hover h3 {
+    color: var(--color-primary);
+  }
+
+  @media (min-width: 768px) {
+    ${({ icon }) => (icon ? 'grid-template-columns: auto 1fr;' : 'grid-template-columns: 100%;')}
   }
 `
 
-const Title = styled.h2`
-  font-size: 22px;
-  font-weight: bold;
-  color: #002750;
-`
+const CardIcon = styled(IconRound)`
+  padding-right: var(--spaces-3);
+  margin-bottom: 32px;
 
-const Subtitle = styled.div`
-  color: #717d8a;
-  font-size: 18px;
+  @media (min-width: 768px) {
+    margin-bottom: 0px;
+  }
 `
 
 const IconList = styled.ul`
@@ -62,8 +73,6 @@ const IconListIcon = styled.li`
   background-size: 70%;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: white;
-  box-shadow: 1px 2px 4px #0000003d;
   border-radius: 22px;
   margin-left: -8px;
 `
@@ -71,23 +80,21 @@ const IconListIcon = styled.li`
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-`
+  margin-top: 32px;
 
-const Description = styled.p`
-  color: #717d8a;
-`
-
-const Metadata = styled.span`
-  font-size: 16px;
-  color: #717d8a;
+  @media (min-width: 768px) {
+    margin-top: 0px;
+  }
 `
 
 export interface Item {
   title: string
   subtitle?: string | null
   description?: string | null
+  icon?: string
+  iconColor?: string
   metadata?: string[]
-  iconlist?: { path: string, title: string }[]
+  iconlist?: { path: string; title: string }[]
   link: string
 }
 
@@ -97,45 +104,48 @@ interface CardListProps {
 
 const CardList: React.FC<CardListProps> = ({ items }) => {
   return (
-    <Container>
-      <List>
-        {items.map((item: Item) => {
-          return (
-            <ListItem key={item.title}>
-              <Link href={item.link} passHref>
-                <Card>
-                  <div />
-                  <Content>
-                    <Title>{item.title}</Title>
-                    
-                    {item.subtitle && <Subtitle>{item.subtitle}</Subtitle>}
+    <List>
+      {items.map((item: Item) => {
+        return (
+          <ListItem key={item.title}>
+            <Link href={item.link} passHref>
+              <Card icon={item.icon}>
+                {item.icon && <CardIcon color={item.iconColor} icon={item.icon} />}
+                <Content>
+                  <Text tag="h3" type="h3">
+                    {item.title}
+                  </Text>
 
-                    {item.iconlist && (
-                      <IconList>
-                        {item.iconlist.map((icon: { path: string, title: string }, i: number) => (
-                          <IconListIcon
-                            key={i}
-                            style={{ backgroundImage: `url(${icon.path})` }}
-                          />
-                        ))}
-                      </IconList>
-                    )}
+                  {item.description && (
+                    <Text tag="p" type="description" mt="16" mb="16">
+                      {item.description}
+                    </Text>
+                  )}
 
-                    {item.description && <Description>{item.description}</Description>}
+                  {item.iconlist && (
+                    <IconList>
+                      {item.iconlist.map((icon: { path: string; title: string }, i: number) => (
+                        <IconListIcon key={i} style={{ backgroundImage: `url(${icon.path})` }} />
+                      ))}
+                    </IconList>
+                  )}
 
-                    {item.metadata && (
-                      <div>
-                        {item.metadata.map((val: string) => <Metadata key={val}>{val}</Metadata>)}
-                      </div>
-                    )}
-                  </Content>
-                </Card>
-              </Link>
-            </ListItem>
-          )
-        })}
-      </List>
-    </Container>
+                  {item.metadata && (
+                    <>
+                      {item.metadata.map((val: string) => (
+                        <Text tag="p" type="content" mt="16" key={val}>
+                          {val}
+                        </Text>
+                      ))}
+                    </>
+                  )}
+                </Content>
+              </Card>
+            </Link>
+          </ListItem>
+        )
+      })}
+    </List>
   )
 }
 

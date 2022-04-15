@@ -13,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let code = req.body.code
   let sourceCode = null
 
-  if (req.body.language = 'typescript') {
+  if ((req.body.language = 'typescript')) {
     sourceCode = req.body.code
     code = await compileTsToJs(req.body.code)
   }
@@ -30,7 +30,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     code += `\nexports.previousVersion = '${req.body.previousVersion}';\n`
   }
 
-  let sourceCID = null;
+  let sourceCID = null
   if (sourceCode) {
     sourceCID = await saveToIPFS(sourceCode, `${moduleName} - Source`)
     code += `\nexports.sourceFile = '${sourceCID}';\n`

@@ -1,14 +1,15 @@
-import React, { useContext, useState } from 'react'
-import { CryptoStatsSDK, List, Module, LOG_LEVEL } from '@cryptostats/sdk'
+import React, { useContext, useEffect, useState } from 'react'
+import { Collection, Module, LOG_LEVEL } from '@cryptostats/sdk'
 import { compileTsToJs } from 'utils/ts-compiler'
+import { getSDK } from 'utils/sdk'
 
 interface CompilerState {
   code: string | null
   compiledCode: string | null
-  list: List | null
+  list: Collection | null
   module: Module | null
   error: string | null
-  processing: boolean 
+  processing: boolean
 }
 
 const DEFAULT_STATE = {
@@ -21,12 +22,14 @@ const DEFAULT_STATE = {
 }
 
 const CompilerContext = React.createContext<{
-  state: CompilerState,
+  state: CompilerState
   setState(state: CompilerState): void
 }>({
   state: DEFAULT_STATE,
 
-  setState() { throw new Error('Not initialized') },
+  setState() {
+    throw new Error('Not initialized')
+  },
 })
 
 interface EvaluateParams {
@@ -41,12 +44,9 @@ export const useCompiler = () => {
   const evaluate = async ({ code, isTS, onLog }: EvaluateParams) => {
     setState({ ...DEFAULT_STATE, code, processing: true })
 
-    const sdk = new CryptoStatsSDK({
-      moralisKey: process.env.NEXT_PUBLIC_MORALIS_KEY,
-      onLog,
-    })
+    const sdk = getSDK({ onLog })
 
-    const list = sdk.getList('test')
+    const list = sdk.getCollection('test')
 
     try {
       let compiledCode = null
@@ -66,9 +66,24 @@ export const useCompiler = () => {
 }
 
 export const CompilerProvider: React.FC = ({ children }) => {
-  const [state, setState] = useState<CompilerState>(DEFAULT_STATE)
+  const [state, _setState] = useState<CompilerState>(DEFAULT_STATE)
 
-  return (
-    <CompilerContext.Provider value={{ state, setState }}>{children}</CompilerContext.Provider>
-  )
+  const setState = (newState: CompilerState) =>
+    _setState((oldState: CompilerState) => {
+      if (oldState.list && oldState.list !== newState.list) {
+        oldState.list.cleanupModules()
+      }
+
+      return newState
+    })
+
+  useEffect(() => {
+    return () => {
+      if (state.list) {
+        state.list.cleanupModules()
+      }
+    }
+  }, [])
+
+  return <CompilerContext.Provider value={{ state, setState }}>{children}</CompilerContext.Provider>
 }

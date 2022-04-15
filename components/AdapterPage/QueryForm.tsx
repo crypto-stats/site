@@ -1,82 +1,103 @@
+import Button from 'components/Button'
 import InputField from 'components/InputField'
+import Text from 'components/Text'
 import { usePlausible } from 'next-plausible'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
 const Container = styled.div`
+  background-color: var(--color-white);
+  border-radius: 4px;
+
+  & + & {
+    margin-top: 16px;
+  }
 `
 
-const TopBar = styled.div`
-  font-size: 16px;
-  font-weight: bold;
-  border-bottom: solid 1px #ddd;
-  padding: 6px 0;
-  margin-bottom: 14px;
-  cursor: pointer;
+const TopBar = styled.div<{ open?: boolean }>`
+  font-size: 14px;
+  padding: 12px 16px;
+  border-radius: 4px;
+  border: solid 1px var(--color-primary-800);
+
+  ${({ open }) =>
+    open
+      ? `
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+  `
+      : ``}
 
   &:hover {
-    background: #eee;
+    cursor: pointer;
+    background-color: var(--color-primary-400);
   }
+`
+
+const QueryFormContainer = styled.div`
+  border: 1px solid var(--color-primary-800);
+  border-top: none;
+  padding-top: 16px;
 `
 
 const Result = styled.pre`
   white-space: pre-wrap;
-  font-size: 14px;
-  min-height: 30px;
-  margin: 4px 0;
+  font-size: 16px;
+  font-weight: medium;
+  margin: 8px 0;
 `
 
 const InputBlock = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-
-const Label = styled.div`
-  font-size: 16px;
-  font-weight: 500;
-  color: #002750;
+  padding: 16px 16px 0;
 `
 
 const Input = styled(InputField)`
-  padding: 8px;
+  width: 100%;
+  width: -webkit-fill-available;
+  padding: 8px 0px 8px 16px;
   border-radius: 4px;
-  border: solid 1px #ddd;
+  border: solid 1px var(--color-primary-800);
+  background-color: var(--color-white);
   font-size: 14px;
-  color: #818181;
+  color: var(--color-dark-500);
+  margin-top: 8px;
   outline: none;
 `
 
-const RunButton = styled.button`
-  height: 35px;
-  padding: 8px 20px;
-  border-radius: 4px;
-  border: solid 1px #0477f4;
-  background-color: transparent;
-  margin: 8px 0;
+const RunButton = styled(Button)`
+  padding: 10px 0;
+  background: #d6eaff;
   color: #0477f4;
-  font-size: 14px;
-  font-weight: 500;
+  border-radius: 4px;
+  text-align: center;
+  transition: var(--transition-fast);
 
   &:hover {
-    background: #eee;
+    cursor: pointer;
+    color: #fff;
+    background-color: #0477f4;
   }
+`
 
-  &:disabled {
-    color: #999;
-    background: transparent;
-    border: solid 1px #ccc;
-  }
-}
+const RunQueryBtn = styled.div`
+  padding: 24px 16px;
+`
+
+const Output = styled.div`
+  padding: 16px;
+  background-color: var(--color-primary-300);
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
 `
 
 const Error = styled.div`
   font-size: 14px;
-  color: #cf9b9b;
+  color: red;
 `
 
 interface QueryProps {
-  id: string;
-  fn: (...params: any[]) => Promise<any>;
+  id: string
+  fn: (...params: any[]) => Promise<any>
   adapter: string
   openByDefault?: boolean
 }
@@ -119,34 +140,46 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, adapter }) => 
 
   return (
     <Container>
-      <TopBar onClick={() => setOpen(!open)}>{id}</TopBar>
+      <TopBar onClick={() => setOpen(!open)} open={open}>
+        {id}
+      </TopBar>
       {open && (
-        <div>
-          <div>
+        <QueryFormContainer>
+          <>
             {[...new Array(fn.length)].map((_: any, index: number) => (
               <InputBlock key={index}>
-                <Label>{functionNames[index]}</Label>
+                <Text tag="p" type="label">
+                  {functionNames[index]}
+                </Text>
                 <Input
-                  name={functionNames[index]}
                   value={values[index]}
+                  name={functionNames[index]}
                   disabled={running}
-                  onChange={(newVal: string) => {
+                  onChange={(newValue: string) => {
                     const newValues = [...values]
-                    newValues[index] = newVal
+                    newValues[index] = newValue
                     setValues(newValues)
                   }}
                 />
               </InputBlock>
             ))}
-          </div>
-          <RunButton onClick={execute} disabled={running}>Run Query</RunButton>
-          <Label>Output</Label>
-          {error ? (
-            <Error>Error: {error}</Error>
-          ) : (
-            <Result>{JSON.stringify(result, null, 2)}</Result>
-          )}
-        </div>
+          </>
+          <RunQueryBtn>
+            <RunButton onClick={execute} loading={running} fullWidth>
+              Run Query
+            </RunButton>
+          </RunQueryBtn>
+          <Output>
+            <Text tag="p" type="label">
+              Output
+            </Text>
+            {error ? (
+              <Error>Error: {error}</Error>
+            ) : (
+              <Result>{JSON.stringify(result, null, 2)}</Result>
+            )}
+          </Output>
+        </QueryFormContainer>
       )}
     </Container>
   )

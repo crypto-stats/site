@@ -1,29 +1,42 @@
 import InputField from 'components/InputField'
+import { useEditorState } from 'hooks/editor-state'
+import { useConsole } from 'hooks/console'
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { LOG_LEVEL } from '@cryptostats/sdk'
+import Button from 'components/Button'
 
 const Container = styled.div`
   background-color: #444;
-  padding: 12px 16px;
+  margin: 16px;
+  border-radius: 4px;
 `
 
 const TopBar = styled.div`
   font-size: 14px;
+  padding: 12px 16px;
+  border-radius: 4px;
   border-bottom: solid 1px #636363;
-  padding: 6px 0;
-  margin-bottom: 14px;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #565656;
+  }
+`
+
+const QueryFormInfo = styled.div`
+  padding: 16px 16px 0;
 `
 
 const Result = styled.pre`
   white-space: pre-wrap;
-  font-size: 14px;
-  min-height: 30px;
-  margin: 4px 0;
+  font-size: 16px;
+  font-weight: medium;
+  margin: 8px 0;
 `
 
 const InputBlock = styled.div`
-  display: flex;
-  flex-direction: column;
+  padding: 16px 16px 0;
 `
 
 const Label = styled.div`
@@ -32,28 +45,41 @@ const Label = styled.div`
 `
 
 const Input = styled(InputField)`
-  padding: 8px;
+  width: 100%;
+  width: -webkit-fill-available;
+  padding: 8px 0px 8px 16px;
   border-radius: 4px;
   border: solid 1px #424242;
   background-color: #1a1919;
   font-size: 14px;
   color: #b5b6b9;
+  margin-top: 8px;
   outline: none;
 `
 
-const RunButton = styled.button`
-  height: 20px;
-  padding: 3px 0 2px;
+const RunButton = styled(Button)`
+  padding: 10px 0;
+  background: #d6eaff;
+  color: #0477f4;
+  border: none;
   border-radius: 4px;
-  border: solid 1px #ffffff;
-  background-color: transparent;
-  margin: 16px 0 6px;
-  color: white;
-  padding: 2px 16px;
+  text-align: center;
 
   &:hover {
-    background: #363636;
+    cursor: pointer;
+    color: #fff;
+    background-color: #0477f4;
   }
+`
+
+const RunQueryBtn = styled.div`
+  padding: 24px 16px;
+`
+const Output = styled.div`
+  padding: 16px;
+  background-color: #000;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
 `
 
 const Error = styled.div`
@@ -62,9 +88,10 @@ const Error = styled.div`
 `
 
 interface QueryProps {
-  id: string;
-  fn: (...params: any[]) => Promise<any>;
+  id: string
+  fn: (...params: any[]) => Promise<any>
   openByDefault?: boolean
+  storageKey: string
 }
 
 const functionToParamNames = (fn: Function) => {
@@ -72,26 +99,44 @@ const functionToParamNames = (fn: Function) => {
   return match ? match[1].split(',').map((name: string) => name.trim()) : []
 }
 
-const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault }) => {
-  const [open, setOpen] = useState(!!openByDefault)
-  const [values, setValues] = useState([...new Array(fn.length)].map(() => ''))
-  const [running, setRunning] = useState(false)
-  const [result, setResult] = useState<string | null>(null)
-  const [error, setError] = useState<string | null>(null)
+enum STATUS {
+  READY,
+  RUNNING,
+  DONE,
+  ERROR,
+}
+
+interface State {
+  status: STATUS
+  result?: string
+  error?: string
+}
+
+const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, storageKey }) => {
+  const { addLine } = useConsole()
+  const [open, setOpen] = useEditorState(`${storageKey}-open`, !!openByDefault)
+  const [storedValues, setStoredValues] = useEditorState(
+    `${storageKey}-values`,
+    JSON.stringify([...new Array(fn.length)].map(() => ''))
+  )
+  const [state, setState] = useState<State>({
+    status: STATUS.READY,
+  })
+
+  const values = JSON.parse(storedValues)
+  const setValues = (newVals: string[]) => setStoredValues(JSON.stringify(newVals))
 
   const functionNames = functionToParamNames(fn)
 
   const execute = async () => {
-    setRunning(true)
+    setState({ status: STATUS.RUNNING })
     try {
-      setResult(null)
-      setError(null)
-      const newResult = await fn.apply(null, values)
-      setResult(newResult)
+      const result = await fn.apply(null, values)
+      setState({ status: STATUS.DONE, result })
     } catch (e: any) {
-      setError(e.message)
+      setState({ status: STATUS.ERROR, error: e.message })
+      addLine({ level: LOG_LEVEL.ERROR.toString(), value: e.stack })
     }
-    setRunning(false)
   }
 
   return (
@@ -99,14 +144,17 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault }) => {
       <TopBar onClick={() => setOpen(!open)}>{id}</TopBar>
       {open && (
         <div>
-          <div>
+          <>
+            <QueryFormInfo>
+              <Label>Fill the parameters below</Label>
+            </QueryFormInfo>
             {[...new Array(fn.length)].map((_: any, index: number) => (
               <InputBlock key={index}>
                 <Label>{functionNames[index]}</Label>
                 <Input
                   value={values[index]}
                   name={functionNames[index]}
-                  disabled={running}
+                  disabled={state.status === STATUS.RUNNING}
                   onChange={(newValue: string) => {
                     const newValues = [...values]
                     newValues[index] = newValue
@@ -115,14 +163,19 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault }) => {
                 />
               </InputBlock>
             ))}
-          </div>
-          <RunButton onClick={execute} disabled={running}>Run Query</RunButton>
-          <Label>Output</Label>
-          {error ? (
-            <Error>Error: {error}</Error>
-          ) : (
-            <Result>{JSON.stringify(result, null, 2)}</Result>
-          )}
+          </>
+          <RunQueryBtn>
+            <RunButton onClick={execute} loading={state.status === STATUS.RUNNING} fullWidth>
+              Run Query
+            </RunButton>
+          </RunQueryBtn>
+          <Output>
+            <Label>Output</Label>
+            {state.error && <Error>Error: {state.error}</Error>}
+            {state.status === STATUS.DONE && (
+              <Result>{JSON.stringify(state.result, null, 2)}</Result>
+            )}
+          </Output>
         </div>
       )}
     </Container>

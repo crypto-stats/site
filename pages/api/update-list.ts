@@ -21,13 +21,33 @@ const proxyAbi = [
 
 const ZERO = '0x0000000000000000000000000000000000000000000000000000000000000000'
 
-const cidToBytes32 = (cid: string) =>
-  ethers.utils.hexlify(ethers.utils.base58.decode(cid).slice(2))
+const cidToBytes32 = (cid: string) => ethers.utils.hexlify(ethers.utils.base58.decode(cid).slice(2))
 
-const rpc = `https://speedy-nodes-nyc.moralis.io/${process.env.NEXT_PUBLIC_MORALIS_KEY}/eth/goerli`
+const rpc = `https://goerli.infura.io/v3/${process.env.INFURA_KEY}`
 const registryAddress = '0xF22e79604434ea8213eb7D79fcEB854e5E4283f7'
 
-function verifyOperation(method: string, listId: string, cid: string, signature: string, previousVersion?: string) {
+const collectionAdmins = process.env.NEXT_PUBLIC_COLLECTION_ADMINS
+  ? JSON.parse(process.env.NEXT_PUBLIC_COLLECTION_ADMINS.toLowerCase())
+  : {}
+
+function isSignerValid(signer: string, collectionId: string) {
+  if (
+    collectionAdmins[collectionId] &&
+    collectionAdmins[collectionId].indexOf(signer.toLowerCase()) !== -1
+  ) {
+    return true
+  }
+
+  return signer.toLowerCase() === process.env.NEXT_PUBLIC_ADMIN_ACCOUNT?.toLowerCase()
+}
+
+function verifyOperation(
+  method: string,
+  collectionId: string,
+  cid: string,
+  signature: string,
+  previousVersion?: string
+) {
   let oldElement = ZERO
   let newElement = ZERO
   let message = ''
@@ -35,7 +55,7 @@ function verifyOperation(method: string, listId: string, cid: string, signature:
   switch (method) {
     case 'add':
       newElement = cidToBytes32(cid)
-      message = `Add ${cid} to ${listId}`
+      message = `Add ${cid} to ${collectionId}`
       break
     case 'update':
       if (!previousVersion) {
@@ -43,18 +63,18 @@ function verifyOperation(method: string, listId: string, cid: string, signature:
       }
       newElement = cidToBytes32(cid)
       oldElement = cidToBytes32(previousVersion)
-      message = `Replace ${previousVersion} with ${cid} on ${listId}`
+      message = `Replace ${previousVersion} with ${cid} on ${collectionId}`
       break
     case 'remove':
       oldElement = cidToBytes32(cid)
-      message = `Remove ${cid} from ${listId}`
+      message = `Remove ${cid} from ${collectionId}`
       break
     default:
       throw new Error(`Unknown method ${method}`)
   }
 
   const signer = ethers.utils.verifyMessage(message, signature)
-  if (signer.toLowerCase() !== process.env.NEXT_PUBLIC_ADMIN_ACCOUNT?.toLowerCase()) {
+  if (!isSignerValid(signer, collectionId)) {
     throw new Error('Signer does not match admin')
   }
 
@@ -97,7 +117,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     transactions.push(newListTx.hash)
   }
 
-  const { oldElement, newElement } = verifyOperation(method, listId, cid, signature, previousVersion)
+  const { oldElement, newElement } = verifyOperation(
+    method,
+    listId,
+    cid,
+    signature,
+    previousVersion
+  )
 
   const proxyContract = new ethers.Contract(proxyAddress, proxyAbi, signer)
   const tx = await proxyContract.update(oldElement, newElement)

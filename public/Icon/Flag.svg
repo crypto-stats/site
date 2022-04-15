@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="17px" viewBox="0 0 14 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Icon/Flag</title>
+    <defs>
+        <path d="M3,1.5 C3.41421356,1.5 3.75,1.83578644 3.75,2.25 L15,2.25 C15.4142136,2.25 15.75,2.58578644 15.75,3 L15.75,9.75 C15.75,10.1642136 15.4142136,10.5 15,10.5 L3.75,10.5 L3.75,16.5 C3.75,16.9142136 3.41421356,17.25 3,17.25 C2.58578644,17.25 2.25,16.9142136 2.25,16.5 L2.25,2.25 C2.25,1.83578644 2.58578644,1.5 3,1.5 Z M14.25,3.75 L3.75,3.75 L3.75,9 L14.25,9 L14.25,3.75 Z" id="path-1"></path>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="UI/editor/sidebar-right/header-tab--test" transform="translate(-297.000000, -17.000000)">
+            <g id="TAB--active" transform="translate(262.000000, 0.000000)">
+                <g id="Icon/Flag" transform="translate(33.000000, 16.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Icon" fill="#FFFFFF" xlink:href="#path-1"></use>
+                    <g id="Color" mask="url(#mask-2)" fill="#FFFFFF">
+                        <rect x="0" y="0" width="18" height="18"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

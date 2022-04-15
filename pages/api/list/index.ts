@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getListNames } from 'utils/lists-chain'
+import { getCollectionNames } from 'utils/lists-chain'
 
 const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
-  const result = await getListNames()
+  const result = await getCollectionNames()
 
-  res.setHeader('Cache-Control', 'max-age=0, s-maxage=10, stale-while-revalidate');
+  res.setHeader('Cache-Control', 'max-age=0, s-maxage=10, stale-while-revalidate')
   res.json({ success: true, result })
 }
 

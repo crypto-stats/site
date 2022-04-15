@@ -1,11 +1,16 @@
+import { CryptoStatsSDK, Module } from '@cryptostats/sdk'
+
 async function query(query: string) {
-  const req = await fetch('https://api.thegraph.com/subgraphs/name/dmihal/cryptostats-adapter-registry-test', {
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({ query }),
-    method: 'POST',
-  });
+  const req = await fetch(
+    'https://api.thegraph.com/subgraphs/name/dmihal/cryptostats-adapter-registry-test',
+    {
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query }),
+      method: 'POST',
+    }
+  )
   const json = await req.json()
   if (json.errors) {
     console.error(query)
@@ -14,16 +19,16 @@ async function query(query: string) {
   return json.data
 }
 
-export async function getListNames(): Promise<string[]> {
+export async function getCollectionNames(): Promise<string[]> {
   const response = await query(`{
-    collections {
+    collections(where: { archived: false }) {
       id
     }
   }`)
   return response.collections.map((collection: any) => collection.id)
 }
 
-export async function getModulesForList(collection: string): Promise<any[]> {
+export async function getModulesForCollection(collection: string): Promise<any[]> {
   const response = await query(`{
     collectionAdapters(where: { collection: "${collection}"}) {
       adapter {
@@ -34,7 +39,7 @@ export async function getModulesForList(collection: string): Promise<any[]> {
   return response.collectionAdapters.map((item: any) => item.adapter.id)
 }
 
-export async function getListsForAdapter(adapterCID: string): Promise<string[]> {
+export async function getCollectionsForAdapter(adapterCID: string): Promise<string[]> {
   const response = await query(`  {
     adapter(id: "${adapterCID}") {
       collections {
@@ -57,29 +62,110 @@ export async function getProxyForCollection(collection: string): Promise<string 
   return response.collection?.proxy || null
 }
 
-export async function getHistoricalVersions(adapterCID: string) {
+export async function getCIDFromSlug(collectionId: string, slug: string) {
   const response = await query(`{
-    adapter(id: "${adapterCID}") {
-      rootAdapter {
-        descendents {
-          id
-          version
-          signer {
-            id
-          }
-        }
+    collectionAdapters(where: {
+      collection: "${collectionId}",
+      adapterSlug: "${slug}"
+    }) {
+      adapter {
+        id
       }
     }
   }`)
 
-  const versions = response.adapter.rootAdapter.descendents.map((descendentAdapter: any) => {
-    const adapter: { cid: string, version: string, signer: string } = {
-      cid: descendentAdapter.id,
-      version: descendentAdapter.version,
-      signer: descendentAdapter.signer.id,
-    }
-    return adapter
-  })
+  return response.collectionAdapters.length > 0 ? response.collectionAdapters[0].adapter.id : null
+}
 
-  return versions
+export async function getAllVerifiedAdapters(): Promise<
+  { collection: string; cid: string; slug: string | null }[]
+> {
+  const response = await query(`{
+    collectionAdapters {
+      adapter {
+        id
+        slug
+      }
+      collection {
+        id
+      }
+    }
+  }`)
+
+  return response.collectionAdapters.map((collectionAdapter: any) => ({
+    collection: collectionAdapter.collection.id,
+    cid: collectionAdapter.adapter.id,
+    slug: collectionAdapter.adapter.slug,
+  }))
+}
+
+export interface Version {
+  cid: string
+  version: string | null
+  verified: boolean
+  signer: string | null
+  activeCollections: string[]
+}
+
+export async function getPreviousVersions(cid: string, numberOfIterations = 4): Promise<Version[]> {
+  const sdk = new CryptoStatsSDK()
+
+  let _cid: string | null = cid
+
+  let result: Version[] = []
+
+  for (let i = 0; _cid && i < numberOfIterations; i += 1) {
+    const response = await query(`{
+      adapter(id: "${_cid}") {
+        version
+        rootAdapter {
+          descendents(orderBy: firstVerificationBlock, orderDirection: desc) {
+            id
+            version
+            signer {
+              id
+            }
+            collections {
+              collection {
+                id
+              }
+            }
+          }
+        }
+      }
+    }`)
+
+    if (response.adapter) {
+      return [
+        ...result,
+        ...response.adapter.rootAdapter.descendents.map((version: any) => ({
+          version: version.version,
+          cid: version.id,
+          verified: true,
+          signer: version.signer.id,
+          activeCollections: version.collections.map((collection: any) => collection.collection.id),
+        })),
+      ]
+    }
+
+    try {
+      const collection = sdk.getCollection(`test-${i}`)
+      const adapter: Module = await collection.fetchAdapterFromIPFS(_cid)
+
+      result.push({
+        cid: _cid,
+        version: adapter.version,
+        verified: false,
+        signer: adapter.signer,
+        activeCollections: [],
+      })
+
+      _cid = adapter.previousVersion
+    } catch (e) {
+      console.warn(e)
+      return result
+    }
+  }
+
+  return []
 }

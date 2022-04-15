@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
+import collectionMetadata, { DEFAULT_FORUM_CATEGORY } from 'resources/collection-metadata'
 
 const Container = styled.div`
   display: flex;
@@ -36,14 +37,20 @@ interface PublisherBarProps {
   previous?: string | null
 }
 
-const PublisherBar: React.FC<PublisherBarProps> = ({ address, collections, name, version, previous }) => {
+const PublisherBar: React.FC<PublisherBarProps> = ({
+  address,
+  collections,
+  name,
+  version,
+  previous,
+}) => {
   const router = useRouter()
 
-  const { cid, listId } = router.query
+  const { cid, collectionId } = router.query
 
   useEffect(() => {
     for (const collection of collections) {
-      if (collection !== listId) {
+      if (collection !== collectionId) {
         router.prefetch(`/discover/${collection}/${cid}`)
       }
     }
@@ -54,11 +61,23 @@ const PublisherBar: React.FC<PublisherBarProps> = ({ address, collections, name,
   }
 
   const params = new URLSearchParams()
-  params.append('title', `${previous ? 'Updated Adapter' : 'New Adapter'}${name ? ` - ${name}` : ''}${version ? ` v${version}` : ''}`)
-  params.append('body', `I've published ${previous ? 'an updated adapter' : 'a new adapter'} for ${name || ''}
+  params.append(
+    'title',
+    `${previous ? 'Updated Adapter' : 'New Adapter'}${name ? ` - ${name}` : ''}${
+      version ? ` v${version}` : ''
+    }`
+  )
+  params.append(
+    'body',
+    `I've published ${previous ? 'an updated adapter' : 'a new adapter'} for ${name || ''}
 
-https://cryptostats.community/discover/${listId}/${cid}
-`)
+https://cryptostats.community/discover/${collectionId}/${cid}
+`
+  )
+  params.append(
+    'category',
+    collectionMetadata[collectionId as string]?.forumCategory || DEFAULT_FORUM_CATEGORY
+  )
 
   return (
     <Container>
@@ -66,19 +85,26 @@ https://cryptostats.community/discover/${listId}/${cid}
 
       <div>
         Create a forum post to verify it in the {}
-        <select value={listId} onChange={navigate}>
+        <select value={collectionId} onChange={navigate}>
           <option value="adapter">(collection)</option>
           {collections.map((collection: string) => (
-            <option key={collection} value={collection}>{collection}</option>
+            <option key={collection} value={collection}>
+              {collection}
+            </option>
           ))}
         </select>
         {} collection.
-        <PublishButton href={`https://forum.cryptostats.community/new-topic?${params.toString()}`} target="forum">
-          Publish on Forum
-        </PublishButton>
+        {collectionId !== 'adapter' && (
+          <PublishButton
+            href={`https://forum.cryptostats.community/new-topic?${params.toString()}`}
+            target="forum"
+          >
+            Publish on Forum
+          </PublishButton>
+        )}
       </div>
     </Container>
-  );
+  )
 }
 
 export default PublisherBar
