@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import ReactModal from 'react-modal'
 import ButtonComponent from '../Button'
-import { ChevronLeft, X } from 'react-feather'
+import { ChevronLeft, X } from 'lucide-react'
 
 const ModalOverlay = styled.div<{ width?: string | number; height?: string | number }>`
   display: flex;

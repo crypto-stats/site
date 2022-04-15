@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css, keyframes } from 'styled-components'
-import { Edit } from 'react-feather'
+import { Edit } from 'lucide-react'
 import DiscordIcon from './icons/Discord'
 import ForkIcon from './icons/Fork'
 

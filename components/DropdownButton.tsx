@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ChevronDown } from 'react-feather'
+import { ChevronDown } from 'lucide-react'
 import styled from 'styled-components'
 
 const Container = styled.div`

@@ -3747,6 +3747,11 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
+lucide-react@^0.29.0:
+  version "0.29.0"
+  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.29.0.tgz#270224985ad90ebf8180462645056852b6f94ef7"
+  integrity sha512-+wHrLNytlvRzbrXajD0oHfFH7LOWm6o//0zsHb4NihNO6f9FHe6zK2pUZZFrqQvIuF/Cps46jbkZA/wY627U9A==
+
 mafmt@^7.0.0:
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/mafmt/-/mafmt-7.1.0.tgz#4126f6d0eded070ace7dbbb6fb04977412d380b5"
@@ -4651,13 +4656,6 @@ react-fast-compare@^3.0.1:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.0.tgz#641a9da81b6a6320f270e89724fb45a0b39e43bb"
   integrity sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==
-
-react-feather@^2.0.9:
-  version "2.0.9"
-  resolved "https://registry.yarnpkg.com/react-feather/-/react-feather-2.0.9.tgz#6e42072130d2fa9a09d4476b0e61b0ed17814480"
-  integrity sha512-yMfCGRkZdXwIs23Zw/zIWCJO3m3tlaUvtHiXlW+3FH7cIT6fiK1iJ7RJWugXq7Fso8ZaQyUm92/GOOHXvkiVUw==
-  dependencies:
-    prop-types "^15.7.2"
 
 react-gh-like-diff@^2.0.2:
   version "2.0.2"

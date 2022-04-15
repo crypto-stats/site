@@ -3,7 +3,7 @@ import { usePlausible } from 'next-plausible'
 import styled from 'styled-components'
 import SiteModal from 'components/SiteModal'
 import { useAdapterList, newModule } from 'hooks/local-adapters'
-import { Edit } from 'react-feather'
+import { Edit } from 'lucide-react'
 import ForkIcon from 'components/icons/Fork'
 import { useState } from 'react'
 
