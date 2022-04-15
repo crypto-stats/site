@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useENSName, setRPC } from 'use-ens-name'
 import { useWeb3React } from '@web3-react/core'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
+import { Clipboard, History } from 'lucide-react'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import {
   getCollectionNames,
@@ -27,6 +28,8 @@ import { getENSCache } from 'utils/ens'
 import EditModal from 'components/AdapterPage/EditModal'
 import SiteModal from 'components/SiteModal'
 import HistoryModal from 'components/AdapterPage/HistoryModal'
+import Attribute from 'components/AdapterPage/Attribute'
+import copy from 'copy-to-clipboard'
 
 setRPC('https://rpc.flashbots.net/')
 
@@ -77,35 +80,19 @@ const InfoBoxGrid = styled.div`
   }
 `
 
-const InfoBoxItem = styled.div`
-  margin: 24px 0;
-  padding: 0;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+const MiniIconButton = styled.button`
+  background: transparent;
+  border: none;
+  padding: 2px;
+  color: #929292;
 
-  @media (min-width: 768px) {
-    margin: 0;
+  &:hover {
+    cursor: pointer;
+    color: #666666;
   }
-`
-
-const InfoBoxValue = styled(Text)`
-  margin: 8px 0 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`
-
-const InfoBoxValueFullWidth = styled(Text)`
-  font-weight: 500;
-  font-size: 14px;
-  color: #000000;
-  margin: 8px 0 0;
-`
-
-const InfoBoxAuthor = styled.div`
-  padding: 24px 24px 32px 24px;
+  &:active {
+    color: #000000;
+  }
 `
 
 const SectionContainer = styled.div`
@@ -128,37 +115,11 @@ const AdapterInfo = styled.div`
   margin-top: var(--spaces-6);
 `
 
-const Attribute: React.FC<{ label: string }> = ({ label, children }) => {
-  if (label && label === 'Author') {
-    return (
-      <InfoBoxAuthor>
-        <Text tag="p" type="label">
-          {label}
-        </Text>
-        <InfoBoxValue tag="p" type="content_small">
-          {children}
-        </InfoBoxValue>
-      </InfoBoxAuthor>
-    )
-  }
-
-  return (
-    <InfoBoxItem>
-      <Text tag="p" type="label">
-        {label}
-      </Text>
-      {label === 'Collections' ? (
-        <InfoBoxValueFullWidth tag="p" type="content_small">
-          {children}
-        </InfoBoxValueFullWidth>
-      ) : (
-        <InfoBoxValue tag="p" type="content_small">
-          {children}
-        </InfoBoxValue>
-      )}
-    </InfoBoxItem>
-  )
-}
+const CopyButton: React.FC<{ text: string }> = ({ text }) => (
+  <MiniIconButton onClick={() => copy(text)}>
+    <Clipboard size={16} />
+  </MiniIconButton>
+)
 
 interface SubAdapter {
   id: string
@@ -292,10 +253,24 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
               <InfoBoxGrid>
                 <Attribute label="Version">{moduleDetails.version}</Attribute>
                 <Attribute label="License">{moduleDetails.license}</Attribute>
-                <Attribute label="IPFS CID">{cid}</Attribute>
-                <Attribute label="CID (source)">{moduleDetails.sourceFileCid}</Attribute>
+                <Attribute label="IPFS CID" buttons={<CopyButton text={cid} />}>
+                  {cid}
+                </Attribute>
+                <Attribute label="CID (source)" buttons={<CopyButton text={moduleDetails.sourceFileCid!} />}>
+                  {moduleDetails.sourceFileCid}
+                </Attribute>
                 {moduleDetails.previousVersion && (
-                  <Attribute label="Prev. Version">
+                  <Attribute
+                    label="Prev. Version"
+                    buttons={
+                      <>
+                        <CopyButton text={moduleDetails.previousVersion} />
+                        <MiniIconButton onClick={() => setShowVersions(true)}>
+                          <History size={16} />
+                        </MiniIconButton>
+                      </>
+                    }
+                  >
                     <Link href={`/discover/${collectionId}/${moduleDetails.previousVersion}`}>
                       <a>{moduleDetails.previousVersion}</a>
                     </Link>
@@ -335,7 +310,6 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         }
       >
         <SectionContainer>
-          <button onClick={() => setShowVersions(true)}>Show History</button>
           <Text tag="h3" type="subtitle">
             Sub-Adapters <InfoNumber>{subadapters.length}</InfoNumber>
           </Text>
