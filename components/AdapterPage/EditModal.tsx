@@ -112,12 +112,10 @@ const EditModal: React.FC<EditModalProps> = ({
       },
     })
 
-    const newCode = moduleDetails.name
-      ? (moduleDetails.sourceCode || moduleDetails.code).replace(
-          moduleDetails.name,
-          `${moduleDetails.name} - Clone`
-        )
-      : moduleDetails.sourceCode || moduleDetails.code
+    const startingCode = moduleDetails.sourceCode || moduleDetails.code
+    const newCode = moduleDetails.name && clone
+      ? startingCode.replace(moduleDetails.name, `${moduleDetails.name} - Clone`)
+      : startingCode
 
     const adapterId = newModule(newCode, [{ cid, version: moduleDetails.version || '0.0.0' }])
     router.push({
