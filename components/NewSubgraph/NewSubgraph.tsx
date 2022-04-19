@@ -157,6 +157,9 @@ export const NewSubgraph = () => {
       prev.map(p => (p.addresses[CHAIN_ID] === address ? { ...p, ...newProps } : p))
     )
 
+  const deleteSelectedContract = (address: string) =>
+    setSelectedContracts(prev => prev.filter(p => p.addresses[CHAIN_ID] !== address))
+
   const handleOnExit = () => {
     if (confirm('Are you sure you wanna exit without saving?')) {
       return router.back()
@@ -197,6 +200,7 @@ export const NewSubgraph = () => {
             key={sc.addresses[CHAIN_ID]}
             contract={sc}
             updateContract={updateSelectedContract}
+            deleteContract={deleteSelectedContract}
             mappingFunctionNames={mappingFunctionNames}
             fnExtractionLoading={fnExtractionLoading}
           />

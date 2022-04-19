@@ -4,10 +4,17 @@ import Select, { SingleValue } from 'react-select'
 
 import { Contract, Event } from 'hooks/local-subgraphs'
 import Button from '../Button'
+import { SolidSvg } from 'components/layouts'
 
 const Root = styled.div`
   background-color: #25252a;
   margin-bottom: 24px;
+
+  .delete-link {
+    &:hover {
+      cursor: pointer;
+    }
+  }
 `
 
 const Header = styled.div`
@@ -20,6 +27,11 @@ const Header = styled.div`
   > .address {
     margin-top: 4px;
     font-size: 14px;
+  }
+
+  > .top {
+    display: flex;
+    justify-content: space-between;
   }
 `
 
@@ -55,7 +67,7 @@ const EventHandlerContainer = styled.div`
 
   .labels {
     display: grid;
-    grid-template-columns: repeat(2, 50%);
+    grid-template-columns: repeat(2, 47%);
     gap: 8px;
     text-transform: uppercase;
     color: #d3d3d3;
@@ -67,11 +79,12 @@ const EventHandlerContainer = styled.div`
 const EventRow = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 16px;
 `
 
 const customStyles = {
-  container: (provided: any) => ({ ...provided, width: 'calc(50% - 8px)' }),
+  container: (provided: any) => ({ ...provided, width: 'calc(50% - 8px - 14px)' }),
   control: (provided: any) => ({
     ...provided,
 
@@ -89,9 +102,10 @@ const CHAIN_ID = 1
 
 interface SelectedContractProps {
   contract: Contract & { errorMessage?: string }
-  updateContract: (address: string, newProps: any) => void
-  mappingFunctionNames: string[]
+  deleteContract: (address: string) => void
   fnExtractionLoading: boolean
+  mappingFunctionNames: string[]
+  updateContract: (address: string, newProps: any) => void
 }
 
 function parseEventsFromAbi(abi: any[]) {
@@ -111,6 +125,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
     updateContract,
     mappingFunctionNames,
     fnExtractionLoading,
+    deleteContract,
   } = props
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -125,7 +140,6 @@ export const SelectedContract = (props: SelectedContractProps) => {
     value: mfn,
   }))
   const [eventHandlers, setEventHandlers] = useState<Event[]>([{ signature: '', handler: '' }])
-  console.log(eventHandlers)
 
   const fetchMetadata = async () => {
     const metadataReq = await fetch(`/api/etherscan/${addresses[CHAIN_ID]}/metadata`)
@@ -186,12 +200,20 @@ export const SelectedContract = (props: SelectedContractProps) => {
       )
     }
 
+  const deleteEventHandler = (idx: number) =>
+    setEventHandlers(prev => prev.filter((_, i) => idx !== i))
+
   const showUploadButton = errorMessage || source === 'custom'
 
   return (
     <Root>
       <Header>
-        <span className="contract-title">{name || 'No name'}</span>
+        <div className="top">
+          <span className="contract-title">{name || 'No name'}</span>
+          <a className="delete-link" onClick={() => deleteContract(addresses[CHAIN_ID])}>
+            <SolidSvg path="/Icon/ico-xmark.svg" width={'18px'} height={'18px'} color="#999999" />
+          </a>
+        </div>
         <span className="address">{addresses[CHAIN_ID]}</span>
         {startBlocks[CHAIN_ID] ? (
           <span className="address">Deployed on block {startBlocks[CHAIN_ID]}</span>
@@ -251,6 +273,9 @@ export const SelectedContract = (props: SelectedContractProps) => {
               styles={customStyles}
               isLoading={fnExtractionLoading}
             />
+            <a className="delete-link" onClick={() => deleteEventHandler(idx)}>
+              <SolidSvg path="/Icon/ico-xmark.svg" width={'18px'} height={'18px'} color="#999999" />
+            </a>
           </EventRow>
         ))}
 
