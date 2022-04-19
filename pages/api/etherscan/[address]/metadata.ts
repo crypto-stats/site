@@ -70,6 +70,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     abi = JSON.parse(implementationData[0].ABI)
   }
 
+  const CACHE_FOR_YEAR = 365 * 24 * 60 * 60
+  res.setHeader('Cache-Control', `s-maxage=${CACHE_FOR_YEAR}, stale-while-revalidate=${CACHE_FOR_YEAR}`);
+
   res.json({
     isContract: true,
     name,
