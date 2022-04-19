@@ -27,6 +27,7 @@ const GlobalStyle = createGlobalStyle`
     --color-dark-500: #282D36;
     --color-dark-600: #505050;
     --color-dark-700: #878787;
+    --color-dark-800: #46464D;
 
     --color-palette-1: #D0E0FF;
     --color-palette-2: #FFE3D0;
@@ -120,8 +121,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
 
       <GlobalStyle />
       <Web3ReactProvider
-        getLibrary={(provider: any) => new ethers.providers.Web3Provider(provider)}
-      >
+        getLibrary={(provider: any) => new ethers.providers.Web3Provider(provider)}>
         <PlausibleProvider domain="cryptostats.community">
           <Component {...pageProps} />
         </PlausibleProvider>

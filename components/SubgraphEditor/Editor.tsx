@@ -1,11 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { ViewPort, Top, Fill, Bottom, BottomResizable, Right } from 'react-spaces'
 import { useRouter } from 'next/router'
-import { useWeb3React } from '@web3-react/core'
 import styled from 'styled-components'
-import { useENSName } from 'use-ens-name'
 import CodeEditor from 'components/CodeEditor'
-import ConnectionButton from 'components/ConnectionButton'
 import { useLocalSubgraph, newSubgraph, DEFAULT_MAPPING } from 'hooks/local-subgraphs'
 import PrimaryFooter from './PrimaryFooter'
 import { Tabs, TabState } from './Tabs'
@@ -20,26 +17,7 @@ import BottomTitleBar, { BottomView } from './BottomTitleBar'
 import SaveMessage from './SaveMessage'
 import ImageLibrary from './ImageLibrary/ImageLibrary'
 import { useEditorState } from 'hooks/editor-state'
-
-const Header = styled(Top)`
-  background-image: url('/editor_logo.png');
-  background-size: 140px;
-  background-color: #2f2f2f;
-  background-position: center;
-  background-repeat: no-repeat;
-  border-bottom: solid 1px #4a4a4d;
-  display: flex;
-  justify-content: space-between;
-`
-
-const HeaderRight = styled.div`
-  display: flex;
-  align-items: center;
-
-  @media (max-width: 700px) {
-    display: none;
-  }
-`
+import { WalletButton, Header, HeaderRight } from 'components/layouts'
 
 const CloseButton = styled.button`
   background: none;
@@ -67,21 +45,6 @@ const NewAdapterButton = styled.button`
 
   &:hover {
     background: #0477f430;
-  }
-`
-
-const WalletButton = styled(ConnectionButton)`
-  height: 35px;
-  border-radius: 5px;
-  border: solid 1px #7b7b7b;
-  background-color: #535353;
-  padding: 0 10px;
-  color: #eeeeee;
-  margin-right: 10px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #404040;
   }
 `
 
@@ -166,9 +129,6 @@ const Editor: React.FC = () => {
   const [bottomView, setBottomView] = useState(BottomView.NONE)
   const editorRef = useRef<any>(null)
 
-  const { account } = useWeb3React()
-  const name = useENSName(account)
-
   // useEffect(() => {
   //   if (router.query.adapter) {
   //     const { adapter, ...query } = router.query
@@ -183,22 +143,23 @@ const Editor: React.FC = () => {
     }
   }, [imageLibraryOpen])
 
+  const logExports = useCallback(async () => {
+    const { compileAs, loadAsBytecode } = await import('utils/as-compiler')
+    const bytecode = await compileAs(subgraph!.mappings[DEFAULT_MAPPING])
+    const module = await loadAsBytecode(bytecode)
+    const exports = WebAssembly.Module.exports(module.module)
+    console.log(exports)
+    const functions = exports
+      .filter(_export => _export.kind === 'function')
+      .map(_export => _export.name)
+    console.log(functions)
+  }, [subgraph?.mappings[DEFAULT_MAPPING]])
+
   useEffect(() => {
     setStarted(true)
   }, [])
   if (!started) {
     return null
-  }
-
-  const logExports = async () => {
-    const { compileAs, loadAsBytecode } = await import('utils/as-compiler')
-    const bytecode = await compileAs(subgraph!.mappings[DEFAULT_MAPPING])
-    const module = await loadAsBytecode(bytecode)
-    const exports = WebAssembly.Module.exports(module.module)
-    const functions = exports
-      .filter(_export => _export.kind === 'function')
-      .map(_export => _export.name)
-    console.log(functions)
   }
 
   return (
@@ -209,10 +170,10 @@ const Editor: React.FC = () => {
         <CloseButton onClick={() => router.push('/discover')}>X Close</CloseButton>
 
         <HeaderRight>
-          <NewAdapterButton onClick={() => setNewAdapterModalOpen(true)}>
-            New Adapter
+          <NewAdapterButton onClick={() => router.push('/editor/subgraph/new')}>
+            New Subgraph
           </NewAdapterButton>
-          <WalletButton>{account ? name || account.substr(0, 10) : 'Connect Wallet'}</WalletButton>
+          <WalletButton />
         </HeaderRight>
       </Header>
       <PrimaryFill side="right">
@@ -327,8 +288,7 @@ const Editor: React.FC = () => {
               setNewAdapterModalOpen(false)
             },
           },
-        ]}
-      >
+        ]}>
         <NewAdapterForm
           onAdapterSelection={(_fileName: string) => {
             // setMappingFileName(fileName)
