@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@cryptostats/sdk": "^0.2.11",
+    "@graphprotocol/graph-cli": "^0.29.0",
     "@graphprotocol/graph-ts": "^0.26.0",
     "@monaco-editor/react": "^4.2.1",
     "@pinata/sdk": "^1.1.23",
@@ -22,6 +23,7 @@
     "assemblyscript": "^0.20.3",
     "copy-to-clipboard": "^3.3.1",
     "ethers": "^5.5.1",
+    "graphql": "^16.3.0",
     "ipfs-http-client": "^54.0.2",
     "js-yaml": "^4.1.0",
     "next": "latest",
@@ -51,6 +53,10 @@
     "babel-plugin-styled-components": "^1.12.0",
     "prettier": "^2.6.0",
     "raw-loader": "^4.0.2"
+  },
+  "resolutions": {
+    "js-yaml": "4.1.0",
+    "yaml": "1.10.2"
   },
   "license": "MIT"
 }

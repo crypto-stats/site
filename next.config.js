@@ -1,7 +1,8 @@
+const path = require('path')
 const { withPlausibleProxy } = require('next-plausible')
 
 let config = {
-  webpack: config => {
+  webpack: (config, { isServer }) => {
     return {
       ...config,
 
@@ -11,9 +12,16 @@ let config = {
         ...config.resolve,
         fallback: {
           ...config.resolve.fallback,
-          fs: false,
           module: false,
         },
+
+        alias: isServer
+          ? config.resolve.alias
+          : {
+              ...config.resolve.alias,
+              fs: path.resolve(__dirname, 'alias/fs'),
+              'fs-extra': path.resolve(__dirname, 'alias/fs-extra'),
+            },
       },
 
       module: {

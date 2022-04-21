@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import EditorModal, { Button as ModalButton } from './EditorModal'
 import Text from 'components/Text'
-import { useLocalSubgraph } from 'hooks/local-subgraphs'
+import { STATUS, useLocalSubgraph } from 'hooks/local-subgraphs'
+import DeployStatus from './DeployStatus'
 
 const subgraphName = 'dmihal/test-graph'
 
@@ -31,8 +32,7 @@ enum STATE {
 
 const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) => {
   const [state, setState] = useState(STATE.INIT)
-  const [cid, setCID] = useState<null | string>(null)
-  const { deploy: deployToNode } = useLocalSubgraph(fileName)
+  const { deploy: deployToNode, deployStatus } = useLocalSubgraph(fileName)
 
   const prepareDeployment = async () => {
     setState(STATE.DEPLOY_PENDING)
@@ -53,8 +53,13 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) 
   const close = () => {
     onClose()
     setState(STATE.INIT)
-    setCID(null)
   }
+
+  useEffect(() => {
+    if (deployStatus?.status === STATUS.COMPLETE) {
+      setState(STATE.DEPLOYED)
+    }
+  }, [deployStatus])
 
   const returnButton = { label: 'Return to Editor', onClick: close }
 
@@ -93,9 +98,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) 
       case STATE.DEPLOYING:
         content = (
           <div>
-            <Text tag="p" color="white" type="description">
-              Deploying...
-            </Text>
+            <DeployStatus status={deployStatus} />
           </div>
         )
         break
@@ -106,12 +109,12 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose }) 
         content = (
           <div>
             <Text tag="p" color="white" type="description">
-              Your adapter has been published to IPFS! You may now share the following link:
+              Your subgraph has been deployed!
             </Text>
             <Text tag="p" type="label" mt="24" mb="16">
-              Adapter url
+              Subgraph URL
             </Text>
-            <ShareUrl>https://cryptostats.community/discover/adapter/{cid}</ShareUrl>
+            <ShareUrl>{deployStatus?.url}</ShareUrl>
           </div>
         )
         break

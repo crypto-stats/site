@@ -1,4 +1,5 @@
 import { DEFAULT_MAPPING, SubgraphData } from 'hooks/local-subgraphs'
+import { generateContractFile, generateSchemaFile } from './graph-file-generator'
 
 export enum STATUS {
   INITIALIZING,
@@ -8,11 +9,14 @@ export enum STATUS {
 }
 
 async function uploadToIPFS(file: string | Uint8Array, name: string) {
-  const body = file instanceof Uint8Array ? {
-    file: Buffer.from(file).toString('base64'),
-    encoding: 'base64',
-    name,
-  } : { file, name }
+  const body =
+    file instanceof Uint8Array
+      ? {
+          file: Buffer.from(file).toString('base64'),
+          encoding: 'base64',
+          name,
+        }
+      : { file, name }
 
   const req = await fetch('/api/graph/upload-file', {
     method: 'POST',
@@ -50,6 +54,12 @@ async function deployHosted(name: string, cid: string, deployKey: string) {
   return json.result
 }
 
+export interface DeployStatus {
+  status: STATUS
+  file?: string
+  url?: string
+}
+
 export async function* deploySubgraph(
   subgraph: SubgraphData,
   {
@@ -59,7 +69,7 @@ export async function* deploySubgraph(
     subgraphName: string
     deployKey: string
   }
-) {
+): AsyncGenerator<DeployStatus> {
   yield {
     status: STATUS.INITIALIZING,
   }
@@ -71,13 +81,32 @@ export async function* deploySubgraph(
     status: STATUS.IPFS_UPLOAD,
   }
 
-  const compiled = await compileAs(subgraph.mappings[DEFAULT_MAPPING])
+  const libraries: { [name: string]: string } = {}
+
+  for (const contract of subgraph.contracts) {
+    const code = await generateContractFile(contract.abi)
+    libraries[`contracts/${contract.name}.ts`] = code
+  }
+
+  libraries['schema/index.ts'] = await generateSchemaFile(subgraph.schema)
+
+  const compiled = await compileAs(subgraph.mappings[DEFAULT_MAPPING], { libraries })
+
+  yield {
+    status: STATUS.IPFS_UPLOAD,
+    file: 'Mapping',
+  }
 
   const mappingCID = await uploadToIPFS(compiled, 'mapping.wasm')
 
   const dataSources: any[] = []
 
   for (const contract of subgraph.contracts) {
+    yield {
+      status: STATUS.IPFS_UPLOAD,
+      file: `${contract.name} Contract`,
+    }
+
     const cid = await uploadToIPFS(JSON.stringify(contract.abi), `${contract.name}.json`)
 
     dataSources.push({
@@ -113,6 +142,11 @@ export async function* deploySubgraph(
     })
   }
 
+  yield {
+    status: STATUS.IPFS_UPLOAD,
+    file: 'Schema',
+  }
+
   const schemaCID = await uploadToIPFS(subgraph.schema, 'schema.graphql')
 
   const manifestString = yaml.dump({
@@ -126,6 +160,11 @@ export async function* deploySubgraph(
     },
   })
 
+  yield {
+    status: STATUS.IPFS_UPLOAD,
+    file: 'Manifest',
+  }
+
   const manifestCID = await uploadToIPFS(manifestString, 'manifest.yaml')
 
   yield {
@@ -136,6 +175,6 @@ export async function* deploySubgraph(
 
   yield {
     status: STATUS.COMPLETE,
-    data: deployResult,
+    url: deployResult.playground,
   }
 }
