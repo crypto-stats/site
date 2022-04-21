@@ -65,7 +65,6 @@ const Editor: React.FC<EditorProps> = ({
 
   useEffect(() => {
     if (monaco) {
-      console.log('setlibs', extraLibs)
       const libs = [
         { content: sdkTypeDefs, filePath: sdkUri },
         {
@@ -74,7 +73,6 @@ const Editor: React.FC<EditorProps> = ({
         },
         ...extraLibs,
       ]
-      console.log(libs)
       monaco.languages.typescript.typescriptDefaults.setExtraLibs(libs)
       // monaco.languages.typescript.typescriptDefaults.addExtraLib(libs)
     }
