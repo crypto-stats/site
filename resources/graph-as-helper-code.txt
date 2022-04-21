@@ -1,0 +1,123 @@
+import {
+  BigInt as ___cs_graph_BigInt,
+  Address as ___cs_graph_Address,
+  Bytes as ___cs_graph_Bytes,
+  ethereum as ___cs_graph_eth,
+  json as ___cs_graph_json,
+  JSONValueKind as ___cs_graph_JSONValueKind,
+} from '@graphprotocol/graph-ts'
+
+export function ___cs_generate_Bytes(s: string): ___cs_graph_Bytes {
+  return ___cs_graph_Bytes.fromHexString(s);
+}
+
+export function ___cs_generate_BigInt(n: i32): ___cs_graph_BigInt {
+  return ___cs_graph_BigInt.fromI32(n);
+}
+
+export function ___cs_generate_Address(s: string): ___cs_graph_Address {
+  return ___cs_graph_Address.fromString(s);
+}
+
+class ___cs_plain_eth_block {
+  hash: ___cs_graph_Bytes;
+  parentHash: ___cs_graph_Bytes;
+  unclesHash: ___cs_graph_Bytes;
+  author: ___cs_graph_Address;
+  stateRoot: ___cs_graph_Bytes;
+  transactionsRoot: ___cs_graph_Bytes;
+  receiptsRoot: ___cs_graph_Bytes;
+  number: ___cs_graph_BigInt;
+  gasUsed: ___cs_graph_BigInt;
+  gasLimit: ___cs_graph_BigInt;
+  timestamp: ___cs_graph_BigInt;
+  difficulty: ___cs_graph_BigInt;
+  totalDifficulty: ___cs_graph_BigInt;
+
+  size: ___cs_graph_BigInt | null;
+  baseFeePerGas: ___cs_graph_BigInt | null;
+}
+
+export function ___cs_generate_eth_block(block: ___cs_plain_eth_block): ___cs_graph_eth.Block {
+  return new ___cs_graph_eth.Block(
+    block.hash,
+    block.parentHash,
+    block.unclesHash,
+    block.author,
+    block.stateRoot,
+    block.transactionsRoot,
+    block.receiptsRoot,
+    block.number,
+    block.gasUsed,
+    block.gasLimit,
+    block.timestamp,
+    block.difficulty,
+    block.totalDifficulty,
+
+    // These two can normally be null, so no default
+    block.size,
+    block.baseFeePerGas,
+  );
+}
+
+class ___cs_plain_eth_tx {
+  hash: ___cs_graph_Bytes;
+  index: ___cs_graph_BigInt;
+  from: ___cs_graph_Address;
+  to: ___cs_graph_Address | null;
+  value: ___cs_graph_BigInt;
+  gasLimit: ___cs_graph_BigInt;
+  gasPrice: ___cs_graph_BigInt;
+  input: ___cs_graph_Bytes;
+  nonce: ___cs_graph_BigInt;
+}
+
+export function ___cs_generate_eth_tx(tx: ___cs_plain_eth_tx): ___cs_graph_eth.Transaction {
+  return new ___cs_graph_eth.Transaction(
+    tx.hash,
+    tx.index,
+    tx.from,
+    tx.to,
+    tx.value,
+    tx.gasLimit,
+    tx.gasPrice,
+    tx.input,
+    tx.nonce,
+  );
+}
+
+export function ___cs_generate_EventParamArray_from_JSON(jsonParams: string): Array<___cs_graph_eth.EventParam> {
+  let parsed = ___cs_graph_json.fromString(jsonParams);
+  if (parsed.kind != ___cs_graph_JSONValueKind.ARRAY) {
+    throw new Error('Expected JSON array');
+  }
+
+  let input = parsed.toArray();
+  let output = new Array<___cs_graph_eth.EventParam>(input.length);
+
+  for (let i = 0; i < input.length; i += 1) {
+    let obj = input[i].toObject();
+    let name = obj.get('name')!.toString();
+    let type = obj.get('type')!.toString();
+    let valueNode = obj.get('value')!;
+    let value: ___cs_graph_eth.Value;
+
+    if (type == 'address') {
+      value = ___cs_graph_eth.Value.fromAddress(___cs_graph_Address.fromString(valueNode.toString()));
+    } else if (type == 'string') {
+      value = ___cs_graph_eth.Value.fromString(valueNode.toString());
+    } else if (type == 'bigint') {
+      let str = valueNode.toString()
+      // TODO: check if typed
+      value = ___cs_graph_eth.Value.fromUnsignedBigInt(BigInt.fromString(str));
+    }
+
+    output[i] = new ___cs_graph_eth.EventParam(name, value);
+  }
+
+  return output;
+}
+
+class ___cs_PlainJSON
+
+export function ___cs_plainJSONToJSON(plainJson: ___cs_PlainJSON): ___cs_graph_json

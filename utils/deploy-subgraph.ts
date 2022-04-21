@@ -90,14 +90,14 @@ export async function* deploySubgraph(
 
   libraries['schema/index.ts'] = await generateSchemaFile(subgraph.schema)
 
-  const compiled = await compileAs(subgraph.mappings[DEFAULT_MAPPING], { libraries })
+  const { binary } = await compileAs(subgraph.mappings[DEFAULT_MAPPING], { libraries })
 
   yield {
     status: STATUS.IPFS_UPLOAD,
     file: 'Mapping',
   }
 
-  const mappingCID = await uploadToIPFS(compiled, 'mapping.wasm')
+  const mappingCID = await uploadToIPFS(binary, 'mapping.wasm')
 
   const dataSources: any[] = []
 

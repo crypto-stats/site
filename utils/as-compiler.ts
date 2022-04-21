@@ -14,13 +14,23 @@ for (let filename of context.keys()) {
 
 interface CompilerOptions {
   libraries?: { [name: string]: string }
+  bindings?: boolean
 }
 
-export async function compileAs(tsCode: string, { libraries }: CompilerOptions = {}) {
+export async function compileAs(
+  tsCode: string,
+  { libraries, bindings }: CompilerOptions = {}
+): Promise<{ binary: Uint8Array, binding: string | null }> {
   const sources: any = {
     'input.ts': tsCode,
   }
-  var argv = ['--outFile', 'binary', '--textFile', 'text']
+  const argv = ['--outFile', 'binary', '--textFile', 'text']
+
+  if (bindings) {
+    argv.push('--bindings')
+    argv.push('raw')
+    argv.push('--exportRuntime')
+  }
 
   const output: any = {}
   const result = await asc.main([...argv, ...Object.keys(sources)], {
@@ -57,7 +67,10 @@ export async function compileAs(tsCode: string, { libraries }: CompilerOptions =
     throw new Error(result.stderr.toString())
   }
 
-  return output.binary
+  return {
+    binary: output.binary,
+    binding: output['binary.js'] || null,
+  }
 }
 
 export async function loadAsBytecode(bytecode: Uint8Array) {

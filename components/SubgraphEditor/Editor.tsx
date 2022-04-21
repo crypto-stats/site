@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { ViewPort, Top, Fill, Bottom, BottomResizable, Right } from 'react-spaces'
+import { ViewPort, Top, Fill, Bottom, BottomResizable, Right, RightResizable } from 'react-spaces'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import CodeEditor from 'components/CodeEditor'
@@ -19,6 +19,7 @@ import ImageLibrary from './ImageLibrary/ImageLibrary'
 import { useEditorState } from 'hooks/editor-state'
 import { WalletButton, Header, HeaderRight } from 'components/layouts'
 import { useGeneratedFiles } from 'hooks/useGeneratedFiles'
+import SubgraphTester from './SubgraphTester'
 
 const CloseButton = styled.button`
   background: none;
@@ -97,6 +98,7 @@ const Editor: React.FC = () => {
   const plausible = usePlausible()
   const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file')
   const [tab, setTab] = useState(SCHEMA_FILE_NAME)
+  const [showTest, setShowTest] = useState(false)
 
   const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId)
 
@@ -181,6 +183,7 @@ const Editor: React.FC = () => {
                   />
                 </Fill>
                 <Right size={100}>
+                  <button disabled={showTest} onClick={() => setShowTest(true)}>Test</button>
                   <EditorControls editorRef={editorRef} />
                 </Right>
               </TabContainer>
@@ -213,6 +216,12 @@ const Editor: React.FC = () => {
                   <div style={{ color: 'white' }}>Empty state</div>
                 )}
               </Fill>
+
+              {subgraph && showTest && (
+                <RightResizable size={300}>
+                  <SubgraphTester subgraph={subgraph} />
+                </RightResizable>
+              )}
 
               {bottomView !== BottomView.NONE && (
                 <BottomResizable size={160} minimumSize={60} maximumSize={300}>
