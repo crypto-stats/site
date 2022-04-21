@@ -10,13 +10,15 @@ interface Publication {
   version: string
 }
 
+export type Event = { signature: string; handler: string }
+
 export interface Contract {
   name: string
   addresses: { [chain: string]: string }
   startBlocks: { [chain: string]: number }
   abi: any
   source: 'etherscan' | 'custom'
-  events: { signature: string; handler: string }[]
+  events: Event[]
 }
 
 export interface SubgraphData {

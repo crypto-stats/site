@@ -102,26 +102,31 @@ export const NewSubgraph = () => {
   )
   const [mappingFunctionNames, setMappingFunctionNames] = useState<string[]>([])
   const router = useRouter()
-
+  const [fnExtractionLoading, setFnExtractionLoading] = useState(false)
   useEffect(() => {
+    const alreadySelected = selectedContracts.find(sc => sc.addresses[CHAIN_ID] === contractAddress)
     if (ADDRESS_REGEX.test(contractAddress)) {
-      setSelectedContracts(prev => [
-        ...prev,
-        {
-          name: '',
-          addresses: { [CHAIN_ID]: contractAddress },
-          abi: null,
-          startBlocks: {},
-          source: 'etherscan',
-          events: [],
-        },
-      ])
-
-      setContractAddress('')
+      if (!alreadySelected) {
+        setSelectedContracts(prev => [
+          ...prev,
+          {
+            name: '',
+            addresses: { [CHAIN_ID]: contractAddress },
+            abi: null,
+            startBlocks: {},
+            source: 'etherscan',
+            events: [],
+          },
+        ])
+        setContractAddress('')
+      } else {
+        alert(`Contract ${contractAddress} already added`)
+      }
     }
   }, [contractAddress])
 
   const loadFunctionsFromMappingCode = async (code: string) => {
+    setFnExtractionLoading(true)
     const { compileAs, loadAsBytecode } = await import('utils/as-compiler')
     const bytecode = await compileAs(code)
     const module = await loadAsBytecode(bytecode)
@@ -130,6 +135,7 @@ export const NewSubgraph = () => {
       .filter(_export => _export.kind === 'function')
       .map(_export => _export.name)
     setMappingFunctionNames(functionNames)
+    setFnExtractionLoading(false)
   }
 
   useEffect(() => {
@@ -147,7 +153,12 @@ export const NewSubgraph = () => {
   }
 
   const updateSelectedContract = (address: string, newProps: any) =>
-    setSelectedContracts(prev => prev.map(p => (p.addresses[CHAIN_ID] === address ? newProps : p)))
+    setSelectedContracts(prev =>
+      prev.map(p => (p.addresses[CHAIN_ID] === address ? { ...p, ...newProps } : p))
+    )
+
+  const deleteSelectedContract = (address: string) =>
+    setSelectedContracts(prev => prev.filter(p => p.addresses[CHAIN_ID] !== address))
 
   const handleOnExit = () => {
     if (confirm('Are you sure you wanna exit without saving?')) {
@@ -189,7 +200,9 @@ export const NewSubgraph = () => {
             key={sc.addresses[CHAIN_ID]}
             contract={sc}
             updateContract={updateSelectedContract}
+            deleteContract={deleteSelectedContract}
             mappingFunctionNames={mappingFunctionNames}
+            fnExtractionLoading={fnExtractionLoading}
           />
         ))}
 
