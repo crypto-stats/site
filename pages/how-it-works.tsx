@@ -48,7 +48,7 @@ const HowItWorks: NextPage = () => {
           <Text tag="p" type="content_big" mb="16">
             Using the CryptoStats online, in browser, javascript editor (1) it's all you need to
             write and test your adapter. Choose from pre-made templates to speed up your coding or
-            use our powerfull SDK for easy pulling of data from different sources.{' '}
+            use our powerful SDK for easy pulling of data from different sources.{' '}
           </Text>
           <Text tag="p" type="content_big" mb="16">
             Then Publish and Sign your adapter with your ETH Wallet (2) to publish it on IPFS (3)
@@ -90,12 +90,12 @@ const HowItWorks: NextPage = () => {
             free and easy with our REST API or the Javascript SDK (8).
           </Text>
           <Text tag="p" type="content_big" mb="16">
-            What's happen behind the scene?.
+            What happens behind the scenes?
           </Text>
           <Text tag="p" type="content_big" mb="16">
-            The list of Adapters will be fetch from the Collection Registry Smart Contract (9) and
-            the correspondant Adapter code downloaded (10). Then the actual query will be made from
-            the indexers and data will be available to use into your project (11) — (It's easier
+            The list of Adapters will be fetched from the Collection Registry Smart Contract (9) and
+            the corresponding Adapter code downloaded (10). Then the actual query will be made from
+            the indexers and data will be available to use in your project (11) — (It's easier
             than it sounds!)
           </Text>
         </ColumnSection>
