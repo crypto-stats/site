@@ -114,7 +114,7 @@ function parseEventsFromAbi(abi: any[]) {
     .map(
       e =>
         `${e.name}(${e.inputs
-          .map((ei: any) => `${ei.indexed ? 'indexed ' : ''}${ei.type}`)
+          .map((ei: any) => `${ei.indexed ? 'indexed ' : ''}${ei.type} ${ei.name}`)
           .join(', ')})`
     )
 }
