@@ -51,7 +51,7 @@ const HowItWorks: NextPage = () => {
             use our powerfull SDK for easy pulling of data from different sources.{' '}
           </Text>
           <Text tag="p" type="content_big" mb="16">
-            Then Publish and Sign your adapter whit your ETH Wallet (2) to publish it on IPFS (3)
+            Then Publish and Sign your adapter with your ETH Wallet (2) to publish it on IPFS (3)
             and you are all set!{' '}
           </Text>
         </ColumnSection>
