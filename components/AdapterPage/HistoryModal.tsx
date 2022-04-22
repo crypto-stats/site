@@ -16,7 +16,7 @@ const LinkItem = styled.a`
   text-decoration: none;
   font-family: 'Inter';
   font-size: 16px;
-  color: #717D8A;
+  color: #717d8a;
 
   &:hover {
     background: var(--color-primary-300);
@@ -72,7 +72,10 @@ const AdapterHistory: React.FC<AdapterHistoryProps> = ({ historicalVersions, cur
             )}
 
             {i < historicalVersions.length - 1 && (
-              <Link href={`/discover/diff/${historicalVersions[i + 1].cid}/${version.cid}`} passHref>
+              <Link
+                href={`/discover/diff/${historicalVersions[i + 1].cid}/${version.cid}`}
+                passHref
+              >
                 <LinkItem>Prev</LinkItem>
               </Link>
             )}

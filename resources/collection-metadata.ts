@@ -409,7 +409,7 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
             description: 'The date to query fees for (UTC time)',
           },
         ],
-      }
+      },
     ],
   },
 }

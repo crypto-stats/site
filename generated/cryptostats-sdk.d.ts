@@ -215,25 +215,25 @@ declare class Ethers {
 }
 
 declare interface BaseQueryOptions {
-  subgraph?: string;
-  subgraphId?: string;
-  query: string;
-  variables?: any;
-  operationName?: string;
-  node?: string;
+  subgraph?: string
+  subgraphId?: string
+  query: string
+  variables?: any
+  operationName?: string
+  node?: string
 }
 
 declare interface SubgraphQueryOptions extends BaseQueryOptions {
-  subgraph: string;
+  subgraph: string
 }
 declare interface SubgraphIDQueryOptions extends BaseQueryOptions {
-  subgraphId: string;
+  subgraphId: string
 }
 declare interface GraphQLQueryOptions extends BaseQueryOptions {
-  url: string;
+  url: string
 }
 
-declare type QueryOptions = SubgraphQueryOptions | SubgraphIDQueryOptions | GraphQLQueryOptions;
+declare type QueryOptions = SubgraphQueryOptions | SubgraphIDQueryOptions | GraphQLQueryOptions
 
 declare class Graph {
   private http

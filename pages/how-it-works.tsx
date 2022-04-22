@@ -95,8 +95,8 @@ const HowItWorks: NextPage = () => {
           <Text tag="p" type="content_big" mb="16">
             The list of Adapters will be fetched from the Collection Registry Smart Contract (9) and
             the corresponding Adapter code downloaded (10). Then the actual query will be made from
-            the indexers and data will be available to use in your project (11) — (It's easier
-            than it sounds!)
+            the indexers and data will be available to use in your project (11) — (It's easier than
+            it sounds!)
           </Text>
         </ColumnSection>
         <ColumnSection from="7" to="12">

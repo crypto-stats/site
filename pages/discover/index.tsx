@@ -69,7 +69,8 @@ const DiscoverPage: NextPage<AdaptersPageProps> = ({ collections }) => {
               curated and managed by the community
             </Text>
           </HeroWrapper>
-        }>
+        }
+      >
         <MainContainer>
           <CardList items={collectionItems} />
         </MainContainer>

@@ -18,8 +18,8 @@ const InputField: React.FC<InputFieldProps> = ({ name, value, onChange, disabled
         selected={value && value.length > 0 ? new Date(value) : null}
         className={className}
         onChange={(date: Date) => {
-          const pad = (num: number) => num.toString().padStart(2, '0');
-          onChange([date.getFullYear(), pad(date.getMonth() + 1), pad(date.getDate())].join('-'));
+          const pad = (num: number) => num.toString().padStart(2, '0')
+          onChange([date.getFullYear(), pad(date.getMonth() + 1), pad(date.getDate())].join('-'))
         }}
         disabled={disabled}
       />
