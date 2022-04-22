@@ -86,20 +86,21 @@ const ButtonsContainer = styled.div`
   }
 `
 
-export type ExtendedContract = Contract & { errorMessage?: string }
-
 const ADDRESS_REGEX = /^0x[0-9a-f]{40}$/i
+const MAPPING_FILENAME = 'mapping.ts'
+export type ExtendedContract = Contract & { errorMessage?: string }
 
 export const NewSubgraph = () => {
   const CHAIN_ID = '1'
 
   const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file')
-  const { subgraph, saveContracts } = useLocalSubgraph(subgraphId)
+  const { subgraph, saveContracts, saveMapping } = useLocalSubgraph(subgraphId)
   const [contractAddress, setContractAddress] = useState('')
   const [started, setStarted] = useState(false)
   const [selectedContracts, setSelectedContracts] = useState<ExtendedContract[]>(
     subgraph?.contracts || []
   )
+
   const [mappingFunctionNames, setMappingFunctionNames] = useState<string[]>([])
   const router = useRouter()
   const [fnExtractionLoading, setFnExtractionLoading] = useState(false)
@@ -145,6 +146,12 @@ export const NewSubgraph = () => {
   }, [subgraph?.mappings[DEFAULT_MAPPING]])
 
   useEffect(() => {
+    if (subgraph?.contracts && !selectedContracts.length) {
+      setSelectedContracts(subgraph.contracts)
+    }
+  }, [subgraph])
+
+  useEffect(() => {
     setStarted(true)
   }, [])
 
@@ -168,10 +175,28 @@ export const NewSubgraph = () => {
 
   const save = () => {
     let id = subgraphId
+    const newFnsToInsert: string[] = []
+    const contractsToSave = selectedContracts.map(sc => ({
+      ...sc,
+      events: sc.events.map((sce, i) => {
+        if (sce.handler === 'newFunction') {
+          const newFnName = `handle${sce.signature.split('(')[0]}${i}`
+          newFnsToInsert.push(`\nexport function ${newFnName}():void {}\n`)
+          return { ...sce, handler: newFnName }
+        }
+
+        return sce
+      }),
+    }))
+
     if (subgraph) {
-      saveContracts(selectedContracts)
+      saveMapping(
+        MAPPING_FILENAME,
+        subgraph.mappings[MAPPING_FILENAME].concat(newFnsToInsert.join('m'))
+      )
+      saveContracts(contractsToSave)
     } else {
-      id = newSubgraph({ contracts: selectedContracts })
+      id = newSubgraph({ contracts: contractsToSave })
     }
     setSubgraphId(id)
     router.push('/editor/subgraph')
