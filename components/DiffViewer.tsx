@@ -9,7 +9,12 @@ interface DiffViewerProps {
   fileBName?: string | null
 }
 
-const DiffViewer: React.FC<DiffViewerProps> = ({ fileA, fileAName = 'Unnamed', fileB, fileBName = 'Unnamed' }) => {
+const DiffViewer: React.FC<DiffViewerProps> = ({
+  fileA,
+  fileAName = 'Unnamed',
+  fileB,
+  fileBName = 'Unnamed',
+}) => {
   return (
     <ReactGhLikeDiff
       past={fileA}

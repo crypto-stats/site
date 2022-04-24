@@ -256,7 +256,10 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
                 <Attribute label="IPFS CID" buttons={<CopyButton text={cid} />}>
                   {cid}
                 </Attribute>
-                <Attribute label="CID (source)" buttons={<CopyButton text={moduleDetails.sourceFileCid!} />}>
+                <Attribute
+                  label="CID (source)"
+                  buttons={<CopyButton text={moduleDetails.sourceFileCid!} />}
+                >
                   {moduleDetails.sourceFileCid}
                 </Attribute>
                 {moduleDetails.previousVersion && (
@@ -352,10 +355,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         isOpen={showVersions}
         onClose={() => setShowVersions(false)}
       >
-        <HistoryModal
-          historicalVersions={previousVersions}
-          currentCID={cid}
-        />
+        <HistoryModal historicalVersions={previousVersions} currentCID={cid} />
       </SiteModal>
     </CompilerProvider>
   )
