@@ -136,7 +136,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
     value: efa,
   }))
   const mappingFunctionsSelectOptions = [
-    { label: 'newFunction()', value: 'newFunction' },
+    { label: 'Create new handler', value: 'newFunction' },
     ...mappingFunctionNames.map(mfn => ({
       label: mfn,
       value: mfn,
@@ -169,8 +169,6 @@ export const SelectedContract = (props: SelectedContractProps) => {
       fetchMetadata()
     }
   }, [addresses, abi, source])
-
-  console.log(eventHandlers)
 
   useEffect(() => {
     updateContract(addresses[CHAIN_ID], {
