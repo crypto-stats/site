@@ -114,7 +114,7 @@ function parseEventsFromAbi(abi: any[]) {
     .map(
       e =>
         `${e.name}(${e.inputs
-          .map((ei: any) => `${ei.indexed ? 'indexed ' : ''}${ei.type}`)
+          .map((ei: any) => `${ei.indexed ? 'indexed ' : ''}${ei.type} ${ei.name}`)
           .join(', ')})`
     )
 }
@@ -135,11 +135,16 @@ export const SelectedContract = (props: SelectedContractProps) => {
     label: efa,
     value: efa,
   }))
-  const mappingFunctionsSelectOptions = mappingFunctionNames.map(mfn => ({
-    label: mfn,
-    value: mfn,
-  }))
-  const [eventHandlers, setEventHandlers] = useState<Event[]>([{ signature: '', handler: '' }])
+  const mappingFunctionsSelectOptions = [
+    { label: 'Create new handler', value: 'newFunction' },
+    ...mappingFunctionNames.map(mfn => ({
+      label: mfn,
+      value: mfn,
+    })),
+  ]
+  const [eventHandlers, setEventHandlers] = useState<Event[]>([
+    { signature: '', handler: 'newFunction' },
+  ])
 
   const fetchMetadata = async () => {
     const metadataReq = await fetch(`/api/etherscan/${addresses[CHAIN_ID]}/metadata`)
@@ -284,7 +289,9 @@ export const SelectedContract = (props: SelectedContractProps) => {
           fullWidth={false}
           variant="outline"
           className="new-event-handler-btn"
-          onClick={() => setEventHandlers(prev => [...prev, { signature: '', handler: '' }])}
+          onClick={() =>
+            setEventHandlers(prev => [...prev, { signature: '', handler: 'newFunction' }])
+          }
           {...(!contractHasEvents && { disabled: true, title: 'Contract has no events defined' })}>
           Add new event handler
         </Button>
