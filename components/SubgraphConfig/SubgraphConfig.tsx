@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { useRouter } from 'next/router'
 
 import InputField from 'components/InputField'
-import { WalletButton, Header, HeaderRight } from 'components/layouts'
 import { InputLabel } from './InputLabel'
 import { Contract, useLocalSubgraph, DEFAULT_MAPPING, newSubgraph } from 'hooks/local-subgraphs'
 import { useEditorState } from 'hooks/editor-state'
@@ -19,7 +18,7 @@ const PrimaryFill = styled.section`
   max-width: 700px;
   display: flex;
   flex-direction: column;
-  margin: 64px auto;
+  margin: 0px auto;
   @media (max-width: 700px) {
     & > * {
       display: none;
@@ -90,7 +89,7 @@ const ADDRESS_REGEX = /^0x[0-9a-f]{40}$/i
 const MAPPING_FILENAME = 'mapping.ts'
 export type ExtendedContract = Contract & { errorMessage?: string }
 
-export const NewSubgraph = () => {
+export const SubgraphConfig = () => {
   const CHAIN_ID = '1'
 
   const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file')
@@ -204,13 +203,8 @@ export const NewSubgraph = () => {
 
   return (
     <Root style={{ background: '#2F3237' }}>
-      <Header size={64} order={1}>
-        <HeaderRight>
-          <WalletButton />
-        </HeaderRight>
-      </Header>
       <PrimaryFill style={{ width: 610 }}>
-        <Title>Configure your contracts & events</Title>
+        <Title>Configuration</Title>
 
         <InputLabel>Protocols</InputLabel>
         <ContractInput
@@ -244,5 +238,3 @@ export const NewSubgraph = () => {
     </Root>
   )
 }
-
-export default NewSubgraph
