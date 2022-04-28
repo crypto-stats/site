@@ -19,6 +19,7 @@ import ImageLibrary from './ImageLibrary/ImageLibrary'
 import { useEditorState } from 'hooks/editor-state'
 import { WalletButton, Header, HeaderRight } from 'components/layouts'
 import { useGeneratedFiles } from 'hooks/useGeneratedFiles'
+import { SubgraphConfig } from '../SubgraphConfig'
 
 const CloseButton = styled.button`
   background: none;
@@ -91,6 +92,7 @@ const PrimaryFill = styled(FillWithStyledResize)`
 `
 
 const SCHEMA_FILE_NAME = 'schema.graphql'
+const MAPPING_FILE_NAME = 'mapping.ts'
 
 const Editor: React.FC = () => {
   const router = useRouter()
@@ -104,7 +106,7 @@ const Editor: React.FC = () => {
     ? [
         {
           type: 'schema',
-          name: 'Schema',
+          name: 'schema',
           fileId: SCHEMA_FILE_NAME,
           open: true,
           focused: tab === SCHEMA_FILE_NAME,
@@ -112,10 +114,10 @@ const Editor: React.FC = () => {
         },
         {
           type: 'mapping',
-          name: 'Mapping',
+          name: 'mapping',
           fileId: DEFAULT_MAPPING,
           open: true,
-          focused: tab !== SCHEMA_FILE_NAME,
+          focused: tab === MAPPING_FILE_NAME,
           value: subgraph.mappings[DEFAULT_MAPPING],
         },
       ]
@@ -162,7 +164,7 @@ const Editor: React.FC = () => {
         <CloseButton onClick={() => router.push('/discover')}>X Close</CloseButton>
 
         <HeaderRight>
-          <NewAdapterButton onClick={() => router.push('/editor/subgraph/new')}>
+          <NewAdapterButton onClick={() => setNewAdapterModalOpen(true)}>
             New Subgraph
           </NewAdapterButton>
           <WalletButton />
@@ -175,7 +177,16 @@ const Editor: React.FC = () => {
               <TabContainer size={50}>
                 <Fill>
                   <Tabs
-                    openTabs={subgraphFiles}
+                    openTabs={[
+                      ...subgraphFiles,
+                      {
+                        name: 'config',
+                        type: 'config',
+                        fileId: 'config',
+                        open: true,
+                        focused: tab === 'config',
+                      },
+                    ]}
                     current={tab}
                     onSelect={fileId => setTab(fileId || SCHEMA_FILE_NAME)}
                   />
@@ -186,32 +197,41 @@ const Editor: React.FC = () => {
               </TabContainer>
 
               <Fill>
-                {subgraph ? (
-                  <CodeEditor
-                    defaultLanguage={focusedTab.type === 'schema' ? 'graphql' : 'typescript'}
-                    fileId={tab}
-                    defaultValue={focusedTab.value}
-                    extraLibs={extraLibs}
-                    onMount={(editor: any) => {
-                      editorRef.current = editor
-                    }}
-                    onChange={(code: string) =>
-                      tab === SCHEMA_FILE_NAME ? saveSchema(code) : saveMapping(tab, code)
-                    }
-                    onValidated={(_code: string, markers: any[]) => {
-                      setMarkers(markers)
+                {(() => {
+                  if (subgraph) {
+                    if (tab !== 'config') {
+                      return (
+                        <CodeEditor
+                          defaultLanguage={focusedTab.type === 'schema' ? 'graphql' : 'typescript'}
+                          fileId={tab}
+                          defaultValue={focusedTab.value}
+                          extraLibs={extraLibs}
+                          onMount={(editor: any) => {
+                            editorRef.current = editor
+                          }}
+                          onChange={(code: string) =>
+                            tab === SCHEMA_FILE_NAME ? saveSchema(code) : saveMapping(tab, code)
+                          }
+                          onValidated={(_code: string, markers: any[]) => {
+                            setMarkers(markers)
 
-                      if (
-                        markers.filter((marker: any) => marker.severity === MarkerSeverity.Error)
-                          .length === 0
-                      ) {
-                        // Evaluate code
-                      }
-                    }}
-                  />
-                ) : (
-                  <div style={{ color: 'white' }}>Empty state</div>
-                )}
+                            if (
+                              markers.filter(
+                                (marker: any) => marker.severity === MarkerSeverity.Error
+                              ).length === 0
+                            ) {
+                              // Evaluate code
+                            }
+                          }}
+                        />
+                      )
+                    } else {
+                      return <SubgraphConfig />
+                    }
+                  } else {
+                    return <div style={{ color: 'white' }}>Empty state</div>
+                  }
+                })()}
               </Fill>
 
               {bottomView !== BottomView.NONE && (
@@ -280,8 +300,7 @@ const Editor: React.FC = () => {
               setNewAdapterModalOpen(false)
             },
           },
-        ]}
-      >
+        ]}>
         <NewAdapterForm
           onAdapterSelection={(_fileName: string) => {
             // setMappingFileName(fileName)

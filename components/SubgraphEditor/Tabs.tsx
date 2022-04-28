@@ -40,7 +40,7 @@ const CloseButton = styled.button`
 `
 
 export interface TabState {
-  type: 'schema' | 'mapping'
+  type: 'schema' | 'mapping' | 'config'
   name?: string
   fileId?: string | null
   open: boolean
