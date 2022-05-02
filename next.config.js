@@ -6,7 +6,10 @@ let config = {
     return {
       ...config,
 
-      experiments: { topLevelAwait: true },
+      experiments: {
+        ...config.experiments,
+        topLevelAwait: true,
+      },
 
       resolve: {
         ...config.resolve,

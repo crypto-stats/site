@@ -5,10 +5,12 @@ import { useRouter } from 'next/router'
 import InputField from 'components/InputField'
 import { WalletButton, Header, HeaderRight } from 'components/layouts'
 import { InputLabel } from './InputLabel'
-import { Contract, useLocalSubgraph, DEFAULT_MAPPING, newSubgraph } from 'hooks/local-subgraphs'
+import { Contract, useLocalSubgraph, DEFAULT_MAPPING, newSubgraph, SubgraphData } from 'hooks/local-subgraphs'
 import { useEditorState } from 'hooks/editor-state'
 import { SelectedContract } from './SelectedContract'
 import Button from '../Button'
+import { addImport } from 'utils/source-code-utils'
+import { generateContractFile, generateSchemaFile } from 'utils/graph-file-generator'
 
 const Root = styled.div`
   background-color: '#2F3237';
@@ -126,10 +128,20 @@ export const NewSubgraph = () => {
     }
   }, [contractAddress])
 
-  const loadFunctionsFromMappingCode = async (code: string) => {
+  const loadFunctionsFromMappingCode = async (subgraph: SubgraphData) => {
     setFnExtractionLoading(true)
     const { compileAs, loadAsBytecode } = await import('utils/as-compiler')
-    const bytecode = await compileAs(code)
+
+    const libraries: { [name: string]: string } = {}
+
+    for (const contract of subgraph.contracts) {
+      const code = await generateContractFile(contract.abi)
+      libraries[`contracts/${contract.name}.ts`] = code
+    }
+
+    libraries['schema/index.ts'] = await generateSchemaFile(subgraph.schema)
+
+    const bytecode = await compileAs(subgraph.mappings[DEFAULT_MAPPING], { libraries })
     const module = await loadAsBytecode(bytecode)
     const exports = WebAssembly.Module.exports(module.module)
     const functionNames = exports
@@ -141,7 +153,7 @@ export const NewSubgraph = () => {
 
   useEffect(() => {
     if (subgraph?.mappings[DEFAULT_MAPPING]) {
-      loadFunctionsFromMappingCode(subgraph.mappings[DEFAULT_MAPPING])
+      loadFunctionsFromMappingCode(subgraph)
     }
   }, [subgraph?.mappings[DEFAULT_MAPPING]])
 
@@ -176,12 +188,25 @@ export const NewSubgraph = () => {
   const save = () => {
     let id = subgraphId
     const newFnsToInsert: string[] = []
+    const newImports: { event: string; contract: string }[] = []
+    const functionNames = [...mappingFunctionNames]
+
     const contractsToSave = selectedContracts.map(sc => ({
       ...sc,
-      events: sc.events.map((sce, i) => {
+      events: sc.events.map((sce) => {
         if (sce.handler === 'newFunction') {
-          const newFnName = `handle${sce.signature.split('(')[0]}${i}`
-          newFnsToInsert.push(`\nexport function ${newFnName}():void {}\n`)
+          const eventName = sce.signature.split('(')[0]
+          let newFnName = `handle${eventName}`
+
+          let i = 0
+          while (functionNames.indexOf(newFnName) !== -1) {
+            i += 1
+            newFnName = `handle${eventName}${i}`
+          }
+          functionNames.push(newFnName)
+
+          newFnsToInsert.push(`\nexport function ${newFnName}(event: ${eventName}): void {}\n`)
+          newImports.push({ event: eventName, contract: sc.name })
           return { ...sce, handler: newFnName }
         }
 
@@ -190,10 +215,12 @@ export const NewSubgraph = () => {
     }))
 
     if (subgraph) {
-      saveMapping(
-        MAPPING_FILENAME,
-        subgraph.mappings[MAPPING_FILENAME].concat(newFnsToInsert.join('m'))
-      )
+      let mappingCode = subgraph.mappings[MAPPING_FILENAME].concat(newFnsToInsert.join('m'))
+      for (const newImport of newImports) {
+        mappingCode = addImport(mappingCode, `contracts/${newImport.contract}`, newImport.event)
+      }
+
+      saveMapping(MAPPING_FILENAME, mappingCode)
       saveContracts(contractsToSave)
     } else {
       id = newSubgraph({ contracts: contractsToSave })
