@@ -147,14 +147,14 @@ export const SelectedContract = (props: SelectedContractProps) => {
   ])
 
   const fetchMetadata = async () => {
-    const metadataReq = await fetch(`/api/etherscan/${addresses[CHAIN_ID]}/metadata`)
+    const metadataReq = await fetch(`https://miniscan.xyz/api/contract?network=ethereum&address=${addresses[CHAIN_ID]}`)
     const metadata = await metadataReq.json()
 
-    if (metadata.isContract) {
+    if (!metadata.error) {
       updateContract(addresses[CHAIN_ID], {
-        abi: metadata.abi,
-        startBlocks: { [CHAIN_ID]: metadata.deployBlock },
-        name: metadata.name,
+        abi: JSON.parse(metadata.data.ABI),
+        startBlocks: { [CHAIN_ID]: parseInt(metadata.data.StartBlock) },
+        name: metadata.data.ContractName,
       })
     } else if (metadata.success === false) {
       updateContract(addresses[CHAIN_ID], {
