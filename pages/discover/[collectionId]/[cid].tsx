@@ -372,6 +372,12 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { collectionId: s
   if (cid.indexOf('Qm') != 0) {
     cid = await getCIDFromSlug(collectionId, cid)
   }
+  if (!cid) {
+    return {
+      revalidate: 15,
+      notFound: true,
+    }
+  }
 
   const sdk = new CryptoStatsSDK({
     executionTimeout: 70,
