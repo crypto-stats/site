@@ -157,7 +157,9 @@ export const getStaticProps: GetStaticProps<ListPageProps, { collectionId: strin
 ) => {
   const collectionId = ctx.params!.collectionId as string
   const adapterCids = await getModulesForCollection(collectionId)
-  const sdk = new CryptoStatsSDK({})
+  const sdk = new CryptoStatsSDK({
+    executionTimeout: 50,
+  })
 
   const adapters = await Promise.all(
     adapterCids.map(async (cid: string): Promise<AdapterData> => {
