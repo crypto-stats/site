@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 const Root = styled.span`
   color: #d3d3d3;
-  text-transform: uppercase;
+  font-size: 12px;
 `
 
 interface InputLabelProps {
