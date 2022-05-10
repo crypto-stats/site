@@ -6,19 +6,21 @@ import InputField from 'components/InputField'
 import { InputLabel } from './InputLabel'
 import { Contract, useLocalSubgraph, DEFAULT_MAPPING, newSubgraph } from 'hooks/local-subgraphs'
 import { useEditorState } from 'hooks/editor-state'
-import { SelectedContract } from './SelectedContract'
+import { SelectedContract } from './SelectedContract/SelectedContract'
 import Button from '../Button'
+import { Fill } from 'react-spaces'
 
 const Root = styled.div`
-  background-color: '#2F3237';
   min-height: 100vh;
+  margin-bottom: 60px;
 `
 
 const PrimaryFill = styled.section`
   max-width: 700px;
   display: flex;
   flex-direction: column;
-  margin: 0px auto;
+  padding: 32px;
+  /* margin: 0px auto; */
   @media (max-width: 700px) {
     & > * {
       display: none;
@@ -43,8 +45,8 @@ const Title = styled.h3`
   font-weight: bold;
   color: #ffffff;
   max-width: 250px;
-  align-self: center;
-  text-align: center;
+  margin: 0px;
+  margin-bottom: 24px;
 `
 
 const ContractInput = styled(InputField)`
@@ -53,13 +55,13 @@ const ContractInput = styled(InputField)`
   background-position-x: calc(100% - 20px);
   width: 100%;
   color: #b0b0b0;
-  background-color: #252528;
+  background-color: #2a2d30;
   border: solid 1px #181818;
   box-sizing: border-box;
-  padding: 20px;
+  padding: 10px;
   padding-right: 55px;
   border-radius: 4px;
-  margin: 16px 0;
+  margin: 4px 0;
 
   &:focus-visible {
     outline: 0;
@@ -108,7 +110,6 @@ export const SubgraphConfig = () => {
     if (ADDRESS_REGEX.test(contractAddress)) {
       if (!alreadySelected) {
         setSelectedContracts(prev => [
-          ...prev,
           {
             name: '',
             addresses: { [CHAIN_ID]: contractAddress },
@@ -117,6 +118,7 @@ export const SubgraphConfig = () => {
             source: 'etherscan',
             events: [],
           },
+          ...prev,
         ])
         setContractAddress('')
       } else {
@@ -202,18 +204,17 @@ export const SubgraphConfig = () => {
   }
 
   return (
-    <Root style={{ background: '#2F3237' }}>
+    <Root>
       <PrimaryFill style={{ width: 610 }}>
         <Title>Configuration</Title>
-
-        <InputLabel>Protocols</InputLabel>
+        <Title>Contracts</Title>
+        <InputLabel>Add contract</InputLabel>
         <ContractInput
           placeholder="Paste here the contract address"
           name="contractAddress"
           value={contractAddress}
           onChange={setContractAddress}
         />
-
         {selectedContracts.map(sc => (
           <SelectedContract
             key={sc.addresses[CHAIN_ID]}
@@ -224,8 +225,7 @@ export const SubgraphConfig = () => {
             fnExtractionLoading={fnExtractionLoading}
           />
         ))}
-
-        <ButtonsContainer>
+        {/* <ButtonsContainer>
           <Button fullWidth={false} className="exit" onClick={handleOnExit}>
             Exit
           </Button>
@@ -233,7 +233,7 @@ export const SubgraphConfig = () => {
           <Button fullWidth={false} variant="outline" className="save" onClick={save}>
             Save
           </Button>
-        </ButtonsContainer>
+        </ButtonsContainer> */}
       </PrimaryFill>
     </Root>
   )
