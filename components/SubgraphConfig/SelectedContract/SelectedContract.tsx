@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import Select, { SingleValue } from 'react-select'
+import { SingleValue } from 'react-select'
+import { Plus, Trash2, Edit, Search } from 'lucide-react'
 
 import { Contract, Event } from 'hooks/local-subgraphs'
-import Button from '../Button'
 import { SolidSvg } from 'components/layouts'
+import { Dropdown } from '../../atoms'
 
 const Root = styled.div`
-  background-color: #25252a;
   margin-bottom: 24px;
+  font-size: 12px;
 
   .delete-link {
     &:hover {
@@ -18,15 +19,15 @@ const Root = styled.div`
 `
 
 const Header = styled.div`
-  padding: 16px 24px;
+  padding: 16px 0px;
   display: flex;
   flex-direction: column;
   color: var(--color-white);
-  background-color: var(--color-dark-800);
 
   > .address {
     margin-top: 4px;
     font-size: 14px;
+    color: #8f8f8f;
   }
 
   > .top {
@@ -52,51 +53,72 @@ const StatusContainer = styled.div`
 const EventHandlerContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 16px 24px;
-
-  .new-event-handler-btn {
-    max-width: 220px;
-    align-self: center;
-    margin: 8px 0px;
-    background-color: #37373c;
-
-    &:hover {
-      background-color: var(--color-primary);
-    }
-  }
+  margin: 16px 0px;
 
   .labels {
     display: grid;
-    grid-template-columns: repeat(2, 47%);
-    gap: 8px;
-    text-transform: uppercase;
+    grid-template-columns: repeat(2, 43%);
     color: #d3d3d3;
-    font-size: 12px;
     margin-bottom: 6px;
+
+    > span {
+      padding: 0px 8px;
+    }
   }
 `
 
 const EventRow = styled.div`
   display: flex;
-  justify-content: space-between;
+  margin-bottom: -1px;
   align-items: center;
-  margin-bottom: 16px;
+  border-top: 1px solid #979797;
+  border-bottom: 1px solid #979797;
+  width: 100%;
+
+  > .actionBtnsContainer {
+    display: flex;
+    justify-content: space-between;
+    color: #979797;
+    min-width: 60px;
+    padding: 0px 12px;
+
+    > svg {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
 `
 
-const customStyles = {
-  container: (provided: any) => ({ ...provided, width: 'calc(50% - 8px - 14px)' }),
-  control: (provided: any) => ({
-    ...provided,
+const NewEventBtnContainer = styled.div`
+  padding: 10px 8px;
+  border-bottom: 1px solid #979797;
+`
+const ActionButton = styled.button`
+  display: flex;
+  align-items: center;
+  background: none;
+  color: #0477f4;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  width: fit-content;
+  font-weight: bold;
+`
 
-    backgroundColor: 'var(--color-dark-800)',
-    border: `1px var(--color-dark-800)`,
-  }),
-  singleValue: (provided: any) => ({
-    ...provided,
-    color: 'var(--color-white)',
-  }),
-  indicatorsContainer: () => ({ '&:hover': { color: 'var(--color-white)' } }),
+const groupStyles = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
 }
+
+const formatGroupLabel = (data: any) => (
+  <div style={groupStyles}>
+    <span>{data.label}</span>
+  </div>
+)
 
 const CHAIN_ID = 1
 
@@ -135,16 +157,24 @@ export const SelectedContract = (props: SelectedContractProps) => {
     label: efa,
     value: efa,
   }))
-  const mappingFunctionsSelectOptions = [
-    { label: 'Create new handler', value: 'newFunction' },
-    ...mappingFunctionNames.map(mfn => ({
-      label: mfn,
-      value: mfn,
-    })),
-  ]
-  const [eventHandlers, setEventHandlers] = useState<Event[]>([
-    { signature: '', handler: 'newFunction' },
-  ])
+  const getMappingFunctionsSelectOptions = (id: number) => {
+    const eventName = eventHandlers[id].signature.split('(')[0].replace(' ', '')
+
+    return [
+      {
+        label: 'Create new',
+        options: [{ label: `handle${eventName}(event ${eventName})`, value: 'newFunction' }],
+      },
+      {
+        label: 'Map to existing functions',
+        options: mappingFunctionNames.map(mfn => ({
+          label: mfn,
+          value: mfn,
+        })),
+      },
+    ]
+  }
+  const [eventHandlers, setEventHandlers] = useState<Event[]>([{ signature: '', handler: '' }])
 
   const fetchMetadata = async () => {
     const metadataReq = await fetch(`/api/etherscan/${addresses[CHAIN_ID]}/metadata`)
@@ -253,48 +283,56 @@ export const SelectedContract = (props: SelectedContractProps) => {
       </Header>
       <EventHandlerContainer>
         <div className="labels">
-          <span>From ABI</span>
-          <span>Map on</span>
+          <span>ABI</span>
+          <span>Map</span>
         </div>
         {eventHandlers.map((eh, idx) => (
           <EventRow key={idx}>
-            <Select
-              components={{ IndicatorSeparator: () => null }}
+            <Dropdown
               value={eventsFromAbiSelectOptions.find(efa => efa.value === eh.signature)}
               name="signature"
               onChange={handleSelectOptionChange(idx, 'signature')}
               options={eventsFromAbiSelectOptions}
-              styles={customStyles}
+              placeholder="Choose event"
             />
-            <Select
+            <Dropdown
+              isDisabled={!eventHandlers[idx].signature}
+              isSearchable
               components={{
                 IndicatorSeparator: () => null,
+                DropdownIndicator: () => null,
                 ...(fnExtractionLoading && { DropdownIndicator: () => null }),
               }}
-              value={mappingFunctionsSelectOptions.find(mfs => mfs.value === eh.handler)}
+              value={getMappingFunctionsSelectOptions(idx)
+                .reduce((acc: any[], { options }) => [...acc, ...options], [])
+                .find(mfs => mfs.value === eh.handler)}
               name="handler"
               onChange={handleSelectOptionChange(idx, 'handler')}
-              options={mappingFunctionsSelectOptions}
-              styles={customStyles}
+              options={getMappingFunctionsSelectOptions(idx)}
               isLoading={fnExtractionLoading}
+              formatGroupLabel={formatGroupLabel}
+              placeholder="Declare event handler function"
             />
-            <a className="delete-link" onClick={() => deleteEventHandler(idx)}>
-              <SolidSvg path="/Icon/ico-xmark.svg" width={'18px'} height={'18px'} color="#999999" />
-            </a>
+            <div className="actionBtnsContainer">
+              <Search size={12} />
+              <Edit size={12} />
+              <Trash2 size={12} onClick={() => deleteEventHandler(idx)} />
+            </div>
           </EventRow>
         ))}
 
-        <Button
-          disabled={!contractHasEvents}
-          fullWidth={false}
-          variant="outline"
-          className="new-event-handler-btn"
-          onClick={() =>
-            setEventHandlers(prev => [...prev, { signature: '', handler: 'newFunction' }])
-          }
-          {...(!contractHasEvents && { disabled: true, title: 'Contract has no events defined' })}>
-          Add new event handler
-        </Button>
+        <NewEventBtnContainer>
+          <ActionButton
+            disabled={!contractHasEvents}
+            onClick={() => setEventHandlers(prev => [...prev, { signature: '', handler: '' }])}
+            {...(!contractHasEvents && {
+              disabled: true,
+              title: 'Contract has no events defined',
+            })}>
+            <Plus size={12} style={{ marginRight: 4 }} />
+            New
+          </ActionButton>
+        </NewEventBtnContainer>
       </EventHandlerContainer>
     </Root>
   )
