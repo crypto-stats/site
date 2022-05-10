@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { ViewPort, Top, Fill, Bottom, BottomResizable, Right } from 'react-spaces'
+import { ViewPort, Top, Fill, Bottom, BottomResizable, Right, LeftResizable } from 'react-spaces'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import CodeEditor from 'components/CodeEditor'
@@ -172,6 +172,7 @@ const Editor: React.FC = () => {
       </Header>
       <PrimaryFill side="right">
         <Fill>
+          <LeftResizable size={298} style={{ backgroundColor: '#303030' }}></LeftResizable>
           <FillWithStyledResize side="left">
             <Fill>
               <TabContainer size={50}>
@@ -196,7 +197,7 @@ const Editor: React.FC = () => {
                 </Right>
               </TabContainer>
 
-              <Fill>
+              <Fill scrollable={tab === 'config'}>
                 {(() => {
                   if (subgraph) {
                     if (tab !== 'config') {
