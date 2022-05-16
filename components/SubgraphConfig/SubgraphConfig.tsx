@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
+import { Info } from 'lucide-react'
 
 import InputField from 'components/InputField'
 import { InputLabel } from './InputLabel'
 import { Contract, useLocalSubgraph, DEFAULT_MAPPING, newSubgraph } from 'hooks/local-subgraphs'
 import { useEditorState } from 'hooks/editor-state'
 import { SelectedContract } from './SelectedContract/SelectedContract'
-import Button from '../Button'
-import { Fill } from 'react-spaces'
+import { Dropdown } from '../atoms'
 
 const Root = styled.div`
   min-height: 100vh;
@@ -41,12 +41,20 @@ const PrimaryFill = styled.section`
 `
 
 const Title = styled.h3`
-  font-size: 24px;
+  font-size: 32px;
   font-weight: bold;
   color: #ffffff;
   max-width: 250px;
   margin: 0px;
   margin-bottom: 24px;
+`
+
+const InfoMsg = styled.span`
+  display: inline-flex;
+  gap: 12px;
+  align-items: center;
+  color: var(--color-white);
+  font-size: 12px;
 `
 
 const ContractInput = styled(InputField)`
@@ -65,7 +73,7 @@ const ContractInput = styled(InputField)`
 
   &:focus-visible {
     outline: 0;
-    border-color: white;
+    border-color: #2684ff;
   }
 `
 
@@ -200,13 +208,36 @@ export const SubgraphConfig = () => {
       id = newSubgraph({ contracts: contractsToSave })
     }
     setSubgraphId(id)
-    router.push('/editor/subgraph')
   }
 
   return (
     <Root>
       <PrimaryFill style={{ width: 610 }}>
         <Title>Configuration</Title>
+        <InfoMsg>
+          <Info size={16} />
+          Configure the network, contracts and event handlers you want to work with.
+        </InfoMsg>
+        <div style={{ margin: '32px 0px' }}>
+          <InputLabel>Network</InputLabel>
+          <Dropdown
+            components={{ DropdownIndicator: () => null }}
+            openMenuOnClick={false}
+            openMenuOnFocus={false}
+            menuIsOpen={false}
+            // aria-disabled
+            inputValue={'Ethereum mainnet'}
+            styles={{
+              valueContainer: (provided: any) => ({
+                ...provided,
+                backgroundColor: '#2a2d30',
+                padding: 10,
+                borderRadius: 4,
+              }),
+            }}
+            // options={[{ label: 'Ethereum mainnet', value: CHAIN_ID }]}
+          />
+        </div>
         <Title>Contracts</Title>
         <InputLabel>Add contract</InputLabel>
         <ContractInput
