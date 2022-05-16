@@ -13,6 +13,7 @@ import { Dropdown } from '../atoms'
 const Root = styled.div`
   min-height: 100vh;
   margin-bottom: 60px;
+  background-color: #212121;
 `
 
 const PrimaryFill = styled.section`

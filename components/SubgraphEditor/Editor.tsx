@@ -175,7 +175,7 @@ const Editor: React.FC = () => {
           <LeftResizable size={298} style={{ backgroundColor: '#303030' }}></LeftResizable>
           <FillWithStyledResize side="left">
             <Fill>
-              <TabContainer size={50}>
+              <TabContainer size={40}>
                 <Fill>
                   <Tabs
                     openTabs={[
