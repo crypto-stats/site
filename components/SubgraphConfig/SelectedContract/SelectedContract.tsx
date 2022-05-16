@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { SingleValue } from 'react-select'
-import { Plus, Trash2, Edit, Search } from 'lucide-react'
+import { Plus, Trash2, Edit, Search, Check } from 'lucide-react'
 
 import { Contract, Event } from 'hooks/local-subgraphs'
 import { SolidSvg } from 'components/layouts'
@@ -74,18 +74,18 @@ const EventRow = styled.div`
   border-top: 1px solid #979797;
   border-bottom: 1px solid #979797;
   width: 100%;
+`
 
-  > .actionBtnsContainer {
-    display: flex;
-    justify-content: space-between;
-    color: #979797;
-    min-width: 60px;
-    padding: 0px 12px;
+const ActionBtnsContainer = styled.div<{ editing?: boolean }>`
+  display: flex;
+  justify-content: ${({ editing }) => (editing ? 'center' : 'space-between')};
+  color: #979797;
+  min-width: 60px;
+  padding: 0px 12px;
 
-    > svg {
-      &:hover {
-        cursor: pointer;
-      }
+  > svg {
+    &:hover {
+      cursor: pointer;
     }
   }
 `
@@ -107,6 +107,14 @@ const ActionButton = styled.button`
   width: fit-content;
   font-weight: bold;
 `
+
+const customStyles = {
+  container: (provided: any) => ({
+    ...provided,
+    width: 'calc(50% - 8px - 14px)',
+    borderRight: '1px solid #979797',
+  }),
+}
 
 const groupStyles = {
   display: 'flex',
@@ -174,7 +182,9 @@ export const SelectedContract = (props: SelectedContractProps) => {
       },
     ]
   }
-  const [eventHandlers, setEventHandlers] = useState<Event[]>([{ signature: '', handler: '' }])
+  const [eventHandlers, setEventHandlers] = useState<(Event & { editing: boolean })[]>([
+    { signature: '', handler: '', editing: true },
+  ])
 
   const fetchMetadata = async () => {
     const metadataReq = await fetch(`/api/etherscan/${addresses[CHAIN_ID]}/metadata`)
@@ -208,7 +218,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
 
   useEffect(() => {
     if (events.length > 0) {
-      setEventHandlers(events)
+      setEventHandlers(events.map(e => ({ ...e, editing: false })))
     }
   }, [fnExtractionLoading])
 
@@ -289,6 +299,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
         {eventHandlers.map((eh, idx) => (
           <EventRow key={idx}>
             <Dropdown
+              styles={customStyles}
               value={eventsFromAbiSelectOptions.find(efa => efa.value === eh.signature)}
               name="signature"
               onChange={handleSelectOptionChange(idx, 'signature')}
@@ -296,6 +307,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
               placeholder="Choose event"
             />
             <Dropdown
+              styles={customStyles}
               isDisabled={!eventHandlers[idx].signature}
               isSearchable
               components={{
@@ -313,18 +325,30 @@ export const SelectedContract = (props: SelectedContractProps) => {
               formatGroupLabel={formatGroupLabel}
               placeholder="Declare event handler function"
             />
-            <div className="actionBtnsContainer">
-              <Search size={12} />
-              <Edit size={12} />
-              <Trash2 size={12} onClick={() => deleteEventHandler(idx)} />
-            </div>
+            <ActionBtnsContainer editing={eh.editing}>
+              {eh.editing ? (
+                <Check size={16} color="#ffffff" />
+              ) : (
+                <>
+                  <Search size={16} />
+                  <Edit size={16} />
+                  <Trash2 size={16} onClick={() => deleteEventHandler(idx)} />
+                </>
+              )}
+            </ActionBtnsContainer>
           </EventRow>
         ))}
 
         <NewEventBtnContainer>
           <ActionButton
-            disabled={!contractHasEvents}
-            onClick={() => setEventHandlers(prev => [...prev, { signature: '', handler: '' }])}
+            disabled={
+              !contractHasEvents ||
+              !eventHandlers[eventHandlers.length - 1].handler ||
+              !eventHandlers[eventHandlers.length - 1].signature
+            }
+            onClick={() =>
+              setEventHandlers(prev => [...prev, { signature: '', handler: '', editing: true }])
+            }
             {...(!contractHasEvents && {
               disabled: true,
               title: 'Contract has no events defined',
