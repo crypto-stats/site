@@ -14,7 +14,7 @@ const Tab = styled.div<{ $focused: boolean }>`
   font-weight: medium;
   color: #ffffff;
   position: relative;
-  margin-top: -3px;
+  margin-top: -2px;
   margin-right: -5px;
   padding: 0 16px;
   border-bottom: 42px solid ${({ $focused }) => ($focused ? '#212121' : '#4b555d')};
@@ -28,7 +28,8 @@ const Tab = styled.div<{ $focused: boolean }>`
 
   .tab-text {
     position: absolute;
-    top: 13px;
+    top: 15px;
+    font-size: 14px;
   }
 
   &:hover {
