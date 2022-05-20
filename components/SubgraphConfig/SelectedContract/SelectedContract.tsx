@@ -3,19 +3,12 @@ import styled from 'styled-components'
 import { SingleValue } from 'react-select'
 import { Plus, Trash2, Edit, Search, Check } from 'lucide-react'
 
-import { Contract, Event } from 'hooks/local-subgraphs'
-import { SolidSvg } from 'components/layouts'
+import { Contract, ContractEvent } from 'hooks/local-subgraphs'
 import { Dropdown } from '../../atoms'
 
 const Root = styled.div`
   margin-bottom: 24px;
   font-size: 12px;
-
-  .delete-link {
-    &:hover {
-      cursor: pointer;
-    }
-  }
 `
 
 const Header = styled.div`
@@ -31,8 +24,16 @@ const Header = styled.div`
   }
 
   > .top {
+    font-size: 16px;
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+
+    .delete-link {
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 `
 
@@ -109,11 +110,7 @@ const ActionButton = styled.button`
 `
 
 const customStyles = {
-  container: (provided: any) => ({
-    ...provided,
-    width: 'calc(50% - 8px - 14px)',
-    borderRight: '1px solid #979797',
-  }),
+  container: { width: 'calc(50% - 8px - 14px)', borderRight: '1px solid #979797' },
 }
 
 const groupStyles = {
@@ -136,6 +133,7 @@ interface SelectedContractProps {
   fnExtractionLoading: boolean
   mappingFunctionNames: string[]
   updateContract: (address: string, newProps: any) => void
+  saveEvent: (newEvent: ContractEvent, eventIndex: number) => void
 }
 
 function parseEventsFromAbi(abi: any[]) {
@@ -156,6 +154,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
     mappingFunctionNames,
     fnExtractionLoading,
     deleteContract,
+    saveEvent,
   } = props
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -167,11 +166,17 @@ export const SelectedContract = (props: SelectedContractProps) => {
   }))
   const getMappingFunctionsSelectOptions = (id: number) => {
     const eventName = eventHandlers[id].signature.split('(')[0].replace(' ', '')
+    const newFnNameTemplate = `handle${eventName}`
+    const fnOccurrenceCount = mappingFunctionNames.filter(mfn =>
+      mfn.includes(newFnNameTemplate)
+    ).length
+    const newFnName =
+      fnOccurrenceCount === 0 ? newFnNameTemplate : `${newFnNameTemplate}${fnOccurrenceCount + 1}`
 
     return [
       {
         label: 'Create new',
-        options: [{ label: `handle${eventName}(event ${eventName})`, value: 'newFunction' }],
+        options: [{ label: `${newFnName}(event ${eventName})`, value: newFnName }],
       },
       {
         label: 'Map to existing functions',
@@ -182,7 +187,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
       },
     ]
   }
-  const [eventHandlers, setEventHandlers] = useState<(Event & { editing: boolean })[]>([
+  const [eventHandlers, setEventHandlers] = useState<(ContractEvent & { editing: boolean })[]>([
     { signature: '', handler: '', editing: true },
   ])
 
@@ -245,8 +250,22 @@ export const SelectedContract = (props: SelectedContractProps) => {
       )
     }
 
+  const toggleEditing = (idx: number) =>
+    setEventHandlers(prev =>
+      prev.map((pe, pei) => (pei === idx ? { ...pe, editing: !pe.editing } : pe))
+    )
+
   const deleteEventHandler = (idx: number) =>
     setEventHandlers(prev => prev.filter((_, i) => idx !== i))
+
+  const saveEventHandler = (idx: number) => {
+    const event = eventHandlers[idx]
+
+    if (event.signature && event.handler) {
+      saveEvent(event, idx)
+      toggleEditing(idx)
+    }
+  }
 
   const showUploadButton = errorMessage || source === 'custom'
 
@@ -255,9 +274,11 @@ export const SelectedContract = (props: SelectedContractProps) => {
       <Header>
         <div className="top">
           <span className="contract-title">{name || 'No name'}</span>
-          <a className="delete-link" onClick={() => deleteContract(addresses[CHAIN_ID])}>
-            <SolidSvg path="/Icon/ico-xmark.svg" width={'18px'} height={'18px'} color="#999999" />
-          </a>
+          <Trash2
+            className="delete-link"
+            size={16}
+            onClick={() => deleteContract(addresses[CHAIN_ID])}
+          />
         </div>
         <span className="address">{addresses[CHAIN_ID]}</span>
         {startBlocks[CHAIN_ID] ? (
@@ -299,7 +320,8 @@ export const SelectedContract = (props: SelectedContractProps) => {
         {eventHandlers.map((eh, idx) => (
           <EventRow key={idx}>
             <Dropdown
-              styles={customStyles}
+              customStyles={customStyles}
+              isDisabled={!eventHandlers[idx].editing}
               value={eventsFromAbiSelectOptions.find(efa => efa.value === eh.signature)}
               name="signature"
               onChange={handleSelectOptionChange(idx, 'signature')}
@@ -307,8 +329,8 @@ export const SelectedContract = (props: SelectedContractProps) => {
               placeholder="Choose event"
             />
             <Dropdown
-              styles={customStyles}
-              isDisabled={!eventHandlers[idx].signature}
+              customStyles={customStyles}
+              isDisabled={!eventHandlers[idx].signature || !eventHandlers[idx].editing}
               isSearchable
               components={{
                 IndicatorSeparator: () => null,
@@ -327,11 +349,11 @@ export const SelectedContract = (props: SelectedContractProps) => {
             />
             <ActionBtnsContainer editing={eh.editing}>
               {eh.editing ? (
-                <Check size={16} color="#ffffff" />
+                <Check size={16} color="#ffffff" onClick={() => saveEventHandler(idx)} />
               ) : (
                 <>
                   <Search size={16} />
-                  <Edit size={16} />
+                  <Edit size={16} onClick={() => toggleEditing(idx)} />
                   <Trash2 size={16} onClick={() => deleteEventHandler(idx)} />
                 </>
               )}
