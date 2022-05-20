@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { useRouter } from 'next/router'
 import { Info } from 'lucide-react'
 
 import InputField from 'components/InputField'
 import { InputLabel } from './InputLabel'
-import { Contract, useLocalSubgraph, DEFAULT_MAPPING, newSubgraph } from 'hooks/local-subgraphs'
+import { Contract, ContractEvent, useLocalSubgraph, DEFAULT_MAPPING } from 'hooks/local-subgraphs'
 import { useEditorState } from 'hooks/editor-state'
 import { SelectedContract } from './SelectedContract/SelectedContract'
 import { Dropdown } from '../atoms'
 
 const Root = styled.div`
   min-height: 100vh;
-  margin-bottom: 60px;
+  padding-bottom: 60px;
   background-color: #212121;
 `
 
@@ -71,28 +70,11 @@ const ContractInput = styled(InputField)`
   padding-right: 55px;
   border-radius: 4px;
   margin: 4px 0;
+  font-size: 14px;
 
   &:focus-visible {
     outline: 0;
     border-color: #2684ff;
-  }
-`
-
-const ButtonsContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-  > .exit {
-    padding: 10px 0px;
-    background-color: #37373c;
-    color: #8e99ff;
-    border: 2px solid #8e99ff;
-  }
-
-  > .save {
-    color: var(--color-white);
-    background-color: #2e53e9;
-    border: 1px solid #172e8b;
   }
 `
 
@@ -103,7 +85,7 @@ export type ExtendedContract = Contract & { errorMessage?: string }
 export const SubgraphConfig = () => {
   const CHAIN_ID = '1'
 
-  const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file')
+  const [subgraphId] = useEditorState<string | null>('subgraph-file')
   const { subgraph, saveContracts, saveMapping } = useLocalSubgraph(subgraphId)
   const [contractAddress, setContractAddress] = useState('')
   const [started, setStarted] = useState(false)
@@ -112,7 +94,6 @@ export const SubgraphConfig = () => {
   )
 
   const [mappingFunctionNames, setMappingFunctionNames] = useState<string[]>([])
-  const router = useRouter()
   const [fnExtractionLoading, setFnExtractionLoading] = useState(false)
   useEffect(() => {
     const alreadySelected = selectedContracts.find(sc => sc.addresses[CHAIN_ID] === contractAddress)
@@ -130,11 +111,18 @@ export const SubgraphConfig = () => {
           ...prev,
         ])
         setContractAddress('')
+        saveContracts(selectedContracts)
       } else {
         alert(`Contract ${contractAddress} already added`)
       }
     }
   }, [contractAddress])
+
+  useEffect(() => {
+    if (subgraph) {
+      saveContracts(selectedContracts)
+    }
+  }, [selectedContracts])
 
   const loadFunctionsFromMappingCode = async (code: string) => {
     setFnExtractionLoading(true)
@@ -177,38 +165,33 @@ export const SubgraphConfig = () => {
   const deleteSelectedContract = (address: string) =>
     setSelectedContracts(prev => prev.filter(p => p.addresses[CHAIN_ID] !== address))
 
-  const handleOnExit = () => {
-    if (confirm('Are you sure you wanna exit without saving?')) {
-      return router.back()
-    }
-  }
-
-  const save = () => {
-    let id = subgraphId
+  const saveEvent = (newEvent: ContractEvent, eventIndex: number) => {
     const newFnsToInsert: string[] = []
     const contractsToSave = selectedContracts.map(sc => ({
       ...sc,
-      events: sc.events.map((sce, i) => {
-        if (sce.handler === 'newFunction') {
-          const newFnName = `handle${sce.signature.split('(')[0]}${i}`
-          newFnsToInsert.push(`\nexport function ${newFnName}():void {}\n`)
-          return { ...sce, handler: newFnName }
+      events: sc.events.map((sce, internalEventIndex) => {
+        if (internalEventIndex === eventIndex) {
+          console.log(mappingFunctionNames, newEvent.handler)
+          if (
+            // newEvent.handler !== sce.handler &&
+            !mappingFunctionNames.includes(newEvent.handler)
+          ) {
+            newFnsToInsert.push(`\nexport function ${newEvent.handler}():void {}\n`)
+          }
+          return newEvent
+        } else {
+          return sce
         }
-
-        return sce
       }),
     }))
 
-    if (subgraph) {
-      saveMapping(
-        MAPPING_FILENAME,
-        subgraph.mappings[MAPPING_FILENAME].concat(newFnsToInsert.join('m'))
-      )
-      saveContracts(contractsToSave)
-    } else {
-      id = newSubgraph({ contracts: contractsToSave })
-    }
-    setSubgraphId(id)
+    console.log(newFnsToInsert)
+
+    saveMapping(
+      MAPPING_FILENAME,
+      subgraph!.mappings[MAPPING_FILENAME].concat(newFnsToInsert.join('m'))
+    )
+    saveContracts(contractsToSave)
   }
 
   return (
@@ -226,15 +209,15 @@ export const SubgraphConfig = () => {
             openMenuOnClick={false}
             openMenuOnFocus={false}
             menuIsOpen={false}
-            // aria-disabled
             inputValue={'Ethereum mainnet'}
-            styles={{
-              valueContainer: (provided: any) => ({
-                ...provided,
+            customStyles={{
+              valueContainer: {
                 backgroundColor: '#2a2d30',
                 padding: 10,
                 borderRadius: 4,
-              }),
+                fontSize: 14,
+                '&:hover': { cursor: 'not-allowed' },
+              },
             }}
             // options={[{ label: 'Ethereum mainnet', value: CHAIN_ID }]}
           />
@@ -255,6 +238,7 @@ export const SubgraphConfig = () => {
             deleteContract={deleteSelectedContract}
             mappingFunctionNames={mappingFunctionNames}
             fnExtractionLoading={fnExtractionLoading}
+            saveEvent={saveEvent}
           />
         ))}
         {/* <ButtonsContainer>
