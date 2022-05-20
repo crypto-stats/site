@@ -51,7 +51,7 @@ const NewAdapterButton = styled.button`
 `
 
 const TabContainer = styled(Top)`
-  background-color: #2f2f2f;
+  background-color: #0f1012;
 
   & > .spaces-space > div {
     display: flex;
