@@ -183,39 +183,42 @@ export const SubgraphConfig = () => {
   const deleteSelectedContract = (address: string) =>
     setSelectedContracts(prev => prev.filter(p => p.addresses[CHAIN_ID] !== address))
 
-  const saveEvent = (newEvent: ContractEvent, eventIndex: number) => {
+  const saveEvent = (contractAddress: string, newEvent: ContractEvent, eventIndex: number) => {
     const newFnsToInsert: string[] = []
     const newImports: { event: string; contract: string }[] = []
 
-    const contractsToSave = selectedContracts.map(sc => ({
-      ...sc,
-      events: sc.events.map((sce, internalEventIndex) => {
-        if (internalEventIndex === eventIndex) {
-          if (!mappingFunctionNames.includes(newEvent.handler)) {
-            const eventName = sce.signature.split('(')[0]
-            newFnsToInsert.push(
-              `\nexport function ${newEvent.handler}(event: ${eventName}):void {}\n`
-            )
-            newImports.push({ event: eventName, contract: sc.name })
+    const contractsToSave = selectedContracts.map(sc => {
+      if (sc.addresses[CHAIN_ID] === contractAddress) {
+        const newEvents = sc.events.map((sce, internalEventIndex) => {
+          if (internalEventIndex === eventIndex) {
+            if (!mappingFunctionNames.includes(newEvent.handler)) {
+              const eventName = newEvent.signature.split('(')[0]
+              newFnsToInsert.push(
+                `\nexport function ${newEvent.handler}(event: ${eventName}):void {}\n`
+              )
+              newImports.push({ event: eventName, contract: sc.name })
+            }
+            return newEvent
+          } else {
+            return sce
           }
-          return newEvent
-        } else {
-          return sce
+        })
+
+        return {
+          ...sc,
+          events: newEvents,
         }
-      }),
-    }))
+      } else {
+        return sc
+      }
+    })
 
-    console.log(newFnsToInsert)
-
-    saveMapping(
-      MAPPING_FILENAME,
-      subgraph!.mappings[MAPPING_FILENAME].concat(newFnsToInsert.join('m'))
-    )
-    saveContracts(contractsToSave)
     let mappingCode = subgraph!.mappings[MAPPING_FILENAME].concat(newFnsToInsert.join('m'))
     for (const newImport of newImports) {
       mappingCode = addImport(mappingCode, `contracts/${newImport.contract}`, newImport.event)
     }
+    saveMapping(MAPPING_FILENAME, mappingCode)
+    saveContracts(contractsToSave)
   }
 
   return (

@@ -133,7 +133,7 @@ interface SelectedContractProps {
   fnExtractionLoading: boolean
   mappingFunctionNames: string[]
   updateContract: (address: string, newProps: any) => void
-  saveEvent: (newEvent: ContractEvent, eventIndex: number) => void
+  saveEvent: (contractAddress: string, newEvent: ContractEvent, eventIndex: number) => void
 }
 
 function parseEventsFromAbi(abi: any[]) {
@@ -176,7 +176,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
     return [
       {
         label: 'Create new',
-        options: [{ label: `${newFnName}(event ${eventName})`, value: newFnName }],
+        options: [{ label: newFnName, value: newFnName }],
       },
       {
         label: 'Map to existing functions',
@@ -192,7 +192,9 @@ export const SelectedContract = (props: SelectedContractProps) => {
   ])
 
   const fetchMetadata = async () => {
-    const metadataReq = await fetch(`https://miniscan.xyz/api/contract?network=ethereum&address=${addresses[CHAIN_ID]}`)
+    const metadataReq = await fetch(
+      `https://miniscan.xyz/api/contract?network=ethereum&address=${addresses[CHAIN_ID]}`
+    )
     const metadata = await metadataReq.json()
 
     if (!metadata.error) {
@@ -220,6 +222,15 @@ export const SelectedContract = (props: SelectedContractProps) => {
       events: eventHandlers.filter(eh => eh.handler !== '' && eh.signature !== ''),
     })
   }, [eventHandlers])
+
+  // when unmounted, remove all unfinished event handlers
+  useEffect(() => {
+    return () => {
+      updateContract(addresses[CHAIN_ID], {
+        events: eventHandlers.filter(eh => eh.handler !== '' && eh.signature !== ''),
+      })
+    }
+  }, [])
 
   useEffect(() => {
     if (events.length > 0) {
@@ -262,7 +273,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
     const event = eventHandlers[idx]
 
     if (event.signature && event.handler) {
-      saveEvent(event, idx)
+      saveEvent(addresses[CHAIN_ID], event, idx)
       toggleEditing(idx)
     }
   }
