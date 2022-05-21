@@ -227,7 +227,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
   useEffect(() => {
     return () => {
       updateContract(addresses[CHAIN_ID], {
-        events: eventHandlers.filter(eh => eh.handler !== '' && eh.signature !== ''),
+        events: eventHandlers.filter(eh => eh.handler !== '' || eh.signature !== ''),
       })
     }
   }, [])
@@ -267,7 +267,10 @@ export const SelectedContract = (props: SelectedContractProps) => {
     )
 
   const deleteEventHandler = (idx: number) =>
-    setEventHandlers(prev => prev.filter((_, i) => idx !== i))
+    setEventHandlers(prev => {
+      const newEvents = prev.filter((_, i) => idx !== i)
+      return newEvents.length > 0 ? newEvents : [{ signature: '', handler: '', editing: true }]
+    })
 
   const saveEventHandler = (idx: number) => {
     const event = eventHandlers[idx]
