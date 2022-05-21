@@ -4,10 +4,18 @@ import { Info } from 'lucide-react'
 
 import InputField from 'components/InputField'
 import { InputLabel } from './InputLabel'
-import { Contract, ContractEvent, useLocalSubgraph, DEFAULT_MAPPING } from 'hooks/local-subgraphs'
+import {
+  Contract,
+  ContractEvent,
+  useLocalSubgraph,
+  DEFAULT_MAPPING,
+  SubgraphData,
+} from 'hooks/local-subgraphs'
 import { useEditorState } from 'hooks/editor-state'
-import { SelectedContract } from './SelectedContract/SelectedContract'
+import { SelectedContract } from './SelectedContract'
 import { Dropdown } from '../atoms'
+import { addImport } from 'utils/source-code-utils'
+import { generateContractFile, generateSchemaFile } from 'utils/graph-file-generator'
 
 const Root = styled.div`
   min-height: 100vh;
@@ -124,10 +132,20 @@ export const SubgraphConfig = () => {
     }
   }, [selectedContracts])
 
-  const loadFunctionsFromMappingCode = async (code: string) => {
+  const loadFunctionsFromMappingCode = async (subgraph: SubgraphData) => {
     setFnExtractionLoading(true)
     const { compileAs, loadAsBytecode } = await import('utils/as-compiler')
-    const bytecode = await compileAs(code)
+
+    const libraries: { [name: string]: string } = {}
+
+    for (const contract of subgraph.contracts) {
+      const code = await generateContractFile(contract.abi)
+      libraries[`contracts/${contract.name}.ts`] = code
+    }
+
+    libraries['schema/index.ts'] = await generateSchemaFile(subgraph.schema)
+
+    const bytecode = await compileAs(subgraph.mappings[DEFAULT_MAPPING], { libraries })
     const module = await loadAsBytecode(bytecode)
     const exports = WebAssembly.Module.exports(module.module)
     const functionNames = exports
@@ -139,7 +157,7 @@ export const SubgraphConfig = () => {
 
   useEffect(() => {
     if (subgraph?.mappings[DEFAULT_MAPPING]) {
-      loadFunctionsFromMappingCode(subgraph.mappings[DEFAULT_MAPPING])
+      loadFunctionsFromMappingCode(subgraph)
     }
   }, [subgraph?.mappings[DEFAULT_MAPPING]])
 
@@ -167,16 +185,18 @@ export const SubgraphConfig = () => {
 
   const saveEvent = (newEvent: ContractEvent, eventIndex: number) => {
     const newFnsToInsert: string[] = []
+    const newImports: { event: string; contract: string }[] = []
+
     const contractsToSave = selectedContracts.map(sc => ({
       ...sc,
       events: sc.events.map((sce, internalEventIndex) => {
         if (internalEventIndex === eventIndex) {
-          console.log(mappingFunctionNames, newEvent.handler)
-          if (
-            // newEvent.handler !== sce.handler &&
-            !mappingFunctionNames.includes(newEvent.handler)
-          ) {
-            newFnsToInsert.push(`\nexport function ${newEvent.handler}():void {}\n`)
+          if (!mappingFunctionNames.includes(newEvent.handler)) {
+            const eventName = sce.signature.split('(')[0]
+            newFnsToInsert.push(
+              `\nexport function ${newEvent.handler}(event: ${eventName}):void {}\n`
+            )
+            newImports.push({ event: eventName, contract: sc.name })
           }
           return newEvent
         } else {
@@ -192,6 +212,10 @@ export const SubgraphConfig = () => {
       subgraph!.mappings[MAPPING_FILENAME].concat(newFnsToInsert.join('m'))
     )
     saveContracts(contractsToSave)
+    let mappingCode = subgraph!.mappings[MAPPING_FILENAME].concat(newFnsToInsert.join('m'))
+    for (const newImport of newImports) {
+      mappingCode = addImport(mappingCode, `contracts/${newImport.contract}`, newImport.event)
+    }
   }
 
   return (
@@ -241,15 +265,6 @@ export const SubgraphConfig = () => {
             saveEvent={saveEvent}
           />
         ))}
-        {/* <ButtonsContainer>
-          <Button fullWidth={false} className="exit" onClick={handleOnExit}>
-            Exit
-          </Button>
-
-          <Button fullWidth={false} variant="outline" className="save" onClick={save}>
-            Save
-          </Button>
-        </ButtonsContainer> */}
       </PrimaryFill>
     </Root>
   )
