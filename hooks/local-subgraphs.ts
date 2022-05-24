@@ -94,7 +94,7 @@ export const newSubgraph = ({
   const subgraph: SubgraphData = {
     mappings: { [DEFAULT_MAPPING]: mapping },
     schema,
-    name: 'New Subgraph',
+    name: 'Untitled subgraph',
     contracts,
     publications,
     version: null,
