@@ -1,10 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { XOctagon, AlertTriangle, Info } from 'react-feather'
-import PublishModal from './PublishModal'
+
 import { MarkerSeverity } from './types'
-import Button from 'components/Button'
-import { useLocalSubgraph } from 'hooks/local-subgraphs'
 
 const Container = styled.div`
   flex: 1;
@@ -15,32 +13,6 @@ const Container = styled.div`
 const Side = styled.div`
   display: flex;
   align-items: center;
-`
-
-const PublishButton = styled(Button)`
-  height: 35px;
-  margin: 0 16px 0 32px;
-  padding: 9px 20px;
-  border-radius: 4px;
-  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.5);
-  font-weight: normal;
-  position: relative;
-
-  &:disabled:hover:before {
-    content: 'Fix all errors to allow publishing';
-    display: block;
-    position: absolute;
-    z-index: 100;
-    left: 0;
-    transform: translateX(-140px);
-    top: 0;
-    bottom: 0;
-    background: #222222;
-    padding: 2px;
-    font-size: 12px;
-    border-radius: 4px;
-    color: #cccccc;
-  }
 `
 
 const ErrorChip = styled.button<{ color?: string }>`
@@ -65,23 +37,16 @@ const ErrorChip = styled.button<{ color?: string }>`
 `
 
 interface PrimaryFooterProps {
-  fileName: string | null
   markers: any[]
   onMarkerClick: () => void
   onConsoleClick: () => void
-  editorRef: any
 }
 
 const PrimaryFooter: React.FC<PrimaryFooterProps> = ({
-  fileName,
   markers,
   onMarkerClick,
   onConsoleClick,
-  editorRef,
 }) => {
-  const [showModal, setShowModal] = useState(false)
-  const { subgraph } = useLocalSubgraph(fileName)
-
   const infos = []
   const warnings = []
   const errors = []
@@ -110,27 +75,6 @@ const PrimaryFooter: React.FC<PrimaryFooterProps> = ({
         </ErrorChip>
         <ErrorChip onClick={onConsoleClick}>Console</ErrorChip>
       </Side>
-
-      <Side>
-        {subgraph && (
-          <PublishButton
-            onClick={() => setShowModal(true)}
-            disabled={errors.length > 0}
-            className="primary"
-          >
-            Publish &amp; Deploy
-          </PublishButton>
-        )}
-      </Side>
-
-      {fileName && (
-        <PublishModal
-          fileName={fileName}
-          show={showModal}
-          onClose={() => setShowModal(false)}
-          editorRef={editorRef}
-        />
-      )}
     </Container>
   )
 }
