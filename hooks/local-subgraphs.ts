@@ -183,6 +183,7 @@ export const useLocalSubgraph = (id?: string | null) => {
   }, [id])
 
   return {
+    update,
     subgraph: subgraphRef.current,
     deployStatus,
     deploy,
