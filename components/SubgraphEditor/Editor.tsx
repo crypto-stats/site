@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { ViewPort, Top, Fill, Bottom, BottomResizable, Right } from 'react-spaces'
+import { ViewPort, Top, Fill, Bottom, BottomResizable, Right, LeftResizable } from 'react-spaces'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import CodeEditor from 'components/CodeEditor'
@@ -19,6 +19,7 @@ import ImageLibrary from './ImageLibrary/ImageLibrary'
 import { useEditorState } from 'hooks/editor-state'
 import { WalletButton, Header, HeaderRight } from 'components/layouts'
 import { useGeneratedFiles } from 'hooks/useGeneratedFiles'
+import { Title, SubgraphList, Footer } from './LeftSide'
 
 const CloseButton = styled.button`
   background: none;
@@ -30,22 +31,6 @@ const CloseButton = styled.button`
 
   &:hover {
     cursor: pointer;
-  }
-`
-
-const NewAdapterButton = styled.button`
-  height: 35px;
-  border: solid 1px;
-  background: transparent;
-  border: solid 1px #0477f4;
-  color: #0477f4;
-  margin: 0 10px;
-  padding: 0 10px;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background: #0477f430;
   }
 `
 
@@ -162,12 +147,16 @@ const Editor: React.FC = () => {
         <CloseButton onClick={() => router.push('/discover')}>X Close</CloseButton>
 
         <HeaderRight>
-          <NewAdapterButton onClick={() => router.push('/editor/subgraph/new')}>
-            New Subgraph
-          </NewAdapterButton>
           <WalletButton />
         </HeaderRight>
       </Header>
+      <LeftResizable size={298} style={{ backgroundColor: '#303030' }}>
+        <Fill scrollable={true} style={{ display: 'flex', flexDirection: 'column' }}>
+          <Title />
+          <SubgraphList selected={subgraphId} onSelected={setSubgraphId} />
+          <Footer />
+        </Fill>
+      </LeftResizable>
       <PrimaryFill side="right">
         <Fill>
           <FillWithStyledResize side="left">
@@ -280,8 +269,7 @@ const Editor: React.FC = () => {
               setNewAdapterModalOpen(false)
             },
           },
-        ]}
-      >
+        ]}>
         <NewAdapterForm
           onAdapterSelection={(_fileName: string) => {
             // setMappingFileName(fileName)
