@@ -20,3 +20,11 @@ export const HeaderRight = styled.div`
     display: none;
   }
 `
+
+export const SubgraphHeader = styled(Top)`
+  background-color: #0f1012;
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 8px;
+  margin-left: 298px;
+`
