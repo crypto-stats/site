@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import CodeEditor from 'components/CodeEditor'
 import { useLocalSubgraph, newSubgraph, DEFAULT_MAPPING } from 'hooks/local-subgraphs'
 import PrimaryFooter from './PrimaryFooter'
+import { PrimaryHeader } from './PrimaryHeader'
 import { Tabs, TabState } from './Tabs'
 import EditorModal from './EditorModal'
 import NewAdapterForm from './NewAdapterForm'
@@ -14,25 +15,10 @@ import { usePlausible } from 'next-plausible'
 import EditorControls from './EditorControls'
 import Console from './Console'
 import BottomTitleBar, { BottomView } from './BottomTitleBar'
-import SaveMessage from './SaveMessage'
 import ImageLibrary from './ImageLibrary/ImageLibrary'
 import { useEditorState } from 'hooks/editor-state'
-import { WalletButton, Header, HeaderRight } from 'components/layouts'
 import { useGeneratedFiles } from 'hooks/useGeneratedFiles'
 import { Title, SubgraphList, Footer } from './LeftSide'
-
-const CloseButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 12px;
-  font-weight: 600;
-  color: white;
-  margin-left: 16px;
-
-  &:hover {
-    cursor: pointer;
-  }
-`
 
 const TabContainer = styled(Top)`
   background-color: #2f2f2f;
@@ -140,16 +126,8 @@ const Editor: React.FC = () => {
   }
 
   return (
-    <ViewPort style={{ background: '#0f1011' }}>
-      <Header size={64} order={1}>
-        <SaveMessage />
-
-        <CloseButton onClick={() => router.push('/discover')}>X Close</CloseButton>
-
-        <HeaderRight>
-          <WalletButton />
-        </HeaderRight>
-      </Header>
+    <ViewPort style={{ background: '#0f1011', fontFamily: 'Manrope' }}>
+      <PrimaryHeader filename={subgraphId} markers={markers} editorRef={editorRef} />
       <LeftResizable size={298} style={{ backgroundColor: '#303030' }}>
         <Fill scrollable={true} style={{ display: 'flex', flexDirection: 'column' }}>
           <Title />
@@ -230,11 +208,9 @@ const Editor: React.FC = () => {
           <PrimaryFooterContainer size={55}>
             {subgraph ? (
               <PrimaryFooter
-                fileName={subgraphId}
                 markers={markers}
                 onMarkerClick={() => setBottomView(BottomView.ERRORS)}
                 onConsoleClick={() => setBottomView(BottomView.CONSOLE)}
-                editorRef={editorRef}
               />
             ) : null}
           </PrimaryFooterContainer>
