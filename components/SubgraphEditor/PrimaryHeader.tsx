@@ -1,16 +1,28 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { useLocalSubgraph } from 'hooks/local-subgraphs'
+import { useOnClickOutside, useLocalSubgraph } from 'hooks'
 import { HeaderRight, SubgraphHeader, WalletButton } from 'components/layouts'
 import Button from 'components/Button'
 import { MarkerSeverity } from './types'
 import PublishModal from './PublishModal'
 
-const SubgraphTitle = styled.h2`
-  font-size: 22px;
+const SubgraphTitle = styled.div`
   color: #d3d3d3;
   margin: 24px 8px;
+
+  input {
+    all: unset;
+    border: solid 1px #979797;
+    padding: 5px 10px;
+  }
+
+  h2,
+  input {
+    margin: 0px;
+    font-size: 22px;
+    font-weight: bold;
+  }
 `
 
 const PublishButton = styled(Button)`
@@ -49,8 +61,19 @@ interface PrimaryHeaderProps {
 
 export const PrimaryHeader = (props: PrimaryHeaderProps) => {
   const { filename, markers, editorRef } = props
+  const { subgraph, update } = useLocalSubgraph(filename)
   const [showModal, setShowModal] = useState(false)
-  const { subgraph } = useLocalSubgraph(filename)
+  const [editingTitle, setEditingTitle] = useState(false)
+  const [titleValue, setTitleValue] = useState(subgraph?.name || '')
+  const ref = useRef()
+
+  useEffect(() => {
+    if (subgraph && subgraph.name !== titleValue) {
+      setTitleValue(subgraph.name!)
+    }
+  }, [subgraph])
+
+  useOnClickOutside(ref, () => setEditingTitle(false))
 
   const infos = []
   const warnings = []
@@ -68,7 +91,19 @@ export const PrimaryHeader = (props: PrimaryHeaderProps) => {
 
   return (
     <SubgraphHeader size={80} order={1}>
-      <SubgraphTitle>{subgraph?.name}</SubgraphTitle>
+      <SubgraphTitle onClick={() => setEditingTitle(prev => !prev)}>
+        {!editingTitle ? (
+          <h2>{titleValue}</h2>
+        ) : (
+          <input
+            ref={ref}
+            autoFocus
+            value={titleValue}
+            onChange={e => update({ ...subgraph!, name: e.target.value })}
+          />
+        )}
+      </SubgraphTitle>
+
       <HeaderRight>
         <WalletButton />
         {subgraph && (
