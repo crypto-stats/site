@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { ViewPort, Top, Fill, Bottom, BottomResizable, Right, LeftResizable } from 'react-spaces'
-import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import CodeEditor from 'components/CodeEditor'
 import { useLocalSubgraph, newSubgraph, DEFAULT_MAPPING } from 'hooks/local-subgraphs'
@@ -64,7 +63,6 @@ const PrimaryFill = styled(FillWithStyledResize)`
 const SCHEMA_FILE_NAME = 'schema.graphql'
 
 const Editor: React.FC = () => {
-  const router = useRouter()
   const plausible = usePlausible()
   const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file')
   const [tab, setTab] = useState(SCHEMA_FILE_NAME)
