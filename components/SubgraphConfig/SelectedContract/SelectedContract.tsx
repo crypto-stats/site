@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { SingleValue } from 'react-select'
 import { Plus, Trash2 } from 'lucide-react'
 
-import { Contract, ContractEvent, DEFAULT_MAPPING } from 'hooks/local-subgraphs'
+import { Contract, ContractEvent } from 'hooks/local-subgraphs'
 import { EventRow } from './EventRow'
 
 const Root = styled.div`
@@ -118,7 +118,6 @@ export const SelectedContract = (props: SelectedContractProps) => {
     fnExtractionLoading,
     mappingFunctionNames,
     saveEvent,
-    subgraphMappings = {},
     updateContract,
   } = props
 
