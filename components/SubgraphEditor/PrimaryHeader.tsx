@@ -65,7 +65,7 @@ export const PrimaryHeader = (props: PrimaryHeaderProps) => {
   const [showModal, setShowModal] = useState(false)
   const [editingTitle, setEditingTitle] = useState(false)
   const [titleValue, setTitleValue] = useState(subgraph?.name || '')
-  const ref = useRef()
+  const ref = useRef<any>()
 
   useEffect(() => {
     if (subgraph && subgraph.name !== titleValue) {
