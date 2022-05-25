@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { SingleValue } from 'react-select'
-import { Plus, Trash2, Edit, Search, Check } from 'lucide-react'
+import { Plus, Trash2 } from 'lucide-react'
 
-import { Contract, ContractEvent } from 'hooks/local-subgraphs'
-import { Dropdown } from '../../atoms'
+import { Contract, ContractEvent, DEFAULT_MAPPING } from 'hooks/local-subgraphs'
+import { EventRow } from './EventRow'
 
 const Root = styled.div`
   margin-bottom: 24px;
@@ -68,29 +68,6 @@ const EventHandlerContainer = styled.div`
   }
 `
 
-const EventRow = styled.div`
-  display: flex;
-  margin-bottom: -1px;
-  align-items: center;
-  border-top: 1px solid #979797;
-  border-bottom: 1px solid #979797;
-  width: 100%;
-`
-
-const ActionBtnsContainer = styled.div<{ editing?: boolean }>`
-  display: flex;
-  justify-content: ${({ editing }) => (editing ? 'center' : 'space-between')};
-  color: #979797;
-  min-width: 60px;
-  padding: 0px 12px;
-
-  > svg {
-    &:hover {
-      cursor: pointer;
-    }
-  }
-`
-
 const NewEventBtnContainer = styled.div`
   padding: 10px 8px;
   border-bottom: 1px solid #979797;
@@ -99,7 +76,7 @@ const ActionButton = styled.button`
   display: flex;
   align-items: center;
   background: none;
-  color: #0477f4;
+  color: var(--color-primary);
   border: none;
   padding: 0;
   font: inherit;
@@ -109,32 +86,7 @@ const ActionButton = styled.button`
   font-weight: bold;
 `
 
-const customStyles = {
-  container: { width: 'calc(50% - 8px - 14px)', borderRight: '1px solid #979797' },
-}
-
-const groupStyles = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-}
-
-const formatGroupLabel = (data: any) => (
-  <div style={groupStyles}>
-    <span>{data.label}</span>
-  </div>
-)
-
 const CHAIN_ID = 1
-
-interface SelectedContractProps {
-  contract: Contract & { errorMessage?: string }
-  deleteContract: (address: string) => void
-  fnExtractionLoading: boolean
-  mappingFunctionNames: string[]
-  updateContract: (address: string, newProps: any) => void
-  saveEvent: (contractAddress: string, newEvent: ContractEvent, eventIndex: number) => void
-}
 
 function parseEventsFromAbi(abi: any[]) {
   return abi
@@ -147,47 +99,34 @@ function parseEventsFromAbi(abi: any[]) {
     )
 }
 
+export type EventHandler = ContractEvent & { editing: boolean }
+
+interface SelectedContractProps {
+  contract: Contract & { errorMessage?: string }
+  deleteContract: (address: string) => void
+  fnExtractionLoading: boolean
+  mappingFunctionNames: string[]
+  saveEvent: (contractAddress: string, newEvent: ContractEvent, eventIndex: number) => void
+  subgraphMappings?: { [name: string]: string }
+  updateContract: (address: string, newProps: any) => void
+}
+
 export const SelectedContract = (props: SelectedContractProps) => {
   const {
     contract: { addresses, name, source, errorMessage, abi, startBlocks, events },
-    updateContract,
-    mappingFunctionNames,
-    fnExtractionLoading,
     deleteContract,
+    fnExtractionLoading,
+    mappingFunctionNames,
     saveEvent,
+    subgraphMappings = {},
+    updateContract,
   } = props
 
   const inputRef = useRef<HTMLInputElement>(null)
   const eventsFromAbi = abi ? parseEventsFromAbi(abi) : []
   const contractHasEvents = eventsFromAbi.length > 0
-  const eventsFromAbiSelectOptions = eventsFromAbi.map(efa => ({
-    label: efa,
-    value: efa,
-  }))
-  const getMappingFunctionsSelectOptions = (id: number) => {
-    const eventName = eventHandlers[id].signature.split('(')[0].replace(' ', '')
-    const newFnNameTemplate = `handle${eventName}`
-    const fnOccurrenceCount = mappingFunctionNames.filter(mfn =>
-      mfn.includes(newFnNameTemplate)
-    ).length
-    const newFnName =
-      fnOccurrenceCount === 0 ? newFnNameTemplate : `${newFnNameTemplate}${fnOccurrenceCount + 1}`
 
-    return [
-      {
-        label: 'Create new',
-        options: [{ label: newFnName, value: newFnName }],
-      },
-      {
-        label: 'Map to existing functions',
-        options: mappingFunctionNames.map(mfn => ({
-          label: mfn,
-          value: mfn,
-        })),
-      },
-    ]
-  }
-  const [eventHandlers, setEventHandlers] = useState<(ContractEvent & { editing: boolean })[]>([
+  const [eventHandlers, setEventHandlers] = useState<EventHandler[]>([
     { signature: '', handler: '', editing: true },
   ])
 
@@ -238,33 +177,33 @@ export const SelectedContract = (props: SelectedContractProps) => {
     }
   }, [fnExtractionLoading])
 
-  const handleFileUploadChange = (e: any) => {
-    const [file] = e.target.files
-    const reader = new FileReader()
-    reader.readAsText(file, 'UTF-8')
-    reader.onload = function (evt: any) {
-      updateContract(addresses[CHAIN_ID], {
-        abi: JSON.parse(evt.target.result),
-        source: 'custom',
-        name: file.name.split('.')[0],
-        errorMessage: null,
-      })
-    }
-    reader.onerror = function () {}
+  const eventsFromAbiSelectOptions = eventsFromAbi.map(efa => ({
+    label: efa,
+    value: efa,
+  }))
+  const getMappingFunctionsSelectOptions = (id: number) => {
+    const eventName = eventHandlers[id].signature.split('(')[0].replace(' ', '')
+    const newFnNameTemplate = `handle${eventName}`
+    const fnOccurrenceCount = mappingFunctionNames.filter(mfn =>
+      mfn.includes(newFnNameTemplate)
+    ).length
+    const newFnName =
+      fnOccurrenceCount === 0 ? newFnNameTemplate : `${newFnNameTemplate}${fnOccurrenceCount + 1}`
+
+    return [
+      {
+        label: 'Create new',
+        options: [{ label: newFnName, value: newFnName }],
+      },
+      {
+        label: 'Map to existing functions',
+        options: mappingFunctionNames.map(mfn => ({
+          label: mfn,
+          value: mfn,
+        })),
+      },
+    ]
   }
-
-  const handleSelectOptionChange =
-    (idx: number, key: 'signature' | 'handler') =>
-    (newValue: SingleValue<{ label: string; value: string }>) => {
-      setEventHandlers(prev =>
-        prev.map((p, i) => (i === idx ? { ...p, [key]: newValue!.value } : p))
-      )
-    }
-
-  const toggleEditing = (idx: number) =>
-    setEventHandlers(prev =>
-      prev.map((pe, pei) => (pei === idx ? { ...pe, editing: !pe.editing } : pe))
-    )
 
   const deleteEventHandler = (idx: number) =>
     setEventHandlers(prev => {
@@ -281,7 +220,37 @@ export const SelectedContract = (props: SelectedContractProps) => {
     }
   }
 
+  const toggleEditing = (idx: number) =>
+    setEventHandlers(prev =>
+      prev.map((pe, pei) => (pei === idx ? { ...pe, editing: !pe.editing } : pe))
+    )
+
+  const getHandleSelectOptionChangeFn =
+    (idx: number) =>
+    (key: 'signature' | 'handler') =>
+    (newValue: SingleValue<{ label: string; value: string }>) => {
+      setEventHandlers(prev =>
+        prev.map((p, i) => (i === idx ? { ...p, [key]: newValue!.value } : p))
+      )
+    }
+
+  const handleFileUploadChange = (e: any) => {
+    const [file] = e.target.files
+    const reader = new FileReader()
+    reader.readAsText(file, 'UTF-8')
+    reader.onload = function (evt: any) {
+      updateContract(addresses[CHAIN_ID], {
+        abi: JSON.parse(evt.target.result),
+        source: 'custom',
+        name: file.name.split('.')[0],
+        errorMessage: null,
+      })
+    }
+    reader.onerror = function () {}
+  }
+
   const showUploadButton = errorMessage || source === 'custom'
+  const codeSplittedByNewline = (subgraphMappings[DEFAULT_MAPPING] || '').split('\n')
 
   return (
     <Root>
@@ -332,47 +301,17 @@ export const SelectedContract = (props: SelectedContractProps) => {
           <span>Map</span>
         </div>
         {eventHandlers.map((eh, idx) => (
-          <EventRow key={idx}>
-            <Dropdown
-              customStyles={customStyles}
-              isDisabled={!eventHandlers[idx].editing}
-              value={eventsFromAbiSelectOptions.find(efa => efa.value === eh.signature)}
-              name="signature"
-              onChange={handleSelectOptionChange(idx, 'signature')}
-              options={eventsFromAbiSelectOptions}
-              placeholder="Choose event"
-            />
-            <Dropdown
-              customStyles={customStyles}
-              isDisabled={!eventHandlers[idx].signature || !eventHandlers[idx].editing}
-              isSearchable
-              components={{
-                IndicatorSeparator: () => null,
-                DropdownIndicator: () => null,
-                ...(fnExtractionLoading && { DropdownIndicator: () => null }),
-              }}
-              value={getMappingFunctionsSelectOptions(idx)
-                .reduce((acc: any[], { options }) => [...acc, ...options], [])
-                .find(mfs => mfs.value === eh.handler)}
-              name="handler"
-              onChange={handleSelectOptionChange(idx, 'handler')}
-              options={getMappingFunctionsSelectOptions(idx)}
-              isLoading={fnExtractionLoading}
-              formatGroupLabel={formatGroupLabel}
-              placeholder="Declare event handler function"
-            />
-            <ActionBtnsContainer editing={eh.editing}>
-              {eh.editing ? (
-                <Check size={16} color="#ffffff" onClick={() => saveEventHandler(idx)} />
-              ) : (
-                <>
-                  <Search size={16} />
-                  <Edit size={16} onClick={() => toggleEditing(idx)} />
-                  <Trash2 size={16} onClick={() => deleteEventHandler(idx)} />
-                </>
-              )}
-            </ActionBtnsContainer>
-          </EventRow>
+          <EventRow
+            key={idx}
+            handleSelectOptionChange={getHandleSelectOptionChangeFn(idx)}
+            eventsOptions={eventsFromAbiSelectOptions}
+            mappingFnsOptions={getMappingFunctionsSelectOptions(idx)}
+            fnExtractionLoading={fnExtractionLoading}
+            toggleEditing={() => toggleEditing(idx)}
+            saveEventHandler={() => saveEventHandler(idx)}
+            deleteEventHandler={() => deleteEventHandler(idx)}
+            eventHandler={eh}
+          />
         ))}
 
         <NewEventBtnContainer>
