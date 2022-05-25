@@ -104,7 +104,7 @@ export const newSubgraph = ({
   return id
 }
 
-export const useLocalSubgraph = (id?: string | null) => {
+export const useLocalSubgraph = (id?: string | null, tab?: string) => {
   const _update = useState({})[1]
   const subgraphRef = useRef<null | SubgraphData>(null)
   const [deployStatus, setDeployStatus] = useState<null | DeployStatus>(null)
@@ -180,7 +180,7 @@ export const useLocalSubgraph = (id?: string | null) => {
 
   useEffect(() => {
     subgraphRef.current = id ? (getStorageItem(id) as SubgraphData) : null
-  }, [id])
+  }, [id, tab])
 
   return {
     subgraph: subgraphRef.current,

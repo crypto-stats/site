@@ -87,7 +87,6 @@ const ContractInput = styled(InputField)`
 `
 
 const ADDRESS_REGEX = /^0x[0-9a-f]{40}$/i
-const MAPPING_FILENAME = 'mapping.ts'
 export type ExtendedContract = Contract & { errorMessage?: string }
 
 export const SubgraphConfig = () => {
@@ -213,11 +212,11 @@ export const SubgraphConfig = () => {
       }
     })
 
-    let mappingCode = subgraph!.mappings[MAPPING_FILENAME].concat(newFnsToInsert.join('m'))
+    let mappingCode = subgraph!.mappings[DEFAULT_MAPPING].concat(newFnsToInsert.join('m'))
     for (const newImport of newImports) {
       mappingCode = addImport(mappingCode, `contracts/${newImport.contract}`, newImport.event)
     }
-    saveMapping(MAPPING_FILENAME, mappingCode)
+    saveMapping(DEFAULT_MAPPING, mappingCode)
     saveContracts(contractsToSave)
   }
 

@@ -92,7 +92,6 @@ const PrimaryFill = styled(FillWithStyledResize)`
 `
 
 const SCHEMA_FILE_NAME = 'schema.graphql'
-const MAPPING_FILE_NAME = 'mapping.ts'
 
 const Editor: React.FC = () => {
   const router = useRouter()
@@ -100,7 +99,7 @@ const Editor: React.FC = () => {
   const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file')
   const [tab, setTab] = useState(SCHEMA_FILE_NAME)
 
-  const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId)
+  const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId, tab)
 
   const subgraphFiles: (TabState & { value: string })[] = subgraph
     ? [
@@ -117,7 +116,7 @@ const Editor: React.FC = () => {
           name: 'mapping',
           fileId: DEFAULT_MAPPING,
           open: true,
-          focused: tab === MAPPING_FILE_NAME,
+          focused: tab === DEFAULT_MAPPING,
           value: subgraph.mappings[DEFAULT_MAPPING],
         },
       ]
