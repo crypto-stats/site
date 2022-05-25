@@ -250,7 +250,6 @@ export const SelectedContract = (props: SelectedContractProps) => {
   }
 
   const showUploadButton = errorMessage || source === 'custom'
-  const codeSplittedByNewline = (subgraphMappings[DEFAULT_MAPPING] || '').split('\n')
 
   return (
     <Root>
