@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { ViewPort, Top, Fill, Bottom, BottomResizable, Right } from 'react-spaces'
+import { ViewPort, Top, Fill, Bottom, BottomResizable, Right, LeftResizable } from 'react-spaces'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import CodeEditor from 'components/CodeEditor'
@@ -19,6 +19,7 @@ import ImageLibrary from './ImageLibrary/ImageLibrary'
 import { useEditorState } from 'hooks/editor-state'
 import { WalletButton, Header, HeaderRight } from 'components/layouts'
 import { useGeneratedFiles } from 'hooks/useGeneratedFiles'
+import { SubgraphConfig } from '../SubgraphConfig'
 
 const CloseButton = styled.button`
   background: none;
@@ -50,7 +51,7 @@ const NewAdapterButton = styled.button`
 `
 
 const TabContainer = styled(Top)`
-  background-color: #2f2f2f;
+  background-color: #0f1012;
 
   & > .spaces-space > div {
     display: flex;
@@ -98,13 +99,13 @@ const Editor: React.FC = () => {
   const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file')
   const [tab, setTab] = useState(SCHEMA_FILE_NAME)
 
-  const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId)
+  const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId, tab)
 
   const subgraphFiles: (TabState & { value: string })[] = subgraph
     ? [
         {
           type: 'schema',
-          name: 'Schema',
+          name: 'schema',
           fileId: SCHEMA_FILE_NAME,
           open: true,
           focused: tab === SCHEMA_FILE_NAME,
@@ -112,10 +113,10 @@ const Editor: React.FC = () => {
         },
         {
           type: 'mapping',
-          name: 'Mapping',
+          name: 'mapping',
           fileId: DEFAULT_MAPPING,
           open: true,
-          focused: tab !== SCHEMA_FILE_NAME,
+          focused: tab === DEFAULT_MAPPING,
           value: subgraph.mappings[DEFAULT_MAPPING],
         },
       ]
@@ -162,7 +163,7 @@ const Editor: React.FC = () => {
         <CloseButton onClick={() => router.push('/discover')}>X Close</CloseButton>
 
         <HeaderRight>
-          <NewAdapterButton onClick={() => router.push('/editor/subgraph/new')}>
+          <NewAdapterButton onClick={() => setNewAdapterModalOpen(true)}>
             New Subgraph
           </NewAdapterButton>
           <WalletButton />
@@ -170,12 +171,22 @@ const Editor: React.FC = () => {
       </Header>
       <PrimaryFill side="right">
         <Fill>
+          <LeftResizable size={298} style={{ backgroundColor: '#303030' }}></LeftResizable>
           <FillWithStyledResize side="left">
             <Fill>
-              <TabContainer size={50}>
+              <TabContainer size={40}>
                 <Fill>
                   <Tabs
-                    openTabs={subgraphFiles}
+                    openTabs={[
+                      ...subgraphFiles,
+                      {
+                        name: 'config',
+                        type: 'config',
+                        fileId: 'config',
+                        open: true,
+                        focused: tab === 'config',
+                      },
+                    ]}
                     current={tab}
                     onSelect={fileId => setTab(fileId || SCHEMA_FILE_NAME)}
                   />
@@ -185,33 +196,42 @@ const Editor: React.FC = () => {
                 </Right>
               </TabContainer>
 
-              <Fill>
-                {subgraph ? (
-                  <CodeEditor
-                    defaultLanguage={focusedTab.type === 'schema' ? 'graphql' : 'typescript'}
-                    fileId={tab}
-                    defaultValue={focusedTab.value}
-                    extraLibs={extraLibs}
-                    onMount={(editor: any) => {
-                      editorRef.current = editor
-                    }}
-                    onChange={(code: string) =>
-                      tab === SCHEMA_FILE_NAME ? saveSchema(code) : saveMapping(tab, code)
-                    }
-                    onValidated={(_code: string, markers: any[]) => {
-                      setMarkers(markers)
+              <Fill scrollable={tab === 'config'}>
+                {(() => {
+                  if (subgraph) {
+                    if (tab !== 'config') {
+                      return (
+                        <CodeEditor
+                          defaultLanguage={focusedTab.type === 'schema' ? 'graphql' : 'typescript'}
+                          fileId={tab}
+                          defaultValue={focusedTab.value}
+                          extraLibs={extraLibs}
+                          onMount={(editor: any) => {
+                            editorRef.current = editor
+                          }}
+                          onChange={(code: string) =>
+                            tab === SCHEMA_FILE_NAME ? saveSchema(code) : saveMapping(tab, code)
+                          }
+                          onValidated={(_code: string, markers: any[]) => {
+                            setMarkers(markers)
 
-                      if (
-                        markers.filter((marker: any) => marker.severity === MarkerSeverity.Error)
-                          .length === 0
-                      ) {
-                        // Evaluate code
-                      }
-                    }}
-                  />
-                ) : (
-                  <div style={{ color: 'white' }}>Empty state</div>
-                )}
+                            if (
+                              markers.filter(
+                                (marker: any) => marker.severity === MarkerSeverity.Error
+                              ).length === 0
+                            ) {
+                              // Evaluate code
+                            }
+                          }}
+                        />
+                      )
+                    } else {
+                      return <SubgraphConfig />
+                    }
+                  } else {
+                    return <div style={{ color: 'white' }}>Empty state</div>
+                  }
+                })()}
               </Fill>
 
               {bottomView !== BottomView.NONE && (
@@ -280,8 +300,7 @@ const Editor: React.FC = () => {
               setNewAdapterModalOpen(false)
             },
           },
-        ]}
-      >
+        ]}>
         <NewAdapterForm
           onAdapterSelection={(_fileName: string) => {
             // setMappingFileName(fileName)
