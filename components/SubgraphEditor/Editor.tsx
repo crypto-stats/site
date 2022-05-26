@@ -136,7 +136,6 @@ const Editor: React.FC = () => {
       </LeftResizable>
       <PrimaryFill side="right">
         <Fill>
-          <LeftResizable size={298} style={{ backgroundColor: '#303030' }}></LeftResizable>
           <FillWithStyledResize side="left">
             <Fill>
               <TabContainer size={40}>
@@ -223,15 +222,17 @@ const Editor: React.FC = () => {
             </RightResizable> */}
           </FillWithStyledResize>
 
-          <PrimaryFooterContainer size={55}>
-            {subgraph ? (
-              <PrimaryFooter
-                markers={markers}
-                onMarkerClick={() => setBottomView(BottomView.ERRORS)}
-                onConsoleClick={() => setBottomView(BottomView.CONSOLE)}
-              />
-            ) : null}
-          </PrimaryFooterContainer>
+          {tab !== 'config' ? (
+            <PrimaryFooterContainer size={55}>
+              {subgraph ? (
+                <PrimaryFooter
+                  markers={markers}
+                  onMarkerClick={() => setBottomView(BottomView.ERRORS)}
+                  onConsoleClick={() => setBottomView(BottomView.CONSOLE)}
+                />
+              ) : null}
+            </PrimaryFooterContainer>
+          ) : null}
         </Fill>
       </PrimaryFill>
 

@@ -8,7 +8,14 @@ import WalletConnections, {
   setForceDisconnect,
 } from './WalletConnections'
 
-const ConnectionButton: React.FC = ({ children }) => {
+interface ConnectionButtonProps {
+  children: React.ReactNode
+  className?: string
+}
+
+const ConnectionButton = (props: ConnectionButtonProps) => {
+  const { children, className } = props
+
   const [modalOpen, setModalOpen] = useState(false)
   const { active, account, deactivate, activate } = useWeb3React()
 
@@ -29,7 +36,7 @@ const ConnectionButton: React.FC = ({ children }) => {
 
   return (
     <Fragment>
-      <Button variant="outline" onClick={() => setModalOpen(true)}>
+      <Button className={className} variant="outline" onClick={() => setModalOpen(true)}>
         {children}
       </Button>
 
@@ -37,8 +44,7 @@ const ConnectionButton: React.FC = ({ children }) => {
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         title="Connect Wallet"
-        buttons={[{ label: 'Close', onClick: () => setModalOpen(false) }]}
-      >
+        buttons={[{ label: 'Close', onClick: () => setModalOpen(false) }]}>
         {account ? (
           <div>
             <div>Connected to {account}</div>

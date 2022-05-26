@@ -7,6 +7,18 @@ import Button from 'components/Button'
 import { MarkerSeverity } from './types'
 import PublishModal from './PublishModal'
 
+const Root = styled(SubgraphHeader)`
+  .wallet-connect-btn {
+    text-transform: uppercase;
+    background-color: inherit;
+    color: var(--color-white);
+
+    &:hover {
+      background-color: var(--color-primary);
+    }
+  }
+`
+
 const SubgraphTitle = styled.div`
   color: #d3d3d3;
   margin: 24px 8px;
@@ -90,7 +102,7 @@ export const PrimaryHeader = (props: PrimaryHeaderProps) => {
   }
 
   return (
-    <SubgraphHeader size={80} order={1}>
+    <Root size={80} order={1}>
       <SubgraphTitle onClick={() => setEditingTitle(prev => !prev)}>
         {!editingTitle ? (
           <h2>{titleValue}</h2>
@@ -105,7 +117,7 @@ export const PrimaryHeader = (props: PrimaryHeaderProps) => {
       </SubgraphTitle>
 
       <HeaderRight>
-        <WalletButton />
+        <WalletButton className="wallet-connect-btn" />
         {subgraph && (
           <PublishButton
             onClick={() => setShowModal(true)}
@@ -124,6 +136,6 @@ export const PrimaryHeader = (props: PrimaryHeaderProps) => {
           editorRef={editorRef}
         />
       )}
-    </SubgraphHeader>
+    </Root>
   )
 }
