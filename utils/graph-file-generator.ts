@@ -20,7 +20,6 @@ export async function generateSchemaFile(schemaCode: string) {
   ])
 
   const ast = immutable.fromJS(gql.parse(schemaCode))
-  console.log(ast)
 
   const generator = new SchemaCodeGenerator({ ast })
 

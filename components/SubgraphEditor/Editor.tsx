@@ -18,9 +18,10 @@ import ImageLibrary from './ImageLibrary/ImageLibrary'
 import { useEditorState } from 'hooks/editor-state'
 import { useGeneratedFiles } from 'hooks/useGeneratedFiles'
 import { Title, SubgraphList, Footer } from './LeftSide'
+import { SubgraphConfig } from '../SubgraphConfig'
 
 const TabContainer = styled(Top)`
-  background-color: #2f2f2f;
+  background-color: #0f1012;
 
   & > .spaces-space > div {
     display: flex;
@@ -67,13 +68,13 @@ const Editor: React.FC = () => {
   const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file')
   const [tab, setTab] = useState(SCHEMA_FILE_NAME)
 
-  const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId)
+  const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId, tab)
 
   const subgraphFiles: (TabState & { value: string })[] = subgraph
     ? [
         {
           type: 'schema',
-          name: 'Schema',
+          name: 'schema',
           fileId: SCHEMA_FILE_NAME,
           open: true,
           focused: tab === SCHEMA_FILE_NAME,
@@ -81,10 +82,10 @@ const Editor: React.FC = () => {
         },
         {
           type: 'mapping',
-          name: 'Mapping',
+          name: 'mapping',
           fileId: DEFAULT_MAPPING,
           open: true,
-          focused: tab !== SCHEMA_FILE_NAME,
+          focused: tab === DEFAULT_MAPPING,
           value: subgraph.mappings[DEFAULT_MAPPING],
         },
       ]
@@ -135,12 +136,22 @@ const Editor: React.FC = () => {
       </LeftResizable>
       <PrimaryFill side="right">
         <Fill>
+          <LeftResizable size={298} style={{ backgroundColor: '#303030' }}></LeftResizable>
           <FillWithStyledResize side="left">
             <Fill>
-              <TabContainer size={50}>
+              <TabContainer size={40}>
                 <Fill>
                   <Tabs
-                    openTabs={subgraphFiles}
+                    openTabs={[
+                      ...subgraphFiles,
+                      {
+                        name: 'config',
+                        type: 'config',
+                        fileId: 'config',
+                        open: true,
+                        focused: tab === 'config',
+                      },
+                    ]}
                     current={tab}
                     onSelect={fileId => setTab(fileId || SCHEMA_FILE_NAME)}
                   />
@@ -150,33 +161,42 @@ const Editor: React.FC = () => {
                 </Right>
               </TabContainer>
 
-              <Fill>
-                {subgraph ? (
-                  <CodeEditor
-                    defaultLanguage={focusedTab.type === 'schema' ? 'graphql' : 'typescript'}
-                    fileId={tab}
-                    defaultValue={focusedTab.value}
-                    extraLibs={extraLibs}
-                    onMount={(editor: any) => {
-                      editorRef.current = editor
-                    }}
-                    onChange={(code: string) =>
-                      tab === SCHEMA_FILE_NAME ? saveSchema(code) : saveMapping(tab, code)
-                    }
-                    onValidated={(_code: string, markers: any[]) => {
-                      setMarkers(markers)
+              <Fill scrollable={tab === 'config'}>
+                {(() => {
+                  if (subgraph) {
+                    if (tab !== 'config') {
+                      return (
+                        <CodeEditor
+                          defaultLanguage={focusedTab.type === 'schema' ? 'graphql' : 'typescript'}
+                          fileId={tab}
+                          defaultValue={focusedTab.value}
+                          extraLibs={extraLibs}
+                          onMount={(editor: any) => {
+                            editorRef.current = editor
+                          }}
+                          onChange={(code: string) =>
+                            tab === SCHEMA_FILE_NAME ? saveSchema(code) : saveMapping(tab, code)
+                          }
+                          onValidated={(_code: string, markers: any[]) => {
+                            setMarkers(markers)
 
-                      if (
-                        markers.filter((marker: any) => marker.severity === MarkerSeverity.Error)
-                          .length === 0
-                      ) {
-                        // Evaluate code
-                      }
-                    }}
-                  />
-                ) : (
-                  <div style={{ color: 'white' }}>Empty state</div>
-                )}
+                            if (
+                              markers.filter(
+                                (marker: any) => marker.severity === MarkerSeverity.Error
+                              ).length === 0
+                            ) {
+                              // Evaluate code
+                            }
+                          }}
+                        />
+                      )
+                    } else {
+                      return <SubgraphConfig />
+                    }
+                  } else {
+                    return <div style={{ color: 'white' }}>Empty state</div>
+                  }
+                })()}
               </Fill>
 
               {bottomView !== BottomView.NONE && (

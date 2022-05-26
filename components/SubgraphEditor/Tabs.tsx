@@ -9,13 +9,28 @@ const TabRow = styled.div`
 
 const Tab = styled.div<{ $focused: boolean }>`
   display: flex;
+  justify-content: center;
   font-size: 16px;
   font-weight: medium;
   color: #ffffff;
-  background: #212121;
-  align-items: center;
+  position: relative;
+  margin-top: -2px;
+  margin-right: -5px;
   padding: 0 16px;
-  opacity: ${props => (props.$focused ? '1' : 0.5)};
+  border-bottom: 42px solid ${({ $focused }) => ($focused ? '#212121' : '#4b555d')};
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+  height: 0;
+  width: 100px;
+  z-index: ${({ $focused }) => ($focused ? 1 : 0)};
+
+  .tab-text {
+    position: absolute;
+    top: 15px;
+    font-size: 14px;
+  }
 
   &:hover {
     cursor: pointer;
@@ -40,7 +55,7 @@ const CloseButton = styled.button`
 `
 
 export interface TabState {
-  type: 'schema' | 'mapping'
+  type: 'schema' | 'mapping' | 'config'
   name?: string
   fileId?: string | null
   open: boolean
@@ -59,7 +74,7 @@ export const Tabs = ({ onClose, openTabs, onSelect }: TabsProps) => {
     <TabRow>
       {openTabs.map(ot => (
         <Tab key={ot.fileId} $focused={ot.focused} onClick={() => onSelect(ot.fileId!)}>
-          <div>{ot.name || ot.fileId || 'File'}</div>
+          <div className="tab-text">{ot.name || ot.fileId || 'File'}</div>
           {ot.focused && onClose && (
             <CloseButton onClick={() => onClose(ot.fileId!)}>
               <CloseIcon />

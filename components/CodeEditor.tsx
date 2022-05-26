@@ -87,6 +87,7 @@ const Editor: React.FC<EditorProps> = ({
       theme="vs-dark"
       defaultLanguage={defaultLanguage}
       defaultValue={defaultValue}
+      value={defaultValue}
       path={fileId}
       options={{
         tabSize: 2,

@@ -1,27 +1,34 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { useRouter } from 'next/router'
+import { Info } from 'lucide-react'
 
 import InputField from 'components/InputField'
-import { WalletButton, Header, HeaderRight } from 'components/layouts'
 import { InputLabel } from './InputLabel'
-import { Contract, useLocalSubgraph, DEFAULT_MAPPING, newSubgraph, SubgraphData } from 'hooks/local-subgraphs'
+import {
+  Contract,
+  ContractEvent,
+  useLocalSubgraph,
+  DEFAULT_MAPPING,
+  SubgraphData,
+} from 'hooks/local-subgraphs'
 import { useEditorState } from 'hooks/editor-state'
 import { SelectedContract } from './SelectedContract'
-import Button from '../Button'
+import { Dropdown } from '../atoms'
 import { addImport } from 'utils/source-code-utils'
 import { generateContractFile, generateSchemaFile } from 'utils/graph-file-generator'
 
 const Root = styled.div`
-  background-color: '#2F3237';
   min-height: 100vh;
+  padding-bottom: 60px;
+  background-color: #212121;
 `
 
 const PrimaryFill = styled.section`
   max-width: 700px;
   display: flex;
   flex-direction: column;
-  margin: 64px auto;
+  padding: 32px;
+  /* margin: 0px auto; */
   @media (max-width: 700px) {
     & > * {
       display: none;
@@ -42,12 +49,20 @@ const PrimaryFill = styled.section`
 `
 
 const Title = styled.h3`
-  font-size: 24px;
+  font-size: 32px;
   font-weight: bold;
   color: #ffffff;
   max-width: 250px;
-  align-self: center;
-  text-align: center;
+  margin: 0px;
+  margin-bottom: 24px;
+`
+
+const InfoMsg = styled.span`
+  display: inline-flex;
+  gap: 12px;
+  align-items: center;
+  color: var(--color-white);
+  font-size: 12px;
 `
 
 const ContractInput = styled(InputField)`
@@ -56,46 +71,28 @@ const ContractInput = styled(InputField)`
   background-position-x: calc(100% - 20px);
   width: 100%;
   color: #b0b0b0;
-  background-color: #252528;
+  background-color: #2a2d30;
   border: solid 1px #181818;
   box-sizing: border-box;
-  padding: 20px;
+  padding: 10px;
   padding-right: 55px;
   border-radius: 4px;
-  margin: 16px 0;
+  margin: 4px 0;
+  font-size: 14px;
 
   &:focus-visible {
     outline: 0;
-    border-color: white;
-  }
-`
-
-const ButtonsContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-  > .exit {
-    padding: 10px 0px;
-    background-color: #37373c;
-    color: #8e99ff;
-    border: 2px solid #8e99ff;
-  }
-
-  > .save {
-    color: var(--color-white);
-    background-color: #2e53e9;
-    border: 1px solid #172e8b;
+    border-color: #2684ff;
   }
 `
 
 const ADDRESS_REGEX = /^0x[0-9a-f]{40}$/i
-const MAPPING_FILENAME = 'mapping.ts'
 export type ExtendedContract = Contract & { errorMessage?: string }
 
-export const NewSubgraph = () => {
+export const SubgraphConfig = () => {
   const CHAIN_ID = '1'
 
-  const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file')
+  const [subgraphId] = useEditorState<string | null>('subgraph-file')
   const { subgraph, saveContracts, saveMapping } = useLocalSubgraph(subgraphId)
   const [contractAddress, setContractAddress] = useState('')
   const [started, setStarted] = useState(false)
@@ -104,14 +101,12 @@ export const NewSubgraph = () => {
   )
 
   const [mappingFunctionNames, setMappingFunctionNames] = useState<string[]>([])
-  const router = useRouter()
   const [fnExtractionLoading, setFnExtractionLoading] = useState(false)
   useEffect(() => {
     const alreadySelected = selectedContracts.find(sc => sc.addresses[CHAIN_ID] === contractAddress)
     if (ADDRESS_REGEX.test(contractAddress)) {
       if (!alreadySelected) {
         setSelectedContracts(prev => [
-          ...prev,
           {
             name: '',
             addresses: { [CHAIN_ID]: contractAddress },
@@ -120,13 +115,21 @@ export const NewSubgraph = () => {
             source: 'etherscan',
             events: [],
           },
+          ...prev,
         ])
         setContractAddress('')
+        saveContracts(selectedContracts)
       } else {
         alert(`Contract ${contractAddress} already added`)
       }
     }
   }, [contractAddress])
+
+  useEffect(() => {
+    if (subgraph) {
+      saveContracts(selectedContracts)
+    }
+  }, [selectedContracts])
 
   const loadFunctionsFromMappingCode = async (subgraph: SubgraphData) => {
     setFnExtractionLoading(true)
@@ -179,74 +182,80 @@ export const NewSubgraph = () => {
   const deleteSelectedContract = (address: string) =>
     setSelectedContracts(prev => prev.filter(p => p.addresses[CHAIN_ID] !== address))
 
-  const handleOnExit = () => {
-    if (confirm('Are you sure you wanna exit without saving?')) {
-      return router.back()
-    }
-  }
-
-  const save = () => {
-    let id = subgraphId
+  const saveEvent = (contractAddress: string, newEvent: ContractEvent, eventIndex: number) => {
     const newFnsToInsert: string[] = []
     const newImports: { event: string; contract: string }[] = []
-    const functionNames = [...mappingFunctionNames]
 
-    const contractsToSave = selectedContracts.map(sc => ({
-      ...sc,
-      events: sc.events.map((sce) => {
-        if (sce.handler === 'newFunction') {
-          const eventName = sce.signature.split('(')[0]
-          let newFnName = `handle${eventName}`
-
-          let i = 0
-          while (functionNames.indexOf(newFnName) !== -1) {
-            i += 1
-            newFnName = `handle${eventName}${i}`
+    const contractsToSave = selectedContracts.map(sc => {
+      if (sc.addresses[CHAIN_ID] === contractAddress) {
+        const newEvents = sc.events.map((sce, internalEventIndex) => {
+          if (internalEventIndex === eventIndex) {
+            if (!mappingFunctionNames.includes(newEvent.handler)) {
+              const eventName = newEvent.signature.split('(')[0]
+              newFnsToInsert.push(
+                `\nexport function ${newEvent.handler}(event: ${eventName}):void {}\n`
+              )
+              newImports.push({ event: eventName, contract: sc.name })
+            }
+            return newEvent
+          } else {
+            return sce
           }
-          functionNames.push(newFnName)
+        })
 
-          newFnsToInsert.push(`\nexport function ${newFnName}(event: ${eventName}): void {}\n`)
-          newImports.push({ event: eventName, contract: sc.name })
-          return { ...sce, handler: newFnName }
+        return {
+          ...sc,
+          events: newEvents,
         }
-
-        return sce
-      }),
-    }))
-
-    if (subgraph) {
-      let mappingCode = subgraph.mappings[MAPPING_FILENAME].concat(newFnsToInsert.join('m'))
-      for (const newImport of newImports) {
-        mappingCode = addImport(mappingCode, `contracts/${newImport.contract}`, newImport.event)
+      } else {
+        return sc
       }
+    })
 
-      saveMapping(MAPPING_FILENAME, mappingCode)
-      saveContracts(contractsToSave)
-    } else {
-      id = newSubgraph({ contracts: contractsToSave })
+    let mappingCode = subgraph!.mappings[DEFAULT_MAPPING].concat(newFnsToInsert.join('m'))
+    for (const newImport of newImports) {
+      mappingCode = addImport(mappingCode, `contracts/${newImport.contract}`, newImport.event)
     }
-    setSubgraphId(id)
-    router.push('/editor/subgraph')
+    saveMapping(DEFAULT_MAPPING, mappingCode)
+    saveContracts(contractsToSave)
   }
 
   return (
-    <Root style={{ background: '#2F3237' }}>
-      <Header size={64} order={1}>
-        <HeaderRight>
-          <WalletButton />
-        </HeaderRight>
-      </Header>
+    <Root>
       <PrimaryFill style={{ width: 610 }}>
-        <Title>Configure your contracts & events</Title>
-
-        <InputLabel>Protocols</InputLabel>
+        <Title>Configuration</Title>
+        <InfoMsg>
+          <Info size={16} />
+          Configure the network, contracts and event handlers you want to work with.
+        </InfoMsg>
+        <div style={{ margin: '32px 0px' }}>
+          <InputLabel>Network</InputLabel>
+          <Dropdown
+            components={{ DropdownIndicator: () => null }}
+            openMenuOnClick={false}
+            openMenuOnFocus={false}
+            menuIsOpen={false}
+            inputValue={'Ethereum mainnet'}
+            customStyles={{
+              valueContainer: {
+                backgroundColor: '#2a2d30',
+                padding: 10,
+                borderRadius: 4,
+                fontSize: 14,
+                '&:hover': { cursor: 'not-allowed' },
+              },
+            }}
+            // options={[{ label: 'Ethereum mainnet', value: CHAIN_ID }]}
+          />
+        </div>
+        <Title>Contracts</Title>
+        <InputLabel>Add contract</InputLabel>
         <ContractInput
           placeholder="Paste here the contract address"
           name="contractAddress"
           value={contractAddress}
           onChange={setContractAddress}
         />
-
         {selectedContracts.map(sc => (
           <SelectedContract
             key={sc.addresses[CHAIN_ID]}
@@ -255,21 +264,10 @@ export const NewSubgraph = () => {
             deleteContract={deleteSelectedContract}
             mappingFunctionNames={mappingFunctionNames}
             fnExtractionLoading={fnExtractionLoading}
+            saveEvent={saveEvent}
           />
         ))}
-
-        <ButtonsContainer>
-          <Button fullWidth={false} className="exit" onClick={handleOnExit}>
-            Exit
-          </Button>
-
-          <Button fullWidth={false} variant="outline" className="save" onClick={save}>
-            Save
-          </Button>
-        </ButtonsContainer>
       </PrimaryFill>
     </Root>
   )
 }
-
-export default NewSubgraph
