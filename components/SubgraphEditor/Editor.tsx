@@ -1,20 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { ViewPort, Top, Fill, Bottom, BottomResizable, Right, LeftResizable } from 'react-spaces'
 import styled from 'styled-components'
-import { usePlausible } from 'next-plausible'
 import CodeEditor from 'components/CodeEditor'
-import { useLocalSubgraph, newSubgraph, DEFAULT_MAPPING } from 'hooks/local-subgraphs'
+import { useLocalSubgraph, DEFAULT_MAPPING } from 'hooks/local-subgraphs'
 import PrimaryFooter from './PrimaryFooter'
 import { PrimaryHeader } from './PrimaryHeader'
 import { Tabs, TabState } from './Tabs'
-import EditorModal from './EditorModal'
-import NewAdapterForm from './NewAdapterForm'
 import { MarkerSeverity } from './types'
 import ErrorPanel from './ErrorPanel'
 import EditorControls from './EditorControls'
 import Console from './Console'
 import BottomTitleBar, { BottomView } from './BottomTitleBar'
-import ImageLibrary from './ImageLibrary/ImageLibrary'
 import { useEditorState } from 'hooks/editor-state'
 import { useGeneratedFiles } from 'hooks/useGeneratedFiles'
 import { Title, SubgraphList, Footer } from './LeftSide'
@@ -65,7 +61,6 @@ const PrimaryFill = styled(FillWithStyledResize)`
 const SCHEMA_FILE_NAME = 'schema.graphql'
 
 const Editor: React.FC = () => {
-  const plausible = usePlausible()
   const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file')
   const [tab, setTab] = useState(SCHEMA_FILE_NAME)
 
@@ -95,28 +90,19 @@ const Editor: React.FC = () => {
   const focusedTab = subgraphFiles.find(sgf => sgf.focused)!
 
   const [started, setStarted] = useState(false)
-  const [newAdapterModalOpen, setNewAdapterModalOpen] = useState(false)
   const [markers, setMarkers] = useState<any[]>([])
-  const [imageLibraryOpen, setImageLibraryOpen] = useState(false)
   const [bottomView, setBottomView] = useState(BottomView.NONE)
   const editorRef = useRef<any>(null)
 
   // Generating files is computationally expensive, don't waste resources if the schema tab is open
   const extraLibs = useGeneratedFiles(focusedTab?.type === 'schema' ? null : subgraph)
 
+  // TODO are we using this?
   // useEffect(() => {
-  //   if (router.query.adapter) {
-  //     const { adapter, ...query } = router.query
-  //     setFileName(adapter as string)
-  //     router.replace({ pathname: '/editor', query })
+  //   if (imageLibraryOpen) {
+  //     plausible('open-image-library')
   //   }
-  // }, [router.query])
-
-  useEffect(() => {
-    if (imageLibraryOpen) {
-      plausible('open-image-library')
-    }
-  }, [imageLibraryOpen])
+  // }, [imageLibraryOpen])
 
   useEffect(() => {
     setStarted(true)
@@ -233,43 +219,6 @@ const Editor: React.FC = () => {
           )}
         </Fill>
       </PrimaryFill>
-
-      <ImageLibrary
-        open={imageLibraryOpen}
-        close={() => setImageLibraryOpen(false)}
-        editor={editorRef.current}
-      />
-
-      <EditorModal
-        isOpen={newAdapterModalOpen}
-        onClose={() => setNewAdapterModalOpen(false)}
-        title="Create new adapter"
-        buttons={[
-          {
-            label: 'Return to Editor',
-            onClick: () => setNewAdapterModalOpen(false),
-          },
-          {
-            label: 'Create Blank Subgraph',
-            onClick: () => {
-              plausible('new-subgraph', {
-                props: {
-                  template: 'blank',
-                },
-              })
-
-              setSubgraphId(newSubgraph())
-              setNewAdapterModalOpen(false)
-            },
-          },
-        ]}>
-        <NewAdapterForm
-          onAdapterSelection={(_fileName: string) => {
-            // setMappingFileName(fileName)
-            setNewAdapterModalOpen(false)
-          }}
-        />
-      </EditorModal>
     </ViewPort>
   )
 }
