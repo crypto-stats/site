@@ -100,9 +100,14 @@ export const SubgraphList: React.FC<FileListProps> = ({ selected, onSelected, fi
   const toggleProjectsExpanded = (type: 'local' | 'wallet') =>
     setProjectsExpanded(prev => ({ ...prev, [type]: !prev[type] }))
 
+  const handleNewSubgraphBtnClicked = () => {
+    const newSubgraphId = newSubgraph()
+    onSelected(newSubgraphId)
+  }
+
   return (
     <Container>
-      <NewSubgraphButton onClick={() => newSubgraph()}>
+      <NewSubgraphButton onClick={handleNewSubgraphBtnClicked}>
         <Plus size={16} /> New Subgraph
       </NewSubgraphButton>
       <Label>
