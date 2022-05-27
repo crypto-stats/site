@@ -85,7 +85,7 @@ interface NewSubgraphParams {
 
 export const newSubgraph = ({
   mapping = '',
-  schema = '',
+  schema = 'type Character {name: String!}',
   publications = [],
   contracts = [],
 }: NewSubgraphParams = {}) => {
@@ -180,6 +180,7 @@ export const useLocalSubgraph = (id?: string | null, tab?: string) => {
 
   useEffect(() => {
     subgraphRef.current = id ? (getStorageItem(id) as SubgraphData) : null
+    _update({})
   }, [id, tab])
 
   return {
