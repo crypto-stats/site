@@ -55,7 +55,6 @@ const setStorageItem = (id: string, value: any) => {
 
 const removeStorageItem = (id: string) => {
   const subgraphs = getStorage()
-  console.log({ id })
 
   window.localStorage.setItem(
     storageKey,
