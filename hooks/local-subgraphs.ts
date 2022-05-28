@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { DeployStatus, deploySubgraph } from 'utils/deploy-subgraph'
+import { setEditorState } from './editor-state'
 export { STATUS } from 'utils/deploy-subgraph'
 
 const storageKey = 'localSubgraphs'
@@ -52,11 +53,29 @@ const setStorageItem = (id: string, value: any) => {
   updateAdapterLists()
 }
 
+const removeStorageItem = (id: string) => {
+  const subgraphs = getStorage()
+  console.log({ id })
+
+  window.localStorage.setItem(
+    storageKey,
+    JSON.stringify(
+      Object.entries(subgraphs).reduce(
+        (acc, [key, sg]) => (key === id ? acc : { ...acc, [key]: sg }),
+        {}
+      )
+    )
+  )
+  setEditorState({ key: 'subgraph-file', value: null, storageKey: 'editor-state' })
+
+  // localStorage.removeItem(id)
+}
+
 const adapterListUpdaters: Function[] = []
 
 const updateAdapterLists = () => adapterListUpdaters.map(updater => updater())
 
-export const useSubgraphList = (): SubgraphWithID[] => {
+export const useSubgraphList = (refreshId?: string): SubgraphWithID[] => {
   const _update = useState({})[1]
   const update = () => _update({})
 
@@ -65,6 +84,10 @@ export const useSubgraphList = (): SubgraphWithID[] => {
 
     return () => void adapterListUpdaters.splice(adapterListUpdaters.indexOf(update), 1)
   }, [])
+
+  useEffect(() => {
+    update()
+  }, [refreshId])
 
   const list = Object.entries(getStorage()).map(([id, adapter]: [string, any]) => ({
     ...adapter,
@@ -102,6 +125,10 @@ export const newSubgraph = ({
 
   setStorageItem(id, subgraph)
   return id
+}
+
+export const deleteSubgraph = (id: string) => {
+  removeStorageItem(id)
 }
 
 export const useLocalSubgraph = (id?: string | null, tab?: string) => {
