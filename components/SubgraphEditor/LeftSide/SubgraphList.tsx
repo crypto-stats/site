@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Plus, ChevronDown, ChevronRight } from 'lucide-react'
+import { Plus, ChevronDown, ChevronRight, Trash2 } from 'lucide-react'
 
 import { LucideIcon } from 'components/layouts'
-import { useSubgraphList, newSubgraph } from 'hooks/local-subgraphs'
+import { useSubgraphList, newSubgraph, deleteSubgraph } from 'hooks/local-subgraphs'
+import { usePrevious } from 'hooks'
 
 const Container = styled.div`
   display: flex;
@@ -48,14 +49,21 @@ const Label = styled.div`
 `
 
 const List = styled.ul`
-  padding: 0;
+  padding: 0px;
   margin: 0;
+  font-size: 12px;
+
+  > .empty-state {
+    color: #eeeeee;
+    font-style: italic;
+    padding: 2px 32px;
+  }
 `
 
 const ListItem = styled.li<{ $selected?: boolean }>`
+  position: relative;
   display: inline-flex;
   justify-content: space-between;
-  font-size: 12px;
   color: ${({ $selected }) => ($selected ? 'var(--color-white)' : '#eeeeee')};
   background-color: ${({ $selected }) => ($selected ? 'var(--color-primary)' : 'inherit')};
   letter-spacing: 0;
@@ -77,17 +85,39 @@ const ListItem = styled.li<{ $selected?: boolean }>`
   > .name {
     font-weight: ${({ $selected }) => ($selected ? 'bold' : '')};
   }
+
+  > .delete-subgraph {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+
+    &:hover {
+      cursor: not-allowed;
+    }
+  }
 `
 
 interface FileListProps {
   selected?: string | null
-  onSelected: (id: string) => void
+  onSelected: (id: string | null) => void
   filter?: string
 }
 
 export const SubgraphList: React.FC<FileListProps> = ({ selected, onSelected, filter }) => {
-  let subgraphs = useSubgraphList()
+  const [deleteId, setDeleteId] = useState('')
+  let subgraphs = useSubgraphList(deleteId)
+  const prevSubgraphs = usePrevious(subgraphs)
   const [projectsExpanded, setProjectsExpanded] = useState({ local: true, wallet: false })
+
+  useEffect(() => {
+    if (subgraphs.length !== prevSubgraphs?.length) {
+      if (subgraphs.length > prevSubgraphs?.length) {
+        onSelected(subgraphs[subgraphs.length - 1].id)
+      } else if (!subgraphs.find(sg => sg.id === selected)) {
+        onSelected(subgraphs.length - 1 >= 0 ? subgraphs[subgraphs.length - 1].id : null)
+      }
+    }
+  }, [subgraphs, prevSubgraphs])
 
   if (filter && filter.length > 0) {
     subgraphs = subgraphs.filter(
@@ -103,6 +133,11 @@ export const SubgraphList: React.FC<FileListProps> = ({ selected, onSelected, fi
   const handleNewSubgraphBtnClicked = () => {
     const newSubgraphId = newSubgraph()
     onSelected(newSubgraphId)
+  }
+
+  const handleSubgraphDeleted = (id: string) => {
+    deleteSubgraph(id)
+    setDeleteId(`deleted-${id}`)
   }
 
   return (
@@ -122,15 +157,26 @@ export const SubgraphList: React.FC<FileListProps> = ({ selected, onSelected, fi
 
       {projectsExpanded.local ? (
         <List>
-          {subgraphs.map(subgraph => (
-            <ListItem
-              $selected={selected === subgraph.id}
-              key={subgraph.id}
-              onClick={() => onSelected(subgraph.id)}>
-              <span className="name">{subgraph.name}</span>
-              <span>{subgraph.publications.length > 0 ? 'published' : 'draft'} </span>
-            </ListItem>
-          ))}
+          {subgraphs.length > 0 ? (
+            subgraphs.map(subgraph => (
+              <ListItem
+                $selected={selected === subgraph.id}
+                key={subgraph.id}
+                onClick={() => onSelected(subgraph.id)}>
+                <span className="name">{subgraph.name}</span>
+                <span>{subgraph.publications.length > 0 ? 'published' : 'draft'} </span>
+                {selected === subgraph.id ? (
+                  <Trash2
+                    className="delete-subgraph"
+                    size={12}
+                    onClick={() => handleSubgraphDeleted(subgraph.id)}
+                  />
+                ) : null}
+              </ListItem>
+            ))
+          ) : (
+            <span className="empty-state">Pretty empty hu?</span>
+          )}
         </List>
       ) : null}
     </Container>
