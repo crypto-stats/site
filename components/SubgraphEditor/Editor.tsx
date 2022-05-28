@@ -61,7 +61,7 @@ const PrimaryFill = styled(FillWithStyledResize)`
 const SCHEMA_FILE_NAME = 'schema.graphql'
 
 const Editor: React.FC = () => {
-  const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file')
+  const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file' || null)
   const [tab, setTab] = useState(SCHEMA_FILE_NAME)
 
   const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId, tab)
@@ -103,6 +103,12 @@ const Editor: React.FC = () => {
   //     plausible('open-image-library')
   //   }
   // }, [imageLibraryOpen])
+
+  useEffect(() => {
+    if (!subgraph) {
+      editorRef.current = null
+    }
+  }, [subgraph])
 
   useEffect(() => {
     setStarted(true)
