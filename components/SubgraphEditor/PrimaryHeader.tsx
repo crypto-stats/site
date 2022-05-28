@@ -103,18 +103,20 @@ export const PrimaryHeader = (props: PrimaryHeaderProps) => {
 
   return (
     <Root size={80} order={1}>
-      <SubgraphTitle onClick={() => setEditingTitle(prev => !prev)}>
-        {!editingTitle ? (
-          <h2>{titleValue}</h2>
-        ) : (
-          <input
-            ref={ref}
-            autoFocus
-            value={titleValue}
-            onChange={e => update({ ...subgraph!, name: e.target.value })}
-          />
-        )}
-      </SubgraphTitle>
+      {subgraph ? (
+        <SubgraphTitle onClick={() => setEditingTitle(prev => !prev)}>
+          {!editingTitle ? (
+            <h2>{titleValue}</h2>
+          ) : (
+            <input
+              ref={ref}
+              autoFocus
+              value={titleValue}
+              onChange={e => update({ ...subgraph!, name: e.target.value })}
+            />
+          )}
+        </SubgraphTitle>
+      ) : null}
 
       <HeaderRight>
         <WalletButton className="wallet-connect-btn" />
