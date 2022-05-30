@@ -5,14 +5,18 @@ import CloseIcon from 'components/CloseIcon'
 import { useConsole } from 'hooks/console'
 
 const Header = styled(Top)`
-  background: #2f2f2f;
   border-bottom: solid 1px #4a4a4d;
   border-top: solid 1px #4a4a4d;
   display: flex;
-  padding: 0 4px;
+  padding: 0 20px;
   align-items: center;
   justify-content: space-between;
   color: #ffffff;
+
+  .title {
+    font-size: 12px;
+    text-decoration: underline;
+  }
 `
 
 const CloseButton = styled.button`
@@ -20,8 +24,8 @@ const CloseButton = styled.button`
   background: transparent;
   margin-left: 10px;
   cursor: pointer;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   padding: 0;
 
   & svg {
@@ -33,15 +37,14 @@ const CloseButton = styled.button`
 `
 
 const ClearButton = styled.button`
-  height: 20px;
-  padding: 3px 0 2px;
+  /* height: 16px; */
+  padding: 3px 8px;
   border-radius: 4px;
   border: solid 1px #ffffff;
   background-color: transparent;
-  margin: 16px 0 6px;
   color: white;
-  padding: 2px 16px;
   margin-left: 8px;
+  font-size: 12px;
 
   &:hover {
     background: #363636;
@@ -63,9 +66,9 @@ const BottomTitleBar: React.FC<BottomTitleBarProps> = ({ view, onSetView }) => {
   const { clear: clearConsole } = useConsole()
 
   return (
-    <Header size={40}>
+    <Header size={30}>
       <div>
-        {view === BottomView.ERRORS ? 'Errors' : 'Console'}
+        <span className="title">{view === BottomView.ERRORS ? 'Errors' : 'Console'}</span>
         {view === BottomView.CONSOLE && <ClearButton onClick={clearConsole}>Clear</ClearButton>}
       </div>
 

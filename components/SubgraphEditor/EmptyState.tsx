@@ -1,66 +1,61 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const OuterContainer = styled.div`
-  width: 100%;
+const Root = styled.div`
+  max-width: 600px;
+  padding: 40px;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  color: #ffffff;
-  margin: 20px;
-  max-width: 400px;
-  text-align: center;
-`
-
-const GM = styled.h3`
-  font-size: 24px;
-  font-weight: bold;
-`
-
-const P = styled.p<{ bold?: boolean }>`
-  font-size: 18px;
-  ${({ bold }) => bold && 'font-weight: bold;'}
-`
-
-const Button = styled.button`
-  border: solid 1px #0477f4;
-  border-radius: 4px;
-  color: #0477f4;
+  color: var(--color-white);
   font-size: 14px;
-  font-weight: 500;
-  background: transparent;
-  height: 36px;
+  display: flex;
+  flex-direction: column;
 
-  &:hover {
-    background: #011932;
+  > .title {
+    font-size: 36px;
+    margin: 30px 0px;
+    font-weight: normal;
   }
 `
 
-interface EmptyStateProps {
-  onCreate: () => void
-}
+const ActionsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 80px 0px 50px 0px;
 
-const EmptyState: React.FC<EmptyStateProps> = ({ onCreate }) => {
+  > .sub-section {
+    display: flex;
+    flex-direction: column;
+
+    > h3 {
+      font-weight: bold;
+      margin: 0px;
+      margin-bottom: 12px;
+      font-size: 20px;
+    }
+
+    > a {
+      color: var(--color-primary);
+      font-weight: bold;
+      text-decoration: none;
+    }
+  }
+`
+
+// interface EmptyStateProps {}
+
+export const EmptyState = () => {
   return (
-    <OuterContainer>
-      <Container>
-        <GM>Gm</GM>
-
-        <P>Create, test, and publish CryptoStats adapters. All from your browser!</P>
-
-        <P bold>Let's get started!</P>
-
-        <Button onClick={onCreate}>Create new adapter</Button>
-      </Container>
-    </OuterContainer>
+    <Root>
+      <h2 className="title">Welcome to the Subeditor</h2>
+      <span>Start by creating a new subgraph or read the documentation</span>
+      <ActionsContainer>
+        <div className="sub-section">
+          <h3>Documentation</h3>
+          <a href="#">How to start</a>
+          <a href="#">Schema</a>
+          <a href="#">Mapping</a>
+        </div>
+      </ActionsContainer>
+    </Root>
   )
 }
-
-export default EmptyState
