@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { XOctagon, AlertTriangle, Info } from 'react-feather'
+import { XOctagon, AlertTriangle, Info } from 'lucide-react'
 
 import { MarkerSeverity } from './types'
 

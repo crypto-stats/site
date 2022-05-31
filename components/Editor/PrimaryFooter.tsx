@@ -1,7 +1,7 @@
 import React, { useState, Fragment } from 'react'
 import Link from 'next/link'
 import styled from 'styled-components'
-import { XOctagon, AlertTriangle, Info } from 'react-feather'
+import { XOctagon, AlertTriangle, Info } from 'lucide-react'
 import { useAdapter } from 'hooks/local-adapters'
 import PublishModal from './PublishModal'
 import { MarkerSeverity } from './types'

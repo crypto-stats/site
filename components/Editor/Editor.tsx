@@ -178,7 +178,11 @@ const PrimaryFill = styled(FillWithStyledResize)`
 `
 
 const formatLog = (val: any) => {
-  if (val.toString() === '[object Object]') {
+  if (val === undefined) {
+    return 'undefined'
+  } else if (val === null) {
+    return 'null'
+  } else if (val.toString() === '[object Object]') {
     return JSON.stringify(val, null, 2)
   } else if (typeof val === 'string') {
     return `"${val}"`

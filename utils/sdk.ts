@@ -3,6 +3,7 @@ import { CryptoStatsSDK } from '@cryptostats/sdk'
 export function getSDK(options?: any) {
   const sdk = new CryptoStatsSDK({
     moralisKey: process.env.NEXT_PUBLIC_MORALIS_KEY,
+    executionTimeout: 100,
     ...options,
   })
 
@@ -19,6 +20,13 @@ export function getSDK(options?: any) {
       `https://speedy-nodes-nyc.moralis.io/${process.env.NEXT_PUBLIC_MORALIS_KEY}/fantom/mainnet`,
       { archive: true }
     )
+  }
+
+  if (process.env.NEXT_PUBLIC_ALCHEMY_ETH_KEY) {
+    const rpc = `https://eth-mainnet.alchemyapi.io/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ETH_KEY}`
+    sdk.ethers.addProvider('ethereum', rpc, { archive: true })
+  } else {
+    console.error('Alchemy key not set')
   }
 
   if (process.env.NEXT_PUBLIC_OPTIMISM_RPC) {

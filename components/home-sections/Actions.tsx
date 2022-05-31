@@ -102,7 +102,7 @@ const Actions: React.FC = () => {
           </Text>
           <Graphic src="/editor-thumbnail.png" alt="editor" />
           <Text tag="p" type="content_big" mt="32" mb="32">
-            Create and update the adapers that provide data to CryptoStats. Write, test and publish
+            Create and update the adapters that provide data to CryptoStats. Write, test and publish
             the code right in the browser!
           </Text>
           <Link href="/editor" passHref>

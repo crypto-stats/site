@@ -36,13 +36,14 @@ const DiscoverPage: NextPage<AdaptersPageProps> = ({ collections }) => {
     .sort((a: Collection, b: Collection) => b.modules.length - a.modules.length)
     .map((collection: { id: string; modules: string[] }) => {
       const metadata = collectionMetadata[collection.id]
+      const { length } = collection.modules
       return {
         title: metadata?.name || collection.id,
         subtitle: metadata ? collection.id : null,
         description: metadata?.description,
         icon: metadata?.icon,
         iconColor: metadata?.iconColor,
-        metadata: [`${collection.modules.length} adapters`],
+        metadata: [`${length} adapter${length > 1 ? 's' : ''}`],
         link: `/discover/${collection.id}`,
       }
     })

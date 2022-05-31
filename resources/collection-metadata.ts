@@ -392,6 +392,26 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
       },
     ],
   },
+  'web3-revenue': {
+    name: 'Web3 Revenues',
+    description: 'Total revenues paid to data-centric Web3 protocols.',
+    icon: '🕸',
+    iconColor: 'palette-1',
+    queries: [
+      {
+        id: 'oneDayTotalFees',
+        name: 'One day total fees',
+        description: 'Query the USD value of all fees paid to a protocol on a given calendar date.',
+        parameters: [
+          {
+            name: 'Date',
+            type: 'date',
+            description: 'The date to query fees for (UTC time)',
+          },
+        ],
+      },
+    ],
+  },
 }
 
 export default collectionMetadata

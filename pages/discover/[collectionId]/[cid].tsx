@@ -1,13 +1,12 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next'
 import styled from 'styled-components'
-import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useENSName, setRPC } from 'use-ens-name'
 import { useWeb3React } from '@web3-react/core'
 import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
+import { Clipboard, History } from 'lucide-react'
 import TranquilLayout from 'components/layouts/TranquilLayout'
-import { useAdapterList, newModule } from 'hooks/local-adapters'
 import {
   getCollectionNames,
   getModulesForCollection,
@@ -26,9 +25,13 @@ import PublisherBar from 'components/AdapterPage/PublisherBar'
 import MetaTags from 'components/MetaTags'
 import Text from 'components/Text'
 import { getENSCache } from 'utils/ens'
-import { usePlausible } from 'next-plausible'
+import EditModal from 'components/AdapterPage/EditModal'
+import SiteModal from 'components/SiteModal'
+import HistoryModal from 'components/AdapterPage/HistoryModal'
+import Attribute from 'components/AdapterPage/Attribute'
+import copy from 'copy-to-clipboard'
 
-setRPC('https://mainnet-nethermind.blockscout.com/')
+setRPC(process.env.ETH_RPC || 'https://mainnet-nethermind.blockscout.com/')
 
 const collectionAdmins = process.env.NEXT_PUBLIC_COLLECTION_ADMINS
   ? JSON.parse(process.env.NEXT_PUBLIC_COLLECTION_ADMINS.toLowerCase())
@@ -77,35 +80,19 @@ const InfoBoxGrid = styled.div`
   }
 `
 
-const InfoBoxItem = styled.div`
-  margin: 24px 0;
-  padding: 0;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+const MiniIconButton = styled.button`
+  background: transparent;
+  border: none;
+  padding: 2px;
+  color: #929292;
 
-  @media (min-width: 768px) {
-    margin: 0;
+  &:hover {
+    cursor: pointer;
+    color: #666666;
   }
-`
-
-const InfoBoxValue = styled(Text)`
-  margin: 8px 0 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`
-
-const InfoBoxValueFullWidth = styled(Text)`
-  font-weight: 500;
-  font-size: 14px;
-  color: #000000;
-  margin: 8px 0 0;
-`
-
-const InfoBoxAuthor = styled.div`
-  padding: 24px 24px 32px 24px;
+  &:active {
+    color: #000000;
+  }
 `
 
 const SectionContainer = styled.div`
@@ -113,10 +100,9 @@ const SectionContainer = styled.div`
 `
 
 const AdapterActionBtns = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: var(--spaces-3);
   margin-bottom: var(--spaces-4);
+  display: flex;
+  flex-direction: column;
 `
 
 const InfoNumber = styled.span`
@@ -129,37 +115,11 @@ const AdapterInfo = styled.div`
   margin-top: var(--spaces-6);
 `
 
-const Attribute: React.FC<{ label: string }> = ({ label, children }) => {
-  if (label && label === 'Author') {
-    return (
-      <InfoBoxAuthor>
-        <Text tag="p" type="label">
-          {label}
-        </Text>
-        <InfoBoxValue tag="p" type="content_small">
-          {children}
-        </InfoBoxValue>
-      </InfoBoxAuthor>
-    )
-  }
-
-  return (
-    <InfoBoxItem>
-      <Text tag="p" type="label">
-        {label}
-      </Text>
-      {label === 'Collections' ? (
-        <InfoBoxValueFullWidth tag="p" type="content_small">
-          {children}
-        </InfoBoxValueFullWidth>
-      ) : (
-        <InfoBoxValue tag="p" type="content_small">
-          {children}
-        </InfoBoxValue>
-      )}
-    </InfoBoxItem>
-  )
-}
+const CopyButton: React.FC<{ text: string }> = ({ text }) => (
+  <MiniIconButton onClick={() => copy(text)}>
+    <Clipboard size={16} />
+  </MiniIconButton>
+)
 
 interface SubAdapter {
   id: string
@@ -201,62 +161,17 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
   collections,
   previousVersions,
 }) => {
-  const plausible = usePlausible()
   const [_verified, setVerified] = useState(verified)
   const { account } = useWeb3React()
-  const router = useRouter()
-  const adapters = useAdapterList()
   const signer = useENSName(moduleDetails.signer)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [showVersions, setShowVersions] = useState(false)
 
   // NextJS page changes might not re-initialize component
-  useEffect(() => setVerified(verified), [cid, collectionId])
-
-  const edit = (clone?: boolean) => () => {
-    if (!clone) {
-      for (const adapter of adapters) {
-        for (const publication of adapter.publications || []) {
-          if (publication.cid === cid) {
-            plausible('edit-adapter', {
-              props: {
-                collectionId,
-                adapter: cid,
-                adapterName: moduleDetails.name,
-                newAdapter: false,
-              },
-            })
-
-            router.push({
-              pathname: '/editor',
-              query: { adapter: adapter.id },
-            })
-            return
-          }
-        }
-      }
-    }
-
-    plausible('edit-adapter', {
-      props: {
-        collectionId,
-        adapter: cid,
-        adapterName: moduleDetails.name,
-        newAdapter: true,
-      },
-    })
-
-    const newCode = moduleDetails.name
-      ? (moduleDetails.sourceCode || moduleDetails.code).replace(
-          moduleDetails.name,
-          `${moduleDetails.name} - Clone`
-        )
-      : moduleDetails.sourceCode || moduleDetails.code
-
-    const adapterId = newModule(newCode, [{ cid, version: moduleDetails.version || '0.0.0' }])
-    router.push({
-      pathname: '/editor',
-      query: { adapter: adapterId },
-    })
-  }
+  useEffect(() => {
+    setVerified(verified)
+    setShowVersions(false)
+  }, [cid, collectionId])
 
   const isAdmin =
     account &&
@@ -320,11 +235,13 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         sidebar={
           <Fragment>
             <AdapterActionBtns>
-              <Button variant="outline" onClick={edit()} icon="Edit" width="auto">
-                Edit
-              </Button>
-              <Button variant="outline" onClick={edit(true)} icon="Fork" width="auto">
-                Clone
+              <Button
+                variant="outline"
+                onClick={() => setShowEditModal(true)}
+                icon="Edit"
+                fullWidth
+              >
+                Edit/Fork
               </Button>
             </AdapterActionBtns>
             <DetailsBox>
@@ -336,10 +253,27 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
               <InfoBoxGrid>
                 <Attribute label="Version">{moduleDetails.version}</Attribute>
                 <Attribute label="License">{moduleDetails.license}</Attribute>
-                <Attribute label="IPFS CID">{cid}</Attribute>
-                <Attribute label="CID (source)">{moduleDetails.sourceFileCid}</Attribute>
+                <Attribute label="IPFS CID" buttons={<CopyButton text={cid} />}>
+                  {cid}
+                </Attribute>
+                <Attribute
+                  label="CID (source)"
+                  buttons={<CopyButton text={moduleDetails.sourceFileCid!} />}
+                >
+                  {moduleDetails.sourceFileCid}
+                </Attribute>
                 {moduleDetails.previousVersion && (
-                  <Attribute label="Prev. Version">
+                  <Attribute
+                    label="Prev. Version"
+                    buttons={
+                      <>
+                        <CopyButton text={moduleDetails.previousVersion} />
+                        <MiniIconButton onClick={() => setShowVersions(true)}>
+                          <History size={16} />
+                        </MiniIconButton>
+                      </>
+                    }
+                  >
                     <Link href={`/discover/${collectionId}/${moduleDetails.previousVersion}`}>
                       <a>{moduleDetails.previousVersion}</a>
                     </Link>
@@ -408,6 +342,21 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
           </Link>
         </div>
       </TranquilLayout>
+
+      <EditModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        cid={cid}
+        collectionId={collectionId}
+        moduleDetails={moduleDetails}
+      />
+      <SiteModal
+        title="Adapter History"
+        isOpen={showVersions}
+        onClose={() => setShowVersions(false)}
+      >
+        <HistoryModal historicalVersions={previousVersions} currentCID={cid} />
+      </SiteModal>
     </CompilerProvider>
   )
 }
@@ -422,6 +371,12 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { collectionId: s
 
   if (cid.indexOf('Qm') != 0) {
     cid = await getCIDFromSlug(collectionId, cid)
+  }
+  if (!cid) {
+    return {
+      revalidate: 15,
+      notFound: true,
+    }
   }
 
   const sdk = new CryptoStatsSDK({
