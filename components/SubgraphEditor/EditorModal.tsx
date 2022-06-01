@@ -9,6 +9,7 @@ const ModalOverlay = styled.div<{ width?: string | number; height?: string | num
   align-items: center;
   justify-content: center;
   background-color: transparent !important;
+  backdrop-filter: blur(10px);
 
   &:before {
     content: '';
@@ -21,14 +22,16 @@ const ModalOverlay = styled.div<{ width?: string | number; height?: string | num
   }
 
   & .modal-content {
+    font-family: Manrope;
     z-index: 2;
-    border: solid 1px #444;
-    border-radius: 4px;
-    background-color: #2f2f2f;
+    border: 1px solid #606060;
+    border-radius: 8px;
+    background-color: #2f3237;
     color: #c8c8c8;
-    margin: 40px;
+    padding: 24px 32px;
     display: flex;
     flex-direction: column;
+
     ${({ width, height }) => `
       ${width ? `width: ${width};` : ''}
       ${height ? `height: ${height};` : ''}
@@ -38,25 +41,22 @@ const ModalOverlay = styled.div<{ width?: string | number; height?: string | num
 
 const Header = styled.h1`
   color: #ffffff;
-  font-size: 18px;
+  font-size: 36px;
   font-weight: 600;
-  border-bottom: solid 1px #444;
-  padding: 32px;
-  text-align: center;
+  margin: 0;
 `
 
 const Footer = styled.div`
   display: flex;
-  border-top: solid 1px #444;
-  padding: 24px 30px;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 12px;
 `
 
 const Content = styled.div`
   max-height: 70vh;
-  padding: 32px;
   overflow: auto;
   flex: 1;
+  padding: 32px 0px;
 `
 
 const HeaderSide = styled.div<{ side: string }>`
@@ -88,7 +88,7 @@ export interface Button {
 
 interface ModalProps {
   isOpen: boolean
-  onClose: () => void
+  onClose?: () => void
   title: string
   buttons: Button[]
   width?: string
@@ -116,26 +116,8 @@ const EditorModal: React.FC<ModalProps> = ({
         <ModalOverlay width={width} height={height} {...props}>
           {contentElement}
         </ModalOverlay>
-      )}
-    >
-      <Header>
-        <HeaderSide side="left">
-          {onBack && (
-            <HeaderButton onClick={onBack}>
-              <ChevronLeft />
-              Back
-            </HeaderButton>
-          )}
-        </HeaderSide>
-
-        {title}
-
-        <HeaderSide side="right">
-          <HeaderButton onClick={onClose}>
-            <X />
-          </HeaderButton>
-        </HeaderSide>
-      </Header>
+      )}>
+      <Header>{title}</Header>
 
       <Content>{children}</Content>
 
@@ -145,8 +127,7 @@ const EditorModal: React.FC<ModalProps> = ({
             key={button.label}
             onClick={button.onClick}
             disabled={button.disabled}
-            variant={button.label === 'Return to Editor' ? 'outline' : 'primary'}
-          >
+            variant={['Cancel', 'Close'].includes(button.label) ? 'outline' : 'primary'}>
             {button.label}
           </ButtonComponent>
         ))}
