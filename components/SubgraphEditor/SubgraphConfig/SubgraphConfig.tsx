@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Info } from 'lucide-react'
 
-import InputField from 'components/InputField'
-import { InputLabel } from './InputLabel'
+import { InputLabel, InputField } from '../atoms'
 import {
   Contract,
   ContractEvent,
@@ -13,7 +12,7 @@ import {
 } from 'hooks/local-subgraphs'
 import { useEditorState } from 'hooks/editor-state'
 import { SelectedContract } from './SelectedContract'
-import { Dropdown } from '../atoms'
+import { Dropdown } from '../../atoms'
 import { addImport } from 'utils/source-code-utils'
 import { generateContractFile, generateSchemaFile } from 'utils/graph-file-generator'
 
@@ -69,21 +68,6 @@ const ContractInput = styled(InputField)`
   background: url('/Icon/ico-magnifying-glass.svg') no-repeat right;
   background-size: 16px;
   background-position-x: calc(100% - 20px);
-  width: 100%;
-  color: #b0b0b0;
-  background-color: #2a2d30;
-  border: solid 1px #181818;
-  box-sizing: border-box;
-  padding: 10px;
-  padding-right: 55px;
-  border-radius: 4px;
-  margin: 4px 0;
-  font-size: 14px;
-
-  &:focus-visible {
-    outline: 0;
-    border-color: #2684ff;
-  }
 `
 
 const ADDRESS_REGEX = /^0x[0-9a-f]{40}$/i
