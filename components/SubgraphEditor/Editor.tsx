@@ -14,7 +14,7 @@ import BottomTitleBar, { BottomView } from './BottomTitleBar'
 import { useEditorState } from 'hooks/editor-state'
 import { useGeneratedFiles } from 'hooks/useGeneratedFiles'
 import { Title, SubgraphList, Footer } from './LeftSide'
-import { SubgraphConfig } from '../SubgraphConfig'
+import { SubgraphConfig } from './SubgraphConfig'
 import { EmptyState } from './EmptyState'
 
 const TabContainer = styled(Top)`
