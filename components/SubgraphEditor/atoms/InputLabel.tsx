@@ -3,7 +3,6 @@ import styled from 'styled-components'
 const Root = styled.span`
   color: #d3d3d3;
   font-size: 12px;
-  margin-bottom: 4px;
   display: inline-block;
 `
 
