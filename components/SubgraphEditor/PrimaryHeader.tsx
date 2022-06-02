@@ -5,7 +5,7 @@ import { useOnClickOutside, useLocalSubgraph } from 'hooks'
 import { HeaderRight, SubgraphHeader, WalletButton } from 'components/layouts'
 import Button from 'components/Button'
 import { MarkerSeverity } from './types'
-import PublishModal from './PublishModal'
+import { PublishModal } from './PublishModal/'
 
 const Root = styled(SubgraphHeader)`
   .wallet-connect-btn {
