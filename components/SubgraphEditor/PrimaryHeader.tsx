@@ -6,6 +6,10 @@ import { HeaderRight, SubgraphHeader, WalletButton } from 'components/layouts'
 import Button from 'components/Button'
 import { MarkerSeverity } from './types'
 import { PublishModal } from './PublishModal/'
+import { PublishTutorialModal } from './PublishTutorialModal'
+import { getLocalStorage, setLocalStorage } from '../../utils/localstorage'
+
+const STORAGE_KEY = 'dont-show-tutorial-again'
 
 const Root = styled(SubgraphHeader)`
   .wallet-connect-btn {
@@ -74,8 +78,9 @@ interface PrimaryHeaderProps {
 export const PrimaryHeader = (props: PrimaryHeaderProps) => {
   const { filename, markers, editorRef } = props
   const { subgraph, update } = useLocalSubgraph(filename)
-  const [showModal, setShowModal] = useState(false)
+  const [modalStatus, setModalStatus] = useState({ publish: false, publishTutorial: false })
   const [editingTitle, setEditingTitle] = useState(false)
+  const [showPublishTutorial, setShowPublishTutorial] = useState(false)
   const [titleValue, setTitleValue] = useState(subgraph?.name || '')
   const ref = useRef<any>()
 
@@ -86,6 +91,21 @@ export const PrimaryHeader = (props: PrimaryHeaderProps) => {
   }, [subgraph])
 
   useOnClickOutside(ref, () => setEditingTitle(false))
+
+  useEffect(() => {
+    const loadTutorialStatus = async () => {
+      const didCloseTutorialBefore = (await getLocalStorage(STORAGE_KEY)) || false
+      setShowPublishTutorial(!didCloseTutorialBefore)
+    }
+
+    loadTutorialStatus()
+  }, [])
+
+  const proceedToPublish = ({ dontShowTutorialAgain = false }) => {
+    setModalStatus({ publish: true, publishTutorial: false })
+    setLocalStorage(STORAGE_KEY, dontShowTutorialAgain)
+    setShowPublishTutorial(!dontShowTutorialAgain)
+  }
 
   const infos = []
   const warnings = []
@@ -122,7 +142,12 @@ export const PrimaryHeader = (props: PrimaryHeaderProps) => {
         <WalletButton className="wallet-connect-btn" />
         {subgraph && (
           <PublishButton
-            onClick={() => setShowModal(true)}
+            onClick={() =>
+              setModalStatus(prev => ({
+                ...prev,
+                [showPublishTutorial ? 'publishTutorial' : 'publish']: true,
+              }))
+            }
             disabled={errors.length > 0}
             className="primary">
             Publish
@@ -131,12 +156,18 @@ export const PrimaryHeader = (props: PrimaryHeaderProps) => {
       </HeaderRight>
 
       {filename && (
-        <PublishModal
-          fileName={filename}
-          show={showModal}
-          onClose={() => setShowModal(false)}
-          editorRef={editorRef}
-        />
+        <>
+          <PublishModal
+            fileName={filename}
+            show={modalStatus.publish}
+            onClose={() => setModalStatus(prev => ({ ...prev, publish: false }))}
+            editorRef={editorRef}
+          />
+          <PublishTutorialModal
+            show={modalStatus.publishTutorial}
+            proceedToPublish={proceedToPublish}
+          />
+        </>
       )}
     </Root>
   )
