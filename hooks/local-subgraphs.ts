@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { DeployStatus, deploySubgraph } from 'utils/deploy-subgraph'
-import { setEditorState } from './editor-state'
+import { withStorageItem } from './lib'
 export { STATUS } from 'utils/deploy-subgraph'
 
 const storageKey = 'localSubgraphs'
@@ -37,64 +37,11 @@ export interface SubgraphWithID extends SubgraphData {
   id: string
 }
 
-const getStorage = () =>
-  typeof window === 'undefined' ? {} : JSON.parse(window.localStorage.getItem(storageKey) || '{}')
+const { useStorageItem, useStorageList, setStorageItem, clearStorageItem } = withStorageItem<SubgraphData>(storageKey)
 
-const getStorageItem = (id: string) => getStorage()[id] || null
+export const useSubgraphList = useStorageList
 
-const setStorageItem = (id: string, value: any) => {
-  window.localStorage.setItem(
-    storageKey,
-    JSON.stringify({
-      ...getStorage(),
-      [id]: value,
-    })
-  )
-  updateAdapterLists()
-}
-
-const removeStorageItem = (id: string) => {
-  const subgraphs = getStorage()
-
-  window.localStorage.setItem(
-    storageKey,
-    JSON.stringify(
-      Object.entries(subgraphs).reduce(
-        (acc, [key, sg]) => (key === id ? acc : { ...acc, [key]: sg }),
-        {}
-      )
-    )
-  )
-  setEditorState({ key: 'subgraph-file', value: null, storageKey: 'editor-state' })
-
-  // localStorage.removeItem(id)
-}
-
-const adapterListUpdaters: Function[] = []
-
-const updateAdapterLists = () => adapterListUpdaters.map(updater => updater())
-
-export const useSubgraphList = (refreshId?: string): SubgraphWithID[] => {
-  const _update = useState({})[1]
-  const update = () => _update({})
-
-  useEffect(() => {
-    adapterListUpdaters.push(update)
-
-    return () => void adapterListUpdaters.splice(adapterListUpdaters.indexOf(update), 1)
-  }, [])
-
-  useEffect(() => {
-    update()
-  }, [refreshId])
-
-  const list = Object.entries(getStorage()).map(([id, adapter]: [string, any]) => ({
-    ...adapter,
-    id,
-  }))
-
-  return list
-}
+export const deleteSubgraph = clearStorageItem
 
 const randomId = () => Math.floor(Math.random() * 1000000).toString(16)
 
@@ -126,75 +73,48 @@ export const newSubgraph = ({
   return id
 }
 
-export const deleteSubgraph = (id: string) => {
-  removeStorageItem(id)
-}
-
-export const useLocalSubgraph = (id?: string | null, tab?: string) => {
-  const _update = useState({})[1]
-  const subgraphRef = useRef<null | SubgraphData>(null)
+export const useLocalSubgraph = (id?: string | null) => {
+  const [subgraph, update] = useStorageItem(id)
   const [deployStatus, setDeployStatus] = useState<null | DeployStatus>(null)
 
-  const update = (newSubgraph: SubgraphData) => {
-    setStorageItem(id!, newSubgraph)
-    subgraphRef.current = newSubgraph
-    _update({})
-  }
-
   const saveSchema = (schema: string) => {
-    if (!id) {
+    if (!id || !subgraph) {
       throw new Error('ID not set')
     }
 
-    const adapter = getStorageItem(id)
-
-    const newAdapter: SubgraphData = { ...adapter, schema }
-
-    update(newAdapter)
+    update({ ...subgraph, schema })
 
     return id
   }
 
   const saveMapping = (fileName: string, mapping: string) => {
-    if (!id) {
+    if (!id || !subgraph) {
       throw new Error('ID not set')
     }
 
-    const adapter = getStorageItem(id)
-
-    const newSubgraph: SubgraphData = {
-      ...adapter,
-      mappings: { ...adapter.mappings, [fileName]: mapping },
-    }
-
-    update(newSubgraph)
+    update({
+      ...subgraph,
+      mappings: { ...subgraph.mappings, [fileName]: mapping },
+    })
 
     return id
   }
 
   const saveContracts = (contracts: Contract[]) => {
-    if (!id) {
+    if (!id || !subgraph) {
       throw new Error('ID not set')
     }
 
-    const adapter = getStorageItem(id)
-
-    const newSubgraph: SubgraphData = {
-      ...adapter,
-      contracts,
-    }
-
-    update(newSubgraph)
+    update({ ...subgraph, contracts })
 
     return id
   }
 
   const deploy = async (subgraphName: string, deployKey: string) => {
-    if (!id) {
+    if (!id || !subgraph) {
       throw new Error(`No subgraph loaded`)
     }
 
-    const subgraph = getStorageItem(id) as SubgraphData
     try {
       for await (const status of deploySubgraph(subgraph, { subgraphName, deployKey })) {
         setDeployStatus(status)
@@ -204,14 +124,9 @@ export const useLocalSubgraph = (id?: string | null, tab?: string) => {
     }
   }
 
-  useEffect(() => {
-    subgraphRef.current = id ? (getStorageItem(id) as SubgraphData) : null
-    _update({})
-  }, [id, tab])
-
   return {
     update,
-    subgraph: subgraphRef.current,
+    subgraph,
     deployStatus,
     deploy,
     saveContracts,

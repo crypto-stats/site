@@ -87,7 +87,6 @@ const ContractInput = styled(InputField)`
 `
 
 const ADDRESS_REGEX = /^0x[0-9a-f]{40}$/i
-export type ExtendedContract = Contract & { errorMessage?: string }
 
 export const SubgraphConfig = () => {
   const CHAIN_ID = '1'
@@ -96,40 +95,34 @@ export const SubgraphConfig = () => {
   const { subgraph, saveContracts, saveMapping } = useLocalSubgraph(subgraphId)
   const [contractAddress, setContractAddress] = useState('')
   const [started, setStarted] = useState(false)
-  const [selectedContracts, setSelectedContracts] = useState<ExtendedContract[]>(
-    subgraph?.contracts || []
-  )
 
   const [mappingFunctionNames, setMappingFunctionNames] = useState<string[]>([])
   const [fnExtractionLoading, setFnExtractionLoading] = useState(false)
-  useEffect(() => {
-    const alreadySelected = selectedContracts.find(sc => sc.addresses[CHAIN_ID] === contractAddress)
+
+  const updateContractAddress = (address: string) => {
+    if (!subgraph) {
+      throw new Error('No subgraph')
+    }
+    const alreadySelected = subgraph.contracts.find(sc => sc.addresses[CHAIN_ID] === address)
     if (ADDRESS_REGEX.test(contractAddress)) {
       if (!alreadySelected) {
-        setSelectedContracts(prev => [
-          {
-            name: '',
-            addresses: { [CHAIN_ID]: contractAddress },
-            abi: null,
-            startBlocks: {},
-            source: 'etherscan',
-            events: [],
-          },
-          ...prev,
-        ])
+        const newContract: Contract = {
+          name: '',
+          addresses: { [CHAIN_ID]: contractAddress },
+          abi: null,
+          startBlocks: {},
+          source: 'etherscan',
+          events: [],
+        }
+        saveContracts([newContract, ...subgraph.contracts])
         setContractAddress('')
-        saveContracts(selectedContracts)
       } else {
         alert(`Contract ${contractAddress} already added`)
       }
+    } else {
+      setContractAddress(address)
     }
-  }, [contractAddress])
-
-  useEffect(() => {
-    if (subgraph) {
-      saveContracts(selectedContracts)
-    }
-  }, [selectedContracts])
+  }
 
   const loadFunctionsFromMappingCode = async (subgraph: SubgraphData) => {
     setFnExtractionLoading(true)
@@ -161,12 +154,6 @@ export const SubgraphConfig = () => {
   }, [subgraph?.mappings[DEFAULT_MAPPING]])
 
   useEffect(() => {
-    if (subgraph?.contracts && !selectedContracts.length) {
-      setSelectedContracts(subgraph.contracts)
-    }
-  }, [subgraph])
-
-  useEffect(() => {
     setStarted(true)
   }, [])
 
@@ -174,19 +161,30 @@ export const SubgraphConfig = () => {
     return null
   }
 
-  const updateSelectedContract = (address: string, newProps: any) =>
-    setSelectedContracts(prev =>
-      prev.map(p => (p.addresses[CHAIN_ID] === address ? { ...p, ...newProps } : p))
-    )
+  const updateSelectedContract = (address: string, newProps: any) => {
+    if (!subgraph) {
+      throw new Error('No subgraph')
+    }
+    saveContracts(subgraph.contracts.map(contract => 
+      contract.addresses[CHAIN_ID] === address ? { ...contract, ...newProps } : contract
+    ))
+  }
 
-  const deleteSelectedContract = (address: string) =>
-    setSelectedContracts(prev => prev.filter(p => p.addresses[CHAIN_ID] !== address))
+  const deleteSelectedContract = (address: string) => {
+    if (!subgraph) {
+      throw new Error('No subgraph')
+    }
+    saveContracts(subgraph.contracts.filter(contract => contract.addresses[CHAIN_ID] !== address))
+  }
 
   const saveEvent = (contractAddress: string, newEvent: ContractEvent, eventIndex: number) => {
+    if (!subgraph) {
+      throw new Error('No subgraph')
+    }
     const newFnsToInsert: string[] = []
     const newImports: { event: string; contract: string }[] = []
 
-    const contractsToSave = selectedContracts.map(sc => {
+    const contractsToSave = subgraph.contracts.map(sc => {
       if (sc.addresses[CHAIN_ID] === contractAddress) {
         const newEvents = sc.events.map((sce, internalEventIndex) => {
           if (internalEventIndex === eventIndex) {
@@ -254,11 +252,11 @@ export const SubgraphConfig = () => {
           placeholder="Paste here the contract address"
           name="contractAddress"
           value={contractAddress}
-          onChange={setContractAddress}
+          onChange={updateContractAddress}
         />
-        {selectedContracts.map(sc => (
+        {subgraph?.contracts.map(sc => (
           <SelectedContract
-            key={sc.addresses[CHAIN_ID]}
+            key={`${subgraphId}-${sc.addresses[CHAIN_ID]}`}
             contract={sc}
             updateContract={updateSelectedContract}
             deleteContract={deleteSelectedContract}

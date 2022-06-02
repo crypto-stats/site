@@ -1,6 +1,6 @@
+import { useAdapterList } from 'hooks/local-adapters'
 import React from 'react'
 import styled from 'styled-components'
-import { useAdapterList, AdapterWithID } from 'hooks/local-adapters'
 
 const Container = styled.div`
   display: flex;
@@ -58,11 +58,11 @@ const FileList: React.FC<FileListProps> = ({ selected, onSelected, filter }) => 
 
   if (filter && filter.length > 0) {
     adapters = adapters.filter(
-      (a: AdapterWithID) => (a.name || 'New').toLowerCase().indexOf(filter.toLowerCase()) !== -1
+      a => (a.name || 'New').toLowerCase().indexOf(filter.toLowerCase()) !== -1
     )
   }
 
-  adapters = adapters.sort((a: AdapterWithID, b: AdapterWithID) =>
+  adapters = adapters.sort((a, b) =>
     (a.name || 'New').localeCompare(b.name || 'New')
   )
 
@@ -71,7 +71,7 @@ const FileList: React.FC<FileListProps> = ({ selected, onSelected, filter }) => 
       <Label>Saved in Browser ({adapters.length})</Label>
 
       <List>
-        {adapters.map((adapter: AdapterWithID) => (
+        {adapters.map((adapter) => (
           <ListItem
             selected={selected === adapter.id}
             key={adapter.id}
