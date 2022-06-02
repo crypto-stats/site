@@ -35,6 +35,10 @@ const ModalOverlay = styled.div<{ width?: string | number; height?: string | num
       ${width ? `width: ${width};` : ''}
       ${height ? `height: ${height};` : ''}
     `}
+
+    &:focus-visible {
+      outline: none;
+    }
   }
 `
 
