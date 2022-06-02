@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import ReactModal from 'react-modal'
 import ButtonComponent from '../Button'
-import { ChevronLeft, X } from 'lucide-react'
 
 const ModalOverlay = styled.div<{ width?: string | number; height?: string | number }>`
   display: flex;
@@ -59,25 +58,6 @@ const Content = styled.div`
   padding: 32px 0px;
 `
 
-const HeaderSide = styled.div<{ side: string }>`
-  width: 32px;
-  float: ${({ side }) => side};
-  text-align: ${({ side }) => side};
-`
-
-const HeaderButton = styled.button`
-  background: none;
-  border: none;
-  color: #cccccc;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-
-  &:hover {
-    background: #444444;
-  }
-`
-
 ReactModal.setAppElement('#__next')
 
 export interface Button {
@@ -96,16 +76,8 @@ interface ModalProps {
   onBack?: null | (() => void)
 }
 
-const EditorModal: React.FC<ModalProps> = ({
-  isOpen,
-  onClose,
-  title,
-  buttons,
-  children,
-  width,
-  height,
-  onBack,
-}) => {
+const EditorModal: React.FC<ModalProps> = props => {
+  const { isOpen, onClose, title, buttons, children, width, height } = props
   return (
     <ReactModal
       isOpen={isOpen}
