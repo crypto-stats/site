@@ -52,6 +52,7 @@ const Header = styled.h1`
 const Footer = styled.div`
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 12px;
 `
 
@@ -66,7 +67,7 @@ ReactModal.setAppElement('#__next')
 
 export interface Button {
   label: string
-  onClick: () => void
+  onClick: (props?: any) => void
   disabled?: boolean
 }
 
@@ -75,17 +76,20 @@ interface ModalProps {
   onClose?: () => void
   title: string
   buttons: Button[]
+  footerElements?: [() => any]
   width?: string
   height?: string
   onBack?: null | (() => void)
 }
 
 const EditorModal: React.FC<ModalProps> = props => {
-  const { isOpen, onClose, title, buttons, children, width, height } = props
+  const { isOpen, onClose, title, buttons, children, width, height, footerElements = [] } = props
+
   return (
     <ReactModal
       isOpen={isOpen}
       onRequestClose={onClose}
+      shouldCloseOnOverlayClick
       contentLabel={title}
       className="modal-content"
       overlayElement={(props: any, contentElement: any) => (
@@ -98,6 +102,9 @@ const EditorModal: React.FC<ModalProps> = props => {
       <Content>{children}</Content>
 
       <Footer>
+        {footerElements.map((FooterEl, idx: number) => (
+          <FooterEl key={idx} />
+        ))}
         {buttons.map(button => (
           <ButtonComponent
             key={button.label}
