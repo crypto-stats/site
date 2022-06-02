@@ -55,6 +55,10 @@ const PublishModal: React.FC<PublishModalProps> = ({ fileName, show, onClose, ed
   }
 
   const sign = async () => {
+    if (!hash || !account) {
+      throw new Error('Can not sign, in invalid state')
+    }
+
     setState(STATE.SIGNED_PUBLISH_PENDING)
     try {
       const signature = await library.getSigner().signMessage(hash)

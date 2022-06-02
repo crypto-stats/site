@@ -1,4 +1,4 @@
-import { useEffect, useState, Dispatch, SetStateAction } from 'react'
+import { UpdateListener } from './lib';
 
 let state: { [key: string]: any } | null = null
 
@@ -33,19 +33,29 @@ export function setEditorState({
   window.localStorage.setItem(storageKey, JSON.stringify(state))
 }
 
+const updaters: { [key: string]: UpdateListener } = {}
+
+const getUpdater = (key: string) => {
+  if (!updaters[key]) {
+    updaters[key] = new UpdateListener()
+  }
+  return updaters[key]
+}
+
 export function useEditorState<T = any>(
   key: string,
   defaultState?: T,
   storageKey: string = 'editor-state'
-): [T, Dispatch<SetStateAction<T>>] {
-  const storedState = getEditorState({ key, storageKey })
-  const [value, setValue] = useState<T>(
-    storedState === undefined ? defaultState || null : storedState
-  )
+): [T, (val: T) => void] {
+  const updater = getUpdater(key)
+  updater.register()
 
-  useEffect(() => {
-    setEditorState({ key, value, storageKey })
-  }, [value])
+  const value = getEditorState({ key, storageKey }) || defaultState || null
+
+  const setValue = (newVal: T) => {
+    setEditorState({ key, value: newVal, storageKey })
+    updater.trigger()
+  }
 
   return [value, setValue]
 }
