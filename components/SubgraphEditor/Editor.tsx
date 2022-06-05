@@ -67,7 +67,7 @@ const Editor: React.FC = () => {
   const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file' || null)
   const [tab, setTab] = useState(SCHEMA_FILE_NAME)
 
-  const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId, tab)
+  const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId)
 
   const subgraphFiles: (TabState & { value: string })[] = subgraph
     ? [

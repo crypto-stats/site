@@ -104,8 +104,7 @@ interface FileListProps {
 }
 
 export const SubgraphList: React.FC<FileListProps> = ({ selected, onSelected, filter }) => {
-  const [deleteId, setDeleteId] = useState('')
-  let subgraphs = useSubgraphList(deleteId)
+  let subgraphs = useSubgraphList()
   const prevSubgraphs = usePrevious(subgraphs)
   const [projectsExpanded, setProjectsExpanded] = useState({ local: true, wallet: false })
 
@@ -137,7 +136,6 @@ export const SubgraphList: React.FC<FileListProps> = ({ selected, onSelected, fi
 
   const handleSubgraphDeleted = (id: string) => {
     deleteSubgraph(id)
-    setDeleteId(`deleted-${id}`)
   }
 
   return (
