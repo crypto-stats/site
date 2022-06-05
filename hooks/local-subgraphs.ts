@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { DeployStatus, deploySubgraph } from 'utils/deploy-subgraph'
+import { DeployStatus, deploySubgraph, STATUS } from 'utils/deploy-subgraph'
 import { setEditorState } from './editor-state'
 export { STATUS } from 'utils/deploy-subgraph'
 
@@ -201,6 +201,7 @@ export const useLocalSubgraph = (id?: string | null, tab?: string) => {
       }
     } catch (e: any) {
       console.error(e)
+      setDeployStatus({ status: STATUS.ERROR, errorMessage: e.message })
     }
   }
 
