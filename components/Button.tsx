@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css, keyframes } from 'styled-components'
-import { Edit } from 'lucide-react'
+import { Edit, ExternalLink } from 'lucide-react'
 import DiscordIcon from './icons/Discord'
 import ForkIcon from './icons/Fork'
 
@@ -145,6 +145,8 @@ const Icon = styled.i`
 
 interface ButtonProps {
   onClick?: () => void
+  href?: string
+  target?: string
   loading?: boolean
   disabled?: boolean
   fullWidth?: boolean
@@ -160,6 +162,8 @@ interface ButtonProps {
 const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
+  href,
+  target,
   disabled,
   className,
   variant,
@@ -175,6 +179,9 @@ const Button: React.FC<ButtonProps> = ({
 
   if (icon) {
     switch (icon) {
+      case 'External':
+        svgIcon = <ExternalLink size="16" />
+        break
       case 'Edit':
         svgIcon = <Edit size="16" />
         break
@@ -185,6 +192,27 @@ const Button: React.FC<ButtonProps> = ({
         svgIcon = <DiscordIcon />
         break
     }
+  }
+
+  if (href) {
+    return (
+      <ButtonElement
+        as="a"
+        href={href}
+        target={target}
+        loading={loading}
+        className={className}
+        width={width}
+        variant={variant}
+        size={size}
+        fullWidth={fullWidth}
+        centered={centered}
+        title={title}
+      >
+        {icon && <Icon>{svgIcon}</Icon>}
+        <span>{children}</span>
+      </ButtonElement>
+    )
   }
 
   return (
@@ -198,7 +226,8 @@ const Button: React.FC<ButtonProps> = ({
       size={size}
       fullWidth={fullWidth}
       centered={centered}
-      title={title}>
+      title={title}
+    >
       {icon && <Icon>{svgIcon}</Icon>}
       <span>{children}</span>
     </ButtonElement>

@@ -85,6 +85,7 @@ export async function loadAsBytecode(bytecode: Uint8Array) {
     },
     index: {
       'store.set': () => null,
+      'store.get': () => null,
     },
   }
 

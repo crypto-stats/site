@@ -178,6 +178,6 @@ export async function* deploySubgraph(
 
   yield {
     status: STATUS.COMPLETE,
-    url: deployResult.playground,
+    url: deployResult.queries,
   }
 }

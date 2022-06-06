@@ -122,11 +122,14 @@ export const useLocalSubgraph = (id?: string | null) => {
     }
   }
 
+  const resetDeployStatus = () => setDeployStatus(null)
+
   return {
     update,
     subgraph,
     deployStatus,
     deploy,
+    resetDeployStatus,
     saveContracts,
     saveSchema,
     saveMapping,
