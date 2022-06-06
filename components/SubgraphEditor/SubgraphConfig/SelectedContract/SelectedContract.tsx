@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { SingleValue } from 'react-select'
 import { Plus, Trash2 } from 'lucide-react'
 
 import { Contract, ContractEvent } from 'hooks/local-subgraphs'
@@ -99,25 +98,23 @@ function parseEventsFromAbi(abi: any[]) {
     )
 }
 
-export type EventHandler = ContractEvent & { editing: boolean }
-
 interface SelectedContractProps {
   contract: Contract & { errorMessage?: string }
-  deleteContract: (address: string) => void
+  createMappingFn: (fnName: string, eventName: string) => void
+  deleteContract: () => void
   fnExtractionLoading: boolean
   mappingFunctionNames: string[]
-  saveEvent: (contractAddress: string, newEvent: ContractEvent, eventIndex: number) => void
   subgraphMappings?: { [name: string]: string }
-  updateContract: (address: string, newProps: any) => void
+  updateContract: (newProps: Partial<Contract>) => void
 }
 
 export const SelectedContract = (props: SelectedContractProps) => {
   const {
     contract: { addresses, name, source, errorMessage, abi, startBlocks, events },
+    createMappingFn,
     deleteContract,
     fnExtractionLoading,
     mappingFunctionNames,
-    saveEvent,
     updateContract,
   } = props
 
@@ -125,9 +122,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
   const eventsFromAbi = abi ? parseEventsFromAbi(abi) : []
   const contractHasEvents = eventsFromAbi.length > 0
 
-  const [eventHandlers, setEventHandlers] = useState<EventHandler[]>([
-    { signature: '', handler: '', editing: true },
-  ])
+  const [newEvent, setNewEvent] = useState({ show: false, signature: '' })
 
   const fetchMetadata = async () => {
     const metadataReq = await fetch(
@@ -136,14 +131,14 @@ export const SelectedContract = (props: SelectedContractProps) => {
     const metadata = await metadataReq.json()
 
     if (!metadata.error) {
-      updateContract(addresses[CHAIN_ID], {
+      updateContract({
         abi: JSON.parse(metadata.data.ABI),
         startBlocks: { [CHAIN_ID]: parseInt(metadata.data.StartBlock) },
         name: metadata.data.ContractName,
       })
     } else if (metadata.success === false) {
-      updateContract(addresses[CHAIN_ID], {
-        errorMessage: metadata.error,
+      updateContract({
+        // errorMessage: metadata.error,
         source: 'custom',
       })
     }
@@ -155,94 +150,35 @@ export const SelectedContract = (props: SelectedContractProps) => {
     }
   }, [addresses, abi, source])
 
-  useEffect(() => {
-    updateContract(addresses[CHAIN_ID], {
-      events: eventHandlers.filter(eh => eh.handler !== '' && eh.signature !== ''),
-    })
-  }, [eventHandlers])
-
-  // when unmounted, remove all unfinished event handlers
-  useEffect(() => {
-    return () => {
-      updateContract(addresses[CHAIN_ID], {
-        events: eventHandlers.filter(eh => eh.handler !== '' || eh.signature !== ''),
-      })
-    }
-  }, [])
-
-  useEffect(() => {
-    if (events.length > 0) {
-      setEventHandlers(events.map(e => ({ ...e, editing: false })))
-    }
-  }, [fnExtractionLoading])
+  // useEffect(() => {
+  //   if (events.length > 0) {
+  //     setEventHandlers(events.map(e => ({ ...e, editing: false })))
+  //   }
+  // }, [fnExtractionLoading])
 
   const eventsFromAbiSelectOptions = eventsFromAbi.map(efa => ({
     label: efa,
     value: efa,
   }))
-  const getMappingFunctionsSelectOptions = (id: number) => {
-    const eventName = eventHandlers[id].signature.split('(')[0].replace(' ', '')
-    const newFnNameTemplate = `handle${eventName}`
-    const fnOccurrenceCount = mappingFunctionNames.filter(mfn =>
-      mfn.includes(newFnNameTemplate)
-    ).length
-    const newFnName =
-      fnOccurrenceCount === 0 ? newFnNameTemplate : `${newFnNameTemplate}${fnOccurrenceCount + 1}`
 
-    return [
-      {
-        label: 'Create new',
-        options: [{ label: newFnName, value: newFnName }],
-      },
-      {
-        label: 'Map to existing functions',
-        options: mappingFunctionNames.map(mfn => ({
-          label: mfn,
-          value: mfn,
-        })),
-      },
-    ]
-  }
-
-  const deleteEventHandler = (idx: number) =>
-    setEventHandlers(prev => {
-      const newEvents = prev.filter((_, i) => idx !== i)
-      return newEvents.length > 0 ? newEvents : [{ signature: '', handler: '', editing: true }]
-    })
-
-  const saveEventHandler = (idx: number) => {
-    const event = eventHandlers[idx]
-
-    if (event.signature && event.handler) {
-      saveEvent(addresses[CHAIN_ID], event, idx)
-      toggleEditing(idx)
+  const deleteEventHandler = (idx: number) => {
+    const newEvents = [...events.slice(0, idx), ...events.slice(idx + 1)]
+    updateContract({ events: newEvents })
+    if (newEvents.length === 0) {
+      setNewEvent({ show: true, signature: '' })
     }
   }
-
-  const toggleEditing = (idx: number) =>
-    setEventHandlers(prev =>
-      prev.map((pe, pei) => (pei === idx ? { ...pe, editing: !pe.editing } : pe))
-    )
-
-  const getHandleSelectOptionChangeFn =
-    (idx: number) =>
-    (key: 'signature' | 'handler') =>
-    (newValue: SingleValue<{ label: string; value: string }>) => {
-      setEventHandlers(prev =>
-        prev.map((p, i) => (i === idx ? { ...p, [key]: newValue!.value } : p))
-      )
-    }
 
   const handleFileUploadChange = (e: any) => {
     const [file] = e.target.files
     const reader = new FileReader()
     reader.readAsText(file, 'UTF-8')
     reader.onload = function (evt: any) {
-      updateContract(addresses[CHAIN_ID], {
+      updateContract({
         abi: JSON.parse(evt.target.result),
         source: 'custom',
         name: file.name.split('.')[0],
-        errorMessage: null,
+        // errorMessage: null,
       })
     }
     reader.onerror = function () {}
@@ -255,11 +191,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
       <Header>
         <div className="top">
           <span className="contract-title">{name || 'No name'}</span>
-          <Trash2
-            className="delete-link"
-            size={16}
-            onClick={() => deleteContract(addresses[CHAIN_ID])}
-          />
+          <Trash2 className="delete-link" size={16} onClick={() => deleteContract()} />
         </div>
         <span className="address">{addresses[CHAIN_ID]}</span>
         {startBlocks[CHAIN_ID] ? (
@@ -298,34 +230,49 @@ export const SelectedContract = (props: SelectedContractProps) => {
           <span>ABI</span>
           <span>Map</span>
         </div>
-        {eventHandlers.map((eh, idx) => (
+        {events.map((eh, idx) => (
           <EventRow
-            key={idx}
-            handleSelectOptionChange={getHandleSelectOptionChangeFn(idx)}
+            key={`${eh.handler}-${idx}`}
+            handleUpdate={(newEvent: ContractEvent) =>
+              updateContract({
+                events: events.map((p, i) => (i === idx ? newEvent : p)),
+              })
+            }
+            createMappingFn={createMappingFn}
             eventsOptions={eventsFromAbiSelectOptions}
-            mappingFnsOptions={getMappingFunctionsSelectOptions(idx)}
+            mappingFns={mappingFunctionNames}
+            eventName={eh.signature.split('(')[0].replace(' ', '')}
             fnExtractionLoading={fnExtractionLoading}
-            toggleEditing={() => toggleEditing(idx)}
-            saveEventHandler={() => saveEventHandler(idx)}
             deleteEventHandler={() => deleteEventHandler(idx)}
             eventHandler={eh}
           />
         ))}
 
+        {newEvent.show && (
+          <EventRow
+            handleUpdate={(newEvent: ContractEvent) => {
+              updateContract({ events: [...events, newEvent] })
+              setNewEvent({ show: false, signature: '' })
+            }}
+            createMappingFn={() => null}
+            eventsOptions={eventsFromAbiSelectOptions}
+            mappingFns={[]}
+            eventName=""
+            fnExtractionLoading={fnExtractionLoading}
+            deleteEventHandler={() => setNewEvent({ show: false, signature: '' })}
+            eventHandler={{ signature: '', handler: '' }}
+          />
+        )}
+
         <NewEventBtnContainer>
           <ActionButton
-            disabled={
-              !contractHasEvents ||
-              !eventHandlers[eventHandlers.length - 1].handler ||
-              !eventHandlers[eventHandlers.length - 1].signature
-            }
-            onClick={() =>
-              setEventHandlers(prev => [...prev, { signature: '', handler: '', editing: true }])
-            }
+            disabled={!contractHasEvents}
+            onClick={() => setNewEvent({ show: true, signature: '' })}
             {...(!contractHasEvents && {
               disabled: true,
               title: 'Contract has no events defined',
-            })}>
+            })}
+          >
             <Plus size={12} style={{ marginRight: 4 }} />
             New
           </ActionButton>

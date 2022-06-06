@@ -3,13 +3,7 @@ import styled from 'styled-components'
 import { Info } from 'lucide-react'
 
 import { InputLabel, InputField } from '../atoms'
-import {
-  Contract,
-  ContractEvent,
-  useLocalSubgraph,
-  DEFAULT_MAPPING,
-  SubgraphData,
-} from 'hooks/local-subgraphs'
+import { Contract, useLocalSubgraph, DEFAULT_MAPPING, SubgraphData } from 'hooks/local-subgraphs'
 import { useEditorState } from 'hooks/editor-state'
 import { SelectedContract } from './SelectedContract'
 import { Dropdown } from '../../atoms'
@@ -149,9 +143,11 @@ export const SubgraphConfig = () => {
     if (!subgraph) {
       throw new Error('No subgraph')
     }
-    saveContracts(subgraph.contracts.map(contract => 
-      contract.addresses[CHAIN_ID] === address ? { ...contract, ...newProps } : contract
-    ))
+    saveContracts(
+      subgraph.contracts.map(contract =>
+        contract.addresses[CHAIN_ID] === address ? { ...contract, ...newProps } : contract
+      )
+    )
   }
 
   const deleteSelectedContract = (address: string) => {
@@ -161,45 +157,11 @@ export const SubgraphConfig = () => {
     saveContracts(subgraph.contracts.filter(contract => contract.addresses[CHAIN_ID] !== address))
   }
 
-  const saveEvent = (contractAddress: string, newEvent: ContractEvent, eventIndex: number) => {
-    if (!subgraph) {
-      throw new Error('No subgraph')
-    }
-    const newFnsToInsert: string[] = []
-    const newImports: { event: string; contract: string }[] = []
-
-    const contractsToSave = subgraph.contracts.map(sc => {
-      if (sc.addresses[CHAIN_ID] === contractAddress) {
-        const newEvents = sc.events.map((sce, internalEventIndex) => {
-          if (internalEventIndex === eventIndex) {
-            if (!mappingFunctionNames.includes(newEvent.handler)) {
-              const eventName = newEvent.signature.split('(')[0]
-              newFnsToInsert.push(
-                `\nexport function ${newEvent.handler}(event: ${eventName}):void {}\n`
-              )
-              newImports.push({ event: eventName, contract: sc.name })
-            }
-            return newEvent
-          } else {
-            return sce
-          }
-        })
-
-        return {
-          ...sc,
-          events: newEvents,
-        }
-      } else {
-        return sc
-      }
-    })
-
-    let mappingCode = subgraph!.mappings[DEFAULT_MAPPING].concat(newFnsToInsert.join('m'))
-    for (const newImport of newImports) {
-      mappingCode = addImport(mappingCode, `contracts/${newImport.contract}`, newImport.event)
-    }
+  const createMappingFn = (fnName: string, eventName: string, contractName: string) => {
+    const newFn = `\nexport function ${fnName}(event: ${eventName}):void {}\n`
+    const mappingCode =
+      addImport(subgraph!.mappings[DEFAULT_MAPPING], `contracts/${contractName}`, eventName) + newFn
     saveMapping(DEFAULT_MAPPING, mappingCode)
-    saveContracts(contractsToSave)
   }
 
   return (
@@ -242,11 +204,15 @@ export const SubgraphConfig = () => {
           <SelectedContract
             key={`${subgraphId}-${sc.addresses[CHAIN_ID]}`}
             contract={sc}
-            updateContract={updateSelectedContract}
-            deleteContract={deleteSelectedContract}
+            updateContract={(newProps: Partial<Contract>) =>
+              updateSelectedContract(sc.addresses[CHAIN_ID], newProps)
+            }
+            deleteContract={() => deleteSelectedContract(sc.addresses[CHAIN_ID])}
+            createMappingFn={(fnName: string, eventName: string) =>
+              createMappingFn(fnName, eventName, sc.name)
+            }
             mappingFunctionNames={mappingFunctionNames}
             fnExtractionLoading={fnExtractionLoading}
-            saveEvent={saveEvent}
           />
         ))}
       </PrimaryFill>

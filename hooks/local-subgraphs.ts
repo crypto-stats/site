@@ -37,7 +37,8 @@ export interface SubgraphWithID extends SubgraphData {
   id: string
 }
 
-const { useStorageItem, useStorageList, setStorageItem, clearStorageItem } = withStorageItem<SubgraphData>(storageKey)
+const { useStorageItem, useStorageList, setStorageItem, clearStorageItem } =
+  withStorageItem<SubgraphData>(storageKey)
 
 export const useSubgraphList = useStorageList
 
@@ -82,7 +83,7 @@ export const useLocalSubgraph = (id?: string | null) => {
       throw new Error('ID not set')
     }
 
-    update({ ...subgraph, schema })
+    update(_subgraph => ({ ..._subgraph, schema }))
 
     return id
   }
@@ -92,20 +93,16 @@ export const useLocalSubgraph = (id?: string | null) => {
       throw new Error('ID not set')
     }
 
-    update({
-      ...subgraph,
-      mappings: { ...subgraph.mappings, [fileName]: mapping },
-    })
+    update(_subgraph => ({
+      ..._subgraph,
+      mappings: { ..._subgraph.mappings, [fileName]: mapping },
+    }))
 
     return id
   }
 
   const saveContracts = (contracts: Contract[]) => {
-    if (!id || !subgraph) {
-      throw new Error('ID not set')
-    }
-
-    update({ ...subgraph, contracts })
+    update(_subgraph => ({ ..._subgraph, contracts }))
 
     return id
   }
