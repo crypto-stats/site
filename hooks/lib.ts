@@ -29,6 +29,10 @@ export class UpdateListener {
 }
 
 function objEquals<T>(a: T, b: T) {
+  if (Object.keys(a).length !== Object.keys(b).length) {
+    return false
+  }
+
   for (let k in a) {
     if (a[k] !== b[k]) {
       return false
@@ -52,13 +56,13 @@ export const withStorageItem = <T>(storageKey: string) => {
       localCache = getStorage()
     }
 
+    localCache = { ...localCache, [id]: value }
+
     window.localStorage.setItem(
       storageKey,
-      JSON.stringify({
-        ...localCache,
-        [id]: value,
-      })
+      JSON.stringify(localCache)
     )
+    listUpdater.trigger()
   }
 
   const clearStorageItem = (id: string) => {
@@ -95,9 +99,7 @@ export const withStorageItem = <T>(storageKey: string) => {
       const _newVal: T =
         typeof newVal === 'function' ? (newVal as ItemTransformer)(localCache[id]) : newVal
 
-      localCache[id] = _newVal
       setStorageItem(id, _newVal)
-      listUpdater.trigger()
     }
 
     const removeItem = () => {
