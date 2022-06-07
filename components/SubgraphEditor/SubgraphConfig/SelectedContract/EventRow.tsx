@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Trash2, Edit, Search, Check } from 'lucide-react'
 
-import { Dropdown } from '../../atoms'
+import { Dropdown } from '../../../atoms'
 import { EventHandler } from './SelectedContract'
 import { SingleValue } from 'react-select'
 

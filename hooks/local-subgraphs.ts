@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { DeployStatus, deploySubgraph } from 'utils/deploy-subgraph'
+import { DeployStatus, deploySubgraph, STATUS } from 'utils/deploy-subgraph'
 import { withStorageItem } from './lib'
 export { STATUS } from 'utils/deploy-subgraph'
 
@@ -37,7 +37,8 @@ export interface SubgraphWithID extends SubgraphData {
   id: string
 }
 
-const { useStorageItem, useStorageList, setStorageItem, clearStorageItem } = withStorageItem<SubgraphData>(storageKey)
+const { useStorageItem, useStorageList, setStorageItem, clearStorageItem } =
+  withStorageItem<SubgraphData>(storageKey)
 
 export const useSubgraphList = useStorageList
 
@@ -121,6 +122,7 @@ export const useLocalSubgraph = (id?: string | null) => {
       }
     } catch (e: any) {
       console.error(e)
+      setDeployStatus({ status: STATUS.ERROR, errorMessage: e.message })
     }
   }
 

@@ -3,9 +3,11 @@ import { generateContractFile, generateSchemaFile } from './graph-file-generator
 
 export enum STATUS {
   INITIALIZING,
+  COMPILING,
   IPFS_UPLOAD,
   DEPLOYING,
   COMPLETE,
+  ERROR,
 }
 
 async function uploadToIPFS(file: string | Uint8Array, name: string) {
@@ -58,6 +60,7 @@ export interface DeployStatus {
   status: STATUS
   file?: string
   url?: string
+  errorMessage?: string
 }
 
 export async function* deploySubgraph(
@@ -78,7 +81,7 @@ export async function* deploySubgraph(
   const { compileAs } = await import('./as-compiler')
 
   yield {
-    status: STATUS.IPFS_UPLOAD,
+    status: STATUS.COMPILING,
   }
 
   const libraries: { [name: string]: string } = {}

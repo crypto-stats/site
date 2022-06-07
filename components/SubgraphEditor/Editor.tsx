@@ -14,8 +14,31 @@ import BottomTitleBar, { BottomView } from './BottomTitleBar'
 import { useEditorState } from 'hooks/editor-state'
 import { useGeneratedFiles } from 'hooks/useGeneratedFiles'
 import { Title, SubgraphList, Footer } from './LeftSide'
-import { SubgraphConfig } from '../SubgraphConfig'
+import { SubgraphConfig } from './SubgraphConfig'
 import { EmptyState } from './EmptyState'
+
+const StyledViewPort = styled(ViewPort)`
+  background-color: var(--color-dark-200);
+  font-family: Manrope;
+
+  @media (max-width: 700px) {
+    & > * {
+      display: none;
+    }
+
+    &:before {
+      content: 'The CryptoStats editor is not available on mobile devices 😢';
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      margin: 32px;
+      font-size: 24px;
+      text-align: center;
+    }
+  }
+`
 
 const TabContainer = styled(Top)`
   background-color: #0f1012;
@@ -35,26 +58,6 @@ const FillWithStyledResize = styled(Fill)<{ side: string }>`
   > .spaces-resize-handle {
     ${({ side }) => 'border-' + side}: solid 2px #4a4a4d;
     box-sizing: border-box;
-  }
-`
-
-const PrimaryFill = styled(FillWithStyledResize)`
-  @media (max-width: 700px) {
-    & > * {
-      display: none;
-    }
-
-    &:before {
-      content: 'The CryptoStats editor is not available on mobile devices 😢';
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      margin: 32px;
-      font-size: 24px;
-      text-align: center;
-    }
   }
 `
 
@@ -118,7 +121,7 @@ const Editor: React.FC = () => {
   }
 
   return (
-    <ViewPort style={{ background: '#0f1011', fontFamily: 'Manrope' }}>
+    <StyledViewPort>
       <PrimaryHeader filename={subgraphId} markers={markers} editorRef={editorRef} />
       <LeftResizable size={298} style={{ backgroundColor: '#303030' }}>
         <Fill scrollable={true} style={{ display: 'flex', flexDirection: 'column' }}>
@@ -127,7 +130,7 @@ const Editor: React.FC = () => {
           <Footer />
         </Fill>
       </LeftResizable>
-      <PrimaryFill side="right">
+      <FillWithStyledResize side="right">
         <Fill>
           {subgraph ? (
             <>
@@ -224,8 +227,8 @@ const Editor: React.FC = () => {
             <EmptyState />
           )}
         </Fill>
-      </PrimaryFill>
-    </ViewPort>
+      </FillWithStyledResize>
+    </StyledViewPort>
   )
 }
 
