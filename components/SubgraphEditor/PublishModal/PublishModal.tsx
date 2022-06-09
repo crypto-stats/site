@@ -8,8 +8,6 @@ import { STATUS, useLocalSubgraph } from 'hooks/local-subgraphs'
 import { ProgressBar } from '../atoms'
 import { InitStage } from './InitStage'
 
-const subgraphName = 'robertistok/cryptostats-test'
-
 const Root = styled.div`
   .info-p {
     font-size: 12px;
@@ -61,7 +59,7 @@ interface PublishModalProps {
 
 export const PublishModal: React.FC<PublishModalProps> = props => {
   const { fileName, show, onClose } = props
-  const { deploy: deployToNode, deployStatus } = useLocalSubgraph(fileName)
+  const { deploy: deployToNode, deployStatus, resetDeployStatus } = useLocalSubgraph(fileName)
   const [publishState, setPublishState] = useState<PublishState>({
     name: '',
     accessToken: '',
@@ -69,11 +67,16 @@ export const PublishModal: React.FC<PublishModalProps> = props => {
   })
 
   const deploy = async () => {
-    await deployToNode(subgraphName, process.env.NEXT_PUBLIC_GRAPH_KEY!)
+    await deployToNode(publishState.name, publishState.accessToken)
+  }
+
+  const close = () => {
+    resetDeployStatus()
+    onClose()
   }
 
   const returnButton = { label: 'Cancel', onClick: onClose }
-  const closeButton = { label: 'Close', onClick: onClose }
+  const closeButton = { label: 'Close', onClick: close }
 
   let title = 'Deploy configuration'
   let buttons: ModalButton[] = []
@@ -112,7 +115,7 @@ export const PublishModal: React.FC<PublishModalProps> = props => {
         title = 'Publishing'
         content = (
           <ProgressContainer>
-            <span className="status-text">Step 2/3: Uploading</span>
+            <span className="status-text">Step 2/3: Uploading {deployStatus?.file || null}</span>
             <div className="progress-bar-container">
               <ProgressBar completed />
               <ProgressBar active />
@@ -139,7 +142,7 @@ export const PublishModal: React.FC<PublishModalProps> = props => {
       case STATUS.COMPLETE:
         title = 'Published'
         // TODO
-        buttons = [closeButton, { label: 'Go to Subgraph', onClick: () => {} }]
+        buttons = [closeButton, { label: 'Go to Subgraph', href: deployStatus.url! }]
         content = (
           <ProgressContainer>
             <span className="status-text">Step 3/3: Subgraph published</span>
@@ -149,7 +152,8 @@ export const PublishModal: React.FC<PublishModalProps> = props => {
               <ProgressBar completed />
             </div>
             <span className="info-p" style={{ marginTop: 24 }}>
-              [More info about the just published subgraph]
+              Vist the subgraph page on the Graph Explorer to view the indexing status and send
+              queries.
             </span>
           </ProgressContainer>
         )

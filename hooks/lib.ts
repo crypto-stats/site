@@ -29,6 +29,10 @@ export class UpdateListener {
 }
 
 function objEquals<T>(a: T, b: T) {
+  if (Object.keys(a).length !== Object.keys(b).length) {
+    return false
+  }
+
   for (let k in a) {
     if (a[k] !== b[k]) {
       return false
@@ -38,6 +42,8 @@ function objEquals<T>(a: T, b: T) {
 }
 
 export const withStorageItem = <T>(storageKey: string) => {
+  type ItemTransformer = (oldItem: T) => T
+
   const listUpdater = new UpdateListener()
 
   let localCache: { [id: string]: T } | null = null
@@ -45,20 +51,18 @@ export const withStorageItem = <T>(storageKey: string) => {
   const getStorage = (): { [id: string]: T } =>
     typeof window === 'undefined' ? {} : JSON.parse(window.localStorage.getItem(storageKey) || '{}')
 
-  // const getStorageItem = (id: string) => getStorage()[id] || null
-
   const setStorageItem = (id: string, value: T) => {
     if (!localCache) {
       localCache = getStorage()
     }
 
+    localCache = { ...localCache, [id]: value }
+
     window.localStorage.setItem(
       storageKey,
-      JSON.stringify({
-        ...localCache,
-        [id]: value,
-      })
+      JSON.stringify(localCache)
     )
+    listUpdater.trigger()
   }
 
   const clearStorageItem = (id: string) => {
@@ -69,7 +73,9 @@ export const withStorageItem = <T>(storageKey: string) => {
     window.localStorage.setItem(storageKey, JSON.stringify(localCache))
   }
 
-  const useStorageItem = (id?: string | null): [T | null, (newVal: T) => void, () => void] => {
+  const useStorageItem = (
+    id?: string | null
+  ): [T | null, (newVal: T | ItemTransformer) => void, () => void] => {
     const item = useRef<T | null>(null)
     listUpdater.register()
 
@@ -82,16 +88,18 @@ export const withStorageItem = <T>(storageKey: string) => {
       item.current = null
     }
 
-    const updateItem = (newVal: T) => {
+    const updateItem = (newVal: T | ItemTransformer) => {
       if (!id) {
         throw new Error('ID not set')
       }
       if (!localCache) {
         localCache = getStorage()
       }
-      localCache[id] = newVal
-      setStorageItem(id, newVal)
-      listUpdater.trigger()
+
+      const _newVal: T =
+        typeof newVal === 'function' ? (newVal as ItemTransformer)(localCache[id]) : newVal
+
+      setStorageItem(id, _newVal)
     }
 
     const removeItem = () => {

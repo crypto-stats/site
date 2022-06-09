@@ -12,6 +12,7 @@ interface InputFieldProps {
   className?: string
   disabled?: boolean
   placeholder?: string
+  spellCheck?: boolean
 }
 
 const InputField = (props: InputFieldProps) => {
@@ -23,6 +24,7 @@ const InputField = (props: InputFieldProps) => {
     className,
     placeholder,
     overrideOnChange = false,
+    spellCheck = false,
   } = props
 
   if (name.toLowerCase().indexOf('date') !== -1) {
@@ -49,6 +51,7 @@ const InputField = (props: InputFieldProps) => {
       disabled={disabled}
       placeholder={placeholder}
       name={name}
+      spellCheck={spellCheck}
     />
   )
 }

@@ -1,9 +1,7 @@
 import styled from 'styled-components'
-import { Trash2, Edit, Search, Check } from 'lucide-react'
-
+import { Trash2, Search } from 'lucide-react'
 import { Dropdown } from '../../../atoms'
-import { EventHandler } from './SelectedContract'
-import { SingleValue } from 'react-select'
+import { ContractEvent } from 'hooks/local-subgraphs'
 
 const Root = styled.div`
   display: flex;
@@ -49,56 +47,60 @@ const formatGroupLabel = (data: any) => (
 )
 
 interface EventRowProps {
+  handleUpdate: (newEvent: ContractEvent) => void
+  createMappingFn: (fnName: string, eventName: string) => void
   deleteEventHandler: () => void
-  eventHandler: EventHandler
-  eventsOptions: {
-    label: string
-    value: string
-  }[]
+  eventHandler: ContractEvent
   fnExtractionLoading: boolean
-  handleSelectOptionChange: (key: 'signature' | 'handler') => (
-    newValue: SingleValue<{
-      label: string
-      value: string
-    }>
-  ) => void
-  mappingFnsOptions: {
-    label: string
-    options: {
-      label: string
-      value: string
-    }[]
-  }[]
-  saveEventHandler: () => void
-  toggleEditing: () => void
+  eventsOptions: { label: string; value: string }[]
+  mappingFns: string[]
+  eventName: string
 }
 
 export const EventRow = (props: EventRowProps) => {
   const {
+    handleUpdate,
+    createMappingFn,
     deleteEventHandler,
     eventHandler,
     eventsOptions,
     fnExtractionLoading,
-    handleSelectOptionChange,
-    mappingFnsOptions,
-    saveEventHandler,
-    toggleEditing,
+    mappingFns,
+    eventName,
   } = props
+
+  const newFnNameTemplate = `handle${eventName}`
+  const fnOccurrenceCount = mappingFns.filter(mfn => mfn.includes(newFnNameTemplate)).length
+  const newFnName =
+    fnOccurrenceCount === 0 ? newFnNameTemplate : `${newFnNameTemplate}${fnOccurrenceCount + 1}`
+
+  const mappingFnsOptions = [
+    {
+      label: 'Create new',
+      options: [{ label: newFnName, value: newFnName }],
+    },
+    {
+      label: 'Map to existing functions',
+      options: mappingFns.map(mfn => ({
+        label: mfn,
+        value: mfn,
+      })),
+    },
+  ]
 
   return (
     <Root>
       <Dropdown
         customStyles={customStyles}
-        isDisabled={!eventHandler.editing}
-        value={eventsOptions.find(efa => efa.value === eventHandler.signature)}
+        value={{ label: eventHandler.signature, value: eventHandler.signature }}
         name="signature"
-        onChange={handleSelectOptionChange('signature')}
+        onChange={newVal => handleUpdate({ ...eventHandler, signature: newVal!.label })}
         options={eventsOptions}
         placeholder="Choose event"
       />
       <Dropdown
         customStyles={customStyles}
-        isDisabled={!eventHandler.signature || !eventHandler.editing}
+        isDisabled={!eventHandler.signature}
         isSearchable
         components={{
           IndicatorSeparator: () => null,
@@ -109,22 +111,20 @@ export const EventRow = (props: EventRowProps) => {
           .reduce((acc: any[], { options }) => [...acc, ...options], [])
           .find(mfs => mfs.value === eventHandler.handler)}
         name="handler"
-        onChange={handleSelectOptionChange('handler')}
+        onChange={newVal => {
+          if (newVal!.label == newFnName) {
+            createMappingFn(newFnName, eventName)
+          }
+          handleUpdate({ ...eventHandler, handler: newVal!.label })
+        }}
         options={mappingFnsOptions}
         isLoading={fnExtractionLoading}
         formatGroupLabel={formatGroupLabel}
         placeholder="Declare event handler function"
       />
-      <ActionBtnsContainer editing={eventHandler.editing}>
-        {eventHandler.editing ? (
-          <Check size={16} color="#ffffff" onClick={saveEventHandler} />
-        ) : (
-          <>
-            <Search size={16} />
-            <Edit size={16} onClick={toggleEditing} />
-            <Trash2 size={16} onClick={deleteEventHandler} className="delete" />
-          </>
-        )}
+      <ActionBtnsContainer>
+        <Search size={16} />
+        <Trash2 size={16} onClick={deleteEventHandler} className="delete" />
       </ActionBtnsContainer>
     </Root>
   )
