@@ -31,7 +31,7 @@ import HistoryModal from 'components/AdapterPage/HistoryModal'
 import Attribute from 'components/AdapterPage/Attribute'
 import copy from 'copy-to-clipboard'
 
-setRPC(process.env.ETH_RPC || 'https://mainnet-nethermind.blockscout.com/')
+setRPC(process.env.NEXT_PUBLIC_ETH_RPC || 'https://mainnet-nethermind.blockscout.com/')
 
 const collectionAdmins = process.env.NEXT_PUBLIC_COLLECTION_ADMINS
   ? JSON.parse(process.env.NEXT_PUBLIC_COLLECTION_ADMINS.toLowerCase())
