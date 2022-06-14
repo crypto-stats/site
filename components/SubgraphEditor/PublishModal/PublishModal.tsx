@@ -48,6 +48,7 @@ export interface PublishState {
   name: string
   accessToken: string
   network: 'ethereum'
+  node: 'hosted' | 'studio'
 }
 
 interface PublishModalProps {
@@ -64,10 +65,15 @@ export const PublishModal: React.FC<PublishModalProps> = props => {
     name: '',
     accessToken: '',
     network: 'ethereum',
+    node: 'hosted',
   })
 
   const deploy = async () => {
-    await deployToNode(publishState.name, publishState.accessToken)
+    const node =
+      publishState.node === 'hosted'
+        ? '/api/graph/deploy'
+        : 'https://api.studio.thegraph.com/deploy/'
+    await deployToNode(node, publishState.name, publishState.accessToken)
   }
 
   const close = () => {

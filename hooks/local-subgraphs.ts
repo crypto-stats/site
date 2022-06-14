@@ -28,7 +28,7 @@ export interface SubgraphData {
   // For now, we only use one mapping (DEFAULT_MAPPING), but it's coded this way to be forward-compatable
   mappings: { [name: string]: string }
   schema: string
-  version: string | null
+  version: string
   contracts: Contract[]
   publications: Publication[]
 }
@@ -67,7 +67,7 @@ export const newSubgraph = ({
     name: 'Untitled subgraph',
     contracts,
     publications,
-    version: null,
+    version: '0.0.1',
   }
 
   setStorageItem(id, subgraph)
@@ -107,13 +107,13 @@ export const useLocalSubgraph = (id?: string | null) => {
     return id
   }
 
-  const deploy = async (subgraphName: string, deployKey: string) => {
+  const deploy = async (node: string, subgraphName: string, deployKey: string) => {
     if (!id || !subgraph) {
       throw new Error(`No subgraph loaded`)
     }
 
     try {
-      for await (const status of deploySubgraph(subgraph, { subgraphName, deployKey })) {
+      for await (const status of deploySubgraph(subgraph, { node, subgraphName, deployKey })) {
         setDeployStatus(status)
       }
     } catch (e: any) {

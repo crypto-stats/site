@@ -59,7 +59,11 @@ export const useAdapter = (id?: string | null) => {
     signature,
     hash,
     signer,
-  }: { signature: string; signer: string; hash: string }) => {
+  }: {
+    signature: string
+    signer: string
+    hash: string
+  }) => {
     if (!id || !adapter) {
       throw new Error('ID not set')
     }
