@@ -1409,10 +1409,10 @@
     "@ethersproject/properties" "^5.5.0"
     "@ethersproject/strings" "^5.5.0"
 
-"@graphprotocol/graph-cli@^0.29.0":
-  version "0.29.0"
-  resolved "https://registry.yarnpkg.com/@graphprotocol/graph-cli/-/graph-cli-0.29.0.tgz#bf723ea95736462684eca8a816934800aa467148"
-  integrity sha512-bO7dVqVfPXwtXqTHO8NHyWafJQ+Umdom5DrXXlWbSUoZYHpNQ+gIPQM91kLxY9JouL/lrSu79zRsC0+ynlRhdA==
+"@graphprotocol/graph-cli@^0.30.4":
+  version "0.30.4"
+  resolved "https://registry.yarnpkg.com/@graphprotocol/graph-cli/-/graph-cli-0.30.4.tgz#c1b353eb3362450259b78acc9f969e67c9f55858"
+  integrity sha512-BZNnkSJBgGIVvSx/cxlep1ytKhvGM1ZUZU/73Lu4yH+lpGQN3UtKjlUzcasHqPEwqyp47OifMHlHxDBm4+CVoQ==
   dependencies:
     assemblyscript "0.19.10"
     binary-install-raw "0.0.13"
@@ -1440,10 +1440,10 @@
     which "2.0.2"
     yaml "1.9.2"
 
-"@graphprotocol/graph-ts@^0.26.0":
-  version "0.26.0"
-  resolved "https://registry.yarnpkg.com/@graphprotocol/graph-ts/-/graph-ts-0.26.0.tgz#576f995531eebaca4374901aeaff499219e382e8"
-  integrity sha512-GW/emOJl+35MXgmIxTnUK7dJtPCaB9u5aAwoLVqJ8swogC794O92UrXMVrAJsherUriu+yI9bLMGmNPOIi60jw==
+"@graphprotocol/graph-ts@^0.27.0":
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/@graphprotocol/graph-ts/-/graph-ts-0.27.0.tgz#948fe1716f6082964a01a63a19bcbf9ac44e06ff"
+  integrity sha512-r1SPDIZVQiGMxcY8rhFSM0y7d/xAbQf5vHMWUf59js1KgoyWpM6P3tczZqmQd7JTmeyNsDGIPzd9FeaxllsU4w==
   dependencies:
     assemblyscript "0.19.10"
 
@@ -4644,9 +4644,9 @@ globals@^11.1.0:
   resolved "https://registry.yarnpkg.com/globals/-/globals-11.12.0.tgz#ab8795338868a0babd8525758018c2a7eb95c42e"
   integrity sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==
 
-"gluegun@https://github.com/edgeandnode/gluegun#v4.3.1-pin-colors-dep":
+"gluegun@git+https://github.com/edgeandnode/gluegun.git#v4.3.1-pin-colors-dep":
   version "4.3.1"
-  resolved "https://github.com/edgeandnode/gluegun#b34b9003d7bf556836da41b57ef36eb21570620a"
+  resolved "git+https://github.com/edgeandnode/gluegun.git#b34b9003d7bf556836da41b57ef36eb21570620a"
   dependencies:
     apisauce "^1.0.1"
     app-module-path "^2.2.0"

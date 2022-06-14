@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { Trash2, Search } from 'lucide-react'
 import { Dropdown } from '../../../atoms'
 import { ContractEvent } from 'hooks/local-subgraphs'
+import ReactTooltip from 'react-tooltip'
 
 const Root = styled.div`
   display: flex;
@@ -22,7 +23,12 @@ const ActionBtnsContainer = styled.div<{ editing?: boolean }>`
   > svg {
     &:hover {
       cursor: pointer;
+      color: #6f6f6f;
     }
+  }
+
+  > .disabled {
+    color: #424242;
   }
 
   > .delete {
@@ -44,6 +50,25 @@ const formatGroupLabel = (data: any) => (
   <div style={groupStyles}>
     <span>{data.label}</span>
   </div>
+)
+
+const ReceiptIcon: React.FC<{ size: number, onClick: () => void, className: string, tooltip?: string }> = ({ size, onClick, className, tooltip }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 512 512"
+    width={size}
+    height={size}
+    fill="currentColor"
+    onClick={onClick}
+    className={className}
+    data-tip={tooltip}
+    style={{ outline: 'none' }}
+  >
+    <path d="M128,0C57.313,0,0,57.313,0,128v384l0,0h32l32-32l32,32h32l32-32l32,32h32l32-32l32,32h32l32-32l32,32V128
+      C384,57.313,441.313,0,512,0H128z M352,128v306.75L306.75,480h-5.5L256,434.719L210.75,480h-5.5L160,434.75L114.75,480h-5.5
+      L64,434.75l-32,32V128c0-52.938,43.063-96,96-96h256.063C363.938,58.75,352,92,352,128z M64,320h160v32H64V320z M64,256h160v32H64
+      V256z M64,192h160v32H64V192z M320,352h-32v-32h32V352z M320,288h-32v-32h32V288z M320,224h-32v-32h32V224z"/>
+  </svg>
 )
 
 interface EventRowProps {
@@ -88,6 +113,8 @@ export const EventRow = (props: EventRowProps) => {
     },
   ]
 
+  const toggleReceipt = () => handleUpdate({ ...eventHandler, receipt: !eventHandler.receipt })
+
   return (
     <Root>
       <Dropdown
@@ -125,6 +152,13 @@ export const EventRow = (props: EventRowProps) => {
       <ActionBtnsContainer>
         <Search size={16} />
         <Trash2 size={16} onClick={deleteEventHandler} className="delete" />
+        <ReceiptIcon
+          onClick={toggleReceipt}
+          size={16}
+          className={eventHandler.receipt ? 'enabled' : 'disabled'}
+          tooltip={`${eventHandler.receipt ? 'Disable' : 'Enable'} transaction receipts`}
+        />
+        <ReactTooltip />
       </ActionBtnsContainer>
     </Root>
   )

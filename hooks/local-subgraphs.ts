@@ -12,7 +12,7 @@ interface Publication {
   version: string
 }
 
-export type ContractEvent = { signature: string; handler: string }
+export type ContractEvent = { signature: string; handler: string, receipt?: boolean }
 
 export interface Contract {
   name: string
