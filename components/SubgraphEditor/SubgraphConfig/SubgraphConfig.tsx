@@ -64,7 +64,17 @@ const ContractInput = styled(InputField)`
   background-position-x: calc(100% - 20px);
 `
 
+const ErrorState = styled.span`
+  color: #ff0000;
+  font-size: 11px;
+`
+
 const ADDRESS_REGEX = /^0x[0-9a-f]{40}$/i
+
+interface TErrorState {
+  address?: string
+  compiler?: string
+}
 
 export const SubgraphConfig = () => {
   const CHAIN_ID = '1'
@@ -73,12 +83,20 @@ export const SubgraphConfig = () => {
   const { subgraph, saveContracts, saveMapping, update } = useLocalSubgraph(subgraphId)
   const [contractAddress, setContractAddress] = useState('')
   const [started, setStarted] = useState(false)
-  // const []
+  const [errorState, setErrorState] = useState<TErrorState>({
+    address: undefined,
+    compiler: undefined,
+  })
 
   const [mappingFunctionNames, setMappingFunctionNames] = useState<string[]>([])
   const [fnExtractionLoading, setFnExtractionLoading] = useState(false)
 
+  const updateErrorState = (key: keyof TErrorState, message?: string) => {
+    setErrorState(prev => ({ ...prev, [key]: message }))
+  }
+
   const updateContractAddress = (address: string) => {
+    updateErrorState('address')
     if (!subgraph) {
       throw new Error('No subgraph')
     }
@@ -96,10 +114,11 @@ export const SubgraphConfig = () => {
         saveContracts([newContract, ...subgraph.contracts])
         setContractAddress('')
       } else {
-        alert(`Contract ${address} already added`)
+        updateErrorState('address', `Contract ${address} already added`)
       }
     } else {
       setContractAddress(address)
+      updateErrorState('address', `Contract "${address}" is not a valid contract`)
     }
   }
 
@@ -116,14 +135,19 @@ export const SubgraphConfig = () => {
 
     libraries['schema/index.ts'] = await generateSchemaFile(subgraph.schema)
 
-    const bytecode = await compileAs(subgraph.mappings[DEFAULT_MAPPING], { libraries })
-    const module = await loadAsBytecode(bytecode)
-    const exports = WebAssembly.Module.exports(module.module)
-    const functionNames = exports
-      .filter(_export => _export.kind === 'function')
-      .map(_export => _export.name)
-    setMappingFunctionNames(functionNames)
-    setFnExtractionLoading(false)
+    try {
+      const bytecode = await compileAs(subgraph.mappings[DEFAULT_MAPPING], { libraries })
+      const module = await loadAsBytecode(bytecode)
+      const exports = WebAssembly.Module.exports(module.module)
+      const functionNames = exports
+        .filter(_export => _export.kind === 'function')
+        .map(_export => _export.name)
+      setMappingFunctionNames(functionNames)
+      setFnExtractionLoading(false)
+      updateErrorState('compiler')
+    } catch (err: any) {
+      updateErrorState('compiler', err.message)
+    }
   }
 
   useEffect(() => {
@@ -164,6 +188,8 @@ export const SubgraphConfig = () => {
       addImport(subgraph!.mappings[DEFAULT_MAPPING], `contracts/${contractName}`, eventName) + newFn
     saveMapping(DEFAULT_MAPPING, mappingCode)
   }
+
+  console.log(errorState)
 
   return (
     <Root>
@@ -210,6 +236,7 @@ export const SubgraphConfig = () => {
           value={contractAddress}
           onChange={updateContractAddress}
         />
+        {errorState.address ? <ErrorState>{errorState.address}</ErrorState> : null}
         {subgraph?.contracts.map(sc => (
           <SelectedContract
             key={`${subgraphId}-${sc.addresses[CHAIN_ID]}`}
