@@ -28,6 +28,10 @@ async function uploadToIPFS(file: string | Uint8Array, name: string) {
     },
   })
   const json = await req.json()
+
+  if (!json.success) {
+    throw new Error(json.error)
+  }
   return json.cid
 }
 

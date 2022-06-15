@@ -6,11 +6,6 @@ const Root = styled.span`
   display: inline-block;
 `
 
-interface InputLabelProps {
-  children: React.ReactChild
-}
-
-export const InputLabel = (props: InputLabelProps) => {
-  const { children } = props
+export const InputLabel: React.FC = ({ children }) => {
   return <Root>{children}</Root>
 }
