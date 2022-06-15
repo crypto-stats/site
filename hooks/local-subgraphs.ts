@@ -23,6 +23,13 @@ export interface Contract {
   events: ContractEvent[]
 }
 
+export interface PublishConfig {
+  name: string
+  accessToken: string
+  network: 'ethereum'
+  node: 'hosted' | 'studio'
+}
+
 export interface SubgraphData {
   name: string | null
   // For now, we only use one mapping (DEFAULT_MAPPING), but it's coded this way to be forward-compatable
@@ -31,6 +38,7 @@ export interface SubgraphData {
   version: string
   contracts: Contract[]
   publications: Publication[]
+  publishConfig: PublishConfig | null
 }
 
 export interface SubgraphWithID extends SubgraphData {
@@ -45,6 +53,13 @@ export const useSubgraphList = useStorageList
 export const deleteSubgraph = clearStorageItem
 
 const randomId = () => Math.floor(Math.random() * 1000000).toString(16)
+
+export const DEFAULT_PUBLISH_CONFIG: PublishConfig = {
+  name: '',
+  accessToken: '',
+  network: 'ethereum',
+  node: 'studio',
+}
 
 interface NewSubgraphParams {
   mapping?: string
@@ -68,6 +83,7 @@ export const newSubgraph = ({
     contracts,
     publications,
     version: '0.0.1',
+    publishConfig: DEFAULT_PUBLISH_CONFIG,
   }
 
   setStorageItem(id, subgraph)
@@ -124,6 +140,9 @@ export const useLocalSubgraph = (id?: string | null) => {
 
   const resetDeployStatus = () => setDeployStatus(null)
 
+  const setPublishConfig = (config?: PublishConfig | null) =>
+    update(_subgraph => ({ ..._subgraph, publishConfig: config || null }))
+
   return {
     update,
     subgraph,
@@ -133,5 +152,6 @@ export const useLocalSubgraph = (id?: string | null) => {
     saveContracts,
     saveSchema,
     saveMapping,
+    setPublishConfig,
   }
 }

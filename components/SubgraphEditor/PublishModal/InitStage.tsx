@@ -1,9 +1,10 @@
+import { ChangeEvent, useState } from 'react'
 import styled from 'styled-components'
 import ReactTooltip from 'react-tooltip'
 
 import { InputLabel, InputField, ExplanationText } from '../atoms'
 import IconElement from 'components/Icon'
-import { PublishState } from './PublishModal'
+import { PublishConfig } from 'hooks/local-subgraphs'
 
 const ConfigContainer = styled.div`
   display: flex;
@@ -51,12 +52,19 @@ const NetworkButton = styled.button`
 `
 
 interface InitStageProps {
-  setPublishState: React.Dispatch<React.SetStateAction<PublishState>>
-  publishState: PublishState
+  setPublishState: React.Dispatch<React.SetStateAction<PublishConfig>>
+  publishState: PublishConfig
+  saveConfigRef: React.MutableRefObject<boolean>
 }
 
 export const InitStage = (props: InitStageProps) => {
-  const { publishState, setPublishState } = props
+  const { publishState, setPublishState, saveConfigRef } = props
+  const [saveConfig, setSaveConfig] = useState(saveConfigRef.current)
+
+  const handleSaveChecked = (e: ChangeEvent<HTMLInputElement>) => {
+    saveConfigRef.current = e.target.checked
+    setSaveConfig(e.target.checked)
+  }
 
   const handleInputChange = (e: any) =>
     setPublishState(prev => ({ ...prev, [e.target.name]: e.target.value }))
@@ -115,6 +123,14 @@ export const InitStage = (props: InitStageProps) => {
         name="accessToken"
         value={publishState.accessToken}
       />
+
+      <div style={{ marginBottom: 32 }} />
+      <InputLabel>
+        <label style={{ display: 'flex' }}>
+          <input type="checkbox" checked={saveConfig} onChange={handleSaveChecked} />
+          <div className="input-label-div">Save deploy configuration</div>
+        </label>
+      </InputLabel>
     </ConfigContainer>
   )
 }

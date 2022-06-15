@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import { Info } from 'lucide-react'
 
 import EditorModal, { Button as ModalButton } from '../EditorModal'
-import { STATUS, useLocalSubgraph } from 'hooks/local-subgraphs'
+import { DEFAULT_PUBLISH_CONFIG, STATUS, useLocalSubgraph } from 'hooks/local-subgraphs'
 
 import { ProgressBar } from '../atoms'
 import { InitStage } from './InitStage'
@@ -44,13 +44,6 @@ const ProgressContainer = styled.div`
   }
 `
 
-export interface PublishState {
-  name: string
-  accessToken: string
-  network: 'ethereum'
-  node: 'hosted' | 'studio'
-}
-
 interface PublishModalProps {
   fileName: string
   show: boolean
@@ -60,15 +53,20 @@ interface PublishModalProps {
 
 export const PublishModal: React.FC<PublishModalProps> = props => {
   const { fileName, show, onClose } = props
-  const { deploy: deployToNode, deployStatus, resetDeployStatus } = useLocalSubgraph(fileName)
-  const [publishState, setPublishState] = useState<PublishState>({
-    name: '',
-    accessToken: '',
-    network: 'ethereum',
-    node: 'hosted',
-  })
+  const {
+    subgraph,
+    deploy: deployToNode,
+    deployStatus,
+    resetDeployStatus,
+    setPublishConfig,
+  } = useLocalSubgraph(fileName)
+  const [publishState, setPublishState] = useState(
+    subgraph?.publishConfig || DEFAULT_PUBLISH_CONFIG
+  )
+  const saveConfig = useRef(!!subgraph?.publishConfig)
 
   const deploy = async () => {
+    setPublishConfig(saveConfig.current ? publishState : null)
     const node =
       publishState.node === 'hosted'
         ? '/api/graph/deploy'
@@ -100,7 +98,13 @@ export const PublishModal: React.FC<PublishModalProps> = props => {
             disabled: !publishState.accessToken || !publishState.name,
           },
         ]
-        content = <InitStage setPublishState={setPublishState} publishState={publishState} />
+        content = (
+          <InitStage
+            setPublishState={setPublishState}
+            publishState={publishState}
+            saveConfigRef={saveConfig}
+          />
+        )
         break
 
       case STATUS.COMPILING:
