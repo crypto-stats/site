@@ -35,6 +35,25 @@ async function uploadToIPFS(file: string | Uint8Array, name: string) {
   return json.cid
 }
 
+async function compileAs(file: string, libraries: { [name: string]: string }) {
+  const req = await fetch('/api/graph/compile-as', {
+    method: 'POST',
+    body: JSON.stringify({ file, libraries }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  const json = await req.json()
+
+  if (!json.success) {
+    throw new Error(json.error)
+  }
+
+  const bytecode = Buffer.from(json.bytecode, 'base64')
+
+  return bytecode
+}
+
 async function deployHosted(
   node: string,
   name: string,
@@ -89,7 +108,25 @@ export async function* deploySubgraph(
   }
 
   const yaml = await import('js-yaml')
-  const { compileAs } = await import('./as-compiler')
+  // @ts-ignore
+  const { default: ABI } = await import('@graphprotocol/graph-cli/src/protocols/ethereum/abi')
+  const immutable = await import('immutable')
+
+  const getGraphEvent = (abi: any[], signature: string) => {
+    for (const item of abi) {
+      if (item.type === 'event') {
+        const params = item.inputs.map(
+          (ei: any) => `${ei.indexed ? 'indexed ' : ''}${ei.type} ${ei.name}`
+        )
+        const longSignature = `${item.name}(${params.join(', ')})`
+
+        if (longSignature === signature) {
+          return ABI.eventSignature(immutable.fromJS(item))
+        }
+      }
+    }
+    throw new Error(`Couldn't find event ${signature} in ABI`)
+  }
 
   yield {
     status: STATUS.COMPILING,
@@ -104,7 +141,7 @@ export async function* deploySubgraph(
 
   libraries['schema/index.ts'] = await generateSchemaFile(subgraph.schema)
 
-  const compiled = await compileAs(subgraph.mappings[DEFAULT_MAPPING], { libraries })
+  const compiled = await compileAs(subgraph.mappings[DEFAULT_MAPPING], libraries)
 
   yield {
     status: STATUS.IPFS_UPLOAD,
@@ -144,7 +181,7 @@ export async function* deploySubgraph(
         apiVersion: '0.0.5',
         entities: ['Pair'],
         eventHandlers: contract.events.map((event: { signature: string; handler: string }) => ({
-          event: event.signature,
+          event: getGraphEvent(contract.abi, event.signature),
           handler: event.handler,
         })),
         file: {
