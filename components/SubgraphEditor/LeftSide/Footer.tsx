@@ -10,14 +10,24 @@ const DocumentationLink = styled.a`
   font-size: 14px;
   color: var(--color-white);
   text-decoration: none;
+
+  &:hover {
+    cursor: pointer;
+  }
 `
 
-export const Footer = () => {
+interface FooterProps {
+  onDocsClick: () => void
+}
+
+export const Footer = (props: FooterProps) => {
+  const { onDocsClick } = props
+
   return (
     <>
       <Separator />
       <Root>
-        <DocumentationLink href="#" className="main-title">
+        <DocumentationLink href="#" className="main-title" onClick={onDocsClick}>
           Help & Documentation
         </DocumentationLink>
       </Root>
