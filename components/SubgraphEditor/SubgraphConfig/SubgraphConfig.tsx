@@ -70,7 +70,7 @@ export const SubgraphConfig = () => {
   const CHAIN_ID = '1'
 
   const [subgraphId] = useEditorState<string | null>('subgraph-file')
-  const { subgraph, saveContracts, saveMapping } = useLocalSubgraph(subgraphId)
+  const { subgraph, saveContracts, saveMapping, update } = useLocalSubgraph(subgraphId)
   const [contractAddress, setContractAddress] = useState('')
   const [started, setStarted] = useState(false)
 
@@ -192,6 +192,15 @@ export const SubgraphConfig = () => {
             // options={[{ label: 'Ethereum mainnet', value: CHAIN_ID }]}
           />
         </div>
+
+        <InputLabel>Version</InputLabel>
+        <ContractInput
+          placeholder="Subgraph version number"
+          name="version"
+          value={subgraph?.version || ''}
+          onChange={version => update(_subgraph => ({ ..._subgraph, version }))}
+        />
+
         <Title>Contracts</Title>
         <InputLabel>Add contract</InputLabel>
         <ContractInput

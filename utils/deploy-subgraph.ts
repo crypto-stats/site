@@ -31,8 +31,14 @@ async function uploadToIPFS(file: string | Uint8Array, name: string) {
   return json.cid
 }
 
-async function deployHosted(name: string, cid: string, deployKey: string) {
-  const req = await fetch('/api/graph/deploy', {
+async function deployHosted(
+  node: string,
+  name: string,
+  cid: string,
+  deployKey: string,
+  version_label: string
+) {
+  const req = await fetch(node, {
     method: 'POST',
     body: JSON.stringify({
       jsonrpc: '2.0',
@@ -40,6 +46,7 @@ async function deployHosted(name: string, cid: string, deployKey: string) {
       params: {
         name,
         ipfs_hash: cid,
+        version_label,
       },
       id: 2,
     }),
@@ -63,15 +70,15 @@ export interface DeployStatus {
   errorMessage?: string
 }
 
+interface DeployOptions {
+  node: string
+  subgraphName: string
+  deployKey: string
+}
+
 export async function* deploySubgraph(
   subgraph: SubgraphData,
-  {
-    subgraphName,
-    deployKey,
-  }: {
-    subgraphName: string
-    deployKey: string
-  }
+  { node, subgraphName, deployKey }: DeployOptions
 ): AsyncGenerator<DeployStatus> {
   yield {
     status: STATUS.INITIALIZING,
@@ -174,7 +181,13 @@ export async function* deploySubgraph(
     status: STATUS.DEPLOYING,
   }
 
-  const deployResult = await deployHosted(subgraphName, manifestCID, deployKey)
+  const deployResult = await deployHosted(
+    node,
+    subgraphName,
+    manifestCID,
+    deployKey,
+    subgraph.version
+  )
 
   yield {
     status: STATUS.COMPLETE,

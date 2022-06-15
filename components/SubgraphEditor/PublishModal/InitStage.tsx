@@ -25,8 +25,13 @@ const NetworkButton = styled.button`
   align-items: center;
   height: 38px;
   padding: 8px 10px;
-  border: 0;
+  border: solid 3px transparent;
   outline: 0;
+  cursor: pointer;
+
+  &:hover {
+    background: #36363d;
+  }
 
   &:disabled {
     color: #a3a0a0;
@@ -53,24 +58,30 @@ interface InitStageProps {
 export const InitStage = (props: InitStageProps) => {
   const { publishState, setPublishState } = props
 
-  const handleInputChange = (e: any) => {
-    console.log(e)
+  const handleInputChange = (e: any) =>
     setPublishState(prev => ({ ...prev, [e.target.name]: e.target.value }))
-  }
+
+  const setNode = (nodeName: typeof publishState.node) => () =>
+    setPublishState(prev => ({ ...prev, node: nodeName }))
 
   return (
     <ConfigContainer>
       <div style={{ marginBottom: 32 }} />
       <InputLabel>Destination</InputLabel>
       <div className="network-selection-container">
-        <NetworkButton className="ready-now">
+        <NetworkButton
+          className={publishState.node === 'hosted' ? 'ready-now' : ''}
+          onClick={setNode('hosted')}
+        >
           <IconElement type="ethereum" size={'x-small'} />
           Hosted
         </NetworkButton>
-        <NetworkButton disabled>
+        <NetworkButton
+          className={publishState.node === 'studio' ? 'ready-now' : ''}
+          onClick={setNode('studio')}
+        >
           <IconElement type="ethereum" size={'x-small'} />
           Mainnet
-          <span className="ready-soon">Ready Soon</span>
         </NetworkButton>
       </div>
       <div style={{ marginBottom: 32 }} />
