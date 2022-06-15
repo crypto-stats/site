@@ -73,6 +73,7 @@ export const SubgraphConfig = () => {
   const { subgraph, saveContracts, saveMapping, update } = useLocalSubgraph(subgraphId)
   const [contractAddress, setContractAddress] = useState('')
   const [started, setStarted] = useState(false)
+  // const []
 
   const [mappingFunctionNames, setMappingFunctionNames] = useState<string[]>([])
   const [fnExtractionLoading, setFnExtractionLoading] = useState(false)
@@ -82,11 +83,11 @@ export const SubgraphConfig = () => {
       throw new Error('No subgraph')
     }
     const alreadySelected = subgraph.contracts.find(sc => sc.addresses[CHAIN_ID] === address)
-    if (ADDRESS_REGEX.test(contractAddress)) {
+    if (ADDRESS_REGEX.test(address)) {
       if (!alreadySelected) {
         const newContract: Contract = {
           name: '',
-          addresses: { [CHAIN_ID]: contractAddress },
+          addresses: { [CHAIN_ID]: address },
           abi: null,
           startBlocks: {},
           source: 'etherscan',
@@ -95,7 +96,7 @@ export const SubgraphConfig = () => {
         saveContracts([newContract, ...subgraph.contracts])
         setContractAddress('')
       } else {
-        alert(`Contract ${contractAddress} already added`)
+        alert(`Contract ${address} already added`)
       }
     } else {
       setContractAddress(address)
