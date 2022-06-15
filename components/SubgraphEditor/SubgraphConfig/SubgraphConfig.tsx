@@ -21,24 +21,6 @@ const PrimaryFill = styled.section`
   display: flex;
   flex-direction: column;
   padding: 32px;
-  /* margin: 0px auto; */
-  @media (max-width: 700px) {
-    & > * {
-      display: none;
-    }
-
-    &:before {
-      content: 'The CryptoStats editor is not available on mobile devices 😢';
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      margin: 32px;
-      font-size: 24px;
-      text-align: center;
-    }
-  }
 `
 
 const Title = styled.h3`
@@ -188,8 +170,6 @@ export const SubgraphConfig = () => {
       addImport(subgraph!.mappings[DEFAULT_MAPPING], `contracts/${contractName}`, eventName) + newFn
     saveMapping(DEFAULT_MAPPING, mappingCode)
   }
-
-  console.log(errorState)
 
   return (
     <Root>
