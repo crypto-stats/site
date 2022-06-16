@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Info } from 'lucide-react'
 
-import { InputLabel, InputField } from '../atoms'
+import { InputLabel, InputField, ErrorState } from '../atoms'
 import { Contract, useLocalSubgraph, DEFAULT_MAPPING, SubgraphData } from 'hooks/local-subgraphs'
 import { useEditorState } from 'hooks/editor-state'
 import { SelectedContract } from './SelectedContract'
@@ -44,11 +44,6 @@ const ContractInput = styled(InputField)`
   background: url('/Icon/ico-magnifying-glass.svg') no-repeat right;
   background-size: 16px;
   background-position-x: calc(100% - 20px);
-`
-
-const ErrorState = styled.span`
-  color: #ff0000;
-  font-size: 11px;
 `
 
 const ADDRESS_REGEX = /^0x[0-9a-f]{40}$/i
@@ -230,6 +225,7 @@ export const SubgraphConfig = () => {
             }
             mappingFunctionNames={mappingFunctionNames}
             fnExtractionLoading={fnExtractionLoading}
+            compileError={errorState.compiler}
           />
         ))}
       </PrimaryFill>
