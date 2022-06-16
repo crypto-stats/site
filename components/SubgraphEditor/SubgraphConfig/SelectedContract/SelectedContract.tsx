@@ -4,6 +4,7 @@ import { Plus, Trash2 } from 'lucide-react'
 
 import { Contract, ContractEvent } from 'hooks/local-subgraphs'
 import { EventRow } from './EventRow'
+import { ErrorState } from 'components/SubgraphEditor/atoms'
 
 const Root = styled.div`
   margin-bottom: 24px;
@@ -106,6 +107,7 @@ interface SelectedContractProps {
   mappingFunctionNames: string[]
   subgraphMappings?: { [name: string]: string }
   updateContract: (newProps: Partial<Contract>) => void
+  compileError?: string
 }
 
 export const SelectedContract = (props: SelectedContractProps) => {
@@ -116,6 +118,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
     fnExtractionLoading,
     mappingFunctionNames,
     updateContract,
+    compileError,
   } = props
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -225,59 +228,62 @@ export const SelectedContract = (props: SelectedContractProps) => {
           ) : null}
         </StatusContainer>
       </Header>
-      <EventHandlerContainer>
-        <div className="labels">
-          <span>ABI</span>
-          <span>Map</span>
-        </div>
-        {events.map((eh, idx) => (
-          <EventRow
-            key={`${eh.handler}-${idx}`}
-            handleUpdate={(newEvent: ContractEvent) =>
-              updateContract({
-                events: events.map((p, i) => (i === idx ? newEvent : p)),
-              })
-            }
-            createMappingFn={createMappingFn}
-            eventsOptions={eventsFromAbiSelectOptions}
-            mappingFns={mappingFunctionNames}
-            eventName={eh.signature.split('(')[0].replace(' ', '')}
-            fnExtractionLoading={fnExtractionLoading}
-            deleteEventHandler={() => deleteEventHandler(idx)}
-            eventHandler={eh}
-          />
-        ))}
+      {compileError ? (
+        <ErrorState>Please fix all compiler errors before managing events</ErrorState>
+      ) : (
+        <EventHandlerContainer>
+          <div className="labels">
+            <span>ABI</span>
+            <span>Map</span>
+          </div>
+          {events.map((eh, idx) => (
+            <EventRow
+              key={`${eh.handler}-${idx}`}
+              handleUpdate={(newEvent: ContractEvent) =>
+                updateContract({
+                  events: events.map((p, i) => (i === idx ? newEvent : p)),
+                })
+              }
+              createMappingFn={createMappingFn}
+              eventsOptions={eventsFromAbiSelectOptions}
+              mappingFns={mappingFunctionNames}
+              eventName={eh.signature.split('(')[0].replace(' ', '')}
+              fnExtractionLoading={fnExtractionLoading}
+              deleteEventHandler={() => deleteEventHandler(idx)}
+              eventHandler={eh}
+            />
+          ))}
 
-        {newEvent.show && (
-          <EventRow
-            handleUpdate={(newEvent: ContractEvent) => {
-              updateContract({ events: [...events, newEvent] })
-              setNewEvent({ show: false, signature: '' })
-            }}
-            createMappingFn={() => null}
-            eventsOptions={eventsFromAbiSelectOptions}
-            mappingFns={[]}
-            eventName=""
-            fnExtractionLoading={fnExtractionLoading}
-            deleteEventHandler={() => setNewEvent({ show: false, signature: '' })}
-            eventHandler={{ signature: '', handler: '' }}
-          />
-        )}
+          {newEvent.show && (
+            <EventRow
+              handleUpdate={(newEvent: ContractEvent) => {
+                updateContract({ events: [...events, newEvent] })
+                setNewEvent({ show: false, signature: '' })
+              }}
+              createMappingFn={() => null}
+              eventsOptions={eventsFromAbiSelectOptions}
+              mappingFns={[]}
+              eventName=""
+              fnExtractionLoading={fnExtractionLoading}
+              deleteEventHandler={() => setNewEvent({ show: false, signature: '' })}
+              eventHandler={{ signature: '', handler: '' }}
+            />
+          )}
 
-        <NewEventBtnContainer>
-          <ActionButton
-            disabled={!contractHasEvents}
-            onClick={() => setNewEvent({ show: true, signature: '' })}
-            {...(!contractHasEvents && {
-              disabled: true,
-              title: 'Contract has no events defined',
-            })}
-          >
-            <Plus size={12} style={{ marginRight: 4 }} />
-            New
-          </ActionButton>
-        </NewEventBtnContainer>
-      </EventHandlerContainer>
+          <NewEventBtnContainer>
+            <ActionButton
+              disabled={!contractHasEvents}
+              onClick={() => setNewEvent({ show: true, signature: '' })}
+              {...(!contractHasEvents && {
+                disabled: true,
+                title: 'Contract has no events defined',
+              })}>
+              <Plus size={12} style={{ marginRight: 4 }} />
+              New
+            </ActionButton>
+          </NewEventBtnContainer>
+        </EventHandlerContainer>
+      )}
     </Root>
   )
 }
