@@ -131,7 +131,7 @@ export const SubgraphConfig = () => {
     if (subgraph?.mappings[DEFAULT_MAPPING]) {
       loadFunctionsFromMappingCode(subgraph)
     }
-  }, [subgraph?.mappings[DEFAULT_MAPPING]])
+  }, [])
 
   useEffect(() => {
     setStarted(true)
