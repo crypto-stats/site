@@ -77,7 +77,6 @@ const ButtonElement = styled.button<ButtonElementProps>`
   &:hover:disabled {
     border-color: #999 !important;
     background-color: #999 !important;
-    opacity: 0.5;
     cursor: not-allowed;
     color: var(--color-dark-600) !important;
   }
@@ -159,22 +158,23 @@ interface ButtonProps {
   title?: string
 }
 
-const Button: React.FC<ButtonProps> = ({
-  children,
-  onClick,
-  href,
-  target,
-  disabled,
-  className,
-  variant,
-  icon,
-  width,
-  size,
-  fullWidth,
-  centered,
-  loading,
-  title = '',
-}) => {
+const Button: React.FC<ButtonProps> = props => {
+  const {
+    children,
+    onClick,
+    href,
+    target,
+    disabled,
+    className,
+    variant,
+    icon,
+    width,
+    size,
+    fullWidth,
+    centered,
+    loading,
+    title = '',
+  } = props
   let svgIcon: React.ReactNode | null = null
 
   if (icon) {
@@ -194,21 +194,22 @@ const Button: React.FC<ButtonProps> = ({
     }
   }
 
+  const buttonProps = {
+    loading,
+    centered,
+    fullWidth,
+    size,
+    title,
+    variant,
+    width,
+    className,
+  }
+
+  const isDisabled = disabled || loading
+
   if (href) {
     return (
-      <ButtonElement
-        as="a"
-        href={href}
-        target={target}
-        loading={loading}
-        className={className}
-        width={width}
-        variant={variant}
-        size={size}
-        fullWidth={fullWidth}
-        centered={centered}
-        title={title}
-      >
+      <ButtonElement as="a" href={href} target={target} {...buttonProps}>
         {icon && <Icon>{svgIcon}</Icon>}
         <span>{children}</span>
       </ButtonElement>
@@ -216,18 +217,7 @@ const Button: React.FC<ButtonProps> = ({
   }
 
   return (
-    <ButtonElement
-      onClick={onClick}
-      loading={loading}
-      disabled={disabled || loading}
-      className={className}
-      width={width}
-      variant={variant}
-      size={size}
-      fullWidth={fullWidth}
-      centered={centered}
-      title={title}
-    >
+    <ButtonElement {...buttonProps} {...(disabled ? { disabled: isDisabled } : { onClick })}>
       {icon && <Icon>{svgIcon}</Icon>}
       <span>{children}</span>
     </ButtonElement>

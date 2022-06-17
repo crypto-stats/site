@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { ViewPort, Top, Fill, Bottom, BottomResizable, Right, LeftResizable } from 'react-spaces'
+import { ViewPort, Top, Fill, Bottom, BottomResizable, Right } from 'react-spaces'
 import styled from 'styled-components'
 import CodeEditor from 'components/CodeEditor'
 import { useLocalSubgraph, DEFAULT_MAPPING } from 'hooks/local-subgraphs'
@@ -13,7 +13,7 @@ import Console from './Console'
 import BottomTitleBar, { BottomView } from './BottomTitleBar'
 import { useEditorState } from 'hooks/editor-state'
 import { useGeneratedFiles } from 'hooks/useGeneratedFiles'
-import { Title, SubgraphList, Footer } from './LeftSide'
+import { LeftSide } from './LeftSide'
 import { SubgraphConfig } from './SubgraphConfig'
 import { EmptyState } from './EmptyState'
 
@@ -21,7 +21,7 @@ const StyledViewPort = styled(ViewPort)`
   background-color: var(--color-dark-200);
   font-family: Manrope;
 
-  @media (max-width: 700px) {
+  @media (max-width: 780px) {
     & > * {
       display: none;
     }
@@ -66,6 +66,7 @@ const SCHEMA_FILE_NAME = 'schema.graphql'
 const Editor: React.FC = () => {
   const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file' || null)
   const [tab, setTab] = useState(SCHEMA_FILE_NAME)
+  const [showDocs, setShowDocs] = useState(false)
 
   const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId)
 
@@ -122,14 +123,18 @@ const Editor: React.FC = () => {
 
   return (
     <StyledViewPort>
-      <PrimaryHeader filename={subgraphId} markers={markers} editorRef={editorRef} />
-      <LeftResizable size={298} style={{ backgroundColor: '#303030' }}>
-        <Fill scrollable={true} style={{ display: 'flex', flexDirection: 'column' }}>
-          <Title />
-          <SubgraphList selected={subgraphId} onSelected={setSubgraphId} />
-          <Footer />
-        </Fill>
-      </LeftResizable>
+      <PrimaryHeader
+        filename={subgraphId}
+        markers={markers}
+        editorRef={editorRef}
+        showDocs={showDocs}
+      />
+      <LeftSide
+        subgraphId={subgraphId}
+        setSubgraphId={setSubgraphId}
+        showDocs={showDocs}
+        setShowDocs={setShowDocs}
+      />
       <FillWithStyledResize side="right">
         <Fill>
           {subgraph ? (

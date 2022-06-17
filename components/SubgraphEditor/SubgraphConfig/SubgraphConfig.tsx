@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Info } from 'lucide-react'
 
-import { InputLabel, InputField } from '../atoms'
+import { InputLabel, InputField, ErrorState } from '../atoms'
 import { Contract, useLocalSubgraph, DEFAULT_MAPPING, SubgraphData } from 'hooks/local-subgraphs'
 import { useEditorState } from 'hooks/editor-state'
 import { SelectedContract } from './SelectedContract'
@@ -21,24 +21,6 @@ const PrimaryFill = styled.section`
   display: flex;
   flex-direction: column;
   padding: 32px;
-  /* margin: 0px auto; */
-  @media (max-width: 700px) {
-    & > * {
-      display: none;
-    }
-
-    &:before {
-      content: 'The CryptoStats editor is not available on mobile devices 😢';
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      margin: 32px;
-      font-size: 24px;
-      text-align: center;
-    }
-  }
 `
 
 const Title = styled.h3`
@@ -66,6 +48,11 @@ const ContractInput = styled(InputField)`
 
 const ADDRESS_REGEX = /^0x[0-9a-f]{40}$/i
 
+interface TErrorState {
+  address?: string
+  compiler?: string
+}
+
 export const SubgraphConfig = () => {
   const CHAIN_ID = '1'
 
@@ -73,20 +60,29 @@ export const SubgraphConfig = () => {
   const { subgraph, saveContracts, saveMapping, update } = useLocalSubgraph(subgraphId)
   const [contractAddress, setContractAddress] = useState('')
   const [started, setStarted] = useState(false)
+  const [errorState, setErrorState] = useState<TErrorState>({
+    address: undefined,
+    compiler: undefined,
+  })
 
   const [mappingFunctionNames, setMappingFunctionNames] = useState<string[]>([])
   const [fnExtractionLoading, setFnExtractionLoading] = useState(false)
 
+  const updateErrorState = (key: keyof TErrorState, message?: string) => {
+    setErrorState(prev => ({ ...prev, [key]: message }))
+  }
+
   const updateContractAddress = (address: string) => {
+    updateErrorState('address')
     if (!subgraph) {
       throw new Error('No subgraph')
     }
     const alreadySelected = subgraph.contracts.find(sc => sc.addresses[CHAIN_ID] === address)
-    if (ADDRESS_REGEX.test(contractAddress)) {
+    if (ADDRESS_REGEX.test(address)) {
       if (!alreadySelected) {
         const newContract: Contract = {
           name: '',
-          addresses: { [CHAIN_ID]: contractAddress },
+          addresses: { [CHAIN_ID]: address },
           abi: null,
           startBlocks: {},
           source: 'etherscan',
@@ -95,10 +91,11 @@ export const SubgraphConfig = () => {
         saveContracts([newContract, ...subgraph.contracts])
         setContractAddress('')
       } else {
-        alert(`Contract ${contractAddress} already added`)
+        updateErrorState('address', `Contract ${address} already added`)
       }
     } else {
       setContractAddress(address)
+      updateErrorState('address', `Contract "${address}" is not a valid contract`)
     }
   }
 
@@ -115,21 +112,26 @@ export const SubgraphConfig = () => {
 
     libraries['schema/index.ts'] = await generateSchemaFile(subgraph.schema)
 
-    const bytecode = await compileAs(subgraph.mappings[DEFAULT_MAPPING], { libraries })
-    const module = await loadAsBytecode(bytecode)
-    const exports = WebAssembly.Module.exports(module.module)
-    const functionNames = exports
-      .filter(_export => _export.kind === 'function')
-      .map(_export => _export.name)
-    setMappingFunctionNames(functionNames)
-    setFnExtractionLoading(false)
+    try {
+      const bytecode = await compileAs(subgraph.mappings[DEFAULT_MAPPING], { libraries })
+      const module = await loadAsBytecode(bytecode)
+      const exports = WebAssembly.Module.exports(module.module)
+      const functionNames = exports
+        .filter(_export => _export.kind === 'function')
+        .map(_export => _export.name)
+      setMappingFunctionNames(functionNames)
+      setFnExtractionLoading(false)
+      updateErrorState('compiler')
+    } catch (err: any) {
+      updateErrorState('compiler', err.message)
+    }
   }
 
   useEffect(() => {
     if (subgraph?.mappings[DEFAULT_MAPPING]) {
       loadFunctionsFromMappingCode(subgraph)
     }
-  }, [subgraph?.mappings[DEFAULT_MAPPING]])
+  }, [])
 
   useEffect(() => {
     setStarted(true)
@@ -209,6 +211,7 @@ export const SubgraphConfig = () => {
           value={contractAddress}
           onChange={updateContractAddress}
         />
+        {errorState.address ? <ErrorState>{errorState.address}</ErrorState> : null}
         {subgraph?.contracts.map(sc => (
           <SelectedContract
             key={`${subgraphId}-${sc.addresses[CHAIN_ID]}`}
@@ -222,6 +225,7 @@ export const SubgraphConfig = () => {
             }
             mappingFunctionNames={mappingFunctionNames}
             fnExtractionLoading={fnExtractionLoading}
+            compileError={errorState.compiler}
           />
         ))}
       </PrimaryFill>

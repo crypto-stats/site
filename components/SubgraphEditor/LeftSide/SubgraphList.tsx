@@ -135,7 +135,9 @@ export const SubgraphList: React.FC<FileListProps> = ({ selected, onSelected, fi
   }
 
   const handleSubgraphDeleted = (id: string) => {
-    deleteSubgraph(id)
+    if (window.confirm('Do you really want to delete this subgraph from your local storage?')) {
+      deleteSubgraph(id)
+    }
   }
 
   return (

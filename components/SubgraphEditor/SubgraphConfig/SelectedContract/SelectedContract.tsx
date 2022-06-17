@@ -4,6 +4,7 @@ import { Plus, Trash2 } from 'lucide-react'
 
 import { Contract, ContractEvent } from 'hooks/local-subgraphs'
 import { EventRow } from './EventRow'
+import { ErrorState } from 'components/SubgraphEditor/atoms'
 
 const Root = styled.div`
   margin-bottom: 24px;
@@ -106,6 +107,7 @@ interface SelectedContractProps {
   mappingFunctionNames: string[]
   subgraphMappings?: { [name: string]: string }
   updateContract: (newProps: Partial<Contract>) => void
+  compileError?: string
 }
 
 export const SelectedContract = (props: SelectedContractProps) => {
@@ -116,6 +118,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
     fnExtractionLoading,
     mappingFunctionNames,
     updateContract,
+    compileError,
   } = props
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -123,25 +126,32 @@ export const SelectedContract = (props: SelectedContractProps) => {
   const contractHasEvents = eventsFromAbi.length > 0
 
   const [newEvent, setNewEvent] = useState({ show: false, signature: '' })
+  const [metadataLoading, setMetadataLoading] = useState(false)
 
   const fetchMetadata = async () => {
+    setMetadataLoading(true)
     const metadataReq = await fetch(
       `https://miniscan.xyz/api/contract?network=ethereum&address=${addresses[CHAIN_ID]}`
     )
     const metadata = await metadataReq.json()
 
-    if (!metadata.error) {
+    const contractSourceCodeNotVerified =
+      metadata?.data?.ABI === 'Contract source code not verified'
+
+    if (!metadata.error && !contractSourceCodeNotVerified) {
       updateContract({
         abi: JSON.parse(metadata.data.ABI),
         startBlocks: { [CHAIN_ID]: parseInt(metadata.data.StartBlock) },
         name: metadata.data.ContractName,
       })
-    } else if (metadata.success === false) {
+    } else if (metadata.success === false || contractSourceCodeNotVerified) {
       updateContract({
         // errorMessage: metadata.error,
         source: 'custom',
       })
     }
+
+    setMetadataLoading(false)
   }
 
   useEffect(() => {
@@ -194,6 +204,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
           <Trash2 className="delete-link" size={16} onClick={() => deleteContract()} />
         </div>
         <span className="address">{addresses[CHAIN_ID]}</span>
+        {metadataLoading ? <span>Fetching contract metadata...</span> : null}
         {startBlocks[CHAIN_ID] ? (
           <span className="address">Deployed on block {startBlocks[CHAIN_ID]}</span>
         ) : null}
@@ -204,7 +215,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
               : `${
                   source === 'etherscan'
                     ? 'ABI automatically fetched from etherscan'
-                    : 'ABI uploaded manually'
+                    : 'ABI upload manually'
                 }`}
           </span>
           {showUploadButton ? (
@@ -225,59 +236,72 @@ export const SelectedContract = (props: SelectedContractProps) => {
           ) : null}
         </StatusContainer>
       </Header>
-      <EventHandlerContainer>
-        <div className="labels">
-          <span>ABI</span>
-          <span>Map</span>
-        </div>
-        {events.map((eh, idx) => (
-          <EventRow
-            key={`${eh.handler}-${idx}`}
-            handleUpdate={(newEvent: ContractEvent) =>
-              updateContract({
-                events: events.map((p, i) => (i === idx ? newEvent : p)),
-              })
-            }
-            createMappingFn={createMappingFn}
-            eventsOptions={eventsFromAbiSelectOptions}
-            mappingFns={mappingFunctionNames}
-            eventName={eh.signature.split('(')[0].replace(' ', '')}
-            fnExtractionLoading={fnExtractionLoading}
-            deleteEventHandler={() => deleteEventHandler(idx)}
-            eventHandler={eh}
-          />
-        ))}
+      {compileError ? (
+        <ErrorState>
+          Please fix all compiler errors in the schema and mapping files before managing events
+        </ErrorState>
+      ) : null}
 
-        {newEvent.show && (
-          <EventRow
-            handleUpdate={(newEvent: ContractEvent) => {
-              updateContract({ events: [...events, newEvent] })
-              setNewEvent({ show: false, signature: '' })
-            }}
-            createMappingFn={() => null}
-            eventsOptions={eventsFromAbiSelectOptions}
-            mappingFns={[]}
-            eventName=""
-            fnExtractionLoading={fnExtractionLoading}
-            deleteEventHandler={() => setNewEvent({ show: false, signature: '' })}
-            eventHandler={{ signature: '', handler: '' }}
-          />
-        )}
+      {!contractHasEvents ? (
+        <ErrorState>
+          {showUploadButton ? 'Please upload the ABI manually' : 'Contract has no events'}
+        </ErrorState>
+      ) : null}
 
-        <NewEventBtnContainer>
-          <ActionButton
-            disabled={!contractHasEvents}
-            onClick={() => setNewEvent({ show: true, signature: '' })}
-            {...(!contractHasEvents && {
-              disabled: true,
-              title: 'Contract has no events defined',
-            })}
-          >
-            <Plus size={12} style={{ marginRight: 4 }} />
-            New
-          </ActionButton>
-        </NewEventBtnContainer>
-      </EventHandlerContainer>
+      {!compileError && contractHasEvents ? (
+        <EventHandlerContainer>
+          <div className="labels">
+            <span>ABI</span>
+            <span>Map</span>
+          </div>
+          {events.map((eh, idx) => (
+            <EventRow
+              key={`${eh.handler}-${idx}`}
+              handleUpdate={(newEvent: ContractEvent) =>
+                updateContract({
+                  events: events.map((p, i) => (i === idx ? newEvent : p)),
+                })
+              }
+              createMappingFn={createMappingFn}
+              eventsOptions={eventsFromAbiSelectOptions}
+              mappingFns={mappingFunctionNames}
+              eventName={eh.signature.split('(')[0].replace(' ', '')}
+              fnExtractionLoading={fnExtractionLoading}
+              deleteEventHandler={() => deleteEventHandler(idx)}
+              eventHandler={eh}
+            />
+          ))}
+
+          {newEvent.show && (
+            <EventRow
+              handleUpdate={(newEvent: ContractEvent) => {
+                updateContract({ events: [...events, newEvent] })
+                setNewEvent({ show: false, signature: '' })
+              }}
+              createMappingFn={() => null}
+              eventsOptions={eventsFromAbiSelectOptions}
+              mappingFns={[]}
+              eventName=""
+              fnExtractionLoading={fnExtractionLoading}
+              deleteEventHandler={() => setNewEvent({ show: false, signature: '' })}
+              eventHandler={{ signature: '', handler: '' }}
+            />
+          )}
+
+          <NewEventBtnContainer>
+            <ActionButton
+              disabled={!contractHasEvents}
+              onClick={() => setNewEvent({ show: true, signature: '' })}
+              {...(!contractHasEvents && {
+                disabled: true,
+                title: 'Contract has no events defined',
+              })}>
+              <Plus size={12} style={{ marginRight: 4 }} />
+              New
+            </ActionButton>
+          </NewEventBtnContainer>
+        </EventHandlerContainer>
+      ) : null}
     </Root>
   )
 }
