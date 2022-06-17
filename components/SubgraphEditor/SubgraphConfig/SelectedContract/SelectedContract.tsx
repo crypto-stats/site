@@ -204,7 +204,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
           <Trash2 className="delete-link" size={16} onClick={() => deleteContract()} />
         </div>
         <span className="address">{addresses[CHAIN_ID]}</span>
-        {metadataLoading ? <span>Fetching contract metadata</span> : null}
+        {metadataLoading ? <span>Fetching contract metadata...</span> : null}
         {startBlocks[CHAIN_ID] ? (
           <span className="address">Deployed on block {startBlocks[CHAIN_ID]}</span>
         ) : null}
