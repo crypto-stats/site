@@ -149,7 +149,8 @@ export const PrimaryHeader = (props: PrimaryHeaderProps) => {
               }))
             }
             disabled={errors.length > 0}
-            className="primary">
+            className="primary"
+          >
             Publish
           </PublishButton>
         )}
@@ -157,12 +158,14 @@ export const PrimaryHeader = (props: PrimaryHeaderProps) => {
 
       {filename && (
         <>
-          <PublishModal
-            fileName={filename}
-            show={modalStatus.publish}
-            onClose={() => setModalStatus(prev => ({ ...prev, publish: false }))}
-            editorRef={editorRef}
-          />
+          {modalStatus.publish && (
+            <PublishModal
+              fileName={filename}
+              show={modalStatus.publish}
+              onClose={() => setModalStatus(prev => ({ ...prev, publish: false }))}
+              editorRef={editorRef}
+            />
+          )}
           <PublishTutorialModal
             show={modalStatus.publishTutorial}
             proceedToPublish={proceedToPublish}
