@@ -130,7 +130,7 @@ export async function* deploySubgraph(
             name: contract.name,
           },
         ],
-        apiVersion: '0.0.5',
+        apiVersion: '0.0.7',
         entities: ['Pair'],
         eventHandlers: contract.events.map((event: { signature: string; handler: string }) => ({
           event: event.signature,
@@ -153,7 +153,7 @@ export async function* deploySubgraph(
   const schemaCID = await uploadToIPFS(subgraph.schema, 'schema.graphql')
 
   const manifestString = yaml.dump({
-    specVersion: '0.0.2',
+    specVersion: '0.0.5',
     description: 'Test description',
     dataSources,
     schema: {

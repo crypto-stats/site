@@ -55,7 +55,10 @@ interface NewSubgraphParams {
 
 export const newSubgraph = ({
   mapping = '',
-  schema = 'type Character {name: String!}',
+  schema = `type Entity @entity {
+  id: ID!
+  name: String!
+}`,
   publications = [],
   contracts = [],
 }: NewSubgraphParams = {}) => {
