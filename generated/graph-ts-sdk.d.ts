@@ -82,9 +82,9 @@ declare module '@graphprotocol/graph-ts' {
     function createWithContext(
       name: string,
       params: Array<string>,
-      context: DataSourceContext,
+      context: DataSourceContext
     ): void
-  
+
     // Properties of the data source that fired the event.
     function address(): Address
     function network(): string
@@ -97,12 +97,8 @@ declare module '@graphprotocol/graph-ts' {
 
   export declare class DataSourceTemplate {
     static create(name: string, params: Array<string>): void
-  
-    static createWithContext(
-      name: string,
-      params: Array<string>,
-      context: DataSourceContext,
-    ): void
+
+    static createWithContext(name: string, params: Array<string>, context: DataSourceContext): void
   }
 
   namespace typeConversion {
@@ -136,7 +132,7 @@ declare module '@graphprotocol/graph-ts' {
   export const store = store
 
   export declare class Address extends Bytes {
-    static fromString(string: string);
+    static fromString(string: string)
     static fromBytes(b: Bytes): Address
     static zero(): Address
   }
@@ -244,8 +240,6 @@ declare module '@graphprotocol/graph-ts' {
     concatI32(other: i32): Bytes
   }
 
-
-
   export declare class TypedMap<K, V> {
     public entries: Array<TypedMapEntry<K, V>>
 
@@ -277,7 +271,7 @@ declare module '@graphprotocol/graph-ts' {
   export declare class Result<V, E> {
     _value: Wrapped<V> | null
     _error: Wrapped<E> | null
-  
+
     get isOk(): boolean
     get isError(): boolean
     get value(): V
@@ -294,7 +288,8 @@ declare module '@graphprotocol/graph-ts' {
     ARRAY = 4,
     NULL = 5,
     BYTES = 6,
-    BIGINT = 7,  }
+    BIGINT = 7,
+  }
 
   export type ValuePayload = u64
 
