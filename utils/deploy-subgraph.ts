@@ -156,6 +156,15 @@ export async function prepareSubgraphDeploymentFiles(subgraph: SubgraphData) {
     cid: mappingCid,
   })
 
+  const sourceCid = await getCID(subgraph.mappings[DEFAULT_MAPPING])
+
+  files.push({
+    title: 'Mapping - mapping.ts',
+    filename: 'mapping.ts',
+    value: subgraph.mappings[DEFAULT_MAPPING],
+    cid: sourceCid,
+  })
+
   const dataSources: any[] = []
 
   for (const contract of subgraph.contracts) {
@@ -220,6 +229,13 @@ export async function prepareSubgraphDeploymentFiles(subgraph: SubgraphData) {
         '/': `/ipfs/${schemaCid}`,
       },
     },
+    sourceCode: [
+      {
+        name: 'mapping.ts',
+        file: `/ipfs/${mappingCid}`,
+        source: `/ipfs/${sourceCid}`,
+      },
+    ],
   })
 
   files.push({
