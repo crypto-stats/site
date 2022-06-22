@@ -15,7 +15,7 @@ const InputField: React.FC<InputFieldProps> = ({ name, value, onChange, disabled
     return (
       <DatePicker
         dateFormat="yyyy-MM-dd"
-        selected={value && value.length > 0 ? new Date(value) : null}
+        selected={value && value.length > 0 ? new Date(value + 'T00:00') : null}
         className={className}
         onChange={(date: Date) => {
           const pad = (num: number) => num.toString().padStart(2, '0')
