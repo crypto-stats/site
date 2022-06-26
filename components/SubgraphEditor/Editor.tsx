@@ -123,12 +123,6 @@ const Editor: React.FC = () => {
 
   return (
     <StyledViewPort>
-      <PrimaryHeader
-        filename={subgraphId}
-        markers={markers}
-        editorRef={editorRef}
-        showDocs={showDocs}
-      />
       <LeftSide
         subgraphId={subgraphId}
         setSubgraphId={setSubgraphId}
@@ -136,6 +130,7 @@ const Editor: React.FC = () => {
         setShowDocs={setShowDocs}
       />
       <FillWithStyledResize side="right">
+        <PrimaryHeader filename={subgraphId} markers={markers} editorRef={editorRef} />
         <Fill>
           {subgraph ? (
             <>

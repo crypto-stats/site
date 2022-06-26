@@ -73,11 +73,10 @@ interface PrimaryHeaderProps {
   filename: string | null
   markers: any[]
   editorRef: any
-  showDocs: boolean
 }
 
 export const PrimaryHeader = (props: PrimaryHeaderProps) => {
-  const { filename, markers, editorRef, showDocs } = props
+  const { filename, markers, editorRef } = props
   const { subgraph, update } = useLocalSubgraph(filename)
   const [modalStatus, setModalStatus] = useState({ publish: false, publishTutorial: false })
   const [editingTitle, setEditingTitle] = useState(false)
@@ -123,7 +122,7 @@ export const PrimaryHeader = (props: PrimaryHeaderProps) => {
   }
 
   return (
-    <Root size={80} order={1} $extendedLeftSide={showDocs}>
+    <Root size={80} order={1}>
       {subgraph ? (
         <SubgraphTitle onClick={() => setEditingTitle(prev => !prev)}>
           {!editingTitle ? (
@@ -150,7 +149,8 @@ export const PrimaryHeader = (props: PrimaryHeaderProps) => {
               }))
             }
             disabled={errors.length > 0}
-            className="primary">
+            className="primary"
+          >
             Publish
           </PublishButton>
         )}
