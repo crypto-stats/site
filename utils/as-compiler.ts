@@ -1,16 +1,6 @@
 // @ts-ignore
 import asc from 'assemblyscript/asc'
-// @ts-ignore
-const context = require.context(
-  '!raw-loader!node_modules/@graphprotocol/graph-ts',
-  true,
-  /node_modules\/@graphprotocol\/graph-ts.+\.ts$/
-)
-const files: any = {}
-
-for (let filename of context.keys()) {
-  files[filename] = context(filename)
-}
+import files from 'resources/graph-ts-lib'
 
 interface CompilerOptions {
   libraries?: { [name: string]: string }
@@ -42,7 +32,7 @@ export async function compileAs(tsCode: string, { libraries }: CompilerOptions =
 
       const path = name.charAt(0) === '/' ? name.substring(1) : name
       if (path in files) {
-        return files[path].default
+        return files[path]
       }
       return null
     },

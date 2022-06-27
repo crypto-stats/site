@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { handleErrors } from 'utils/api-endpoints'
 import * as asc from '@graphprotocol/graph-cli/node_modules/assemblyscript/cli/asc'
-import * as fs from 'fs'
+import graphLibFiles from 'resources/graph-ts-lib'
 
 const createExitHandler = (inputFile: string) => () => {
   throw new Error(`The AssemblyScript compiler crashed when compiling this file: '${inputFile}'
@@ -75,20 +75,11 @@ const compile = (inputFile: string, libraries: { [fileName: string]: string }) =
           return libraries[name]
         }
 
-        if (
-          name.indexOf('node_modules/@graphprotocol/graph-ts') === 0 &&
-          name.indexOf('..') === -1
-        ) {
-          const file = fs.readFileSync(`${process.env.PWD}/${name}`, { encoding: 'utf-8' })
-          console.log('found', name)
-          return file
+        if (name.indexOf('node_modules/@graphprotocol/graph-ts') === 0) {
+          return graphLibFiles[name]
         }
-        if (name.indexOf('@graphprotocol/graph-ts') === 0 && name.indexOf('..') === -1) {
-          const file = fs.readFileSync(`${process.env.PWD}/node_modules/${name}`, {
-            encoding: 'utf-8',
-          })
-          console.log('found', name)
-          return file
+        if (name.indexOf('@graphprotocol/graph-ts') === 0) {
+          return graphLibFiles[`node_modules/${name}`]
         }
       } catch (e) {
         return null
