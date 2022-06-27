@@ -12,7 +12,11 @@ interface Publication {
   version: string
 }
 
-export type ContractEvent = { signature: string; handler: string }
+export interface ContractEvent {
+  signature: string
+  handler: string
+  receipt?: boolean
+}
 
 export interface Contract {
   name: string
@@ -70,7 +74,10 @@ interface NewSubgraphParams {
 
 export const newSubgraph = ({
   mapping = '',
-  schema = 'type Character {name: String!}',
+  schema = `type Entity @entity {
+  id: ID!
+  name: String!
+}`,
   publications = [],
   contracts = [],
 }: NewSubgraphParams = {}) => {

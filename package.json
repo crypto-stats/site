@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@cryptostats/sdk": "^0.2.11",
-    "@graphprotocol/graph-cli": "^0.29.0",
-    "@graphprotocol/graph-ts": "^0.26.0",
+    "@graphprotocol/graph-cli": "^0.30.4",
+    "@graphprotocol/graph-ts": "^0.27.0",
     "@monaco-editor/react": "^4.2.1",
     "@pinata/sdk": "^1.1.23",
     "@types/react-modal": "^3.12.1",
