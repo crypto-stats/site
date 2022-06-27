@@ -65,7 +65,7 @@ const SCHEMA_FILE_NAME = 'schema.graphql'
 
 const Editor: React.FC = () => {
   const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file' || null)
-  const [tab, setTab] = useState(SCHEMA_FILE_NAME)
+  const [tab, setTab] = useState('config')
   const [showDocs, setShowDocs] = useState(false)
 
   const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId)
@@ -140,7 +140,6 @@ const Editor: React.FC = () => {
                     <Fill>
                       <Tabs
                         openTabs={[
-                          ...subgraphFiles,
                           {
                             name: 'config',
                             type: 'config',
@@ -148,6 +147,7 @@ const Editor: React.FC = () => {
                             open: true,
                             focused: tab === 'config',
                           },
+                          ...subgraphFiles,
                         ]}
                         current={tab}
                         onSelect={fileId => setTab(fileId || SCHEMA_FILE_NAME)}
