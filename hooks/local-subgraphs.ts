@@ -1,7 +1,5 @@
-import { useState } from 'react'
-import { DeployStatus, deploySubgraph, STATUS } from 'utils/deploy-subgraph'
 import { withStorageItem } from './lib'
-export { STATUS } from 'utils/deploy-subgraph'
+import { PublishConfig } from './useSubgraphDeployment'
 
 const storageKey = 'localSubgraphs'
 
@@ -25,13 +23,6 @@ export interface Contract {
   abi: any
   source: 'etherscan' | 'custom'
   events: ContractEvent[]
-}
-
-export interface PublishConfig {
-  name: string
-  accessToken: string
-  network: 'ethereum'
-  node: 'hosted' | 'studio'
 }
 
 export interface SubgraphData {
@@ -99,7 +90,6 @@ export const newSubgraph = ({
 
 export const useLocalSubgraph = (id?: string | null) => {
   const [subgraph, update] = useStorageItem(id)
-  const [deployStatus, setDeployStatus] = useState<null | DeployStatus>(null)
 
   const saveSchema = (schema: string) => {
     if (!id || !subgraph) {
@@ -130,32 +120,12 @@ export const useLocalSubgraph = (id?: string | null) => {
     return id
   }
 
-  const deploy = async (node: string, subgraphName: string, deployKey: string) => {
-    if (!id || !subgraph) {
-      throw new Error(`No subgraph loaded`)
-    }
-
-    try {
-      for await (const status of deploySubgraph(subgraph, { node, subgraphName, deployKey })) {
-        setDeployStatus(status)
-      }
-    } catch (e: any) {
-      console.error(e)
-      setDeployStatus({ status: STATUS.ERROR, errorMessage: e.message })
-    }
-  }
-
-  const resetDeployStatus = () => setDeployStatus(null)
-
   const setPublishConfig = (config?: PublishConfig | null) =>
     update(_subgraph => ({ ..._subgraph, publishConfig: config || null }))
 
   return {
     update,
     subgraph,
-    deployStatus,
-    deploy,
-    resetDeployStatus,
     saveContracts,
     saveSchema,
     saveMapping,
