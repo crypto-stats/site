@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 import { Trash2, Search } from 'lucide-react'
 import { Dropdown } from '../../../atoms'
-import { ContractEvent } from 'hooks/local-subgraphs'
+import { ContractEvent, useLocalSubgraph } from 'hooks/local-subgraphs'
+import { useEditorState, EDITOR_TYPES } from 'hooks/editor-state'
 
 const Root = styled.div`
   display: flex;
@@ -55,6 +56,7 @@ interface EventRowProps {
   eventsOptions: { label: string; value: string }[]
   mappingFns: string[]
   eventName: string
+  setLineOfCursor: React.Dispatch<React.SetStateAction<number>>
 }
 
 export const EventRow = (props: EventRowProps) => {
@@ -67,7 +69,12 @@ export const EventRow = (props: EventRowProps) => {
     fnExtractionLoading,
     mappingFns,
     eventName,
+    setLineOfCursor,
   } = props
+
+  const [subgraphId] = useEditorState<string | null>(EDITOR_TYPES['subgraph-file'])
+  const { subgraph } = useLocalSubgraph(subgraphId)
+  const mappingFileSplitted = subgraph?.mappings['mapping.ts']?.split('\n') || []
 
   const newFnNameTemplate = `handle${eventName}`
   const fnOccurrenceCount = mappingFns.filter(mfn => mfn.includes(newFnNameTemplate)).length
@@ -87,6 +94,14 @@ export const EventRow = (props: EventRowProps) => {
       })),
     },
   ]
+
+  const lineOfSelectedFn = mappingFileSplitted?.indexOf(
+    mappingFileSplitted.find(mfl => mfl.includes(eventHandler.handler)) || 'n/a'
+  )
+
+  const handleFnLookup = () => {
+    setLineOfCursor(lineOfSelectedFn)
+  }
 
   return (
     <Root>
@@ -123,7 +138,7 @@ export const EventRow = (props: EventRowProps) => {
         placeholder="Declare event handler function"
       />
       <ActionBtnsContainer>
-        <Search size={16} />
+        <Search size={16} {...(lineOfSelectedFn !== -1 && { onClick: handleFnLookup })} />
         <Trash2 size={16} onClick={deleteEventHandler} className="delete" />
       </ActionBtnsContainer>
     </Root>

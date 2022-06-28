@@ -11,7 +11,7 @@ import ErrorPanel from './ErrorPanel'
 import EditorControls from './EditorControls'
 import Console from './Console'
 import BottomTitleBar, { BottomView } from './BottomTitleBar'
-import { useEditorState } from 'hooks/editor-state'
+import { EDITOR_TYPES, useEditorState } from 'hooks/editor-state'
 import { useGeneratedFiles } from 'hooks/useGeneratedFiles'
 import { LeftSide } from './LeftSide'
 import { SubgraphConfig } from './SubgraphConfig'
@@ -64,9 +64,10 @@ const FillWithStyledResize = styled(Fill)<{ side: string }>`
 const SCHEMA_FILE_NAME = 'schema.graphql'
 
 const Editor: React.FC = () => {
-  const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file' || null)
+  const [subgraphId, setSubgraphId] = useEditorState<string | null>(EDITOR_TYPES['subgraph-file'])
   const [tab, setTab] = useState(SCHEMA_FILE_NAME)
   const [showDocs, setShowDocs] = useState(false)
+  const [lineOfCursor, setLineOfCursor] = useState(4)
 
   const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId)
 
@@ -168,6 +169,7 @@ const Editor: React.FC = () => {
                       if (tab !== 'config') {
                         return (
                           <CodeEditor
+                            lineOfCursor={lineOfCursor}
                             defaultLanguage={
                               focusedTab.type === 'schema' ? 'graphql' : 'typescript'
                             }
@@ -176,6 +178,7 @@ const Editor: React.FC = () => {
                             extraLibs={extraLibs}
                             onMount={(editor: any) => {
                               editorRef.current = editor
+                              // editor.revealLine(lineOfCursor, 1)
                             }}
                             onChange={(code: string) =>
                               tab === SCHEMA_FILE_NAME ? saveSchema(code) : saveMapping(tab, code)
@@ -194,7 +197,7 @@ const Editor: React.FC = () => {
                           />
                         )
                       } else {
-                        return <SubgraphConfig />
+                        return <SubgraphConfig setLineOfCursor={setLineOfCursor} />
                       }
                     })()}
                   </Fill>
