@@ -11,7 +11,7 @@ import ErrorPanel from './ErrorPanel'
 import EditorControls from './EditorControls'
 import Console from './Console'
 import BottomTitleBar, { BottomView } from './BottomTitleBar'
-import { EDITOR_TYPES, useEditorState } from 'hooks/editor-state'
+import { EDITOR_STATE, useEditorState } from 'hooks/editor-state'
 import { useGeneratedFiles } from 'hooks/useGeneratedFiles'
 import { LeftSide } from './LeftSide'
 import { SubgraphConfig } from './SubgraphConfig'
@@ -64,8 +64,8 @@ const FillWithStyledResize = styled(Fill)<{ side: string }>`
 const SCHEMA_FILE_NAME = 'schema.graphql'
 
 const Editor: React.FC = () => {
-  const [subgraphId, setSubgraphId] = useEditorState<string | null>(EDITOR_TYPES['subgraph-file'])
-  const [tab, setTab] = useEditorState(EDITOR_TYPES['subgraph-tab'], 'config')
+  const [subgraphId, setSubgraphId] = useEditorState<string | null>(EDITOR_STATE['subgraph-file'])
+  const [tab, setTab] = useEditorState(EDITOR_STATE['subgraph-tab'], 'config')
   const [showDocs, setShowDocs] = useState(false)
 
   const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId)

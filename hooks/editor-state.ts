@@ -42,7 +42,7 @@ const getUpdater = (key: string) => {
   return updaters[key]
 }
 
-export const EDITOR_TYPES = {
+export const EDITOR_STATE = {
   'editor-state': 'editor-state',
   'subgraph-file': 'subgraph-file',
   'subgraph-tab': 'subgraph-tab',
@@ -51,7 +51,7 @@ export const EDITOR_TYPES = {
 export function useEditorState<T = any>(
   key: string,
   defaultState?: T,
-  storageKey: keyof typeof EDITOR_TYPES = 'editor-state'
+  storageKey: keyof typeof EDITOR_STATE = 'editor-state'
 ): [T, (val: T) => void] {
   const updater = getUpdater(key)
   updater.register()

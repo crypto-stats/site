@@ -4,7 +4,7 @@ import { Info } from 'lucide-react'
 
 import { InputLabel, InputField, ErrorState } from '../atoms'
 import { Contract, useLocalSubgraph, DEFAULT_MAPPING, SubgraphData } from 'hooks/local-subgraphs'
-import { EDITOR_TYPES, useEditorState } from 'hooks/editor-state'
+import { EDITOR_STATE, useEditorState } from 'hooks/editor-state'
 import { SelectedContract } from './SelectedContract'
 import { Dropdown } from '../../atoms'
 import { addImport } from 'utils/source-code-utils'
@@ -62,7 +62,7 @@ export const SubgraphConfig = (props: SubgraphConfigProps) => {
 
   const CHAIN_ID = '1'
 
-  const [subgraphId] = useEditorState<string | null>(EDITOR_TYPES['subgraph-file'])
+  const [subgraphId] = useEditorState<string | null>(EDITOR_STATE['subgraph-file'])
   const { subgraph, saveContracts, saveMapping, update } = useLocalSubgraph(subgraphId)
   const [contractAddress, setContractAddress] = useState('')
   const [started, setStarted] = useState(false)

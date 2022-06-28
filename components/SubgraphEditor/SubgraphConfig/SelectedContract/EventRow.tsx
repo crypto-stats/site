@@ -3,7 +3,7 @@ import { Trash2, Search } from 'lucide-react'
 import ReactTooltip from 'react-tooltip'
 import { Dropdown } from '../../../atoms'
 import { ContractEvent, DEFAULT_MAPPING } from 'hooks/local-subgraphs'
-import { useEditorState, EDITOR_TYPES } from 'hooks/editor-state'
+import { useEditorState, EDITOR_STATE } from 'hooks/editor-state'
 
 const Root = styled.div`
   display: flex;
@@ -106,7 +106,7 @@ export const EventRow = (props: EventRowProps) => {
     setJumpToLine,
   } = props
 
-  const [, setTab] = useEditorState(EDITOR_TYPES['subgraph-tab'], 'config')
+  const [, setTab] = useEditorState(EDITOR_STATE['subgraph-tab'], 'config')
 
   const newFnNameTemplate = `handle${eventName}`
   const fnOccurrenceCount = mappingFns.filter(mfn => mfn.includes(newFnNameTemplate)).length
@@ -177,11 +177,7 @@ export const EventRow = (props: EventRowProps) => {
           data-tip={
             enableJumpToLineBtn ? 'Jump to line' : 'Declare an event handler before jumping to it'
           }
-          {...(enableJumpToLineBtn
-            ? { onClick: handleFnLookup }
-            : {
-                className: 'disabled',
-              })}
+          {...(enableJumpToLineBtn ? { onClick: handleFnLookup } : { className: 'disabled' })}
         />
         <Trash2 size={16} onClick={deleteEventHandler} className="delete" />
         <ReceiptIcon
