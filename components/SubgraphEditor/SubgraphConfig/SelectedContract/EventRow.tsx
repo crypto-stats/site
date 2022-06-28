@@ -22,9 +22,10 @@ const ActionBtnsContainer = styled.div<{ editing?: boolean }>`
   padding: 0px 12px;
 
   > svg {
+    opacity: 0.9;
     &:hover {
       cursor: pointer;
-      color: #6f6f6f;
+      opacity: 1;
     }
   }
 
@@ -127,6 +128,7 @@ export const EventRow = (props: EventRowProps) => {
   ]
 
   const selectedFnExists = mappingFns.indexOf(eventHandler.handler) !== -1
+  const enableJumpToLineBtn = eventHandler.handler && selectedFnExists
 
   const handleFnLookup = () => {
     setTab(DEFAULT_MAPPING)
@@ -172,7 +174,14 @@ export const EventRow = (props: EventRowProps) => {
       <ActionBtnsContainer>
         <Search
           size={16}
-          {...(eventHandler.handler && selectedFnExists && { onClick: handleFnLookup })}
+          data-tip={
+            enableJumpToLineBtn ? 'Jump to line' : 'Declare an event handler before jumping to it'
+          }
+          {...(enableJumpToLineBtn
+            ? { onClick: handleFnLookup }
+            : {
+                className: 'disabled',
+              })}
         />
         <Trash2 size={16} onClick={deleteEventHandler} className="delete" />
         <ReceiptIcon
