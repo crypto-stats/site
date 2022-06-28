@@ -63,6 +63,8 @@ const LeaderboardPage: NextPage<AdaptersPageProps> = ({ signers }) => {
       }
     >
       <div>
+        <div>{signers.length} total contributors</div>
+
         <Row>
           <Col flex={1}>User</Col>
           <Col min={140} align="right">
