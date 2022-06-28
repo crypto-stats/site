@@ -44,7 +44,8 @@ const ConnectionButton = (props: ConnectionButtonProps) => {
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         title="Connect Wallet"
-        buttons={[{ label: 'Close', onClick: () => setModalOpen(false) }]}>
+        buttons={[{ label: 'Close', onClick: () => setModalOpen(false) }]}
+      >
         {account ? (
           <div>
             <div>Connected to {account}</div>
