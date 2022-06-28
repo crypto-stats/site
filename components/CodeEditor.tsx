@@ -15,7 +15,6 @@ interface EditorProps {
   onMount?: (editor: any, monaco: any) => void
   defaultLanguage?: 'typescript' | 'graphql'
   extraLibs?: { content: string; filePath: string }[]
-  lineOfCursor?: number
 }
 
 const sdkUri = 'ts:filename/sdk.d.ts'
@@ -28,19 +27,9 @@ const Editor: React.FC<EditorProps> = ({
   onMount,
   defaultLanguage = 'typescript',
   extraLibs = [],
-  lineOfCursor,
 }) => {
   const code = useRef(defaultValue)
   const monaco = useMonaco()
-
-  // useEffect(() => {
-  //   console.log({ monaco })
-  //   if (monaco) {
-  //     const post = new monaco.Position(lineOfCursor, 3)
-  //     // monaco.editor.revealLine(10)
-  //     console.log({ post })
-  //   }
-  // }, [monaco])
 
   useEffect(() => {
     if (monaco) {
@@ -73,13 +62,6 @@ const Editor: React.FC<EditorProps> = ({
       return () => monaco.editor.getModels().forEach((model: any) => model.dispose())
     }
   }, [monaco])
-
-  // useEffect(() => {
-  //   if (monaco && lineOfCursor) {
-  //     console.log(monaco)
-  //     monaco.editor?.revealLine(lineOfCursor)
-  //   }
-  // }, [lineOfCursor])
 
   useEffect(() => {
     if (monaco) {
