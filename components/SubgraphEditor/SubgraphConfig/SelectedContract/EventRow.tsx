@@ -1,8 +1,9 @@
 import styled from 'styled-components'
 import { Trash2, Search } from 'lucide-react'
 import { Dropdown } from '../../../atoms'
-import { ContractEvent } from 'hooks/local-subgraphs'
+import { ContractEvent, DEFAULT_MAPPING } from 'hooks/local-subgraphs'
 import ReactTooltip from 'react-tooltip'
+import { useEditorState } from 'hooks/editor-state'
 
 const Root = styled.div`
   display: flex;
@@ -103,6 +104,9 @@ export const EventRow = (props: EventRowProps) => {
     eventName,
   } = props
 
+  const [_tab, setTab] = useEditorState('subgraph-tab', 'config')
+  const [_jumpToLine, setJumpToLine] = useEditorState<string | null>('jumpToLine', null)
+
   const newFnNameTemplate = `handle${eventName}`
   const fnOccurrenceCount = mappingFns.filter(mfn => mfn.includes(newFnNameTemplate)).length
   const newFnName =
@@ -121,6 +125,11 @@ export const EventRow = (props: EventRowProps) => {
       })),
     },
   ]
+
+  const jumpToMappingFn = () => {
+    setTab(DEFAULT_MAPPING)
+    setJumpToLine(eventHandler.handler)
+  }
 
   const toggleReceipt = () => handleUpdate({ ...eventHandler, receipt: !eventHandler.receipt })
 
@@ -159,7 +168,7 @@ export const EventRow = (props: EventRowProps) => {
         placeholder="Declare event handler function"
       />
       <ActionBtnsContainer>
-        <Search size={16} />
+        <Search size={16} onClick={jumpToMappingFn} />
         <Trash2 size={16} onClick={deleteEventHandler} className="delete" />
         <ReceiptIcon
           onClick={toggleReceipt}
