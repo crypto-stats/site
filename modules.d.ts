@@ -9,3 +9,11 @@ declare module 'react-gh-like-diff' {
 
   export const ReactGhLikeDiff: React.FC<ReactGhLikeDiffProps>
 }
+
+declare module 'ipfs-only-hash' {
+  const Hash: {
+    of(input: Buffer): Promise<string>
+  }
+
+  export default Hash
+}

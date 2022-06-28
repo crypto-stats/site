@@ -21,10 +21,9 @@ export const HeaderRight = styled.div`
   }
 `
 
-export const SubgraphHeader = styled(Top)<{ $extendedLeftSide?: boolean }>`
+export const SubgraphHeader = styled(Top)`
   background-color: #0f1012;
   display: flex;
   justify-content: space-between;
   padding: 0px 8px;
-  margin-left: ${({ $extendedLeftSide }) => ($extendedLeftSide ? 500 : 298)}px;
 `

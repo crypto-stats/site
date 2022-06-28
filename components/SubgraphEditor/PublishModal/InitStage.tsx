@@ -4,7 +4,7 @@ import ReactTooltip from 'react-tooltip'
 
 import { InputLabel, InputField, ExplanationText } from '../atoms'
 import IconElement from 'components/Icon'
-import { PublishConfig } from 'hooks/local-subgraphs'
+import { PublishConfig } from 'hooks/useSubgraphDeployment'
 
 const ConfigContainer = styled.div`
   display: flex;

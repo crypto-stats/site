@@ -3,10 +3,11 @@ import styled from 'styled-components'
 import { Info } from 'lucide-react'
 
 import EditorModal, { Button as ModalButton } from '../EditorModal'
-import { DEFAULT_PUBLISH_CONFIG, STATUS, useLocalSubgraph } from 'hooks/local-subgraphs'
+import { DEFAULT_PUBLISH_CONFIG, useLocalSubgraph } from 'hooks/local-subgraphs'
 
 import { ProgressBar } from '../atoms'
 import { InitStage } from './InitStage'
+import { DeployStatus, useSubgraphDeployment } from 'hooks/useSubgraphDeployment'
 
 const Root = styled.div`
   .info-p {
@@ -53,13 +54,13 @@ interface PublishModalProps {
 
 export const PublishModal: React.FC<PublishModalProps> = props => {
   const { fileName, show, onClose } = props
+  const { subgraph, setPublishConfig } = useLocalSubgraph(fileName)
   const {
-    subgraph,
+    status,
+    prepareFiles,
+    signSubgraph,
     deploy: deployToNode,
-    deployStatus,
-    resetDeployStatus,
-    setPublishConfig,
-  } = useLocalSubgraph(fileName)
+  } = useSubgraphDeployment(subgraph)
   const [publishState, setPublishState] = useState(
     subgraph?.publishConfig || DEFAULT_PUBLISH_CONFIG
   )
@@ -67,35 +68,28 @@ export const PublishModal: React.FC<PublishModalProps> = props => {
 
   const deploy = async () => {
     setPublishConfig(saveConfig.current ? publishState : null)
-    const node =
-      publishState.node === 'hosted'
-        ? '/api/graph/deploy'
-        : 'https://api.studio.thegraph.com/deploy/'
-    await deployToNode(node, publishState.name, publishState.accessToken)
-  }
-
-  const close = () => {
-    resetDeployStatus()
-    onClose()
+    await deployToNode(publishState)
   }
 
   const returnButton = { label: 'Cancel', onClick: onClose }
-  const closeButton = { label: 'Close', onClick: close }
+  const closeButton = { label: 'Close', onClick: onClose }
 
   let title = 'Deploy configuration'
   let buttons: ModalButton[] = []
   let content = null
 
   if (show) {
-    switch (deployStatus?.status) {
-      case STATUS.INITIALIZING:
+    switch (status) {
+      case DeployStatus.READY_TO_PREPARE:
+      case DeployStatus.PREPARING:
       case undefined:
         buttons = [
           returnButton,
           {
-            label: 'Deploy',
-            onClick: deploy,
-            disabled: !publishState.accessToken || !publishState.name,
+            label: 'Next',
+            onClick: prepareFiles,
+            disabled:
+              !publishState.accessToken || !publishState.name || status === DeployStatus.PREPARING,
           },
         ]
         content = (
@@ -107,8 +101,45 @@ export const PublishModal: React.FC<PublishModalProps> = props => {
         )
         break
 
-      case STATUS.COMPILING:
-        title = 'Publishing'
+      case DeployStatus.READY_TO_SIGN:
+      case DeployStatus.SIGNATURE_PENDING:
+        buttons = [
+          returnButton,
+          {
+            label: 'Sign',
+            onClick: signSubgraph,
+            disabled: status === DeployStatus.SIGNATURE_PENDING,
+          },
+        ]
+        content = <div>Sign the subgraph with your Ethereum wallet</div>
+        break
+
+      case DeployStatus.READY_TO_SIGN:
+      case DeployStatus.SIGNATURE_PENDING:
+        buttons = [
+          returnButton,
+          {
+            label: 'Sign',
+            onClick: signSubgraph,
+            disabled: status === DeployStatus.SIGNATURE_PENDING,
+          },
+        ]
+        content = <div>Sign the subgraph with your Ethereum wallet</div>
+        break
+
+      case DeployStatus.READY_TO_DEPLOY:
+        buttons = [
+          returnButton,
+          {
+            label: 'Deploy',
+            onClick: deploy,
+          },
+        ]
+        content = <div>All set! Click "Deploy" to deploy your subgraph to {publishState.name}</div>
+        break
+
+      case DeployStatus.DEPLOYING:
+        title = 'Deploying'
         content = (
           <ProgressContainer>
             <span className="status-text">Step 1/3: Compiling</span>
@@ -121,38 +152,10 @@ export const PublishModal: React.FC<PublishModalProps> = props => {
         )
         break
 
-      case STATUS.IPFS_UPLOAD:
-        title = 'Publishing'
-        content = (
-          <ProgressContainer>
-            <span className="status-text">Step 2/3: Uploading {deployStatus?.file || null}</span>
-            <div className="progress-bar-container">
-              <ProgressBar completed />
-              <ProgressBar active />
-              <ProgressBar />
-            </div>
-          </ProgressContainer>
-        )
-        break
-
-      case STATUS.DEPLOYING:
-        title = 'Publishing'
-        content = (
-          <ProgressContainer>
-            <span className="status-text">Step 3/3: Deploying</span>
-            <div className="progress-bar-container">
-              <ProgressBar completed />
-              <ProgressBar completed />
-              <ProgressBar active />
-            </div>
-          </ProgressContainer>
-        )
-        break
-
-      case STATUS.COMPLETE:
+      case DeployStatus.DEPLOY_COMPLETE:
         title = 'Published'
         // TODO
-        buttons = [closeButton, { label: 'Go to Subgraph', href: deployStatus.url! }]
+        buttons = [closeButton, { label: 'Go to Subgraph', href: 'deployStatus.url!' }]
         content = (
           <ProgressContainer>
             <span className="status-text">Step 3/3: Subgraph published</span>
@@ -169,14 +172,14 @@ export const PublishModal: React.FC<PublishModalProps> = props => {
         )
         break
 
-      case STATUS.ERROR:
+      case DeployStatus.ERROR:
         title = 'Error'
 
         buttons = [closeButton]
         content = (
           <ProgressContainer>
             <span className="info-p" style={{ marginTop: 24 }}>
-              {deployStatus.errorMessage}
+              Error
             </span>
           </ProgressContainer>
         )

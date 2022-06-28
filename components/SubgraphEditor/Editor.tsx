@@ -130,12 +130,6 @@ const Editor: React.FC = () => {
 
   return (
     <StyledViewPort>
-      <PrimaryHeader
-        filename={subgraphId}
-        markers={markers}
-        editorRef={editorRef}
-        showDocs={showDocs}
-      />
       <LeftSide
         subgraphId={subgraphId}
         setSubgraphId={setSubgraphId}
@@ -143,6 +137,7 @@ const Editor: React.FC = () => {
         setShowDocs={setShowDocs}
       />
       <FillWithStyledResize side="right">
+        <PrimaryHeader filename={subgraphId} markers={markers} editorRef={editorRef} />
         <Fill>
           {subgraph ? (
             <>
@@ -152,7 +147,6 @@ const Editor: React.FC = () => {
                     <Fill>
                       <Tabs
                         openTabs={[
-                          ...subgraphFiles,
                           {
                             name: 'config',
                             type: 'config',
@@ -160,6 +154,7 @@ const Editor: React.FC = () => {
                             open: true,
                             focused: tab === 'config',
                           },
+                          ...subgraphFiles,
                         ]}
                         current={tab}
                         onSelect={fileId => setTab(fileId || SCHEMA_FILE_NAME)}

@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@cryptostats/sdk": "^0.2.11",
-    "@graphprotocol/graph-cli": "^0.29.0",
-    "@graphprotocol/graph-ts": "^0.26.0",
+    "@graphprotocol/graph-cli": "^0.30.4",
+    "@graphprotocol/graph-ts": "^0.27.0",
     "@monaco-editor/react": "^4.2.1",
     "@pinata/sdk": "^1.1.23",
     "@types/react-modal": "^3.12.1",
@@ -26,6 +26,7 @@
     "ethers": "^5.5.1",
     "graphql": "^16.3.0",
     "ipfs-http-client": "^54.0.2",
+    "ipfs-only-hash": "^4.0.0",
     "js-yaml": "^4.1.0",
     "lucide-react": "^0.48.0",
     "next": "latest",
