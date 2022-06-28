@@ -54,11 +54,11 @@ interface TErrorState {
 }
 
 interface SubgraphConfigProps {
-  setLineOfCursor: React.Dispatch<React.SetStateAction<number>>
+  setJumpToLine: React.Dispatch<React.SetStateAction<string | null>>
 }
 
 export const SubgraphConfig = (props: SubgraphConfigProps) => {
-  const { setLineOfCursor } = props
+  const { setJumpToLine } = props
 
   const CHAIN_ID = '1'
 
@@ -231,7 +231,7 @@ export const SubgraphConfig = (props: SubgraphConfigProps) => {
             mappingFunctionNames={mappingFunctionNames}
             fnExtractionLoading={fnExtractionLoading}
             compileError={errorState.compiler}
-            setLineOfCursor={setLineOfCursor}
+            setJumpToLine={setJumpToLine}
           />
         ))}
       </PrimaryFill>

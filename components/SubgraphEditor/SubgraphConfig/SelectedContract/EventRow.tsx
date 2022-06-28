@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Trash2, Search } from 'lucide-react'
 import { Dropdown } from '../../../atoms'
-import { ContractEvent, useLocalSubgraph } from 'hooks/local-subgraphs'
+import { ContractEvent, DEFAULT_MAPPING } from 'hooks/local-subgraphs'
 import { useEditorState, EDITOR_TYPES } from 'hooks/editor-state'
 
 const Root = styled.div`
@@ -56,7 +56,7 @@ interface EventRowProps {
   eventsOptions: { label: string; value: string }[]
   mappingFns: string[]
   eventName: string
-  setLineOfCursor: React.Dispatch<React.SetStateAction<number>>
+  setJumpToLine: React.Dispatch<React.SetStateAction<string | null>>
 }
 
 export const EventRow = (props: EventRowProps) => {
@@ -69,12 +69,10 @@ export const EventRow = (props: EventRowProps) => {
     fnExtractionLoading,
     mappingFns,
     eventName,
-    setLineOfCursor,
+    setJumpToLine,
   } = props
 
-  const [subgraphId] = useEditorState<string | null>(EDITOR_TYPES['subgraph-file'])
-  const { subgraph } = useLocalSubgraph(subgraphId)
-  const mappingFileSplitted = subgraph?.mappings['mapping.ts']?.split('\n') || []
+  const [, setTab] = useEditorState(EDITOR_TYPES['subgraph-tab'], 'config')
 
   const newFnNameTemplate = `handle${eventName}`
   const fnOccurrenceCount = mappingFns.filter(mfn => mfn.includes(newFnNameTemplate)).length
@@ -95,12 +93,12 @@ export const EventRow = (props: EventRowProps) => {
     },
   ]
 
-  const lineOfSelectedFn = mappingFileSplitted?.indexOf(
-    mappingFileSplitted.find(mfl => mfl.includes(eventHandler.handler)) || 'n/a'
-  )
+  const selectedFnExists = mappingFns.indexOf(eventHandler.handler) !== -1
 
   const handleFnLookup = () => {
-    setLineOfCursor(lineOfSelectedFn)
+    setTab(DEFAULT_MAPPING)
+
+    setJumpToLine(eventHandler.handler)
   }
 
   return (
@@ -138,7 +136,10 @@ export const EventRow = (props: EventRowProps) => {
         placeholder="Declare event handler function"
       />
       <ActionBtnsContainer>
-        <Search size={16} {...(lineOfSelectedFn !== -1 && { onClick: handleFnLookup })} />
+        <Search
+          size={16}
+          {...(eventHandler.handler && selectedFnExists && { onClick: handleFnLookup })}
+        />
         <Trash2 size={16} onClick={deleteEventHandler} className="delete" />
       </ActionBtnsContainer>
     </Root>

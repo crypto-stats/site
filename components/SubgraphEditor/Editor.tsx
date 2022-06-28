@@ -65,11 +65,18 @@ const SCHEMA_FILE_NAME = 'schema.graphql'
 
 const Editor: React.FC = () => {
   const [subgraphId, setSubgraphId] = useEditorState<string | null>(EDITOR_TYPES['subgraph-file'])
-  const [tab, setTab] = useState(SCHEMA_FILE_NAME)
+  const [tab, setTab] = useEditorState(EDITOR_TYPES['subgraph-tab'], 'config')
   const [showDocs, setShowDocs] = useState(false)
-  const [lineOfCursor, setLineOfCursor] = useState(4)
 
   const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId)
+  const [jumpToLine, setJumpToLine] = useState<string | null>(null)
+  const mappingFileSplitted = subgraph?.mappings['mapping.ts']?.split('\n') || []
+  const lineOfSelectedFn =
+    jumpToLine !== null
+      ? mappingFileSplitted?.indexOf(
+          mappingFileSplitted.find(mfl => mfl.includes(jumpToLine)) || 'n/a'
+        )
+      : -1
 
   const subgraphFiles: (TabState & { value: string })[] = subgraph
     ? [
@@ -99,15 +106,14 @@ const Editor: React.FC = () => {
   const [bottomView, setBottomView] = useState(BottomView.NONE)
   const editorRef = useRef<any>(null)
 
+  useEffect(() => {
+    if (tab !== 'config') {
+      editorRef.current?.focus()
+    }
+  }, [tab])
+
   // Generating files is computationally expensive, don't waste resources if the schema tab is open
   const extraLibs = useGeneratedFiles(focusedTab?.type === 'schema' ? null : subgraph)
-
-  // TODO are we using this?
-  // useEffect(() => {
-  //   if (imageLibraryOpen) {
-  //     plausible('open-image-library')
-  //   }
-  // }, [imageLibraryOpen])
 
   useEffect(() => {
     if (!subgraph) {
@@ -169,7 +175,6 @@ const Editor: React.FC = () => {
                       if (tab !== 'config') {
                         return (
                           <CodeEditor
-                            lineOfCursor={lineOfCursor}
                             defaultLanguage={
                               focusedTab.type === 'schema' ? 'graphql' : 'typescript'
                             }
@@ -178,7 +183,13 @@ const Editor: React.FC = () => {
                             extraLibs={extraLibs}
                             onMount={(editor: any) => {
                               editorRef.current = editor
-                              // editor.revealLine(lineOfCursor, 1)
+                              editorRef.current?.focus()
+                              if (focusedTab.type === 'mapping' && lineOfSelectedFn !== -1) {
+                                editorRef.current?.setPosition({
+                                  lineNumber: lineOfSelectedFn + 1,
+                                  column: 1,
+                                })
+                              }
                             }}
                             onChange={(code: string) =>
                               tab === SCHEMA_FILE_NAME ? saveSchema(code) : saveMapping(tab, code)
@@ -197,7 +208,7 @@ const Editor: React.FC = () => {
                           />
                         )
                       } else {
-                        return <SubgraphConfig setLineOfCursor={setLineOfCursor} />
+                        return <SubgraphConfig setJumpToLine={setJumpToLine} />
                       }
                     })()}
                   </Fill>
