@@ -45,6 +45,7 @@ const getUpdater = (key: string) => {
 export const EDITOR_TYPES = {
   'editor-state': 'editor-state',
   'subgraph-file': 'subgraph-file',
+  'subgraph-tab': 'subgraph-tab',
 }
 
 export function useEditorState<T = any>(
