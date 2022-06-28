@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
-import { Info } from 'lucide-react'
 
 import EditorModal, { Button as ModalButton } from '../EditorModal'
 import { DEFAULT_PUBLISH_CONFIG, useLocalSubgraph } from 'hooks/local-subgraphs'
@@ -189,13 +188,7 @@ export const PublishModal: React.FC<PublishModalProps> = props => {
 
   return (
     <EditorModal isOpen={show} title={title} buttons={buttons} width={'550px'}>
-      <Root>
-        <div className="info-p">
-          <Info size={16} />
-          Informative copy
-        </div>
-        {content}
-      </Root>
+      <Root>{content}</Root>
     </EditorModal>
   )
 }

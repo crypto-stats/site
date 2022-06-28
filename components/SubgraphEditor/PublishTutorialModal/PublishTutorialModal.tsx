@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import { useEditorState } from 'hooks/editor-state'
+import React from 'react'
 import styled from 'styled-components'
 
 import EditorModal, { Button as ModalButton } from '../EditorModal'
+
+const STUDIO_URL = 'https://thegraph.com/studio/'
 
 const Root = styled.div`
   color: var(--color-white);
@@ -11,6 +14,13 @@ const Root = styled.div`
     display: flex;
     align-items: center;
     gap: 12px;
+  }
+
+  a {
+    color: #cda9ef;
+  }
+  a:hover {
+    color: #b279e6;
   }
 `
 
@@ -30,8 +40,8 @@ const InstructionsList = styled.ul`
 const InstructionLiItem = styled.li`
   margin: 0;
   display: grid;
-  grid-template-columns: 50% 50%;
-  margin-bottom: 24px;
+  margin-bottom: 42px;
+  margin-right: 24px;
 
   > .description {
     display: flex;
@@ -51,6 +61,15 @@ const InstructionLiItem = styled.li`
   }
 `
 
+const ImageBox = styled.div`
+  float: right;
+  width: 300px;
+
+  img {
+    width: 100%;
+  }
+`
+
 interface PublishModalProps {
   show: boolean
   proceedToPublish: ({ dontShowTutorialAgain }: { dontShowTutorialAgain: boolean }) => void
@@ -58,7 +77,10 @@ interface PublishModalProps {
 
 export const PublishTutorialModal: React.FC<PublishModalProps> = props => {
   const { show, proceedToPublish } = props
-  const [dontShowTutorialAgain, setDontShowTutorialAgain] = useState(false)
+  const [dontShowTutorialAgain, setDontShowTutorialAgain] = useEditorState(
+    'skip-subgraph-deploy-tutorial',
+    false
+  )
 
   const buttons: ModalButton[] = [
     { label: 'OK, GOT IT', onClick: () => proceedToPublish({ dontShowTutorialAgain }) },
@@ -67,7 +89,7 @@ export const PublishTutorialModal: React.FC<PublishModalProps> = props => {
   return (
     <EditorModal
       isOpen={show}
-      title={'Couple of things before the deployment'}
+      title="Let's get ready to deploy your subgraph..."
       buttons={buttons}
       footerElements={[
         () => (
@@ -88,34 +110,40 @@ export const PublishTutorialModal: React.FC<PublishModalProps> = props => {
           In order to deploy the subgraph, you need to add a subgraph in your account on
           thegraph.com.
         </div>
+
+        <ImageBox>
+          <img src="/subgraph/tutorial0.png" />
+          <img src="/subgraph/tutorial2.png" />
+          <img src="/subgraph/tutorial3-crop.png" />
+        </ImageBox>
+
         <InstructionsList>
           <InstructionLiItem>
             <div className="description">
-              <h4 className="title">1. Go to your thegraph dashboard ↗</h4>
-            </div>
-          </InstructionLiItem>
-          <InstructionLiItem>
-            <div className="description">
-              <h4 className="title">2. Add a subgraph</h4>
+              <h4 className="title">
+                1. Open the{' '}
+                <a href={STUDIO_URL} target="studio">
+                  Subgraph Studio ↗
+                </a>
+              </h4>
               <p className="more-info">
-                Login with your github account, then access the dashboard and Add Subgraph.
+                Connect your wallet to the Subgraph Studio and sign a message to log in.
               </p>
             </div>
           </InstructionLiItem>
           <InstructionLiItem>
             <div className="description">
-              <h4 className="title">3. Get your subgraph slug</h4>
-              <p className="more-info">
-                Once you define your subgraph name, copy your subgraph URL; it’s required for the
-                deployment. The URL should come in the form of
-                thegraph.com/hosted-service/yourUsername/your-subgraph-name
-              </p>
+              <h4 className="title">2. Create a subgraph</h4>
+              <p className="more-info">Select the chain to index and give your subgraph a name.</p>
             </div>
           </InstructionLiItem>
           <InstructionLiItem>
             <div className="description">
-              <h4 className="title">4. Get your subgraph access token</h4>
-              <p className="more-info">Once you saved your subgraph, copy your access token.</p>
+              <h4 className="title">3. Get your subgraph slug &amp; deploy key</h4>
+              <p className="more-info">
+                Once you create your subgraph, copy the "subgraph slug" and "deploy key" values from
+                the top of the page. You'll need to provide these values on the next screen.
+              </p>
             </div>
           </InstructionLiItem>
         </InstructionsList>
