@@ -64,9 +64,10 @@ const FillWithStyledResize = styled(Fill)<{ side: string }>`
 const SCHEMA_FILE_NAME = 'schema.graphql'
 
 const Editor: React.FC = () => {
-  const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file' || null)
-  const [tab, setTab] = useState('config')
+  const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file', null)
+  const [tab, setTab] = useEditorState('subgraph-tab', 'config')
   const [showDocs, setShowDocs] = useState(false)
+  const [jumpToLine, setJumpToLine] = useEditorState<string | null>('jumpToLine', null)
 
   const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId)
 
@@ -101,12 +102,22 @@ const Editor: React.FC = () => {
   // Generating files is computationally expensive, don't waste resources if the schema tab is open
   const extraLibs = useGeneratedFiles(focusedTab?.type === 'schema' ? null : subgraph)
 
-  // TODO are we using this?
-  // useEffect(() => {
-  //   if (imageLibraryOpen) {
-  //     plausible('open-image-library')
-  //   }
-  // }, [imageLibraryOpen])
+  useEffect(() => {
+    if (jumpToLine) {
+      const model = editorRef.current?.getModel()
+      if (!model) {
+        return
+      }
+
+      const code = model.getValue()
+      const pos = code.indexOf(jumpToLine)
+      if (pos !== -1) {
+        const lineNumber = code.substring(0, pos).split('\n').length
+        editorRef.current.revealPositionInCenter({ column: 0, lineNumber })
+      }
+      setJumpToLine(null)
+    }
+  }, [jumpToLine, jumpToLine && editorRef.current?.getModel()])
 
   useEffect(() => {
     if (!subgraph) {
