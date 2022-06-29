@@ -5,12 +5,28 @@ import 'react-datepicker/dist/react-datepicker.css'
 interface InputFieldProps {
   name: string
   value: string
-  onChange: (val: string) => void
+  onChange: (val: string | any) => void
+  // it's better to pass in the whole event, not only the value in case we need other props from the event
+  // this is here for backward compatibility
+  overrideOnChange?: boolean
   className?: string
   disabled?: boolean
+  placeholder?: string
+  spellCheck?: boolean
 }
 
-const InputField: React.FC<InputFieldProps> = ({ name, value, onChange, disabled, className }) => {
+const InputField = (props: InputFieldProps) => {
+  const {
+    name,
+    value,
+    onChange,
+    disabled,
+    className,
+    placeholder,
+    overrideOnChange = false,
+    spellCheck = false,
+  } = props
+
   if (name.toLowerCase().indexOf('date') !== -1) {
     return (
       <DatePicker
@@ -21,6 +37,7 @@ const InputField: React.FC<InputFieldProps> = ({ name, value, onChange, disabled
           const pad = (num: number) => num.toString().padStart(2, '0')
           onChange([date.getFullYear(), pad(date.getMonth() + 1), pad(date.getDate())].join('-'))
         }}
+        name={name}
         disabled={disabled}
       />
     )
@@ -30,9 +47,11 @@ const InputField: React.FC<InputFieldProps> = ({ name, value, onChange, disabled
     <input
       value={value}
       className={className}
-      onChange={(e: any) => onChange(e.target.value)}
+      onChange={overrideOnChange ? onChange : (e: any) => onChange(e.target.value)}
       disabled={disabled}
-      placeholder={name}
+      placeholder={placeholder}
+      name={name}
+      spellCheck={spellCheck}
     />
   )
 }

@@ -1,10 +1,8 @@
-import { useState } from 'react'
+import { UpdateListener } from './lib'
 
 let state: { [key: string]: any } | null = null
 
-const storageKey = 'editor-state'
-
-export function getEditorState(key: string) {
+export function getEditorState({ key, storageKey }: { key: string; storageKey: string }) {
   if (!state) {
     const isServer = typeof window === 'undefined'
     if (isServer) {
@@ -17,26 +15,53 @@ export function getEditorState(key: string) {
   return key in state! ? state![key] : undefined
 }
 
-export function setEditorState(key: string, val: any) {
-  if (state![key] === val) {
+export function setEditorState({
+  key,
+  value,
+  storageKey,
+}: {
+  key: string
+  value: any
+  storageKey: string
+}) {
+  if (state![key] === value) {
     return
   }
 
-  state![key] = val
+  state![key] = value
 
   window.localStorage.setItem(storageKey, JSON.stringify(state))
 }
 
-export function useEditorState<T = any>(key: string, defaultState?: T): [T, (val: T) => void] {
-  const storedState = getEditorState(key)
-  const [value, setValue] = useState<T>(
-    storedState === undefined ? defaultState || null : storedState
-  )
+const updaters: { [key: string]: UpdateListener } = {}
 
-  const setAndSave = (val: T) => {
-    setValue(val)
-    setEditorState(key, val)
+const getUpdater = (key: string) => {
+  if (!updaters[key]) {
+    updaters[key] = new UpdateListener()
+  }
+  return updaters[key]
+}
+
+export const EDITOR_TYPES = {
+  EDITOR_STATE: 'EDITOR_STATE',
+  SUBGRAPH_FILE: 'SUBGRAPH_FILE',
+  SUBGRAPH_TAB: 'SUBGRAPH_TAB',
+}
+
+export function useEditorState<T = any>(
+  key: string,
+  defaultState?: T,
+  storageKey: string = EDITOR_TYPES.EDITOR_STATE
+): [T, (val: T) => void] {
+  const updater = getUpdater(key)
+  updater.register()
+
+  const value = getEditorState({ key, storageKey }) || defaultState || null
+
+  const setValue = (newVal: T) => {
+    setEditorState({ key, value: newVal, storageKey })
+    updater.trigger()
   }
 
-  return [value, setAndSave]
+  return [value, setValue]
 }

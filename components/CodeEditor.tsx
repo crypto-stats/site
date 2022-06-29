@@ -4,6 +4,8 @@ import { MarkerSeverity } from './Editor/types'
 
 // @ts-ignore
 import sdkTypeDefs from '!raw-loader!generated/cryptostats-sdk.d.ts'
+// @ts-ignore
+import graphTypeDefs from '!raw-loader!generated/graph-ts-sdk.d.ts'
 
 interface EditorProps {
   onValidated: (code: string, markers: any[]) => void
@@ -11,7 +13,11 @@ interface EditorProps {
   defaultValue: string
   fileId: string
   onMount?: (editor: any, monaco: any) => void
+  defaultLanguage?: 'typescript' | 'graphql'
+  extraLibs?: { content: string; filePath: string }[]
 }
+
+const sdkUri = 'ts:filename/sdk.d.ts'
 
 const Editor: React.FC<EditorProps> = ({
   onValidated,
@@ -19,6 +25,8 @@ const Editor: React.FC<EditorProps> = ({
   defaultValue,
   fileId,
   onMount,
+  defaultLanguage = 'typescript',
+  extraLibs = [],
 }) => {
   const code = useRef(defaultValue)
   const monaco = useMonaco()
@@ -47,8 +55,6 @@ const Editor: React.FC<EditorProps> = ({
         lib: ['es2018'],
       })
 
-      var sdkUri = 'ts:filename/sdk.d.ts'
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(sdkTypeDefs, sdkUri)
       // When resolving definitions and references, the editor will try to use created models.
       // Creating a model for the library allows "peek definition/references" commands to work with the library.
       monaco.editor.createModel(sdkTypeDefs, 'typescript', monaco.Uri.parse(sdkUri))
@@ -58,18 +64,35 @@ const Editor: React.FC<EditorProps> = ({
   }, [monaco])
 
   useEffect(() => {
+    if (monaco) {
+      const libs = [
+        { content: sdkTypeDefs, filePath: sdkUri },
+        {
+          content: graphTypeDefs,
+          filePath: 'file:///node_modules/@graphprotocol/graph-ts/index.d.ts',
+        },
+        ...extraLibs,
+      ]
+      monaco.languages.typescript.typescriptDefaults.setExtraLibs(libs)
+      // monaco.languages.typescript.typescriptDefaults.addExtraLib(libs)
+    }
+  }, [monaco, extraLibs])
+
+  useEffect(() => {
     code.current = defaultValue
   }, [fileId])
 
   return (
     <MonacoEditor
       theme="vs-dark"
-      defaultLanguage="typescript"
+      defaultLanguage={defaultLanguage}
       defaultValue={defaultValue}
+      value={defaultValue}
       path={fileId}
       options={{
         tabSize: 2,
         insertSpaces: true,
+        minimap: { enabled: false },
       }}
       onMount={(editor: any) => {
         if (onMount) {
@@ -85,6 +108,8 @@ const Editor: React.FC<EditorProps> = ({
       onValidate={(markers: MarkerSeverity[]) => {
         onValidated(code.current, markers)
       }}
+      // {...(lineOfCursor && { line: lineOfCursor })}
+      // line={5}
     />
   )
 }

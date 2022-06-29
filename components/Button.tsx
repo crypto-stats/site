@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css, keyframes } from 'styled-components'
-import { Edit } from 'lucide-react'
+import { Edit, ExternalLink } from 'lucide-react'
 import DiscordIcon from './icons/Discord'
 import ForkIcon from './icons/Fork'
 
@@ -75,7 +75,10 @@ const ButtonElement = styled.button<ButtonElementProps>`
 
   &:disabled,
   &:hover:disabled {
-    background-color: #999;
+    border-color: #999 !important;
+    background-color: #999 !important;
+    cursor: not-allowed;
+    color: var(--color-dark-600) !important;
   }
 
   ${({ loading }) => (loading ? loadingMixin : '')}
@@ -141,6 +144,8 @@ const Icon = styled.i`
 
 interface ButtonProps {
   onClick?: () => void
+  href?: string
+  target?: string
   loading?: boolean
   disabled?: boolean
   fullWidth?: boolean
@@ -150,25 +155,33 @@ interface ButtonProps {
   variant?: string
   size?: string
   centered?: boolean
+  title?: string
 }
 
-const Button: React.FC<ButtonProps> = ({
-  children,
-  onClick,
-  disabled,
-  className,
-  variant,
-  icon,
-  width,
-  size,
-  fullWidth,
-  centered,
-  loading,
-}) => {
+const Button: React.FC<ButtonProps> = props => {
+  const {
+    children,
+    onClick,
+    href,
+    target,
+    disabled,
+    className,
+    variant,
+    icon,
+    width,
+    size,
+    fullWidth,
+    centered,
+    loading,
+    title = '',
+  } = props
   let svgIcon: React.ReactNode | null = null
 
   if (icon) {
     switch (icon) {
+      case 'External':
+        svgIcon = <ExternalLink size="16" />
+        break
       case 'Edit':
         svgIcon = <Edit size="16" />
         break
@@ -181,18 +194,30 @@ const Button: React.FC<ButtonProps> = ({
     }
   }
 
+  const buttonProps = {
+    loading,
+    centered,
+    fullWidth,
+    size,
+    title,
+    variant,
+    width,
+    className,
+  }
+
+  const isDisabled = disabled || loading
+
+  if (href) {
+    return (
+      <ButtonElement as="a" href={href} target={target} {...buttonProps}>
+        {icon && <Icon>{svgIcon}</Icon>}
+        <span>{children}</span>
+      </ButtonElement>
+    )
+  }
+
   return (
-    <ButtonElement
-      onClick={onClick}
-      loading={loading}
-      disabled={disabled || loading}
-      className={className}
-      width={width}
-      variant={variant}
-      size={size}
-      fullWidth={fullWidth}
-      centered={centered}
-    >
+    <ButtonElement {...buttonProps} {...(disabled ? { disabled: isDisabled } : { onClick })}>
       {icon && <Icon>{svgIcon}</Icon>}
       <span>{children}</span>
     </ButtonElement>

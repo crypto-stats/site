@@ -10,13 +10,20 @@ const IconElement = styled.i<{ type?: string; size?: string }>`
   width: var(--spaces-5);
   height: var(--spaces-5);
 
-  ${({ size }) =>
-    size &&
-    size === 'small' &&
-    `
-    width: var(--spaces-4);
-    height: var(--spaces-4);
-  `}
+  ${({ size }) => {
+    if (size) {
+      let width, height
+      if (size === 'small') {
+        width = 'var(--spaces-4)'
+        height = 'var(--spaces-4)'
+      } else if (size === 'x-small') {
+        width = 'var(--spaces-3)'
+        height = 'var(--spaces-3)'
+      }
+
+      return `width: ${width};height: ${height};`
+    }
+  }}
 
   ${({ type }) =>
     type &&
@@ -105,7 +112,7 @@ const IconElement = styled.i<{ type?: string; size?: string }>`
 
 interface IconProps {
   type?: string
-  size?: string
+  size?: 'small' | 'x-small'
 }
 
 const Icon: React.FC<IconProps> = ({ type, size }) => {
