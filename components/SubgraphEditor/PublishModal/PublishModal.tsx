@@ -8,6 +8,8 @@ import { DEFAULT_PUBLISH_CONFIG, useLocalSubgraph } from 'hooks/local-subgraphs'
 import { ProgressBar } from '../atoms'
 import { InitStage } from './InitStage'
 import { DeployStatus, useSubgraphDeployment } from 'hooks/useSubgraphDeployment'
+import { useWeb3React } from '@web3-react/core'
+import { injected, walletconnect } from 'components/WalletConnections'
 
 const Root = styled.div`
   .info-p {
@@ -54,19 +56,23 @@ interface PublishModalProps {
 
 export const PublishModal: React.FC<PublishModalProps> = props => {
   const { fileName, show, onClose } = props
+  const { activate, account } = useWeb3React()
   const { subgraph, setPublishConfig } = useLocalSubgraph(fileName)
   const {
     status,
     prepareFiles,
     signSubgraph,
     deploy: deployToNode,
+    reset,
+    error,
   } = useSubgraphDeployment(subgraph)
   const [publishState, setPublishState] = useState(
     subgraph?.publishConfig || DEFAULT_PUBLISH_CONFIG
   )
   const saveConfig = useRef(!!subgraph?.publishConfig)
 
-  const deploy = async () => {
+  const signAndDeploy = async () => {
+    await signSubgraph()
     setPublishConfig(saveConfig.current ? publishState : null)
     await deployToNode(publishState)
   }
@@ -103,39 +109,27 @@ export const PublishModal: React.FC<PublishModalProps> = props => {
 
       case DeployStatus.READY_TO_SIGN:
       case DeployStatus.SIGNATURE_PENDING:
-        buttons = [
-          returnButton,
-          {
-            label: 'Sign',
-            onClick: signSubgraph,
-            disabled: status === DeployStatus.SIGNATURE_PENDING,
-          },
-        ]
-        content = <div>Sign the subgraph with your Ethereum wallet</div>
-        break
-
-      case DeployStatus.READY_TO_SIGN:
-      case DeployStatus.SIGNATURE_PENDING:
-        buttons = [
-          returnButton,
-          {
-            label: 'Sign',
-            onClick: signSubgraph,
-            disabled: status === DeployStatus.SIGNATURE_PENDING,
-          },
-        ]
-        content = <div>Sign the subgraph with your Ethereum wallet</div>
-        break
-
-      case DeployStatus.READY_TO_DEPLOY:
-        buttons = [
-          returnButton,
-          {
-            label: 'Deploy',
-            onClick: deploy,
-          },
-        ]
-        content = <div>All set! Click "Deploy" to deploy your subgraph to {publishState.name}</div>
+        buttons = account
+          ? [
+              returnButton,
+              {
+                label: 'Sign & Deploy',
+                onClick: signAndDeploy,
+                disabled: status === DeployStatus.SIGNATURE_PENDING,
+              },
+            ]
+          : [
+              returnButton,
+              {
+                label: 'Connect Metamask',
+                onClick: () => activate(injected),
+              },
+              {
+                label: 'Connect WalletConnect',
+                onClick: () => activate(walletconnect),
+              },
+            ]
+        content = <div>Sign the subgraph with your Ethereum wallet to deploy</div>
         break
 
       case DeployStatus.DEPLOYING:
@@ -154,8 +148,11 @@ export const PublishModal: React.FC<PublishModalProps> = props => {
 
       case DeployStatus.DEPLOY_COMPLETE:
         title = 'Published'
-        // TODO
-        buttons = [closeButton, { label: 'Go to Subgraph', href: 'deployStatus.url!' }]
+        const deployURL =
+          publishState.node === 'hosted'
+            ? `https://thegraph.com/hosted-service/subgraph/${publishState.name}?version=pending`
+            : `https://thegraph.com/studio/subgraph/${publishState.name}/`
+        buttons = [closeButton, { label: 'Go to Subgraph', href: deployURL }]
         content = (
           <ProgressContainer>
             <span className="status-text">Step 3/3: Subgraph published</span>
@@ -175,11 +172,17 @@ export const PublishModal: React.FC<PublishModalProps> = props => {
       case DeployStatus.ERROR:
         title = 'Error'
 
-        buttons = [closeButton]
+        buttons = [
+          {
+            label: 'Retry',
+            onClick: reset,
+          },
+          closeButton,
+        ]
         content = (
           <ProgressContainer>
             <span className="info-p" style={{ marginTop: 24 }}>
-              Error
+              Error: {error}
             </span>
           </ProgressContainer>
         )

@@ -22,6 +22,7 @@ export interface DeployFile {
 interface DeployState {
   files: DeployFile[] | null
   status: DeployStatus
+  error: string | null
 }
 
 export enum DeployStatus {
@@ -39,6 +40,7 @@ export enum DeployStatus {
 const DEFAULT_DEPLOY_STATE: DeployState = {
   files: null,
   status: DeployStatus.READY_TO_PREPARE,
+  error: null,
 }
 
 export const useSubgraphDeployment = (subgraph?: SubgraphData | null) => {
@@ -52,9 +54,11 @@ export const useSubgraphDeployment = (subgraph?: SubgraphData | null) => {
 
     return {
       status: DeployStatus.NOT_READY,
+      error: null,
       prepareFiles: throwSubgraphMissing,
       signSubgraph: throwSubgraphMissing,
       deploy: throwSubgraphMissing,
+      reset: throwSubgraphMissing,
     }
   }
 
@@ -71,9 +75,9 @@ export const useSubgraphDeployment = (subgraph?: SubgraphData | null) => {
   }
 
   const prepareFiles = async () => {
-    setDeployState({ files: null, status: DeployStatus.PREPARING })
+    setDeployState(_state => ({ ..._state, files: null, status: DeployStatus.PREPARING }))
     const files = await prepareSubgraphDeploymentFiles(subgraph)
-    setDeployState({ files, status: DeployStatus.READY_TO_SIGN })
+    setDeployState(_state => ({ ..._state, files, status: DeployStatus.READY_TO_SIGN }))
   }
 
   const signSubgraph = async () => {
@@ -95,27 +99,46 @@ signature: ${signature}`
       cid: await Hash.of(Buffer.from(newManifestCode)),
     }
 
-    setDeployState({ files: newFiles, status: DeployStatus.READY_TO_DEPLOY })
+    setDeployState(_state => ({ ..._state, files: newFiles, status: DeployStatus.READY_TO_DEPLOY }))
   }
 
   const deploy = async (options: PublishConfig) => {
     if (!deployState.files) {
-      throw new Error('Files not prepares')
+      setDeployState(_state => ({
+        ..._state,
+        status: DeployStatus.ERROR,
+        error: 'Files not prepared',
+      }))
+      return
     }
     setDeployState(_state => ({ ..._state, status: DeployStatus.DEPLOYING }))
 
     const node =
       options.node === 'hosted' ? '/api/graph/deploy' : 'https://api.studio.thegraph.com/deploy/'
 
-    const result = await deployPreparedSubgraph(subgraph, deployState.files, {
-      node,
-      subgraphName: options.name,
-      deployKey: options.accessToken,
-    })
+    try {
+      await deployPreparedSubgraph(subgraph, deployState.files, {
+        node,
+        subgraphName: options.name,
+        deployKey: options.accessToken,
+      })
 
-    setDeployState(_state => ({ ..._state, status: DeployStatus.DEPLOY_COMPLETE }))
-    return result
+      setDeployState(_state => ({ ..._state, status: DeployStatus.DEPLOY_COMPLETE }))
+    } catch (e: any) {
+      setDeployState(_state => ({ ..._state, status: DeployStatus.ERROR, error: e.message }))
+    }
   }
 
-  return { status: deployState.status, prepareFiles, signSubgraph, deploy }
+  const reset = () => {
+    setDeployState(DEFAULT_DEPLOY_STATE)
+  }
+
+  return {
+    status: deployState.status,
+    error: deployState.error,
+    prepareFiles,
+    signSubgraph,
+    deploy,
+    reset,
+  }
 }

@@ -82,7 +82,7 @@ async function deployHosted(
 
   const json = await req.json()
   if (json.error) {
-    throw new Error(`Subgraph deploy failed: ${JSON.stringify(json.error)}`)
+    throw new Error(`Subgraph deploy failed: ${json.error.message || JSON.stringify(json.error)}`)
   }
   return json.result
 }
