@@ -1,8 +1,9 @@
 import styled from 'styled-components'
 import { Trash2, Search } from 'lucide-react'
-import { Dropdown } from '../../../atoms'
-import { ContractEvent } from 'hooks/local-subgraphs'
 import ReactTooltip from 'react-tooltip'
+import { Dropdown } from '../../../atoms'
+import { ContractEvent, DEFAULT_MAPPING } from 'hooks/local-subgraphs'
+import { useEditorState, EDITOR_TYPES } from 'hooks/editor-state'
 
 const Root = styled.div`
   display: flex;
@@ -21,9 +22,10 @@ const ActionBtnsContainer = styled.div<{ editing?: boolean }>`
   padding: 0px 12px;
 
   > svg {
+    opacity: 0.9;
     &:hover {
       cursor: pointer;
-      color: #6f6f6f;
+      opacity: 1;
     }
   }
 
@@ -69,8 +71,7 @@ const ReceiptIcon: React.FC<ReceiptIconProps> = ({ size, onClick, className, too
     onClick={onClick}
     className={className}
     data-tip={tooltip}
-    style={{ outline: 'none' }}
-  >
+    style={{ outline: 'none' }}>
     <path
       d="M128,0C57.313,0,0,57.313,0,128v384l0,0h32l32-32l32,32h32l32-32l32,32h32l32-32l32,32h32l32-32l32,32V128
       C384,57.313,441.313,0,512,0H128z M352,128v306.75L306.75,480h-5.5L256,434.719L210.75,480h-5.5L160,434.75L114.75,480h-5.5
@@ -89,6 +90,7 @@ interface EventRowProps {
   eventsOptions: { label: string; value: string }[]
   mappingFns: string[]
   eventName: string
+  setJumpToLine: React.Dispatch<React.SetStateAction<string | null>>
 }
 
 export const EventRow = (props: EventRowProps) => {
@@ -101,7 +103,10 @@ export const EventRow = (props: EventRowProps) => {
     fnExtractionLoading,
     mappingFns,
     eventName,
+    setJumpToLine,
   } = props
+
+  const [, setTab] = useEditorState(EDITOR_TYPES.SUBGRAPH_TAB, 'config')
 
   const newFnNameTemplate = `handle${eventName}`
   const fnOccurrenceCount = mappingFns.filter(mfn => mfn.includes(newFnNameTemplate)).length
@@ -122,6 +127,14 @@ export const EventRow = (props: EventRowProps) => {
     },
   ]
 
+  const selectedFnExists = mappingFns.indexOf(eventHandler.handler) !== -1
+  const enableJumpToLineBtn = eventHandler.handler && selectedFnExists
+
+  const handleFnLookup = () => {
+    setTab(DEFAULT_MAPPING)
+
+    setJumpToLine(eventHandler.handler)
+  }
   const toggleReceipt = () => handleUpdate({ ...eventHandler, receipt: !eventHandler.receipt })
 
   return (
@@ -159,7 +172,13 @@ export const EventRow = (props: EventRowProps) => {
         placeholder="Declare event handler function"
       />
       <ActionBtnsContainer>
-        <Search size={16} />
+        <Search
+          size={16}
+          data-tip={
+            enableJumpToLineBtn ? 'Jump to line' : 'Declare an event handler before jumping to it'
+          }
+          {...(enableJumpToLineBtn ? { onClick: handleFnLookup } : { className: 'disabled' })}
+        />
         <Trash2 size={16} onClick={deleteEventHandler} className="delete" />
         <ReceiptIcon
           onClick={toggleReceipt}

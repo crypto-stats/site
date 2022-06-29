@@ -11,7 +11,7 @@ import ErrorPanel from './ErrorPanel'
 import EditorControls from './EditorControls'
 import Console from './Console'
 import BottomTitleBar, { BottomView } from './BottomTitleBar'
-import { useEditorState } from 'hooks/editor-state'
+import { EDITOR_TYPES, useEditorState } from 'hooks/editor-state'
 import { useGeneratedFiles } from 'hooks/useGeneratedFiles'
 import { LeftSide } from './LeftSide'
 import { SubgraphConfig } from './SubgraphConfig'
@@ -64,11 +64,19 @@ const FillWithStyledResize = styled(Fill)<{ side: string }>`
 const SCHEMA_FILE_NAME = 'schema.graphql'
 
 const Editor: React.FC = () => {
-  const [subgraphId, setSubgraphId] = useEditorState<string | null>('subgraph-file' || null)
-  const [tab, setTab] = useState('config')
+  const [subgraphId, setSubgraphId] = useEditorState<string | null>(EDITOR_TYPES.SUBGRAPH_FILE)
+  const [tab, setTab] = useEditorState(EDITOR_TYPES.SUBGRAPH_TAB, 'config')
   const [showDocs, setShowDocs] = useState(false)
 
   const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId)
+  const [jumpToLine, setJumpToLine] = useState<string | null>(null)
+  const mappingFileSplitted = subgraph?.mappings['mapping.ts']?.split('\n') || []
+  const lineOfSelectedFn =
+    jumpToLine !== null
+      ? mappingFileSplitted?.indexOf(
+          mappingFileSplitted.find(mfl => mfl.includes(jumpToLine)) || 'n/a'
+        )
+      : -1
 
   const subgraphFiles: (TabState & { value: string })[] = subgraph
     ? [
@@ -98,15 +106,14 @@ const Editor: React.FC = () => {
   const [bottomView, setBottomView] = useState(BottomView.NONE)
   const editorRef = useRef<any>(null)
 
+  useEffect(() => {
+    if (tab !== 'config') {
+      editorRef.current?.focus()
+    }
+  }, [tab])
+
   // Generating files is computationally expensive, don't waste resources if the schema tab is open
   const extraLibs = useGeneratedFiles(focusedTab?.type === 'schema' ? null : subgraph)
-
-  // TODO are we using this?
-  // useEffect(() => {
-  //   if (imageLibraryOpen) {
-  //     plausible('open-image-library')
-  //   }
-  // }, [imageLibraryOpen])
 
   useEffect(() => {
     if (!subgraph) {
@@ -171,6 +178,13 @@ const Editor: React.FC = () => {
                             extraLibs={extraLibs}
                             onMount={(editor: any) => {
                               editorRef.current = editor
+                              editorRef.current?.focus()
+                              if (focusedTab.type === 'mapping' && lineOfSelectedFn !== -1) {
+                                editorRef.current?.setPosition({
+                                  lineNumber: lineOfSelectedFn + 1,
+                                  column: 1,
+                                })
+                              }
                             }}
                             onChange={(code: string) =>
                               tab === SCHEMA_FILE_NAME ? saveSchema(code) : saveMapping(tab, code)
@@ -189,7 +203,7 @@ const Editor: React.FC = () => {
                           />
                         )
                       } else {
-                        return <SubgraphConfig />
+                        return <SubgraphConfig setJumpToLine={setJumpToLine} />
                       }
                     })()}
                   </Fill>

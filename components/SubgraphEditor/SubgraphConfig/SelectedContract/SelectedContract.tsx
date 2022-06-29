@@ -108,6 +108,7 @@ interface SelectedContractProps {
   subgraphMappings?: { [name: string]: string }
   updateContract: (newProps: Partial<Contract>) => void
   compileError?: string
+  setJumpToLine: React.Dispatch<React.SetStateAction<string | null>>
 }
 
 export const SelectedContract = (props: SelectedContractProps) => {
@@ -119,6 +120,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
     mappingFunctionNames,
     updateContract,
     compileError,
+    setJumpToLine,
   } = props
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -269,6 +271,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
               fnExtractionLoading={fnExtractionLoading}
               deleteEventHandler={() => deleteEventHandler(idx)}
               eventHandler={eh}
+              setJumpToLine={setJumpToLine}
             />
           ))}
 
@@ -285,6 +288,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
               fnExtractionLoading={fnExtractionLoading}
               deleteEventHandler={() => setNewEvent({ show: false, signature: '' })}
               eventHandler={{ signature: '', handler: '' }}
+              setJumpToLine={setJumpToLine}
             />
           )}
 

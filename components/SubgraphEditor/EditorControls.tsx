@@ -46,7 +46,7 @@ const EditorControls: React.FC<{ editorRef: any }> = ({ editorRef }) => {
 
   useEffect(() => {
     if (editorRef.current) {
-      versions.current.initialVersion = editorRef.current.getModel().getAlternativeVersionId()
+      versions.current.initialVersion = editorRef.current.getModel()?.getAlternativeVersionId() || 0
 
       const disposable = editorRef.current.onDidChangeModelContent(() => {
         const versionId = editorRef.current.getModel().getAlternativeVersionId()

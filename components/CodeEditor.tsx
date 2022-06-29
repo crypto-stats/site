@@ -108,6 +108,8 @@ const Editor: React.FC<EditorProps> = ({
       onValidate={(markers: MarkerSeverity[]) => {
         onValidated(code.current, markers)
       }}
+      // {...(lineOfCursor && { line: lineOfCursor })}
+      // line={5}
     />
   )
 }

@@ -4,7 +4,7 @@ import { Info } from 'lucide-react'
 
 import { InputLabel, InputField, ErrorState } from '../atoms'
 import { Contract, useLocalSubgraph, DEFAULT_MAPPING, SubgraphData } from 'hooks/local-subgraphs'
-import { useEditorState } from 'hooks/editor-state'
+import { EDITOR_TYPES, useEditorState } from 'hooks/editor-state'
 import { SelectedContract } from './SelectedContract'
 import { Dropdown } from '../../atoms'
 import { addImport } from 'utils/source-code-utils'
@@ -53,10 +53,16 @@ interface TErrorState {
   compiler?: string
 }
 
-export const SubgraphConfig = () => {
+interface SubgraphConfigProps {
+  setJumpToLine: React.Dispatch<React.SetStateAction<string | null>>
+}
+
+export const SubgraphConfig = (props: SubgraphConfigProps) => {
+  const { setJumpToLine } = props
+
   const CHAIN_ID = '1'
 
-  const [subgraphId] = useEditorState<string | null>('subgraph-file')
+  const [subgraphId] = useEditorState<string | null>(EDITOR_TYPES.SUBGRAPH_FILE)
   const { subgraph, saveContracts, saveMapping, update } = useLocalSubgraph(subgraphId)
   const [contractAddress, setContractAddress] = useState('')
   const [started, setStarted] = useState(false)
@@ -191,12 +197,11 @@ export const SubgraphConfig = () => {
                 '&:hover': { cursor: 'not-allowed' },
               },
             }}
-            // options={[{ label: 'Ethereum mainnet', value: CHAIN_ID }]}
           />
         </div>
 
         <InputLabel>Version</InputLabel>
-        <ContractInput
+        <InputField
           placeholder="Subgraph version number"
           name="version"
           value={subgraph?.version || ''}
@@ -226,6 +231,7 @@ export const SubgraphConfig = () => {
             mappingFunctionNames={mappingFunctionNames}
             fnExtractionLoading={fnExtractionLoading}
             compileError={errorState.compiler}
+            setJumpToLine={setJumpToLine}
           />
         ))}
       </PrimaryFill>

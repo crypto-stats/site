@@ -1,4 +1,4 @@
-import { UpdateListener } from './lib';
+import { UpdateListener } from './lib'
 
 let state: { [key: string]: any } | null = null
 
@@ -42,10 +42,16 @@ const getUpdater = (key: string) => {
   return updaters[key]
 }
 
+export const EDITOR_TYPES = {
+  EDITOR_STATE: 'EDITOR_STATE',
+  SUBGRAPH_FILE: 'SUBGRAPH_FILE',
+  SUBGRAPH_TAB: 'SUBGRAPH_TAB',
+}
+
 export function useEditorState<T = any>(
   key: string,
   defaultState?: T,
-  storageKey: string = 'editor-state'
+  storageKey: string = EDITOR_TYPES.EDITOR_STATE
 ): [T, (val: T) => void] {
   const updater = getUpdater(key)
   updater.register()
