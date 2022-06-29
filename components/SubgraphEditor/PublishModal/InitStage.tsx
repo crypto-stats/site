@@ -97,7 +97,10 @@ export const InitStage = (props: InitStageProps) => {
       <InputLabel>
         <div className="input-label-div">
           Subgraph slug
-          <ExplanationText question="What is this?" answer="hello world" />
+          <ExplanationText
+            question="What is this?"
+            answer="Visit the Subgraph Studio on thegraph.com for your subgraph slug & deploy key"
+          />
           <ReactTooltip />
         </div>
       </InputLabel>
@@ -111,10 +114,7 @@ export const InitStage = (props: InitStageProps) => {
       <div style={{ marginBottom: 32 }} />
       <InputLabel>
         <div className="input-label-div">
-          <span>Access token</span>
-          <a className="access-token-url" href="#">
-            Get it here
-          </a>
+          <span>Deploy Key</span>
         </div>
       </InputLabel>
       <InputField
