@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import MonacoEditor, { useMonaco } from '@monaco-editor/react'
 import { MarkerSeverity } from './Editor/types'
 
@@ -26,7 +26,7 @@ const Editor: React.FC<EditorProps> = ({
   fileId,
   onMount,
   defaultLanguage = 'typescript',
-  extraLibs = [],
+  extraLibs,
 }) => {
   const code = useRef(defaultValue)
   const monaco = useMonaco()
@@ -71,7 +71,7 @@ const Editor: React.FC<EditorProps> = ({
           content: graphTypeDefs,
           filePath: 'file:///node_modules/@graphprotocol/graph-ts/index.d.ts',
         },
-        ...extraLibs,
+        ...(extraLibs || []),
       ]
       monaco.languages.typescript.typescriptDefaults.setExtraLibs(libs)
       // monaco.languages.typescript.typescriptDefaults.addExtraLib(libs)
@@ -81,6 +81,13 @@ const Editor: React.FC<EditorProps> = ({
   useEffect(() => {
     code.current = defaultValue
   }, [fileId])
+
+  const _onValidate = useCallback(
+    (markers: MarkerSeverity[]) => {
+      onValidated(code.current, markers)
+    },
+    [onValidated]
+  )
 
   return (
     <MonacoEditor
@@ -105,9 +112,7 @@ const Editor: React.FC<EditorProps> = ({
           onChange(newCode)
         }
       }}
-      onValidate={(markers: MarkerSeverity[]) => {
-        onValidated(code.current, markers)
-      }}
+      onValidate={_onValidate}
       // {...(lineOfCursor && { line: lineOfCursor })}
       // line={5}
     />

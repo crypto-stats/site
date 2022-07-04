@@ -162,7 +162,8 @@ export const SubgraphList: React.FC<FileListProps> = ({ selected, onSelected, fi
               <ListItem
                 $selected={selected === subgraph.id}
                 key={subgraph.id}
-                onClick={() => onSelected(subgraph.id)}>
+                onClick={() => onSelected(subgraph.id)}
+              >
                 <span className="name">{subgraph.name}</span>
                 <span>{subgraph.publications.length > 0 ? 'published' : 'draft'} </span>
                 {selected === subgraph.id ? (

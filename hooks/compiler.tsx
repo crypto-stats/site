@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { Collection, Module, LOG_LEVEL } from '@cryptostats/sdk'
 import { compileTsToJs } from 'utils/ts-compiler'
 import { getSDK } from 'utils/sdk'
@@ -41,26 +41,29 @@ interface EvaluateParams {
 export const useCompiler = () => {
   const { state, setState } = useContext(CompilerContext)
 
-  const evaluate = async ({ code, isTS, onLog }: EvaluateParams) => {
-    setState({ ...DEFAULT_STATE, code, processing: true })
+  const evaluate = useCallback(
+    async ({ code, isTS, onLog }: EvaluateParams) => {
+      setState({ ...DEFAULT_STATE, code, processing: true })
 
-    const sdk = getSDK({ onLog })
+      const sdk = getSDK({ onLog })
 
-    const list = sdk.getCollection('test')
+      const list = sdk.getCollection('test')
 
-    try {
-      let compiledCode = null
-      if (isTS) {
-        compiledCode = await compileTsToJs(code)
+      try {
+        let compiledCode = null
+        if (isTS) {
+          compiledCode = await compileTsToJs(code)
+        }
+        const module = list.addAdaptersWithCode(compiledCode || code)
+
+        setState({ ...DEFAULT_STATE, code, module, compiledCode, list })
+      } catch (e) {
+        console.warn(e)
+        setState({ ...DEFAULT_STATE, error: e.message })
       }
-      const module = list.addAdaptersWithCode(compiledCode || code)
-
-      setState({ ...DEFAULT_STATE, code, module, compiledCode, list })
-    } catch (e) {
-      console.warn(e)
-      setState({ ...DEFAULT_STATE, error: e.message })
-    }
-  }
+    },
+    [setState]
+  )
 
   return { ...state, evaluate }
 }
@@ -68,14 +71,17 @@ export const useCompiler = () => {
 export const CompilerProvider: React.FC = ({ children }) => {
   const [state, _setState] = useState<CompilerState>(DEFAULT_STATE)
 
-  const setState = (newState: CompilerState) =>
-    _setState((oldState: CompilerState) => {
-      if (oldState.list && oldState.list !== newState.list) {
-        oldState.list.cleanupModules()
-      }
+  const setState = useCallback(
+    (newState: CompilerState) =>
+      _setState((oldState: CompilerState) => {
+        if (oldState.list && oldState.list !== newState.list) {
+          oldState.list.cleanupModules()
+        }
 
-      return newState
-    })
+        return newState
+      }),
+    [_setState]
+  )
 
   useEffect(() => {
     return () => {

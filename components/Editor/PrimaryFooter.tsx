@@ -75,7 +75,7 @@ interface PrimaryFooterProps {
   markers: any[]
   onMarkerClick: () => void
   onConsoleClick: () => void
-  editorRef: any
+  editorRef: React.MutableRefObject<any>
 }
 
 const PrimaryFooter: React.FC<PrimaryFooterProps> = ({

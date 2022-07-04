@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 
 export interface Line {
   level: string
@@ -27,11 +27,17 @@ const CompilerContext = React.createContext<{
 export const useConsole = () => {
   const { state, setState } = useContext(CompilerContext)
 
-  const addLine = (line: Line) => {
-    setState((oldState: ConsoleState) => ({ ...oldState, lines: [...oldState.lines, line] }))
-  }
+  const addLine = useCallback(
+    (line: Line) => {
+      setState((oldState: ConsoleState) => ({ ...oldState, lines: [...oldState.lines, line] }))
+    },
+    [setState]
+  )
 
-  const clear = () => setState((oldState: ConsoleState) => ({ ...oldState, lines: [] }))
+  const clear = useCallback(
+    () => setState((oldState: ConsoleState) => ({ ...oldState, lines: [] })),
+    [setState]
+  )
 
   return { ...state, addLine, clear }
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import {
   ViewPort,
   Top,
@@ -206,6 +206,25 @@ const Editor: React.FC = () => {
   const { evaluate, module } = useCompiler()
   const { addLine } = useConsole()
 
+  const onValidated = useCallback(
+    (code: string, markers: any[]) => {
+      setMarkers(markers)
+
+      if (markers.filter((marker: any) => marker.severity === MarkerSeverity.Error).length === 0) {
+        evaluate({
+          code,
+          isTS: true,
+          onLog: (level: LOG_LEVEL, ...args: any[]) =>
+            addLine({
+              level: level.toString(),
+              value: args.map(formatLog).join(' '),
+            }),
+        })
+      }
+    },
+    [setMarkers, addLine, evaluate]
+  )
+
   useEffect(() => {
     if (module && adapter && (module.name !== adapter.name || module.version !== adapter.version)) {
       const name = module.name && module.name.length > 0 ? module.name : 'Unnamed Adapter'
@@ -305,24 +324,7 @@ const Editor: React.FC = () => {
                       editorRef.current = editor
                     }}
                     onChange={(code: string) => save(code, adapter.name, adapter.version)}
-                    onValidated={(code: string, markers: any[]) => {
-                      setMarkers(markers)
-
-                      if (
-                        markers.filter((marker: any) => marker.severity === MarkerSeverity.Error)
-                          .length === 0
-                      ) {
-                        evaluate({
-                          code,
-                          isTS: true,
-                          onLog: (level: LOG_LEVEL, ...args: any[]) =>
-                            addLine({
-                              level: level.toString(),
-                              value: args.map(formatLog).join(' '),
-                            }),
-                        })
-                      }
-                    }}
+                    onValidated={onValidated}
                   />
                 ) : (
                   <EmptyState onCreate={() => setNewAdapterModalOpen(true)} />
@@ -393,7 +395,8 @@ const Editor: React.FC = () => {
               setNewAdapterModalOpen(false)
             },
           },
-        ]}>
+        ]}
+      >
         <NewAdapterForm
           onAdapterSelection={(fileName: string) => {
             setFileName(fileName)
