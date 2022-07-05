@@ -37,6 +37,7 @@ import BottomTitleBar, { BottomView } from './BottomTitleBar'
 import SaveMessage from './SaveMessage'
 import ImageLibrary from './ImageLibrary/ImageLibrary'
 import { Header, HeaderRight, WalletButton } from 'components/layouts'
+import UpdateBar from './UpdateBar'
 
 const CloseButton = styled.button`
   background: none;
@@ -330,6 +331,8 @@ const Editor: React.FC = () => {
                   <EmptyState onCreate={() => setNewAdapterModalOpen(true)} />
                 )}
               </Fill>
+
+              <UpdateBar fileName={fileName} editorRef={editorRef} />
 
               {bottomView !== BottomView.NONE && (
                 <BottomResizable size={160} minimumSize={60} maximumSize={300}>

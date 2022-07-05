@@ -1,5 +1,6 @@
 // @ts-ignore
 import sampleModule from '!raw-loader!../components/sample-module.txt'
+import semver from 'semver'
 import { withStorageItem } from './lib'
 
 const storageKey = 'localAdapters'
@@ -22,6 +23,9 @@ export interface AdapterWithID extends Adapter {
 }
 
 const randomId = () => Math.floor(Math.random() * 1000000).toString(16)
+
+const sortPublications = (a: Publication, b: Publication) =>
+  semver.lt(a.version, b.version) ? -1 : 1
 
 const { useStorageItem, useStorageList, setStorageItem } = withStorageItem<Adapter>(storageKey)
 
@@ -145,5 +149,18 @@ export const useAdapter = (id?: string | null) => {
     return message
   }
 
-  return { save, publish, adapter, getSignableHash }
+  const savePublications = (publications: Publication[]) => {
+    updateAdapter(_adapter => ({
+      ..._adapter,
+      publications: [...publications, ..._adapter.publications].sort(sortPublications),
+    }))
+  }
+
+  return {
+    adapter,
+    save,
+    publish,
+    getSignableHash,
+    savePublications,
+  }
 }

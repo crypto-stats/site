@@ -115,10 +115,9 @@ const ButtonElement = styled.button<ButtonElementProps>`
     margin: 0 auto;
   `}
 
-  ${({ size }) =>
-    size &&
-    size === 'large' &&
-    `
+  ${({ size, width }) => {
+    if (size === 'large')
+      return `
     padding: var(--spaces-3) var(--spaces-5);
 
     & > i {
@@ -131,8 +130,16 @@ const ButtonElement = styled.button<ButtonElementProps>`
       i > svg {
         fill: white;
       }
-    }
-  `}
+    }`
+
+    if (size === 'small')
+      return `
+      padding: var(--spaces-1) var(--spaces-1);
+      ${width ? '' : 'min-width: 70px;'}
+    `
+
+    return ''
+  }}
 `
 
 const Icon = styled.i`
