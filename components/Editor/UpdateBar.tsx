@@ -25,6 +25,14 @@ const Button = styled(BaseButton)`
   margin: 0 2px;
 `
 
+const Link = styled.a`
+  color: white;
+
+  &:hover {
+    color: #ccc;
+  }
+`
+
 interface UpdateBarProps {
   fileName: string | null
   editorRef: React.MutableRefObject<any>
@@ -74,10 +82,15 @@ const UpdateBar: React.FC<UpdateBarProps> = ({ fileName, editorRef }) => {
 
   return (
     <Bar size={30}>
-      <div>Update available: </div>
+      <div>
+        Update available: {}
+        <Link href={`/discover/adapter/${updates[0].cid}`} target="update">
+          {updates[0].version}
+        </Link>
+      </div>
       <Buttons>
         <Button size="small" disabled={loading} onClick={acceptUpdate(updates[0])}>
-          {updates[0].version}
+          Update
         </Button>
         <Button size="small" disabled={loading} onClick={skip}>
           Skip
