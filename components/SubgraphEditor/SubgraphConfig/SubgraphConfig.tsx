@@ -9,6 +9,7 @@ import { SelectedContract } from './SelectedContract'
 import { Dropdown } from '../../atoms'
 import { addImport } from 'utils/source-code-utils'
 import { generateContractFile, generateSchemaFile } from 'utils/graph-file-generator'
+import { compileAs } from 'utils/deploy-subgraph'
 
 const Root = styled.div`
   min-height: 100vh;
@@ -107,7 +108,7 @@ export const SubgraphConfig = (props: SubgraphConfigProps) => {
 
   const loadFunctionsFromMappingCode = async (subgraph: SubgraphData) => {
     setFnExtractionLoading(true)
-    const { compileAs, loadAsBytecode } = await import('utils/as-compiler')
+    const { /* compileAs, */ loadAsBytecode } = await import('utils/as-compiler')
 
     const libraries: { [name: string]: string } = {}
 
@@ -119,7 +120,7 @@ export const SubgraphConfig = (props: SubgraphConfigProps) => {
     libraries['schema/index.ts'] = await generateSchemaFile(subgraph.schema)
 
     try {
-      const bytecode = await compileAs(subgraph.mappings[DEFAULT_MAPPING], { libraries })
+      const bytecode = await compileAs(subgraph.mappings[DEFAULT_MAPPING], libraries)
       const module = await loadAsBytecode(bytecode)
       const exports = WebAssembly.Module.exports(module.module)
       const functionNames = exports
@@ -129,6 +130,7 @@ export const SubgraphConfig = (props: SubgraphConfigProps) => {
       setFnExtractionLoading(false)
       updateErrorState('compiler')
     } catch (err: any) {
+      console.warn(err)
       updateErrorState('compiler', err.message)
     }
   }

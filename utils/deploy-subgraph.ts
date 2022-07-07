@@ -36,7 +36,7 @@ async function uploadToIPFS(file: string | Uint8Array, name: string) {
   return json.cid
 }
 
-async function compileAs(file: string, libraries: { [name: string]: string }) {
+export async function compileAs(file: string, libraries: { [name: string]: string }) {
   const req = await fetch('/api/graph/compile-as', {
     method: 'POST',
     body: JSON.stringify({ file, libraries }),

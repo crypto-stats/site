@@ -123,6 +123,29 @@ declare module '@graphprotocol/graph-ts' {
   }
   export const ipfs = ipfs
 
+  namespace ens {
+    function nameByHash(hash: string): string | null
+  }
+  export const ens = ens
+
+  namespace log {
+    export enum Level {
+      CRITICAL = 0,
+      ERROR = 1,
+      WARNING = 2,
+      INFO = 3,
+      DEBUG = 4,
+    }
+
+    function log(level: Level, msg: string): void
+    function critical(msg: string, args: Array<string>): void
+    function error(msg: string, args: Array<string>): void
+    function warning(msg: string, args: Array<string>): void
+    function info(msg: string, args: Array<string>): void
+    function debug(msg: string, args: Array<string>): void
+  }
+  export const log = log
+
   namespace store {
     function get(type: string, id: string): any
     function set(type: string, id: string, val: any): void
