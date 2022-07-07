@@ -1,4 +1,4 @@
-import { DEFAULT_MAPPING, SubgraphData } from 'hooks/local-subgraphs'
+import { ContractEvent, DEFAULT_MAPPING, SubgraphData } from 'hooks/local-subgraphs'
 import { generateContractFile, generateSchemaFile } from './graph-file-generator'
 import Hash from 'ipfs-only-hash'
 
@@ -196,11 +196,12 @@ export async function prepareSubgraphDeploymentFiles(subgraph: SubgraphData) {
             name: contract.name,
           },
         ],
-        apiVersion: '0.0.5',
+        apiVersion: '0.0.7',
         entities: ['Pair'],
-        eventHandlers: contract.events.map((event: { signature: string; handler: string }) => ({
+        eventHandlers: contract.events.map((event: ContractEvent) => ({
           event: getGraphEvent(contract.abi, event.signature),
           handler: event.handler,
+          receipt: !!event.receipt,
         })),
         file: {
           '/': `/ipfs/${mappingCid}`,
@@ -221,7 +222,7 @@ export async function prepareSubgraphDeploymentFiles(subgraph: SubgraphData) {
   })
 
   const manifestString = yaml.dump({
-    specVersion: '0.0.2',
+    specVersion: '0.0.5',
     description: 'Test description',
     dataSources,
     schema: {
