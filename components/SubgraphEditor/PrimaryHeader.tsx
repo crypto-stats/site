@@ -8,6 +8,7 @@ import { MarkerSeverity } from './types'
 import { PublishModal } from './PublishModal/'
 import { PublishTutorialModal } from './PublishTutorialModal'
 import { getLocalStorage, setLocalStorage } from '../../utils/localstorage'
+import SaveMessage from 'components/Editor/SaveMessage'
 
 const STORAGE_KEY = 'dont-show-tutorial-again'
 
@@ -123,6 +124,8 @@ export const PrimaryHeader = (props: PrimaryHeaderProps) => {
 
   return (
     <Root size={80} order={1}>
+      <SaveMessage />
+
       {subgraph ? (
         <SubgraphTitle onClick={() => setEditingTitle(prev => !prev)}>
           {!editingTitle ? (
