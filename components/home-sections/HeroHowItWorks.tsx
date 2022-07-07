@@ -27,7 +27,7 @@ const Hero: React.FC = () => {
         </Text>
         <Text tag="h2" type="content_display" mb="40">
           It's easy: just <strong>publish an adapter</strong> or <strong>use the Dataset</strong>{' '}
-          created by the Comunity to create and view anything you want.
+          created by the Community to create and view anything you want.
         </Text>
         <HeroCtas>
           <Link href="/editor" passHref>

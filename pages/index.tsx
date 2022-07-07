@@ -40,7 +40,7 @@ const Home: NextPage<HomePageProps> = ({ sampleData }) => {
         <title>Homepage | CryptoStats</title>
         <meta
           name="description"
-          content="It's easy: just publish an adapter or use the Dataset created by the Comunity to create and view anything you want."
+          content="It's easy: just publish an adapter or use the Dataset created by the Community to create and view anything you want."
         />
       </Head>
       <HomeBackgroundHead>
