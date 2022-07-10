@@ -336,7 +336,7 @@ export async function* deploySubgraph(
 
   // Currently, all ABIs are available to all data sources, so we generate
   // one single array that's added to all sources
-  const abis: { name: string, file: { '/': string} }[] = []
+  const abis: { name: string; file: { '/': string } }[] = []
 
   for (const contract of subgraph.contracts) {
     yield {

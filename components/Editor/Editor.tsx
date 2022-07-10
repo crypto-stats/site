@@ -326,6 +326,7 @@ const Editor: React.FC = () => {
                     }}
                     onChange={(code: string) => save(code, adapter.name, adapter.version)}
                     onValidated={onValidated}
+                    includeSDK
                   />
                 ) : (
                   <EmptyState onCreate={() => setNewAdapterModalOpen(true)} />
