@@ -334,6 +334,10 @@ export async function* deploySubgraph(
 
   const dataSources: any[] = []
 
+  // Currently, all ABIs are available to all data sources, so we generate
+  // one single array that's added to all sources
+  const abis: { name: string, file: { '/': string} }[] = []
+
   for (const contract of subgraph.contracts) {
     yield {
       status: STATUS.IPFS_UPLOAD,
@@ -341,6 +345,12 @@ export async function* deploySubgraph(
     }
 
     const cid = await uploadToIPFS(JSON.stringify(contract.abi), `${contract.name}.json`)
+    abis.push({
+      file: {
+        '/': `/ipfs/${cid}`,
+      },
+      name: contract.name,
+    })
 
     dataSources.push({
       kind: 'ethereum/contract',
@@ -352,14 +362,7 @@ export async function* deploySubgraph(
         startBlock: contract.startBlocks['1'],
       },
       mapping: {
-        abis: [
-          {
-            file: {
-              '/': `/ipfs/${cid}`,
-            },
-            name: contract.name,
-          },
-        ],
+        abis,
         apiVersion: '0.0.7',
         entities: ['Pair'],
         eventHandlers: contract.events.map((event: { signature: string; handler: string }) => ({
