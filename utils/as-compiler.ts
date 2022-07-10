@@ -81,6 +81,11 @@ export async function loadAsBytecode(bytecode: Uint8Array) {
       'dataSource.network': () => null,
       'dataSource.context': () => null,
     },
+    ethereum: {
+      'ethereum.call': () => null,
+      'ethereum.encode': () => null,
+      'ethereum.decode': () => null,
+    },
     numbers: {
       'bigInt.plus': () => null,
       'bigInt.minus': () => null,
