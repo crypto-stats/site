@@ -101,7 +101,6 @@ export async function loadAsBytecode(bytecode: Uint8Array) {
       'bigDecimal.times': () => null,
       'bigDecimal.dividedBy': () => null,
       'bigDecimal.equals': () => null,
-
     },
     index: {
       'crypto.keccak256': () => null,
