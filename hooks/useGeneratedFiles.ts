@@ -16,7 +16,7 @@ export const useGeneratedFiles = (subgraph: SubgraphData | null) => {
     _files.push({ content: schemaCode, filePath: 'file:///schema.ts' })
 
     for (const contract of subgraph.contracts) {
-      const content = await generateContractFile(contract.abi)
+      const content = await generateContractFile(contract.name, contract.abi)
       _files.push({ content, filePath: `file:///contracts/${contract.name}.ts` })
     }
     setFiles(_files)

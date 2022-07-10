@@ -139,7 +139,7 @@ export async function prepareSubgraphDeploymentFiles(subgraph: SubgraphData) {
   const libraries: { [name: string]: string } = {}
 
   for (const contract of subgraph.contracts) {
-    const code = await generateContractFile(contract.abi)
+    const code = await generateContractFile(contract.name, contract.abi)
     libraries[`contracts/${contract.name}.ts`] = code
   }
 
@@ -317,7 +317,7 @@ export async function* deploySubgraph(
   const libraries: { [name: string]: string } = {}
 
   for (const contract of subgraph.contracts) {
-    const code = await generateContractFile(contract.abi)
+    const code = await generateContractFile(contract.name, contract.abi)
     libraries[`contracts/${contract.name}.ts`] = code
   }
 
