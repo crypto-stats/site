@@ -17,13 +17,27 @@ const removeExitHandler = (exitHandler: () => void) => process.removeListener('e
 
 // Important note, the `asc.main` callback function parameter is synchronous,
 // that's why this function doesn't need to be `async` and the throw works properly.
-const assemblyScriptCompiler = (argv: string[], options: asc.APIOptions) =>
-  asc.main(argv, options, err => {
+const assemblyScriptCompiler = (argv: string[], options: asc.APIOptions) => {
+  let errorText = ''
+  const errorStream = {
+    write(chunk: any) {
+      errorText += chunk.toString()
+      return true
+    },
+  }
+
+  const _options = {
+    ...options,
+    stderr: errorStream,
+  }
+
+  asc.main(argv, _options, err => {
     if (err) {
-      throw err
+      throw new Error(`${err}\n${errorText}`)
     }
     return 0
   })
+}
 
 const compilerDefaults = {
   stdout: process.stdout,
