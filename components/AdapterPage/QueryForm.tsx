@@ -95,6 +95,11 @@ const Error = styled.div`
   color: red;
 `
 
+const Stat = styled.div`
+  font-size: 12px;
+  color: #555;
+`
+
 interface QueryProps {
   id: string
   fn: (...params: any[]) => Promise<any>
@@ -112,7 +117,7 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, adapter }) => 
   const [open, setOpen] = useState(!!openByDefault)
   const [values, setValues] = useState([...new Array(fn.length)].map(() => ''))
   const [running, setRunning] = useState(false)
-  const [result, setResult] = useState<string | null>(null)
+  const [result, setResult] = useState<{ output: any; time: number } | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   const functionNames = functionToParamNames(fn)
@@ -130,8 +135,9 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, adapter }) => 
     try {
       setResult(null)
       setError(null)
+      const startTime = Date.now()
       const newResult = await fn.apply(null, values)
-      setResult(newResult)
+      setResult({ output: newResult, time: Date.now() - startTime })
     } catch (e: any) {
       setError(e.message)
     }
@@ -176,7 +182,12 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, adapter }) => 
             {error ? (
               <Error>Error: {error}</Error>
             ) : (
-              <Result>{JSON.stringify(result, null, 2)}</Result>
+              result && (
+                <>
+                  <Result>{JSON.stringify(result.output, null, 2)}</Result>
+                  <Stat>Query executed in {result.time / 1000}s</Stat>
+                </>
+              )
             )}
           </Output>
         </QueryFormContainer>

@@ -87,6 +87,11 @@ const Error = styled.div`
   color: #cf9b9b;
 `
 
+const Stat = styled.div`
+  font-size: 12px;
+  color: #555;
+`
+
 interface QueryProps {
   id: string
   fn: (...params: any[]) => Promise<any>
@@ -110,6 +115,7 @@ interface State {
   status: STATUS
   result?: string
   error?: string
+  time?: number
 }
 
 const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, storageKey }) => {
@@ -131,8 +137,9 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, storageKey }) 
   const execute = async () => {
     setState({ status: STATUS.RUNNING })
     try {
+      const startTime = Date.now()
       const result = await fn.apply(null, values)
-      setState({ status: STATUS.DONE, result })
+      setState({ status: STATUS.DONE, result, time: Date.now() - startTime })
     } catch (e: any) {
       setState({ status: STATUS.ERROR, error: e.message })
       addLine({ level: LOG_LEVEL.ERROR.toString(), value: e.stack })
@@ -173,7 +180,10 @@ const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, storageKey }) 
             <Label>Output</Label>
             {state.error && <Error>Error: {state.error}</Error>}
             {state.status === STATUS.DONE && (
-              <Result>{JSON.stringify(state.result, null, 2)}</Result>
+              <>
+                <Result>{JSON.stringify(state.result, null, 2)}</Result>
+                <Stat>Query executed in {state.time! / 1000}s</Stat>
+              </>
             )}
           </Output>
         </div>
