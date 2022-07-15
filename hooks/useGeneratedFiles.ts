@@ -16,8 +16,12 @@ export const useGeneratedFiles = (subgraph: SubgraphData | null) => {
     _files.push({ content: schemaCode, filePath: 'file:///schema.ts' })
 
     for (const contract of subgraph.contracts) {
-      const content = await generateContractFile(contract.name, contract.abi)
-      _files.push({ content, filePath: `file:///contracts/${contract.name}.ts` })
+      try {
+        const content = await generateContractFile(contract.name, contract.abi)
+        _files.push({ content, filePath: `file:///contracts/${contract.name}.ts` })
+      } catch (e) {
+        console.error(`Error generating file for ${contract.name}: ${e.message}`)
+      }
     }
     setFiles(_files)
   }

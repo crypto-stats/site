@@ -5,6 +5,7 @@ import { Plus, Trash2 } from 'lucide-react'
 import { Contract, ContractEvent } from 'hooks/local-subgraphs'
 import { EventRow } from './EventRow'
 import { ErrorState } from 'components/SubgraphEditor/atoms'
+import { generateContractFile } from 'utils/graph-file-generator'
 
 const Root = styled.div`
   margin-bottom: 24px;
@@ -129,6 +130,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
 
   const [newEvent, setNewEvent] = useState({ show: false, signature: '' })
   const [metadataLoading, setMetadataLoading] = useState(false)
+  const [parseABIError, setParseABIError] = useState<string | null>(null)
 
   const fetchMetadata = async () => {
     setMetadataLoading(true)
@@ -159,6 +161,10 @@ export const SelectedContract = (props: SelectedContractProps) => {
   useEffect(() => {
     if (!abi && source === 'etherscan') {
       fetchMetadata()
+    }
+    if (abi) {
+      setParseABIError(null)
+      generateContractFile(name, abi).catch(e => setParseABIError(e.message))
     }
   }, [addresses, abi, source])
 
@@ -243,6 +249,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
           Please fix all compiler errors in the schema and mapping files before managing events
         </ErrorState>
       ) : null}
+      {parseABIError && <ErrorState>Error parsing ABI: {parseABIError}</ErrorState>}
 
       {!contractHasEvents ? (
         <ErrorState>
@@ -299,7 +306,8 @@ export const SelectedContract = (props: SelectedContractProps) => {
               {...(!contractHasEvents && {
                 disabled: true,
                 title: 'Contract has no events defined',
-              })}>
+              })}
+            >
               <Plus size={12} style={{ marginRight: 4 }} />
               New
             </ActionButton>
