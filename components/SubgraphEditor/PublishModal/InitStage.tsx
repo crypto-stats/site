@@ -79,17 +79,15 @@ export const InitStage = (props: InitStageProps) => {
       <div className="network-selection-container">
         <NetworkButton
           className={publishState.node === 'hosted' ? 'ready-now' : ''}
-          onClick={setNode('hosted')}
-        >
+          onClick={setNode('hosted')}>
           <IconElement type="ethereum" size={'x-small'} />
-          Hosted
+          Graph Mainnet
         </NetworkButton>
         <NetworkButton
           className={publishState.node === 'studio' ? 'ready-now' : ''}
-          onClick={setNode('studio')}
-        >
+          onClick={setNode('studio')}>
           <IconElement type="ethereum" size={'x-small'} />
-          Mainnet
+          Ethereum Mainnet
         </NetworkButton>
       </div>
       <div style={{ marginBottom: 32 }} />
