@@ -78,7 +78,7 @@ interface LinkButton extends BaseButton {
   href: string
 }
 
-export type Button = NormalButton | LinkButton
+export type Button = (NormalButton | LinkButton) & { iconType?: string }
 
 interface ModalProps {
   isOpen: boolean
@@ -105,8 +105,7 @@ const EditorModal: React.FC<ModalProps> = props => {
         <ModalOverlay width={width} height={height} {...props}>
           {contentElement}
         </ModalOverlay>
-      )}
-    >
+      )}>
       <Header>{title}</Header>
 
       <Content>{children}</Content>
@@ -120,11 +119,10 @@ const EditorModal: React.FC<ModalProps> = props => {
             key={button.label}
             onClick={(button as NormalButton).onClick}
             href={(button as LinkButton).href}
-            icon={(button as LinkButton).href ? 'External' : undefined}
+            icon={(button as LinkButton).href ? 'External' : button.iconType}
             target={(button as LinkButton).href ? 'graph-explorer' : undefined}
             disabled={button.disabled}
-            variant={['Cancel', 'Close'].includes(button.label) ? 'outline' : 'primary'}
-          >
+            variant={['Cancel', 'Close'].includes(button.label) ? 'outline' : 'primary'}>
             {button.label}
           </ButtonComponent>
         ))}
