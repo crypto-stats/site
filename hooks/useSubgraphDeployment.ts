@@ -76,8 +76,12 @@ export const useSubgraphDeployment = (subgraph?: SubgraphData | null) => {
 
   const prepareFiles = async () => {
     setDeployState(_state => ({ ..._state, files: null, status: DeployStatus.PREPARING }))
-    const files = await prepareSubgraphDeploymentFiles(subgraph)
-    setDeployState(_state => ({ ..._state, files, status: DeployStatus.READY_TO_SIGN }))
+    try {
+      const files = await prepareSubgraphDeploymentFiles(subgraph)
+      setDeployState(_state => ({ ..._state, files, status: DeployStatus.READY_TO_SIGN }))
+    } catch (err: any) {
+      setDeployState(_state => ({ ..._state, status: DeployStatus.ERROR, error: err.message }))
+    }
   }
 
   const signSubgraph = async () => {

@@ -108,7 +108,7 @@ export const SubgraphConfig = (props: SubgraphConfigProps) => {
 
   const loadFunctionsFromMappingCode = async (subgraph: SubgraphData) => {
     setFnExtractionLoading(true)
-    const { /* compileAs, */ loadAsBytecode } = await import('utils/as-compiler')
+    const { loadAsBytecode } = await import('utils/as-compiler')
 
     const libraries: { [name: string]: string } = {}
 
