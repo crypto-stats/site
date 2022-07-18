@@ -226,22 +226,19 @@ export const SelectedContract = (props: SelectedContractProps) => {
                     : 'ABI upload manually'
                 }`}
           </span>
-          {showUploadButton ? (
-            <>
-              <input
-                type="file"
-                name="abi"
-                style={{ display: 'none' }}
-                ref={inputRef}
-                accept="application/JSON"
-                multiple={false}
-                onChange={handleFileUploadChange}
-              />
-              <a className="upload-link" href="#" onClick={() => inputRef.current?.click()}>
-                Manually upload
-              </a>
-            </>
-          ) : null}
+
+          <input
+            type="file"
+            name="abi"
+            style={{ display: 'none' }}
+            ref={inputRef}
+            accept="application/JSON"
+            multiple={false}
+            onChange={handleFileUploadChange}
+          />
+          <a className="upload-link" href="#" onClick={() => inputRef.current?.click()}>
+            Manually upload
+          </a>
         </StatusContainer>
       </Header>
       {compileError ? (
@@ -306,8 +303,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
               {...(!contractHasEvents && {
                 disabled: true,
                 title: 'Contract has no events defined',
-              })}
-            >
+              })}>
               <Plus size={12} style={{ marginRight: 4 }} />
               New
             </ActionButton>
