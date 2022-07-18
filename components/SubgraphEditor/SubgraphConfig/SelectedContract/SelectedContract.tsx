@@ -125,16 +125,19 @@ export const SelectedContract = (props: SelectedContractProps) => {
   } = props
 
   useEffect(() => {
-    const missingFns = events.reduce(
-      (acc: number[], e, i) => (!mappingFunctionNames.includes(e.handler) ? [...acc, i] : acc),
-      []
-    )
-    if (missingFns.length > 0) {
-      updateContract({
-        events: events.map((p, i) =>
-          missingFns.includes(i) ? { handler: '', signature: p.signature } : p
-        ),
-      })
+    if (mappingFunctionNames.length > 0) {
+      const missingFns = events.reduce(
+        (acc: number[], e, i) => (!mappingFunctionNames.includes(e.handler) ? [...acc, i] : acc),
+        []
+      )
+
+      if (missingFns.length > 0) {
+        updateContract({
+          events: events.map((p, i) =>
+            missingFns.includes(i) ? { handler: '', signature: p.signature } : p
+          ),
+        })
+      }
     }
   }, [mappingFunctionNames])
 
