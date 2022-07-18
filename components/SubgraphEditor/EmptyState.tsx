@@ -41,9 +41,12 @@ const ActionsContainer = styled.div`
   }
 `
 
-// interface EmptyStateProps {}
+interface EmptyStateProps {
+  setShowDocs: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-export const EmptyState = () => {
+export const EmptyState = (props: EmptyStateProps) => {
+  const { setShowDocs } = props
   return (
     <Root>
       <h2 className="title">Welcome to the Subeditor</h2>
@@ -51,9 +54,9 @@ export const EmptyState = () => {
       <ActionsContainer>
         <div className="sub-section">
           <h3>Documentation</h3>
-          <a href="#">How to start</a>
-          <a href="#">Schema</a>
-          <a href="#">Mapping</a>
+          <a href="#" onClick={() => setShowDocs(true)}>
+            How to start
+          </a>
         </div>
       </ActionsContainer>
     </Root>

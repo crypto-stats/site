@@ -238,7 +238,7 @@ const Editor: React.FC = () => {
               ) : null}
             </>
           ) : (
-            <EmptyState />
+            <EmptyState setShowDocs={setShowDocs} />
           )}
         </Fill>
       </FillWithStyledResize>
