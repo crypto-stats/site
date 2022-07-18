@@ -124,6 +124,20 @@ export const SelectedContract = (props: SelectedContractProps) => {
     setJumpToLine,
   } = props
 
+  useEffect(() => {
+    const missingFns = events.reduce(
+      (acc: number[], e, i) => (!mappingFunctionNames.includes(e.handler) ? [...acc, i] : acc),
+      []
+    )
+    if (missingFns.length > 0) {
+      updateContract({
+        events: events.map((p, i) =>
+          missingFns.includes(i) ? { handler: '', signature: p.signature } : p
+        ),
+      })
+    }
+  }, [mappingFunctionNames])
+
   const inputRef = useRef<HTMLInputElement>(null)
   const eventsFromAbi = abi ? parseEventsFromAbi(abi) : []
   const contractHasEvents = eventsFromAbi.length > 0
