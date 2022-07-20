@@ -87,7 +87,7 @@ export const InitStage = (props: InitStageProps) => {
           className={publishState.node === 'studio' ? 'ready-now' : ''}
           onClick={setNode('studio')}>
           <IconElement type="ethereum" size={'x-small'} />
-          Ethereum Mainnet
+          Subgraph Studio
         </NetworkButton>
       </div>
       <div style={{ marginBottom: 32 }} />
