@@ -48,6 +48,8 @@ export const EDITOR_TYPES = {
   SUBGRAPH_TAB: 'SUBGRAPH_TAB',
 }
 
+export function useEditorState<T = any>(key: string, defaultState?: T, storageKey?: string): [T, (val: T) => void]
+export function useEditorState<T = any>(key?: string | null, defaultState?: T, storageKey?: string): [T | null, (val: T) => void]
 export function useEditorState<T = any>(
   key?: string | null,
   defaultState?: T,
