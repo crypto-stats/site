@@ -81,7 +81,7 @@ export const InitStage = (props: InitStageProps) => {
           className={publishState.node === 'hosted' ? 'ready-now' : ''}
           onClick={setNode('hosted')}>
           <IconElement type="ethereum" size={'x-small'} />
-          Graph Mainnet
+          Hosted Service
         </NetworkButton>
         <NetworkButton
           className={publishState.node === 'studio' ? 'ready-now' : ''}
