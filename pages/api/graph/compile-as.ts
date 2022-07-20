@@ -113,38 +113,31 @@ const compile = (inputFile: string, libraries: { [fileName: string]: string }) =
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  try {
-    if (req.method !== 'POST') {
-      throw new Error('Only POST requests allowed')
-    }
-
-    const { file, libraries } = req.body
-
-    if (typeof file !== 'string') {
-      throw new Error(`File must be a string`)
-    }
-    if (typeof libraries !== 'object') {
-      throw new Error(`Libraries must be a dictionary of strings`)
-    }
-    for (const fileName in libraries) {
-      if (typeof libraries[fileName] !== 'string') {
-        throw new Error(`Library ${fileName} must be a string`)
-      }
-    }
-
-    await ready()
-
-    const output = await compile(file, libraries)
-
-    const outputBase64 = Buffer.from(output.output).toString('base64')
-
-    res.json({ success: true, bytecode: outputBase64 })
-  } catch (err: any) {
-    res.status(400).json({
-      success: false,
-      error: err.message,
-    })
+  if (req.method !== 'POST') {
+    throw new Error('Only POST requests allowed')
   }
+
+  const { file, libraries } = req.body
+
+  if (typeof file !== 'string') {
+    throw new Error(`File must be a string`)
+  }
+  if (typeof libraries !== 'object') {
+    throw new Error(`Libraries must be a dictionary of strings`)
+  }
+  for (const fileName in libraries) {
+    if (typeof libraries[fileName] !== 'string') {
+      throw new Error(`Library ${fileName} must be a string`)
+    }
+  }
+
+  await ready()
+
+  const output = await compile(file, libraries)
+
+  const outputBase64 = Buffer.from(output.output).toString('base64')
+
+  res.json({ success: true, bytecode: outputBase64 })
 }
 
 export default handleErrors(handler)
