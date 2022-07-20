@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
 interface InputFieldProps {
-  name: string
+  name?: string | null
   value: string
   onChange: (val: string | any) => void
   // it's better to pass in the whole event, not only the value in case we need other props from the event
@@ -27,7 +27,7 @@ const InputField = (props: InputFieldProps) => {
     spellCheck = false,
   } = props
 
-  if (name.toLowerCase().indexOf('date') !== -1) {
+  if (name && name.toLowerCase().indexOf('date') !== -1) {
     return (
       <DatePicker
         dateFormat="yyyy-MM-dd"
