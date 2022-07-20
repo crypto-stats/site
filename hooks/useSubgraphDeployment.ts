@@ -135,7 +135,7 @@ signature: ${signature}`
         ..._subgraph,
         publications: [
           ..._subgraph.publications,
-          { version: deployResult.version, cid: deployResult.manifestCid },
+          { version: deployResult.version, cid: deployResult.manifestCid, node },
         ],
       }))
     } catch (e: any) {
