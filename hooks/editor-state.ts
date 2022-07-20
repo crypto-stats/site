@@ -49,14 +49,18 @@ export const EDITOR_TYPES = {
 }
 
 export function useEditorState<T = any>(
-  key: string,
+  key?: string | null,
   defaultState?: T,
   storageKey: string = EDITOR_TYPES.EDITOR_STATE
-): [T, (val: T) => void] {
-  const updater = getUpdater(key)
+): [T | null, (val: T) => void] {
+  const updater = getUpdater(key || 'undefined')
   updater.register()
 
-  const value = getEditorState({ key, storageKey }) || defaultState || null
+  if (!key) {
+    return [null, () => null]
+  }
+
+  const value: T | null = getEditorState({ key, storageKey }) || defaultState || null
 
   const setValue = (newVal: T) => {
     setEditorState({ key, value: newVal, storageKey })

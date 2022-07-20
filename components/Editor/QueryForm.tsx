@@ -119,17 +119,23 @@ interface State {
 }
 
 const QueryForm: React.FC<QueryProps> = ({ id, fn, openByDefault, storageKey }) => {
+  const fnIsAFunction = typeof fn === 'function'
+
   const { addLine } = useConsole()
   const [open, setOpen] = useEditorState(`${storageKey}-open`, !!openByDefault)
   const [storedValues, setStoredValues] = useEditorState(
-    `${storageKey}-values`,
-    JSON.stringify([...new Array(fn.length)].map(() => ''))
+    fnIsAFunction ? `${storageKey}-values` : null,
+    JSON.stringify([...new Array(fnIsAFunction ? fn.length : 0)].map(() => ''))
   )
   const [state, setState] = useState<State>({
     status: STATUS.READY,
   })
 
-  const values = JSON.parse(storedValues)
+  if (!fnIsAFunction) {
+    return <div>"{id}" is not a function</div>
+  }
+
+  const values = JSON.parse(storedValues || '{}')
   const setValues = (newVals: string[]) => setStoredValues(JSON.stringify(newVals))
 
   const functionNames = functionToParamNames(fn)

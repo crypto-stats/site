@@ -50,7 +50,7 @@ const InputField = (props: InputFieldProps) => {
       onChange={overrideOnChange ? onChange : (e: any) => onChange(e.target.value)}
       disabled={disabled}
       placeholder={placeholder}
-      name={name}
+      name={name || undefined}
       spellCheck={spellCheck}
     />
   )
