@@ -62,7 +62,11 @@ export function useEditorState<T = any>(
     return [null, () => null]
   }
 
-  const value: T | null = getEditorState({ key, storageKey }) || defaultState || null
+  let value: T | null = getEditorState({ key, storageKey })
+
+  if (value === null || value === undefined) {
+    value = defaultState || null
+  }
 
   const setValue = (newVal: T) => {
     setEditorState({ key, value: newVal, storageKey })
