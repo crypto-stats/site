@@ -92,6 +92,7 @@ export const PublishModal: React.FC<PublishModalProps> = props => {
           returnButton,
           {
             label: 'Next',
+            iconType: status === DeployStatus.PREPARING ? 'Loading' : undefined,
             onClick: prepareFiles,
             disabled:
               !publishState.accessToken || !publishState.name || status === DeployStatus.PREPARING,

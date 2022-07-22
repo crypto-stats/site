@@ -124,6 +124,23 @@ export const SelectedContract = (props: SelectedContractProps) => {
     setJumpToLine,
   } = props
 
+  useEffect(() => {
+    if (mappingFunctionNames.length > 0) {
+      const missingFns = events.reduce(
+        (acc: number[], e, i) => (!mappingFunctionNames.includes(e.handler) ? [...acc, i] : acc),
+        []
+      )
+
+      if (missingFns.length > 0) {
+        updateContract({
+          events: events.map((p, i) =>
+            missingFns.includes(i) ? { handler: '', signature: p.signature } : p
+          ),
+        })
+      }
+    }
+  }, [mappingFunctionNames])
+
   const inputRef = useRef<HTMLInputElement>(null)
   const eventsFromAbi = abi ? parseEventsFromAbi(abi) : []
   const contractHasEvents = eventsFromAbi.length > 0
@@ -226,22 +243,19 @@ export const SelectedContract = (props: SelectedContractProps) => {
                     : 'ABI upload manually'
                 }`}
           </span>
-          {showUploadButton ? (
-            <>
-              <input
-                type="file"
-                name="abi"
-                style={{ display: 'none' }}
-                ref={inputRef}
-                accept="application/JSON"
-                multiple={false}
-                onChange={handleFileUploadChange}
-              />
-              <a className="upload-link" href="#" onClick={() => inputRef.current?.click()}>
-                Manually upload
-              </a>
-            </>
-          ) : null}
+
+          <input
+            type="file"
+            name="abi"
+            style={{ display: 'none' }}
+            ref={inputRef}
+            accept="application/JSON"
+            multiple={false}
+            onChange={handleFileUploadChange}
+          />
+          <a className="upload-link" href="#" onClick={() => inputRef.current?.click()}>
+            Manually upload
+          </a>
         </StatusContainer>
       </Header>
       {compileError ? (
@@ -306,8 +320,7 @@ export const SelectedContract = (props: SelectedContractProps) => {
               {...(!contractHasEvents && {
                 disabled: true,
                 title: 'Contract has no events defined',
-              })}
-            >
+              })}>
               <Plus size={12} style={{ marginRight: 4 }} />
               New
             </ActionButton>

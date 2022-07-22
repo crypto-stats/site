@@ -74,10 +74,11 @@ interface PrimaryHeaderProps {
   filename: string | null
   markers: any[]
   editorRef: any
+  canPublish: boolean
 }
 
 export const PrimaryHeader = (props: PrimaryHeaderProps) => {
-  const { filename, markers, editorRef } = props
+  const { filename, markers, editorRef, canPublish } = props
   const { subgraph, update } = useLocalSubgraph(filename)
   const [modalStatus, setModalStatus] = useState({ publish: false, publishTutorial: false })
   const [editingTitle, setEditingTitle] = useState(false)
@@ -151,9 +152,8 @@ export const PrimaryHeader = (props: PrimaryHeaderProps) => {
                 [showPublishTutorial ? 'publishTutorial' : 'publish']: true,
               }))
             }
-            disabled={errors.length > 0}
-            className="primary"
-          >
+            disabled={errors.length > 0 || !canPublish}
+            className="primary">
             Publish
           </PublishButton>
         )}

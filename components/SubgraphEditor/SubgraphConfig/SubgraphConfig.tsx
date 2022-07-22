@@ -52,14 +52,16 @@ const ADDRESS_REGEX = /^0x[0-9a-f]{40}$/i
 interface TErrorState {
   address?: string
   compiler?: string
+  version?: string | null
 }
 
 interface SubgraphConfigProps {
   setJumpToLine: React.Dispatch<React.SetStateAction<string | null>>
+  setCanPublish: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const SubgraphConfig = (props: SubgraphConfigProps) => {
-  const { setJumpToLine } = props
+  const { setJumpToLine, setCanPublish } = props
 
   const CHAIN_ID = '1'
 
@@ -75,12 +77,12 @@ export const SubgraphConfig = (props: SubgraphConfigProps) => {
   const [mappingFunctionNames, setMappingFunctionNames] = useState<string[]>([])
   const [fnExtractionLoading, setFnExtractionLoading] = useState(false)
 
-  const updateErrorState = (key: keyof TErrorState, message?: string) => {
+  const updateErrorState = (key: keyof TErrorState, message: string | null) => {
     setErrorState(prev => ({ ...prev, [key]: message }))
   }
 
   const updateContractAddress = (address: string) => {
-    updateErrorState('address')
+    updateErrorState('address', null)
     if (!subgraph) {
       throw new Error('No subgraph')
     }
@@ -108,7 +110,7 @@ export const SubgraphConfig = (props: SubgraphConfigProps) => {
 
   const loadFunctionsFromMappingCode = async (subgraph: SubgraphData) => {
     setFnExtractionLoading(true)
-    const { /* compileAs, */ loadAsBytecode } = await import('utils/as-compiler')
+    const { loadAsBytecode } = await import('utils/as-compiler')
 
     const libraries: { [name: string]: string } = {}
 
@@ -128,7 +130,7 @@ export const SubgraphConfig = (props: SubgraphConfigProps) => {
         .map(_export => _export.name)
       setMappingFunctionNames(functionNames)
       setFnExtractionLoading(false)
-      updateErrorState('compiler')
+      updateErrorState('compiler', null)
     } catch (err: any) {
       console.warn(err)
       updateErrorState('compiler', err.message)
@@ -144,6 +146,25 @@ export const SubgraphConfig = (props: SubgraphConfigProps) => {
   useEffect(() => {
     setStarted(true)
   }, [])
+
+  useEffect(() => {
+    if (subgraph?.publications.find(sp => sp.version === subgraph.version)) {
+      updateErrorState(
+        'version',
+        `Version ${subgraph?.version} already exists, please update before publishing`
+      )
+    } else {
+      updateErrorState('version', null)
+    }
+  }, [subgraph?.version])
+
+  useEffect(() => {
+    if (errorState.version) {
+      setCanPublish(false)
+    } else {
+      setCanPublish(true)
+    }
+  }, [errorState])
 
   if (!started) {
     return null
@@ -209,6 +230,7 @@ export const SubgraphConfig = (props: SubgraphConfigProps) => {
           value={subgraph?.version || ''}
           onChange={version => update(_subgraph => ({ ..._subgraph, version }))}
         />
+        {errorState.version ? <ErrorState>{errorState.version}</ErrorState> : null}
 
         <Title>Contracts</Title>
         <InputLabel>Add contract</InputLabel>
@@ -219,6 +241,7 @@ export const SubgraphConfig = (props: SubgraphConfigProps) => {
           onChange={updateContractAddress}
         />
         {errorState.address ? <ErrorState>{errorState.address}</ErrorState> : null}
+
         {subgraph?.contracts.map(sc => (
           <SelectedContract
             key={`${subgraphId}-${sc.addresses[CHAIN_ID]}`}
