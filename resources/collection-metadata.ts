@@ -23,6 +23,17 @@ export interface CollectionMetadata {
 export const DEFAULT_FORUM_CATEGORY = 'protocols/other-collections'
 
 const collectionMetadata: { [id: string]: CollectionMetadata } = {
+  'active-addresses': {
+    name: 'Active Addresses',
+    description: 'Number of addresses that have sent a transaction on a given chain on a given date.',
+    icon: '🏃',
+    queries: [
+      {
+        id: 'activeAddressesOneDay',
+        name: 'One day active addresses',
+      },
+    ],
+  },
   'apy-current': {
     name: 'Current APY',
     description: 'The current yield rates of various lending protocols and yield aggregators.',
@@ -318,6 +329,18 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
       },
     ],
   },
+  'historic-l2-fees': {
+    name: 'Historical Layer-2 Fees',
+    description: 'The average transaction fee paid on Ethereum Layer-2s on a given date',
+    icon: '🌀',
+    queries: [
+      {
+        id: 'oneDayAverageFeeSwap',
+        name: 'Average Swap Fee on Date',
+        description: 'Average transaction fee paid for a simple AMM-swap on a given date',
+      },
+    ],
+  },
   issuance: {
     name: 'Issuance',
     description: 'The amount of tokens issued in the past day, in USD.',
@@ -339,8 +362,30 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
       },
     ],
   },
+  'l1-fees': {
+    name: 'Layer-1 Transaction Fees',
+    description: 'The USD transaction fees for basic transactions on various blockchains.',
+    icon: '💳',
+    queries: [
+      {
+        id: 'feeTransferEth',
+        name: 'Fee to transfer Ether',
+        description: 'The current USD transaction fee to transfer ETH.',
+      },
+      {
+        id: 'feeTransferERC20',
+        name: 'Fee to transfer ERC20 tokens',
+        description: 'The current USD transaction fee to transfer arbitrary tokens.',
+      },
+      {
+        id: 'feeSwap',
+        name: 'Fee to swap ERC20 tokens',
+        description: 'The current USD transaction fee to swap two tokens on a basic DEX.',
+      },
+    ],
+  },
   'l2-fees': {
-    name: 'Layer-2 Fees',
+    name: 'Layer-2 Transaction Fees',
     description: 'The USD transaction fees for basic transactions on Ethereum layer-2s.',
     forumCategory: 'protocols/tx-fees',
     icon: '🌀',
@@ -360,6 +405,32 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
         id: 'feeSwap',
         name: 'Fee to swap ERC20 tokens',
         description: 'The current USD transaction fee to swap two tokens on a basic DEX.',
+      },
+    ],
+  },
+  'pos-chains': {
+    name: 'Proof of Stake Chains',
+    icon: '🥩',
+    queries: [
+      {
+        id: 'stakedAssetsUSD',
+        name: 'Staked assets (USD)',
+        description: 'The USD value of all assets staked as part of the chain\'s consensus.',
+      },
+    ],
+  },
+  'rollup-l1-fees': {
+    name: 'Rollup Security Fees',
+    description: 'The amount of fees paid by Ethereum rollups for security (data availability, proofs and execution)',
+    icon: '🛡',
+    queries: [
+      {
+        id: 'oneDayFeesPaidNative',
+        name: 'One day fees paid (ETH)',
+      },
+      {
+        id: 'oneDayFeesPaidUSD',
+        name: 'One day fees paid (USD)',
       },
     ],
   },
@@ -389,6 +460,17 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
       {
         id: 'recentProposals',
         name: 'Recent governance proposals',
+      },
+    ],
+  },
+  'tx-count': {
+    name: 'Transaction Counts',
+    description: 'Number of transactions include on a chain',
+    icon: '🎟',
+    queries: [
+      {
+        id: 'txCountOneDay',
+        name: 'One day transaction count',
       },
     ],
   },
