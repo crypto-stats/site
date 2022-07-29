@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { Adapter } from '@cryptostats/sdk'
 import QueryForm from './QueryForm'
 import { useEditorState } from 'hooks/editor-state'
+import { IPFS_GATEWAY } from 'resources/constants'
 
 const Container = styled.div``
 
@@ -54,7 +55,7 @@ const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDe
     return (
       <Header onClick={() => setOpen(true)}>
         {metadata.icon?.cid && (
-          <Icon size="small" src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />
+          <Icon size="small" src={`${IPFS_GATEWAY}/ipfs/${metadata.icon.cid}`} />
         )}
         {name || subadapter.id}
         {subtitle ? ` - ${subtitle}` : null}
@@ -68,7 +69,7 @@ const SubAdapterTest: React.FC<SubAdapterPreviewProps> = ({ subadapter, openByDe
     <Container>
       <Header onClick={() => setOpen(false)}>
         {metadata.icon?.cid && (
-          <Icon size="small" src={`https://gateway.pinata.cloud/ipfs/${metadata.icon.cid}`} />
+          <Icon size="small" src={`${IPFS_GATEWAY}/ipfs/${metadata.icon.cid}`} />
         )}
         {name || subadapter.id}
         {subtitle ? ` - ${subtitle}` : null}

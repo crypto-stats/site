@@ -1,23 +1,5 @@
-import * as fs from 'fs'
 import { NextApiRequest, NextApiResponse } from 'next'
-import pinataSDK from '@pinata/sdk'
-
-const filePath = '/tmp/upload.bin'
-
-async function saveToIPFS(stream: any, name: string, type: string): Promise<string> {
-  if (!process.env.PINATA_KEY || !process.env.PINATA_SECRET) {
-    throw new Error('Pinata key missing')
-  }
-
-  const pinata = pinataSDK(process.env.PINATA_KEY, process.env.PINATA_SECRET)
-  const fileStream = fs.createWriteStream(filePath)
-  stream.pipe(fileStream)
-  const response = await pinata.pinFromFS(filePath, {
-    pinataMetadata: { name, type, category: 'image' },
-  })
-
-  return response.IpfsHash
-}
+import { getInfuraNode } from 'utils/ipfs-upload'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {
@@ -30,7 +12,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new Error('Upload must include name/type')
   }
 
-  const cid = await saveToIPFS(req, name.toString(), type.toString())
+  const infuraNode = getInfuraNode()
+  const response = await infuraNode.add(req)
+  const cid = response.path
+
   console.log('Uploaded image', cid)
   res.json({ cid })
 }

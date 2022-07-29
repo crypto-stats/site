@@ -32,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   let sourceCID = null
   if (sourceCode) {
-    sourceCID = await saveToIPFS(sourceCode, `${moduleName} - Source`)
+    sourceCID = await saveToIPFS(sourceCode)
     code += `\nexports.sourceFile = '${sourceCID}';\n`
   }
 
@@ -51,7 +51,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     code += `\nexports.signer = '${signer}';\nexports.signature = '${req.body.signature}';\n`
   }
 
-  const codeCID = await saveToIPFS(code, moduleName)
+  const codeCID = await saveToIPFS(code)
 
   res.json({ success: true, codeCID, sourceCID })
 }

@@ -13,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     file = Buffer.from(file as string, 'base64')
   }
 
-  const cid = await saveToIPFS(file, req.body.name)
+  const cid = await saveToIPFS(file)
 
   res.json({ success: true, cid })
 }

@@ -1863,17 +1863,6 @@
   resolved "https://registry.yarnpkg.com/@pedrouid/environment/-/environment-1.0.1.tgz#858f0f8a057340e0b250398b75ead77d6f4342ec"
   integrity sha512-HaW78NszGzRZd9SeoI3JD11JqY+lubnaOx7Pewj5pfjqWXOEATpeKIFb9Z4t2WBUK2iryiXX3lzWwmYWgUL0Ug==
 
-"@pinata/sdk@^1.1.23":
-  version "1.1.23"
-  resolved "https://registry.yarnpkg.com/@pinata/sdk/-/sdk-1.1.23.tgz#91d7e289a29f514ee35d8d2ad62f8ef891b57ea0"
-  integrity sha512-ZIQI6acEu2m3tuLW9UCUNVgqbHc5U+t657ukunamV0E8XcW639vgtGa5rd5C/9mVIxoWpp5CJ9q7FA1OT88huQ==
-  dependencies:
-    axios "^0.21.1"
-    base-path-converter "^1.0.2"
-    form-data "^2.3.3"
-    is-ipfs "^0.6.0"
-    recursive-fs "^1.1.2"
-
 "@popperjs/core@^2.9.2":
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.0.tgz#6734f8ebc106a0860dff7f92bf90df193f0935d7"
@@ -3010,11 +2999,6 @@ balanced-match@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
-
-base-path-converter@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/base-path-converter/-/base-path-converter-1.0.2.tgz#e80b4b4f31c7b1561e632158e00774b6f2f27978"
-  integrity sha512-51R8JiuXadknn6ouVUteOhDpmI3G5u5GqjruL7bPJpfxUHVgosaO5uPAvRP4FeR4VyyH4sSvsN78Ci6ouoRYqQ==
 
 base-x@^3.0.2, base-x@^3.0.8:
   version "3.0.8"
@@ -4521,7 +4505,7 @@ forever-agent@~0.6.1:
   resolved "https://registry.yarnpkg.com/forever-agent/-/forever-agent-0.6.1.tgz#fbc71f0c41adeb37f96c577ad1ed42d8fdacca91"
   integrity sha1-+8cfDEGt6zf5bFd60e1C2P2sypE=
 
-form-data@^2.2.0, form-data@^2.3.3:
+form-data@^2.2.0:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-2.5.1.tgz#f2cbec57b5e59e23716e128fe44d4e5dd23895f4"
   integrity sha512-m21N3WOmEEURgk6B9GLOE4RuWOFf28Lhh9qGYeNlGq4VDXUlJy2th2slBNU8Gp8EzloYZOibZJ7t5ecIrFSjVA==
@@ -5616,7 +5600,7 @@ is-ip@^3.1.0:
   dependencies:
     ip-regex "^4.0.0"
 
-is-ipfs@^0.6.0, is-ipfs@~0.6.1:
+is-ipfs@~0.6.1:
   version "0.6.3"
   resolved "https://registry.yarnpkg.com/is-ipfs/-/is-ipfs-0.6.3.tgz#82a5350e0a42d01441c40b369f8791e91404c497"
   integrity sha512-HyRot1dvLcxImtDqPxAaY1miO6WsiP/z7Yxpg2qpaLWv5UdhAPtLvHJ4kMLM0w8GSl8AFsVF23PHe1LzuWrUlQ==
@@ -8308,11 +8292,6 @@ recompose@^0.30.0:
     hoist-non-react-statics "^2.3.1"
     react-lifecycles-compat "^3.0.2"
     symbol-observable "^1.0.4"
-
-recursive-fs@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/recursive-fs/-/recursive-fs-1.1.2.tgz#1d752e2f1a65d25fb6964109a9dbf83a335f90f0"
-  integrity sha512-QPFEt5EwzwlHoqYsZc+NkUSyDTQf1Hvq7c/kpQJHi77OSCAiDXI3wfB0J04ZG+ekGHmv37mdR8MDPEshD3/RlQ==
 
 redent@^3.0.0:
   version "3.0.0"

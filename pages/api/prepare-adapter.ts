@@ -32,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   let sourceCID = null
   if (sourceCode) {
-    sourceCID = await saveToIPFS(sourceCode, `${moduleName} - Source`)
+    sourceCID = await saveToIPFS(sourceCode)
     code += `\nexports.sourceFile = '${sourceCID}';\n`
   }
 
