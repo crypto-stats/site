@@ -1,4 +1,4 @@
-import { addImport } from "utils/source-code-utils"
+import { addImport } from 'utils/source-code-utils'
 
 describe('addImport', () => {
   it('will add an import to an empty file', () => {

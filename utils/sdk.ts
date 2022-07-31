@@ -1,8 +1,10 @@
 import { CryptoStatsSDK } from '@cryptostats/sdk'
+import { IPFS_GATEWAY } from 'resources/constants'
 
 export function getSDK(options?: any) {
   const sdk = new CryptoStatsSDK({
     moralisKey: process.env.NEXT_PUBLIC_MORALIS_KEY,
+    ipfsGateway: IPFS_GATEWAY,
     executionTimeout: 100,
     ...options,
   })

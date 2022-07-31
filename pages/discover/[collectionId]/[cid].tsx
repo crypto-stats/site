@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Link from 'next/link'
 import { useENSName, setRPC } from 'use-ens-name'
 import { useWeb3React } from '@web3-react/core'
-import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
+import { Adapter } from '@cryptostats/sdk'
 import { Clipboard, History } from 'lucide-react'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import {
@@ -30,6 +30,7 @@ import SiteModal from 'components/SiteModal'
 import HistoryModal from 'components/AdapterPage/HistoryModal'
 import Attribute from 'components/AdapterPage/Attribute'
 import copy from 'copy-to-clipboard'
+import { getSDK } from 'utils/sdk'
 
 setRPC(process.env.NEXT_PUBLIC_ETH_RPC || 'https://mainnet-nethermind.blockscout.com/')
 
@@ -379,9 +380,7 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { collectionId: s
     }
   }
 
-  const sdk = new CryptoStatsSDK({
-    executionTimeout: 70,
-  })
+  const sdk = getSDK()
 
   const listModules = collectionId === 'adapter' ? [] : await getModulesForCollection(collectionId)
   const verified = listModules.indexOf(cid) !== -1

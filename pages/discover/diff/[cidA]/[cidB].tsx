@@ -8,6 +8,7 @@ import Header from 'components/Header'
 import Head from 'next/head'
 import Footer from 'components/Footer'
 import styled from 'styled-components'
+import { getSDK } from 'utils/sdk'
 
 const DiffContainer = styled.div`
   margin: 20px 4px;
@@ -52,9 +53,7 @@ export const getStaticProps: GetStaticProps<DiffPageProps, { cidA: string; cidB:
   const cidA = ctx.params!.cidA as string
   const cidB = ctx.params!.cidB as string
 
-  const sdk = new CryptoStatsSDK({
-    executionTimeout: 70,
-  })
+  const sdk = getSDK()
 
   const collectionA = sdk.getCollection('testA')
   const collectionB = sdk.getCollection('testB')

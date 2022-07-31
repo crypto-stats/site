@@ -1,4 +1,5 @@
 import { CryptoStatsSDK, Module } from '@cryptostats/sdk'
+import { getSDK } from './sdk'
 
 async function query(query: string) {
   const req = await fetch(
@@ -108,7 +109,7 @@ export interface Version {
 }
 
 export async function getPreviousVersions(cid: string, numberOfIterations = 4): Promise<Version[]> {
-  const sdk = new CryptoStatsSDK()
+  const sdk = getSDK()
 
   let _cid: string | null = cid
 

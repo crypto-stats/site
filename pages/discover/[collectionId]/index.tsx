@@ -14,6 +14,7 @@ import { usePlausible } from 'next-plausible'
 import { getSlug } from 'utils/adapters'
 import Text from 'components/Text'
 import IconRound from 'components/IconRound'
+import { getSDK } from 'utils/sdk'
 
 const Hero = styled.div`
   margin: var(--spaces-5) 0 0;
@@ -157,9 +158,7 @@ export const getStaticProps: GetStaticProps<ListPageProps, { collectionId: strin
 ) => {
   const collectionId = ctx.params!.collectionId as string
   const adapterCids = await getModulesForCollection(collectionId)
-  const sdk = new CryptoStatsSDK({
-    executionTimeout: 50,
-  })
+  const sdk = getSDK()
 
   const adapters = await Promise.all(
     adapterCids.map(async (cid: string): Promise<AdapterData> => {

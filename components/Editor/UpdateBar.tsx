@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import BaseButton from 'components/Button'
 import { CryptoStatsSDK } from '@cryptostats/sdk'
 import { Version } from 'utils/lists-chain'
+import { getSDK } from 'utils/sdk'
 
 const Bar = styled(Bottom)`
   color: white;
@@ -66,7 +67,7 @@ const UpdateBar: React.FC<UpdateBarProps> = ({ fileName, editorRef }) => {
 
   const acceptUpdate = (version: Version) => async () => {
     setLoading(true)
-    const sdk = new CryptoStatsSDK()
+    const sdk = getSDK()
 
     const tempCollection = sdk.getCollection('temp')
     const newAdapter = await tempCollection.fetchAdapterFromIPFS(version.cid)
