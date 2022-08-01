@@ -1,4 +1,4 @@
-import { CryptoStatsSDK, Module } from '@cryptostats/sdk'
+import { Module } from '@cryptostats/sdk'
 import { getSDK } from './sdk'
 
 async function query(query: string) {

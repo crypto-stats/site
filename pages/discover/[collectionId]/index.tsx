@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { NextPage, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next'
-import { CryptoStatsSDK, Adapter } from '@cryptostats/sdk'
+import { Adapter } from '@cryptostats/sdk'
 import styled from 'styled-components'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import APIExplainer from 'components/APIExplainer'

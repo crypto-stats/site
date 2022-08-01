@@ -1,6 +1,5 @@
 import React from 'react'
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext, NextPage } from 'next'
-import { CryptoStatsSDK } from '@cryptostats/sdk'
 import DiffViewer from 'components/DiffViewer'
 import RowSection from 'components/RowSection'
 import ColumnSection from 'components/ColumnSection'

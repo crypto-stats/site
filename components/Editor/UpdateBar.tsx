@@ -5,7 +5,6 @@ import { Bottom } from 'react-spaces'
 import { useEditorState } from 'hooks/editor-state'
 import styled from 'styled-components'
 import BaseButton from 'components/Button'
-import { CryptoStatsSDK } from '@cryptostats/sdk'
 import { Version } from 'utils/lists-chain'
 import { getSDK } from 'utils/sdk'
 
