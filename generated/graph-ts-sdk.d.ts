@@ -229,7 +229,7 @@ declare module '@graphprotocol/graph-ts' {
     static compare(a: BigDecimal, b: BigDecimal): i32
   }
 
-  export declare class ByteArray /* extends Uint8Array */ {
+  export declare class ByteArray extends Uint8Array {
     static fromI32(x: i32): ByteArray
     static fromU32(x: u32): ByteArray
     static fromI64(x: i64): ByteArray
