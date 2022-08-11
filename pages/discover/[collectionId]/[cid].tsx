@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Link from 'next/link'
 import { useENSName, setRPC } from 'use-ens-name'
 import { useWeb3React } from '@web3-react/core'
-import { Adapter } from '@cryptostats/sdk'
+import { Adapter, CryptoStatsSDK } from '@cryptostats/sdk'
 import { Clipboard, History } from 'lucide-react'
 import TranquilLayout from 'components/layouts/TranquilLayout'
 import {
@@ -132,7 +132,7 @@ interface ModuleDetails {
   version: string | null
   license: string | null
   description: string | null
-  code: string
+  code: string | null
   sourceFileCid: string | null
   sourceCode: string | null
   signer: string | null
@@ -167,6 +167,19 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
   const signer = useENSName(moduleDetails.signer)
   const [showEditModal, setShowEditModal] = useState(false)
   const [showVersions, setShowVersions] = useState(false)
+  const [code, setCode] = useState(moduleDetails.code)
+  const [sourceCode, setSourceCode] = useState(moduleDetails.sourceCode)
+
+  useEffect(() => {
+    if (!moduleDetails.code) {
+      const sdk = new CryptoStatsSDK()
+      sdk.ipfs.getFile(cid).then(newCode => setCode(newCode))
+    }
+    if (!moduleDetails.sourceCode && moduleDetails.sourceFileCid) {
+      const sdk = new CryptoStatsSDK()
+      sdk.ipfs.getFile(moduleDetails.sourceFileCid).then(newCode => setSourceCode(newCode))
+    }
+  }, [moduleDetails])
 
   // NextJS page changes might not re-initialize component
   useEffect(() => {
@@ -320,7 +333,11 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
           <Text tag="p" type="description" mt="8">
             Preview and test each sub adapter.
           </Text>
-          <AdapterPreviewList staticDetails={subadapters} code={moduleDetails.code} />
+          {code ? (
+            <AdapterPreviewList staticDetails={subadapters} code={code} />
+          ) : (
+            <div>Loading...</div>
+          )}
         </SectionContainer>
         <SectionContainer>
           <Text tag="h3" type="subtitle">
@@ -329,7 +346,7 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
           <Text tag="p" type="description" mt="8">
             Check the entire code written for the Adapter.
           </Text>
-          <CodeViewer js={moduleDetails.code} ts={moduleDetails.sourceCode} />
+          {code && sourceCode ? <CodeViewer js={code} ts={sourceCode} /> : <div>Loading</div>}
         </SectionContainer>
         <div>
           <Text tag="h3" type="subtitle" mt="100" align="center">
@@ -408,7 +425,7 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { collectionId: s
     name: module.name,
     version: module.version,
     license: module.license,
-    code: module.code!,
+    code: module.code!.length < 100000 ? module.code! : null,
     signer: module.signer,
     previousVersion: module.previousVersion,
     sourceFileCid: module.sourceFile,
@@ -416,7 +433,7 @@ export const getStaticProps: GetStaticProps<AdaptersPageProps, { collectionId: s
       module.description ||
       (subadapters.length === 1 && subadapters[0].metadata.description) ||
       null,
-    sourceCode,
+    sourceCode: sourceCode.length < 100000 ? sourceCode : null,
   }
 
   const ensCache = module.signer ? await getENSCache([module.signer]) : []
