@@ -361,13 +361,17 @@ const AdapterPage: NextPage<AdaptersPageProps> = ({
         </div>
       </TranquilLayout>
 
-      <EditModal
-        isOpen={showEditModal}
-        onClose={() => setShowEditModal(false)}
-        cid={cid}
-        collectionId={collectionId}
-        moduleDetails={moduleDetails}
-      />
+      {sourceCode && (
+        <EditModal
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          cid={cid}
+          collectionId={collectionId}
+          name={moduleDetails.name}
+          version={moduleDetails.version}
+          code={sourceCode}
+        />
+      )}
       <SiteModal
         title="Adapter History"
         isOpen={showVersions}

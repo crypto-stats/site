@@ -46,24 +46,14 @@ const Icon = styled.div`
   margin-right: 10px;
 `
 
-interface ModuleDetails {
-  name: string | null
-  version: string | null
-  // license: string | null
-  // description: string | null
-  code: string
-  // sourceFileCid: string | null
-  sourceCode: string | null
-  // signer: string | null
-  // previousVersion: string | null
-}
-
 interface EditModalProps {
   isOpen: boolean
   onClose: () => void
   cid: string
   collectionId: string
-  moduleDetails: ModuleDetails
+  name?: string | null
+  version?: string | null
+  code: string
 }
 
 const EditModal: React.FC<EditModalProps> = ({
@@ -71,7 +61,9 @@ const EditModal: React.FC<EditModalProps> = ({
   onClose,
   cid,
   collectionId,
-  moduleDetails,
+  name,
+  version,
+  code,
 }) => {
   const router = useRouter()
   const adapters = useAdapterList()
@@ -88,7 +80,7 @@ const EditModal: React.FC<EditModalProps> = ({
               props: {
                 collectionId,
                 adapter: cid,
-                adapterName: moduleDetails.name,
+                adapterName: name,
                 newAdapter: false,
               },
             })
@@ -107,18 +99,14 @@ const EditModal: React.FC<EditModalProps> = ({
       props: {
         collectionId,
         adapter: cid,
-        adapterName: moduleDetails.name,
+        adapterName: name,
         newAdapter: true,
       },
     })
 
-    const startingCode = moduleDetails.sourceCode || moduleDetails.code
-    const newCode =
-      moduleDetails.name && clone
-        ? startingCode.replace(moduleDetails.name, `${moduleDetails.name} - Clone`)
-        : startingCode
+    const newCode = name && clone ? code.replace(name, `${name} - Clone`) : code
 
-    const adapterId = newModule(newCode, [{ cid, version: moduleDetails.version || '0.0.0' }])
+    const adapterId = newModule(newCode, [{ cid, version: version || '0.0.0' }])
     router.push({
       pathname: '/editor',
       query: { adapter: adapterId },
@@ -126,11 +114,7 @@ const EditModal: React.FC<EditModalProps> = ({
   }
 
   return (
-    <SiteModal
-      title={`Edit or fork the "${moduleDetails.name}" adapter`}
-      isOpen={isOpen}
-      onClose={onClose}
-    >
+    <SiteModal title={`Edit or fork the "${name}" adapter`} isOpen={isOpen} onClose={onClose}>
       <Button onClick={edit()} disabled={loading}>
         <Icon>
           <Edit size={36} />

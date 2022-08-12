@@ -58,10 +58,7 @@ export const withStorageItem = <T>(storageKey: string) => {
 
     localCache = { ...localCache, [id]: value }
 
-    window.localStorage.setItem(
-      storageKey,
-      JSON.stringify(localCache)
-    )
+    window.localStorage.setItem(storageKey, JSON.stringify(localCache))
     listUpdater.trigger()
   }
 
