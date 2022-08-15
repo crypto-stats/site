@@ -110,10 +110,21 @@ export const SubgraphList: React.FC<FileListProps> = ({ selected, onSelected, fi
 
   useEffect(() => {
     if (subgraphs.length !== prevSubgraphs?.length) {
-      if (subgraphs.length > prevSubgraphs?.length) {
-        onSelected(subgraphs[subgraphs.length - 1].id)
-      } else if (!subgraphs.find(sg => sg.id === selected)) {
-        onSelected(subgraphs.length - 1 >= 0 ? subgraphs[subgraphs.length - 1].id : null)
+      const subgraphListContainsSelectedSubgraph = subgraphs.find(sg => sg.id === selected)
+      if (!subgraphListContainsSelectedSubgraph) {
+        const previousSelectedSubgraph = prevSubgraphs.find(sg => sg.id === selected)
+        const previousSubgraphIndex =
+          previousSelectedSubgraph && prevSubgraphs.indexOf(previousSelectedSubgraph)
+
+        if (
+          previousSubgraphIndex &&
+          previousSubgraphIndex !== -1 &&
+          previousSubgraphIndex < subgraphs.length
+        ) {
+          onSelected(subgraphs[previousSubgraphIndex].id)
+        } else {
+          onSelected(subgraphs.length - 1 >= 0 ? subgraphs[subgraphs.length - 1].id : null)
+        }
       }
     }
   }, [subgraphs, prevSubgraphs])

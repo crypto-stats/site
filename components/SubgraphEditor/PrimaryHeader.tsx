@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { useOnClickOutside, useLocalSubgraph } from 'hooks'
+import { useLocalSubgraph } from 'hooks'
 import { HeaderRight, SubgraphHeader, WalletButton } from 'components/layouts'
 import Button from 'components/Button'
 import { MarkerSeverity } from './types'
@@ -9,6 +9,7 @@ import { PublishModal } from './PublishModal/'
 import { PublishTutorialModal } from './PublishTutorialModal'
 import { getLocalStorage, setLocalStorage } from '../../utils/localstorage'
 import SaveMessage from 'components/Editor/SaveMessage'
+import EditableText from './atoms/EditableText'
 
 const STORAGE_KEY = 'dont-show-tutorial-again'
 
@@ -24,22 +25,11 @@ const Root = styled(SubgraphHeader)`
   }
 `
 
-const SubgraphTitle = styled.div`
+const SubgraphTitle = styled(EditableText)`
   color: #d3d3d3;
   margin: 24px 8px;
-
-  input {
-    all: unset;
-    border: solid 1px #979797;
-    padding: 5px 10px;
-  }
-
-  h2,
-  input {
-    margin: 0px;
-    font-size: 22px;
-    font-weight: bold;
-  }
+  font-size: 22px;
+  font-weight: bold;
 `
 
 const PublishButton = styled(Button)`
@@ -81,18 +71,14 @@ export const PrimaryHeader = (props: PrimaryHeaderProps) => {
   const { filename, markers, editorRef, canPublish } = props
   const { subgraph, update } = useLocalSubgraph(filename)
   const [modalStatus, setModalStatus] = useState({ publish: false, publishTutorial: false })
-  const [editingTitle, setEditingTitle] = useState(false)
   const [showPublishTutorial, setShowPublishTutorial] = useState(false)
   const [titleValue, setTitleValue] = useState(subgraph?.name || '')
-  const ref = useRef<any>()
 
   useEffect(() => {
     if (subgraph && subgraph.name !== titleValue) {
       setTitleValue(subgraph.name!)
     }
   }, [subgraph])
-
-  useOnClickOutside(ref, () => setEditingTitle(false))
 
   useEffect(() => {
     const loadTutorialStatus = async () => {
@@ -128,18 +114,11 @@ export const PrimaryHeader = (props: PrimaryHeaderProps) => {
       <SaveMessage />
 
       {subgraph ? (
-        <SubgraphTitle onClick={() => setEditingTitle(prev => !prev)}>
-          {!editingTitle ? (
-            <h2>{titleValue}</h2>
-          ) : (
-            <input
-              ref={ref}
-              autoFocus
-              value={titleValue}
-              onChange={e => update({ ...subgraph!, name: e.target.value })}
-            />
-          )}
-        </SubgraphTitle>
+        <SubgraphTitle
+          tag="h2"
+          value={titleValue}
+          onChange={name => update({ ...subgraph!, name })}
+        />
       ) : null}
 
       <HeaderRight>
@@ -153,7 +132,8 @@ export const PrimaryHeader = (props: PrimaryHeaderProps) => {
               }))
             }
             disabled={errors.length > 0 || !canPublish}
-            className="primary">
+            className="primary"
+          >
             Publish
           </PublishButton>
         )}
