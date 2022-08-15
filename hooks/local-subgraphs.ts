@@ -8,6 +8,7 @@ export const DEFAULT_MAPPING = 'mapping.ts'
 interface Publication {
   cid: string
   version: string
+  node: string
 }
 
 export interface ContractEvent {

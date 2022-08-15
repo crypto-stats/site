@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css, keyframes } from 'styled-components'
-import { Edit, ExternalLink } from 'lucide-react'
+import { Edit, ExternalLink, Loader2 } from 'lucide-react'
 import DiscordIcon from './icons/Discord'
 import ForkIcon from './icons/Fork'
 
@@ -142,11 +142,22 @@ const ButtonElement = styled.button<ButtonElementProps>`
   }}
 `
 
-const Icon = styled.i`
+const Icon = styled.i<{ $spin?: boolean }>`
   width: var(--spaces-3);
   height: var(--spaces-3);
   display: inline-block;
   margin-right: var(--spaces-2);
+
+  ${({ $spin }) => ($spin ? 'animation: spin 2s linear infinite;' : null)}
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(359deg);
+    }
+  }
 `
 
 interface ButtonProps {
@@ -183,6 +194,7 @@ const Button: React.FC<ButtonProps> = props => {
     title = '',
   } = props
   let svgIcon: React.ReactNode | null = null
+  let shouldSpin: boolean = false
 
   if (icon) {
     switch (icon) {
@@ -197,6 +209,10 @@ const Button: React.FC<ButtonProps> = props => {
         break
       case 'Discord':
         svgIcon = <DiscordIcon />
+        break
+      case 'Loading':
+        svgIcon = <Loader2 size="16" />
+        shouldSpin = true
         break
     }
   }
@@ -217,7 +233,7 @@ const Button: React.FC<ButtonProps> = props => {
   if (href) {
     return (
       <ButtonElement as="a" href={href} target={target} {...buttonProps}>
-        {icon && <Icon>{svgIcon}</Icon>}
+        {icon && <Icon $spin={shouldSpin}>{svgIcon}</Icon>}
         <span>{children}</span>
       </ButtonElement>
     )
@@ -225,7 +241,7 @@ const Button: React.FC<ButtonProps> = props => {
 
   return (
     <ButtonElement {...buttonProps} {...(disabled ? { disabled: isDisabled } : { onClick })}>
-      {icon && <Icon>{svgIcon}</Icon>}
+      {icon && <Icon $spin={shouldSpin}>{svgIcon}</Icon>}
       <span>{children}</span>
     </ButtonElement>
   )

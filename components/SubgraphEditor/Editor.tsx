@@ -67,6 +67,7 @@ const Editor: React.FC = () => {
   const [subgraphId, setSubgraphId] = useEditorState<string | null>(EDITOR_TYPES.SUBGRAPH_FILE)
   const [tab, setTab] = useEditorState(EDITOR_TYPES.SUBGRAPH_TAB, 'config')
   const [showDocs, setShowDocs] = useState(false)
+  const [canPublish, setCanPublish] = useState(true)
 
   const { saveSchema, saveMapping, subgraph } = useLocalSubgraph(subgraphId)
   const [jumpToLine, setJumpToLine] = useState<string | null>(null)
@@ -137,7 +138,12 @@ const Editor: React.FC = () => {
         setShowDocs={setShowDocs}
       />
       <FillWithStyledResize side="right">
-        <PrimaryHeader filename={subgraphId} markers={markers} editorRef={editorRef} />
+        <PrimaryHeader
+          filename={subgraphId}
+          markers={markers}
+          editorRef={editorRef}
+          canPublish={canPublish}
+        />
         <Fill>
           {subgraph ? (
             <>
@@ -203,7 +209,12 @@ const Editor: React.FC = () => {
                           />
                         )
                       } else {
-                        return <SubgraphConfig setJumpToLine={setJumpToLine} />
+                        return (
+                          <SubgraphConfig
+                            setJumpToLine={setJumpToLine}
+                            setCanPublish={setCanPublish}
+                          />
+                        )
                       }
                     })()}
                   </Fill>
@@ -238,7 +249,7 @@ const Editor: React.FC = () => {
               ) : null}
             </>
           ) : (
-            <EmptyState />
+            <EmptyState setShowDocs={setShowDocs} />
           )}
         </Fill>
       </FillWithStyledResize>

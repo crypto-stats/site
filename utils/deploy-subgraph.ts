@@ -282,5 +282,5 @@ export async function deployPreparedSubgraph(
     options.deployKey,
     subgraph.version
   )
-  return deployResult
+  return { version: subgraph.version, manifestCid, result: deployResult }
 }

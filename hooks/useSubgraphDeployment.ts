@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
-import { SubgraphData } from './local-subgraphs'
+import { SubgraphData, useLocalSubgraph } from './local-subgraphs'
 import { ethers } from 'ethers'
 import { prepareSubgraphDeploymentFiles, deployPreparedSubgraph } from 'utils/deploy-subgraph'
 import Hash from 'ipfs-only-hash'
+import { EDITOR_TYPES, useEditorState } from './editor-state'
 
 export interface PublishConfig {
   name: string
@@ -46,6 +47,8 @@ const DEFAULT_DEPLOY_STATE: DeployState = {
 export const useSubgraphDeployment = (subgraph?: SubgraphData | null) => {
   const { library, account } = useWeb3React()
   const [deployState, setDeployState] = useState(DEFAULT_DEPLOY_STATE)
+  const [subgraphId] = useEditorState<string | null>(EDITOR_TYPES.SUBGRAPH_FILE)
+  const { update } = useLocalSubgraph(subgraphId)
 
   if (!subgraph) {
     const throwSubgraphMissing = async () => {
@@ -76,8 +79,12 @@ export const useSubgraphDeployment = (subgraph?: SubgraphData | null) => {
 
   const prepareFiles = async () => {
     setDeployState(_state => ({ ..._state, files: null, status: DeployStatus.PREPARING }))
-    const files = await prepareSubgraphDeploymentFiles(subgraph)
-    setDeployState(_state => ({ ..._state, files, status: DeployStatus.READY_TO_SIGN }))
+    try {
+      const files = await prepareSubgraphDeploymentFiles(subgraph)
+      setDeployState(_state => ({ ..._state, files, status: DeployStatus.READY_TO_SIGN }))
+    } catch (err: any) {
+      setDeployState(_state => ({ ..._state, status: DeployStatus.ERROR, error: err.message }))
+    }
   }
 
   const signSubgraph = async () => {
@@ -117,13 +124,20 @@ signature: ${signature}`
       options.node === 'hosted' ? '/api/graph/deploy' : 'https://api.studio.thegraph.com/deploy/'
 
     try {
-      await deployPreparedSubgraph(subgraph, deployState.files, {
+      const deployResult = await deployPreparedSubgraph(subgraph, deployState.files, {
         node,
         subgraphName: options.name,
         deployKey: options.accessToken,
       })
 
       setDeployState(_state => ({ ..._state, status: DeployStatus.DEPLOY_COMPLETE }))
+      update(_subgraph => ({
+        ..._subgraph,
+        publications: [
+          ..._subgraph.publications,
+          { version: deployResult.version, cid: deployResult.manifestCid, node },
+        ],
+      }))
     } catch (e: any) {
       setDeployState(_state => ({ ..._state, status: DeployStatus.ERROR, error: e.message }))
     }
