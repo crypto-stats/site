@@ -49,6 +49,16 @@ const ContractInput = styled(InputField)`
 
 const ADDRESS_REGEX = /^0x[0-9a-f]{40}$/i
 
+const IGNORED_FUNCTIONS = [
+  'id_of_type',
+  'allocate',
+  '__new',
+  '__pin',
+  '__unpin',
+  '__collect',
+  '_start',
+]
+
 interface TErrorState {
   address?: string
   compiler?: string
@@ -126,7 +136,7 @@ export const SubgraphConfig = (props: SubgraphConfigProps) => {
       const module = await loadAsBytecode(bytecode)
       const exports = WebAssembly.Module.exports(module.module)
       const functionNames = exports
-        .filter(_export => _export.kind === 'function')
+        .filter(_export => _export.kind === 'function' && !IGNORED_FUNCTIONS.includes(_export.name))
         .map(_export => _export.name)
       setMappingFunctionNames(functionNames)
       setFnExtractionLoading(false)
@@ -170,7 +180,7 @@ export const SubgraphConfig = (props: SubgraphConfigProps) => {
     return null
   }
 
-  const updateSelectedContract = (address: string, newProps: any) => {
+  const updateSelectedContract = (address: string, newProps: Partial<Contract>) => {
     if (!subgraph) {
       throw new Error('No subgraph')
     }
