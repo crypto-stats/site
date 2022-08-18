@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { Plus, Trash2 } from 'lucide-react'
+import { Files, Plus, Trash2 } from 'lucide-react'
+import ReactTooltip from 'react-tooltip'
 
 import { Contract, ContractEvent } from 'hooks/local-subgraphs'
 import { EventRow } from './EventRow'
@@ -30,13 +31,13 @@ const Header = styled.div`
     display: flex;
     align-items: center;
     gap: 8px;
-
-    .delete-link {
-      &:hover {
-        cursor: pointer;
-      }
-    }
   }
+`
+
+const IconBtn = styled.button<{ active?: boolean }>`
+  color: ${({ active }) => (active ? '#ffffff' : '#bbbbbb')};
+  border: none;
+  background: transparent;
 `
 
 const StatusContainer = styled.div`
@@ -115,7 +116,7 @@ interface SelectedContractProps {
 
 export const SelectedContract = (props: SelectedContractProps) => {
   const {
-    contract: { addresses, name, source, errorMessage, abi, startBlocks, events },
+    contract: { addresses, name, source, errorMessage, abi, startBlocks, events, isTemplate },
     createMappingFn,
     deleteContract,
     fnExtractionLoading,
@@ -231,13 +232,28 @@ export const SelectedContract = (props: SelectedContractProps) => {
             onChange={name => updateContract({ name })}
           />
 
-          <Trash2 className="delete-link" size={16} onClick={() => deleteContract()} />
+          <IconBtn data-tip="Remove contract" onClick={deleteContract}>
+            <Trash2 size={16} />
+          </IconBtn>
+          <IconBtn
+            data-tip="Data Source Template"
+            active={isTemplate}
+            onClick={() => updateContract({ isTemplate: !isTemplate })}
+            disabled={metadataLoading}
+          >
+            <Files size={16} />
+          </IconBtn>
+          <ReactTooltip />
         </div>
-        <span className="address">{addresses[CHAIN_ID]}</span>
-        {metadataLoading ? <span>Fetching contract metadata...</span> : null}
-        {startBlocks[CHAIN_ID] ? (
-          <span className="address">Deployed on block {startBlocks[CHAIN_ID]}</span>
-        ) : null}
+        {!isTemplate && (
+          <>
+            <span className="address">{addresses[CHAIN_ID]}</span>
+            {metadataLoading ? <span>Fetching contract metadata...</span> : null}
+            {startBlocks[CHAIN_ID] ? (
+              <span className="address">Deployed on block {startBlocks[CHAIN_ID]}</span>
+            ) : null}
+          </>
+        )}
         <StatusContainer>
           <span className="status-message">
             {errorMessage
@@ -322,10 +338,12 @@ export const SelectedContract = (props: SelectedContractProps) => {
             <ActionButton
               disabled={!contractHasEvents}
               onClick={() => setNewEvent({ show: true, signature: '' })}
-              {...(!contractHasEvents && {
-                disabled: true,
-                title: 'Contract has no events defined',
-              })}
+              {...(contractHasEvents
+                ? {}
+                : {
+                    disabled: true,
+                    title: 'Contract has no events defined',
+                  })}
             >
               <Plus size={12} style={{ marginRight: 4 }} />
               New

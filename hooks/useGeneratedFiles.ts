@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
-import { generateContractFile, generateSchemaFile } from 'utils/graph-file-generator'
+import {
+  generateContractFile,
+  generateSchemaFile,
+  generateTemplateFile,
+} from 'utils/graph-file-generator'
 import { SubgraphData } from './local-subgraphs'
 // @ts-ignore
 import assemblyscriptGlobals from '!raw-loader!assemblyscript/std/assembly/index.d.ts'
@@ -19,6 +23,11 @@ export const useGeneratedFiles = (subgraph: SubgraphData | null) => {
       try {
         const content = await generateContractFile(contract.name, contract.abi)
         _files.push({ content, filePath: `file:///contracts/${contract.name}.ts` })
+
+        if (contract.isTemplate) {
+          const template = await generateTemplateFile(contract.name)
+          _files.push({ content: template, filePath: `file:///templates/${contract.name}.ts` })
+        }
       } catch (e) {
         console.error(`Error generating file for ${contract.name}: ${e.message}`)
       }

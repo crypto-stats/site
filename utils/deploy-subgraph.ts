@@ -1,5 +1,5 @@
 import { ContractEvent, DEFAULT_MAPPING, SubgraphData } from 'hooks/local-subgraphs'
-import { generateContractFile, generateSchemaFile } from './graph-file-generator'
+import { generateLibrariesForSubgraph } from './graph-file-generator'
 import Hash from 'ipfs-only-hash'
 
 export enum STATUS {
@@ -136,14 +136,7 @@ export async function prepareSubgraphDeploymentFiles(subgraph: SubgraphData) {
     throw new Error(`Couldn't find event ${signature} in ABI`)
   }
 
-  const libraries: { [name: string]: string } = {}
-
-  for (const contract of subgraph.contracts) {
-    const code = await generateContractFile(contract.name, contract.abi)
-    libraries[`contracts/${contract.name}.ts`] = code
-  }
-
-  libraries['schema/index.ts'] = await generateSchemaFile(subgraph.schema)
+  const libraries = await generateLibrariesForSubgraph(subgraph)
 
   const compiled = await compileAs(subgraph.mappings[DEFAULT_MAPPING], libraries)
 
@@ -166,6 +159,7 @@ export async function prepareSubgraphDeploymentFiles(subgraph: SubgraphData) {
   })
 
   const dataSources: any[] = []
+  const templates: any[] = []
 
   // Currently, all ABIs are available to all data sources, so we generate
   // one single array that's added to all sources
@@ -189,14 +183,12 @@ export async function prepareSubgraphDeploymentFiles(subgraph: SubgraphData) {
       cid,
     })
 
-    dataSources.push({
+    const contractManifest: any = {
       kind: 'ethereum/contract',
       name: contract.name,
       network: 'mainnet',
       source: {
         abi: contract.name,
-        address: contract.addresses['1'],
-        startBlock: contract.startBlocks['1'],
       },
       mapping: {
         abis,
@@ -213,7 +205,15 @@ export async function prepareSubgraphDeploymentFiles(subgraph: SubgraphData) {
         kind: 'ethereum/events',
         language: 'wasm/assemblyscript',
       },
-    })
+    }
+
+    if (contract.isTemplate) {
+      templates.push(contractManifest)
+    } else {
+      contractManifest.source.address = contract.addresses['1']
+      contractManifest.source.startBlock = contract.startBlocks['1']
+      dataSources.push(contractManifest)
+    }
   }
 
   const schemaCid = await getCID(subgraph.schema)
@@ -225,23 +225,29 @@ export async function prepareSubgraphDeploymentFiles(subgraph: SubgraphData) {
     cid: schemaCid,
   })
 
-  const manifestString = yaml.dump({
-    specVersion: '0.0.5',
-    description: 'Test description',
-    dataSources,
-    schema: {
-      file: {
-        '/': `/ipfs/${schemaCid}`,
+  const manifestString = yaml.dump(
+    {
+      specVersion: '0.0.5',
+      description: 'Test description',
+      dataSources,
+      templates,
+      schema: {
+        file: {
+          '/': `/ipfs/${schemaCid}`,
+        },
       },
+      sourceCode: [
+        {
+          name: 'mapping.ts',
+          file: `/ipfs/${mappingCid}`,
+          source: `/ipfs/${sourceCid}`,
+        },
+      ],
     },
-    sourceCode: [
-      {
-        name: 'mapping.ts',
-        file: `/ipfs/${mappingCid}`,
-        source: `/ipfs/${sourceCid}`,
-      },
-    ],
-  })
+    {
+      noRefs: true,
+    }
+  )
 
   files.push({
     title: 'Manifest',

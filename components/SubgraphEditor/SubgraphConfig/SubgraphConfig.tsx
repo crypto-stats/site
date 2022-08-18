@@ -8,7 +8,7 @@ import { EDITOR_TYPES, useEditorState } from 'hooks/editor-state'
 import { SelectedContract } from './SelectedContract'
 import { Dropdown } from '../../atoms'
 import { addImport } from 'utils/source-code-utils'
-import { generateContractFile, generateSchemaFile } from 'utils/graph-file-generator'
+import { generateLibrariesForSubgraph } from 'utils/graph-file-generator'
 import { compileAs } from 'utils/deploy-subgraph'
 
 const Root = styled.div`
@@ -101,6 +101,7 @@ export const SubgraphConfig = (props: SubgraphConfigProps) => {
       if (!alreadySelected) {
         const newContract: Contract = {
           name: '',
+          isTemplate: false,
           addresses: { [CHAIN_ID]: address },
           abi: null,
           startBlocks: {},
@@ -122,14 +123,7 @@ export const SubgraphConfig = (props: SubgraphConfigProps) => {
     setFnExtractionLoading(true)
     const { loadAsBytecode } = await import('utils/as-compiler')
 
-    const libraries: { [name: string]: string } = {}
-
-    for (const contract of subgraph.contracts) {
-      const code = await generateContractFile(contract.name, contract.abi)
-      libraries[`contracts/${contract.name}.ts`] = code
-    }
-
-    libraries['schema/index.ts'] = await generateSchemaFile(subgraph.schema)
+    const libraries = await generateLibrariesForSubgraph(subgraph)
 
     try {
       const bytecode = await compileAs(subgraph.mappings[DEFAULT_MAPPING], libraries)

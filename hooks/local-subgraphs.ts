@@ -19,6 +19,7 @@ export interface ContractEvent {
 
 export interface Contract {
   name: string
+  isTemplate: boolean
   addresses: { [chain: string]: string }
   startBlocks: { [chain: string]: number }
   abi: any

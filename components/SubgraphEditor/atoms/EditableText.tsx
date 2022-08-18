@@ -3,6 +3,8 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 const commonStyles = css`
+  color: var(--color-white);
+  font-size: 14px;
   padding: 1px 2px;
   font-family: 'Inter', sans-serif;
 `

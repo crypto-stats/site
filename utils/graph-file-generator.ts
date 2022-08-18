@@ -1,4 +1,42 @@
+import { SubgraphData } from 'hooks/local-subgraphs'
 import immutable from 'immutable'
+
+export async function generateLibrariesForSubgraph(
+  subgraph: SubgraphData,
+  { prefix = '', failSilently = false } = {}
+) {
+  const libraries: { [name: string]: string } = {}
+
+  for (const contract of subgraph.contracts) {
+    try {
+      const code = await generateContractFile(contract.name, contract.abi)
+      libraries[`${prefix}contracts/${contract.name}.ts`] = code
+      console.log(contract)
+      if (contract.isTemplate) {
+        const template = await generateTemplateFile(contract.name)
+        libraries[`${prefix}templates/${contract.name}.ts`] = template
+      }
+    } catch (e: any) {
+      if (failSilently) {
+        console.error(`Error generating file for ${contract.name}: ${e.message}`)
+      } else {
+        throw e
+      }
+    }
+  }
+
+  try {
+    libraries[`${prefix}schema/index.ts`] = await generateSchemaFile(subgraph.schema)
+  } catch (e: any) {
+    if (failSilently) {
+      console.error(`Error generating schema: ${e.message}`)
+    } else {
+      throw e
+    }
+  }
+
+  return libraries
+}
 
 export async function generateContractFile(name: string, abi: any) {
   // @ts-ignore
@@ -7,6 +45,25 @@ export async function generateContractFile(name: string, abi: any) {
   const file = 'test.json'
   const abiWrapper = new ABI(name, file, immutable.fromJS(abi))
   const codegen = abiWrapper.codeGenerator()
+
+  return [...codegen.generateModuleImports(), ...codegen.generateTypes()].join('\n')
+}
+
+export async function generateTemplateFile(name: string) {
+  const { default: Template } = await import(
+    // @ts-ignore
+    '@graphprotocol/graph-cli/src/protocols/ethereum/codegen/template'
+  )
+  const { default: DataSourceTemplateCodeGenerator } = await import(
+    // @ts-ignore
+    '@graphprotocol/graph-cli/src/codegen/template'
+  )
+
+  const templateData = { get: () => name }
+  const template = new Template(templateData)
+  const codegen = new DataSourceTemplateCodeGenerator(templateData, {
+    getTemplateCodeGen: () => template,
+  })
 
   return [...codegen.generateModuleImports(), ...codegen.generateTypes()].join('\n')
 }

@@ -1,5 +1,7 @@
 declare module '@graphprotocol/graph-ts' {
   namespace ethereum {
+    export declare class Value {}
+
     export declare class Block {
       public hash: Bytes
       public parentHash: Bytes
