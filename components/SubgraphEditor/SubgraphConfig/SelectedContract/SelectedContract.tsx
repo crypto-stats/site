@@ -6,6 +6,7 @@ import { Contract, ContractEvent } from 'hooks/local-subgraphs'
 import { EventRow } from './EventRow'
 import { ErrorState } from 'components/SubgraphEditor/atoms'
 import { generateContractFile } from 'utils/graph-file-generator'
+import EditableText from 'components/SubgraphEditor/atoms/EditableText'
 
 const Root = styled.div`
   margin-bottom: 24px;
@@ -225,7 +226,11 @@ export const SelectedContract = (props: SelectedContractProps) => {
     <Root>
       <Header>
         <div className="top">
-          <span className="contract-title">{name || 'No name'}</span>
+          <EditableText
+            value={name || 'Unnamed Contract'}
+            onChange={name => updateContract({ name })}
+          />
+
           <Trash2 className="delete-link" size={16} onClick={() => deleteContract()} />
         </div>
         <span className="address">{addresses[CHAIN_ID]}</span>
@@ -320,7 +325,8 @@ export const SelectedContract = (props: SelectedContractProps) => {
               {...(!contractHasEvents && {
                 disabled: true,
                 title: 'Contract has no events defined',
-              })}>
+              })}
+            >
               <Plus size={12} style={{ marginRight: 4 }} />
               New
             </ActionButton>
