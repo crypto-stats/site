@@ -144,12 +144,26 @@ export const SelectedContract = (props: SelectedContractProps) => {
   }, [mappingFunctionNames])
 
   const inputRef = useRef<HTMLInputElement>(null)
-  const eventsFromAbi = abi ? parseEventsFromAbi(abi) : []
-  const contractHasEvents = eventsFromAbi.length > 0
 
   const [newEvent, setNewEvent] = useState({ show: false, signature: '' })
   const [metadataLoading, setMetadataLoading] = useState(false)
+  const [eventsFromAbi, setEventsFromAbi] = useState<string[]>([])
   const [parseABIError, setParseABIError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (abi) {
+      try {
+        setEventsFromAbi(parseEventsFromAbi(abi))
+      } catch (e: any) {
+        setEventsFromAbi([])
+        setParseABIError(e.message)
+      }
+    } else {
+      setEventsFromAbi([])
+    }
+  }, [abi])
+
+  const contractHasEvents = eventsFromAbi.length > 0
 
   const fetchMetadata = async () => {
     setMetadataLoading(true)
