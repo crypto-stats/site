@@ -174,6 +174,7 @@ interface ButtonProps {
   size?: string
   centered?: boolean
   title?: string
+  rel?: string
 }
 
 const Button: React.FC<ButtonProps> = props => {
@@ -192,6 +193,7 @@ const Button: React.FC<ButtonProps> = props => {
     centered,
     loading,
     title = '',
+    rel,
   } = props
   let svgIcon: React.ReactNode | null = null
   let shouldSpin: boolean = false
@@ -232,7 +234,7 @@ const Button: React.FC<ButtonProps> = props => {
 
   if (href) {
     return (
-      <ButtonElement as="a" href={href} target={target} {...buttonProps}>
+      <ButtonElement as="a" href={href} target={target} rel={rel} {...buttonProps}>
         {icon && <Icon $spin={shouldSpin}>{svgIcon}</Icon>}
         <span>{children}</span>
       </ButtonElement>

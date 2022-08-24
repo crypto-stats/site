@@ -243,7 +243,7 @@ const Header: React.FC = () => {
         </NavItem>
         <NavItem>
           <Link href="/editor" passHref>
-            <Button variant="secondary">Create Adapter</Button>
+            <Button rel="nofollow" variant="secondary">Create Adapter</Button>
           </Link>
         </NavItem>
         <NavItem>
