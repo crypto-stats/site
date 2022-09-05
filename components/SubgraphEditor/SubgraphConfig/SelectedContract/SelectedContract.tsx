@@ -89,6 +89,21 @@ const ActionButton = styled.button`
   font-weight: bold;
 `
 
+const EtherscanLink = styled.a`
+  display: inline-block;
+  background-image: url(/etherscan-logo-light-circle.svg);
+  height: 16px;
+  width: 16px;
+  opacity: 0.5;
+  background-size: 100%;
+  margin-left: 6px;
+  vertical-align: middle;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`
+
 const CHAIN_ID = 1
 
 function parseEventsFromAbi(abi: any[]) {
@@ -261,7 +276,10 @@ export const SelectedContract = (props: SelectedContractProps) => {
         </div>
         {!isTemplate && (
           <>
-            <span className="address">{addresses[CHAIN_ID]}</span>
+            <span className="address">
+              {addresses[CHAIN_ID]}
+              <EtherscanLink href={`https://etherscan.io/address/${addresses[CHAIN_ID]}`} target="etherscan" />
+            </span>
             {metadataLoading ? <span>Fetching contract metadata...</span> : null}
             {startBlocks[CHAIN_ID] ? (
               <span className="address">Deployed on block {startBlocks[CHAIN_ID]}</span>
