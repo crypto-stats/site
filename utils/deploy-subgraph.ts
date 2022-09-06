@@ -1,6 +1,7 @@
 import { ContractEvent, DEFAULT_MAPPING, SubgraphData } from 'hooks/local-subgraphs'
 import { generateLibrariesForSubgraph } from './graph-file-generator'
 import Hash from 'ipfs-only-hash'
+import { templates as templateContracts } from 'resources/subgraph-templates'
 
 export enum STATUS {
   INITIALIZING,
@@ -165,7 +166,22 @@ export async function prepareSubgraphDeploymentFiles(subgraph: SubgraphData) {
   // one single array that's added to all sources
   const abis: { name: string; file: { '/': string } }[] = []
 
-  for (const contract of subgraph.contracts) {
+  const allContracts = [
+    ...subgraph.contracts,
+    ...(subgraph.templates || [])
+      .map(templateId => templateContracts.find(contract => contract.id === templateId))
+      .filter(contract => !!contract)
+      .map(template => ({
+        abi: template!.abi,
+        name: template!.name || template!.id,
+        isTemplate: true,
+        events: [],
+        addresses: {} as { [chainId: string]: string },
+        startBlocks: {} as { [chainId: string]: string },
+      }))
+  ]
+
+  for (const contract of allContracts) {
     const abiString = JSON.stringify(contract.abi)
     const cid = await getCID(abiString)
 
