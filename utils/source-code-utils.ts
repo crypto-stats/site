@@ -1,10 +1,10 @@
 export function addImport(code: string, file: string, item: string): string {
   const IMPORT_REGEX = /import {\s*([\w]+(?:,\s*[\w]+)*)\s*} from (?:'|")([\w/]+)(?:'|");?/g
-  
+
   let result: RegExpExecArray | null
   let lastImportPos = 0
-  
-  while((result = IMPORT_REGEX.exec(code)) !== null) {
+
+  while ((result = IMPORT_REGEX.exec(code)) !== null) {
     lastImportPos = result.index + result[0].length + 1
 
     if (result[2] === file) {
@@ -25,5 +25,9 @@ export function addImport(code: string, file: string, item: string): string {
   }
 
   // Add new import after the last existing import
-  return code.slice(0, lastImportPos) + `import { ${item} } from '${file}';\n` + code.slice(lastImportPos)
+  return (
+    code.slice(0, lastImportPos) +
+    `import { ${item} } from '${file}';\n` +
+    code.slice(lastImportPos)
+  )
 }

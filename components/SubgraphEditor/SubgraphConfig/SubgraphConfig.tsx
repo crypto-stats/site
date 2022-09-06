@@ -10,6 +10,7 @@ import { Dropdown } from '../../atoms'
 import { addImport } from 'utils/source-code-utils'
 import { generateLibrariesForSubgraph } from 'utils/graph-file-generator'
 import { compileAs } from 'utils/deploy-subgraph'
+import ContractTemplateSelector from './ContractTemplateSelector'
 
 const Root = styled.div`
   min-height: 100vh;
@@ -28,9 +29,7 @@ const Title = styled.h3`
   font-size: 32px;
   font-weight: bold;
   color: #ffffff;
-  max-width: 250px;
-  margin: 0px;
-  margin-bottom: 24px;
+  margin: 8px 0 24px;
 `
 
 const InfoMsg = styled.span`
@@ -174,6 +173,10 @@ export const SubgraphConfig = (props: SubgraphConfigProps) => {
     return null
   }
 
+  if (!subgraph) {
+    return <div>Error: Subgraph not found</div>
+  }
+
   const updateSelectedContract = (address: string, newProps: Partial<Contract>) => {
     if (!subgraph) {
       throw new Error('No subgraph')
@@ -235,6 +238,14 @@ export const SubgraphConfig = (props: SubgraphConfigProps) => {
           onChange={version => update(_subgraph => ({ ..._subgraph, version }))}
         />
         {errorState.version ? <ErrorState>{errorState.version}</ErrorState> : null}
+
+        <Title>Contract Templates</Title>
+        <ContractTemplateSelector
+          selected={subgraph.templates || []}
+          onChange={newTemplates =>
+            update(_subgraph => ({ ..._subgraph, templates: newTemplates }))
+          }
+        />
 
         <Title>Contracts</Title>
         <InputLabel>Add contract</InputLabel>

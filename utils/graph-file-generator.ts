@@ -1,5 +1,6 @@
 import { SubgraphData } from 'hooks/local-subgraphs'
 import immutable from 'immutable'
+import { templates } from 'resources/subgraph-templates'
 
 export async function generateLibrariesForSubgraph(
   subgraph: SubgraphData,
@@ -11,7 +12,6 @@ export async function generateLibrariesForSubgraph(
     try {
       const code = await generateContractFile(contract.name, contract.abi)
       libraries[`${prefix}contracts/${contract.name}.ts`] = code
-      console.log(contract)
       if (contract.isTemplate) {
         const template = await generateTemplateFile(contract.name)
         libraries[`${prefix}templates/${contract.name}.ts`] = template
@@ -23,6 +23,18 @@ export async function generateLibrariesForSubgraph(
         throw e
       }
     }
+  }
+
+  for (const templateId of subgraph.templates || []) {
+    const template = templates.find(template => template.id === templateId)
+    if (!template) {
+      console.warn(`Contract template ${templateId} not found`)
+      continue
+    }
+    const code = await generateContractFile(template.id, template.abi)
+    libraries[`${prefix}contracts/${template.id}.ts`] = code
+    const templateCode = await generateTemplateFile(template.id)
+    libraries[`${prefix}templates/${template.id}.ts`] = templateCode
   }
 
   try {

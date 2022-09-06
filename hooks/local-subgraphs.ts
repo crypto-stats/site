@@ -5,6 +5,8 @@ const storageKey = 'localSubgraphs'
 
 export const DEFAULT_MAPPING = 'mapping.ts'
 
+const DEFAULT_TEMPLATES = ['ERC20', 'ERC721']
+
 interface Publication {
   cid: string
   version: string
@@ -34,6 +36,7 @@ export interface SubgraphData {
   schema: string
   version: string
   contracts: Contract[]
+  templates: string[]
   publications: Publication[]
   publishConfig: PublishConfig | null
 }
@@ -81,6 +84,7 @@ export const newSubgraph = ({
     schema,
     name: 'Untitled subgraph',
     contracts,
+    templates: DEFAULT_TEMPLATES,
     publications,
     version: '0.0.1',
     publishConfig: DEFAULT_PUBLISH_CONFIG,
