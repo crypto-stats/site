@@ -128,6 +128,7 @@ signature: ${signature}`
         node,
         subgraphName: options.name,
         deployKey: options.accessToken,
+        hideVersion: options.node === 'hosted',
       })
 
       setDeployState(_state => ({ ..._state, status: DeployStatus.DEPLOY_COMPLETE }))

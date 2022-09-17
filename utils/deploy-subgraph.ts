@@ -61,18 +61,19 @@ async function deployHosted(
   name: string,
   cid: string,
   deployKey: string,
-  version_label: string
+  version_label?: string | null
 ) {
+  const params: any = { name, ipfs_hash: cid }
+  if (version_label) {
+    params.version_label = version_label
+  }
+
   const req = await fetch(node, {
     method: 'POST',
     body: JSON.stringify({
       jsonrpc: '2.0',
       method: 'subgraph_deploy',
-      params: {
-        name,
-        ipfs_hash: cid,
-        version_label,
-      },
+      params,
       id: 2,
     }),
     headers: {
@@ -99,6 +100,7 @@ interface DeployOptions {
   node: string
   subgraphName: string
   deployKey: string
+  hideVersion?: boolean
 }
 
 export interface DeployFile {
@@ -178,7 +180,7 @@ export async function prepareSubgraphDeploymentFiles(subgraph: SubgraphData) {
         events: [],
         addresses: {} as { [chainId: string]: string },
         startBlocks: {} as { [chainId: string]: string },
-      }))
+      })),
   ]
 
   for (const contract of allContracts) {
@@ -302,7 +304,7 @@ export async function deployPreparedSubgraph(
     options.subgraphName,
     manifestCid,
     options.deployKey,
-    subgraph.version
+    options.hideVersion ? null : subgraph.version,
   )
   return { version: subgraph.version, manifestCid, result: deployResult }
 }
