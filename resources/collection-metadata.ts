@@ -25,7 +25,8 @@ export const DEFAULT_FORUM_CATEGORY = 'protocols/other-collections'
 const collectionMetadata: { [id: string]: CollectionMetadata } = {
   'active-addresses': {
     name: 'Active Addresses',
-    description: 'Number of addresses that have sent a transaction on a given chain on a given date.',
+    description:
+      'Number of addresses that have sent a transaction on a given chain on a given date.',
     icon: '🏃',
     queries: [
       {
@@ -84,6 +85,27 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
             description: 'The end date to query (exclusive)',
           },
         ],
+      },
+    ],
+  },
+  'bridged-value': {
+    name: 'Bridged Value',
+    description:
+      'The amount of value bridged between various chains over various bridging protocols',
+    icon: '🌉',
+    iconColor: 'palette-5',
+    queries: [
+      {
+        id: 'currentValueBridgedAToB',
+        name: 'Value bridged from Chain A to Chain B (USD)',
+        description:
+          'The amount of assets currently custodied in a bridge on Chain A, represented by wrapped derivative tokens on Chain B.',
+      },
+      {
+        id: 'currentValueBridgedBTOA',
+        name: 'Value bridged from Chain B to Chain A (USD)',
+        description:
+          'The amount of assets currently custodied in a bridge on Chain B, represented by wrapped derivative tokens on Chain A.',
       },
     ],
   },
@@ -280,6 +302,11 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
         name: 'APY',
         description: 'The APY provided to users by the staking provider',
       },
+      {
+        id: 'underlyingAssetMarketRate',
+        name: 'Market rate',
+        description: 'The market discount or premium of the associated staking derivative token.',
+      },
     ],
   },
   fees: {
@@ -415,13 +442,14 @@ const collectionMetadata: { [id: string]: CollectionMetadata } = {
       {
         id: 'stakedAssetsUSD',
         name: 'Staked assets (USD)',
-        description: 'The USD value of all assets staked as part of the chain\'s consensus.',
+        description: "The USD value of all assets staked as part of the chain's consensus.",
       },
     ],
   },
   'rollup-l1-fees': {
     name: 'Rollup Security Fees',
-    description: 'The amount of fees paid by Ethereum rollups for security (data availability, proofs and execution)',
+    description:
+      'The amount of fees paid by Ethereum rollups for security (data availability, proofs and execution)',
     icon: '🛡',
     queries: [
       {
