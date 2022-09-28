@@ -63,6 +63,7 @@ const ButtonElement = styled.button<ButtonElementProps>`
   transition: 150ms ease;
   padding: var(--spaces-2) var(--spaces-3);
   position: relative;
+  text-decoration: none;
 
   // Primary styling
   background-color: var(--color-primary);

@@ -71,7 +71,7 @@ const TagElement = styled.div<{
     type === 'label' &&
     `
     font-size: 12px;
-    color: #838383;
+    color: var(--color-muted-text);
     letter-spacing: 1.5px;  
     text-transform: uppercase;
   `}
@@ -80,7 +80,7 @@ const TagElement = styled.div<{
     type === 'description' &&
     `
     font-size: 16px;
-    color: #717D8A;
+    color: var(--color-muted-text);
     line-height: 24px;
   `}
 

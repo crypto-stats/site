@@ -34,9 +34,9 @@ const HeaderMobileWrapper = styled.div`
   }
 `
 
-const Logo = styled.a`
+const Logo = styled.a<{ dark?: boolean }>`
   display: block;
-  background-image: url('/logo.svg');
+  background-image: url(${({ dark }) => (dark ? 'logo-dark.svg' : '/logo.svg')});
   color: transparent;
   background-repeat: no-repeat;
   background-position: center;
@@ -99,7 +99,7 @@ const NavLink = styled.a<{ active?: boolean }>`
   position: relative;
   display: inline-block;
   margin: 0 4px;
-  color: #3d3d3d;
+  color: var(--color-normal-text);
   text-decoration: none;
   font-size: 16px;
   font-weight: 500;
@@ -137,7 +137,7 @@ const WalletButton = styled(ConnectionButton)`
   border: solid 1px #d6eaff;
   height: 35px;
   background: transparent;
-  color: #002750;
+  color: var(--color-normal-text);
   padding: 0 20px;
   align-self: center;
 
@@ -204,7 +204,7 @@ const Hamburger = styled.button<{ open: boolean }>`
       : ``}
 `
 
-const Header: React.FC = () => {
+const Header = ({ dark }: { dark?: boolean }) => {
   const router = useRouter()
   const { account } = useWeb3React()
   const name = useENSName(account)
@@ -214,7 +214,7 @@ const Header: React.FC = () => {
     <HeaderContainer>
       <HeaderMobileWrapper>
         <Link href="/" passHref>
-          <Logo>Home</Logo>
+          <Logo dark={dark}>Home</Logo>
         </Link>
 
         <Hamburger open={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
@@ -231,8 +231,10 @@ const Header: React.FC = () => {
           </Link>
         </NavItem>
         <NavItem>
-          <Link href="/how-it-works" passHref>
-            <NavLink active={router.route.indexOf('/how-it-works') === 0}>How it works</NavLink>
+          <Link href="/subgraph-editor" passHref>
+            <NavLink active={router.route.indexOf('/subgraph-editor') === 0}>
+              Subgraph Editor
+            </NavLink>
           </Link>
         </NavItem>
         <NavItem>
@@ -243,7 +245,9 @@ const Header: React.FC = () => {
         </NavItem>
         <NavItem>
           <Link href="/editor" passHref>
-            <Button rel="nofollow" variant="secondary">Create Adapter</Button>
+            <Button rel="nofollow" variant="secondary">
+              Create Adapter
+            </Button>
           </Link>
         </NavItem>
         <NavItem>

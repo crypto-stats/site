@@ -38,6 +38,10 @@ const GlobalStyle = createGlobalStyle`
     --color-palette-7: #F0D0FF;
     --color-palette-8: #FFD0DD;
 
+    // Light/dark mode colors
+    --color-normal-text: #3d3d3d;
+    --color-muted-text: #838383;
+
     // Shadows
     --box-shadow-card: 0 3px 6px 0 rgba(0,36,75,.07);
 

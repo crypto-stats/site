@@ -10,8 +10,8 @@ const FooterContainer = styled(RowSection)`
   border-top: 1px solid var(--color-primary-800);
 `
 
-const Logo = styled.div`
-  background-image: url('/logo-all-black.svg');
+const Logo = styled.div<{ dark?: boolean }>`
+  background-image: url(${({ dark }) => (dark ? '/logo-all-white.svg' : '/logo-all-black.svg')});
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -45,7 +45,7 @@ const Nav = styled.nav`
 
 const NavLink = styled.a`
   line-height: 40px;
-  color: black;
+  color: var(--color-normal-text);
   font-size: 18px;
   text-decoration: none;
 
@@ -54,11 +54,11 @@ const NavLink = styled.a`
   }
 `
 
-const Footer: React.FC = () => {
+const Footer = ({ dark }: { dark?: boolean }) => {
   return (
     <FooterContainer mt="40" alignItems="center">
       <ColumnSection columns="5">
-        <Logo />
+        <Logo dark={dark} />
         <Text tag="p" type="description" mt="24">
           One neutral source of truth for crypto metrics.
           <br />
