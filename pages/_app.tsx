@@ -40,6 +40,7 @@ const GlobalStyle = createGlobalStyle`
 
     // Light/dark mode colors
     --color-normal-text: #3d3d3d;
+    --color-strong-text: #002750;
     --color-muted-text: #838383;
 
     // Shadows

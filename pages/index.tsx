@@ -13,6 +13,7 @@ import Users from 'components/home-sections/Users'
 import Dao from 'components/home-sections/Dao'
 import RowSection from 'components/RowSection'
 import ColumnSection from 'components/ColumnSection'
+import GraphEditorSection from 'components/home-sections/GraphEditorSection'
 
 const HomeBackgroundHead = styled.div`
   background-image: url('hp_bg_head.png');
@@ -51,6 +52,7 @@ const Home: NextPage<HomePageProps> = ({ sampleData }) => {
         </RowSection>
         <Hero sampleData={sampleData} />
       </HomeBackgroundHead>
+      <GraphEditorSection />
       <Description />
       <HomeBackgroundActions>
         <Actions />

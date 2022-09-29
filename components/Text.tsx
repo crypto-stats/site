@@ -38,7 +38,7 @@ const TagElement = styled.div<{
     `
     font-weight: 600;
     font-size: 36px;
-    color: #002750;
+    color: var(--color-strong-text);
   `}
 
   ${({ type }) =>
@@ -46,7 +46,7 @@ const TagElement = styled.div<{
     `
     font-weight: 500;
     font-size: 24px;
-    color: #002750;
+    color: var(--color-strong-text);
     letter-spacing: 0.1px;
   `}
 
@@ -54,7 +54,7 @@ const TagElement = styled.div<{
     type === 'title_highlight' &&
     `
     font-size: 24px;
-    color: #0477F4;
+    color: var(--color-primary);
     letter-spacing: 0.1px;
   `}
 
@@ -63,7 +63,7 @@ const TagElement = styled.div<{
     `
     font-weight: 700;
     font-size: 22px;
-    color: #002750;
+    color: var(--color-strong-text);
     letter-spacing: 0.1px;
   `}
 
@@ -88,14 +88,14 @@ const TagElement = styled.div<{
     type === 'content' &&
     `
     font-size: 16px;
-    color: #002750;
+    color: var(--color-strong-text);
     line-height: 21px;
   `}
   ${({ type }) =>
     type === 'content_small' &&
     `
     font-size: 14px;
-    color: #002750;
+    color: var(--color-strong-text);
     line-height: 21px;
   `}
   
@@ -103,7 +103,7 @@ const TagElement = styled.div<{
     type === 'content_big' &&
     `
     font-size: 18px;
-    color: #002750;
+    color: var(--color-strong-text);
     line-height: 24px;
   `}
 
@@ -112,7 +112,7 @@ const TagElement = styled.div<{
     `
     font-weight: 400;
     font-size: 24px;
-    color: #002750;
+    color: var(--color-strong-text);
     line-height: 37px;
   `}
 
@@ -121,7 +121,7 @@ const TagElement = styled.div<{
     `
     font-family: monospace;
     font-size: 16px;
-    color: #002750;
+    color: var(--color-strong-text);
     line-height: 21px;
     word-break: break-all;
   `}
