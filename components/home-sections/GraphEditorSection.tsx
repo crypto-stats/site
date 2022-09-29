@@ -23,6 +23,14 @@ const Split = styled.div`
   & > a {
     margin: 4px;
   }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+
+  & .desktop-only {
+    display: none;
+  }
 `
 
 export default function GraphEditorSection() {
@@ -48,7 +56,7 @@ export default function GraphEditorSection() {
               </Button>
             </Link>
             <Link href="/editor/subgraph" passHref>
-              <Button variant="outline" size="large">
+              <Button variant="outline" size="large" className="desktop-only">
                 Try it out
               </Button>
             </Link>

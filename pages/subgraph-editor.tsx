@@ -15,6 +15,7 @@ const DarkPage = styled.div`
 
   --color-normal-text: #ffffff;
   --color-muted-text: #9d9d9d;
+  --color-strong-text: #ffffff;
 
   color: var(--color-normal-text);
 `
