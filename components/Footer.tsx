@@ -69,6 +69,17 @@ const Footer = ({ dark }: { dark?: boolean }) => {
         <NavContainer>
           <Nav>
             <Text tag="p" type="label" mb="16">
+              &nbsp;
+            </Text>
+            <Link href="/subgraph-editor" passHref>
+              <NavLink>Subgraph Editor</NavLink>
+            </Link>
+            <Link href="/blog" passHref>
+              <NavLink>Blog</NavLink>
+            </Link>
+          </Nav>
+          <Nav>
+            <Text tag="p" type="label" mb="16">
               Data Metrics
             </Text>
             <Link href="/discover" passHref>

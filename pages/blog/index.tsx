@@ -1,71 +1,61 @@
 import React from 'react'
 import { NextPage, GetStaticProps } from 'next'
-import Link from 'next/link'
 import MetaTags from 'components/MetaTags'
 import { BlogPost, getBlogPostList } from 'utils/blog'
+import TranquilLayout from 'components/layouts/TranquilLayout'
+import styled from 'styled-components'
+import CardList from 'components/CardList'
+
+const Title = styled.h1`
+  font-size: 36px;
+`
 
 interface BlogProps {
   posts: BlogPost[]
 }
 
 export const Blog: NextPage<BlogProps> = ({ posts }: { posts: BlogPost[] }) => {
+  const blogPosts = posts
+    .sort(
+      (a: BlogPost, b: BlogPost) =>
+        new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime()
+    )
+    .map(post => {
+      return {
+        title: post.title,
+        description: post.metadata.tagline,
+        thumbnail: post.metadata.image,
+        metadata: [
+          `By ${post.metadata.author}`,
+          post.date
+            ? new Date(post.date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })
+            : '',
+        ],
+        link: `/blog/${post.slug}`,
+      }
+    })
+
   return (
-    <main>
+    <TranquilLayout
+      page="blog"
+      hero={
+        <div>
+          <Title>CryptoStats Blog</Title>
+        </div>
+      }
+    >
       <MetaTags
         title="CryptoStats Blog"
         description="Writing about the tooling and data in the crypto metrics ecosystem"
       />
 
-      <h1 className="title">L2Fees Blog</h1>
-      <div className="nav-links">
-        <Link href="/">
-          <a>Home</a>
-        </Link>
-      </div>
-
-      <ul className="posts">
-        {posts.map(post => (
-          <li key={post.slug}>
-            <Link href={`/blog/${post.slug}`}>
-              <a
-                style={{
-                  backgroundImage: post.metadata.image ? `url(${post.metadata.image})` : '',
-                }}
-              >
-                <div className="link-title">{post.title}</div>
-                <div className="link-tagline">{post.metadata.tagline}</div>
-                <div className="link-date">
-                  {post.date &&
-                    new Date(post.date).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                </div>
-              </a>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <CardList items={blogPosts} />
 
       <style jsx>{`
-        main {
-          padding: 2rem 0 3rem;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          width: 100%;
-        }
-
-        .title {
-          margin: 0 0 16px;
-          line-height: 1.15;
-          font-size: 4rem;
-          font-weight: 700;
-        }
-
         .posts {
           display: flex;
           padding: 0;
@@ -131,7 +121,7 @@ export const Blog: NextPage<BlogProps> = ({ posts }: { posts: BlogPost[] }) => {
           color: #999;
         }
       `}</style>
-    </main>
+    </TranquilLayout>
   )
 }
 

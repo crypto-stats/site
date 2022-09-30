@@ -20,7 +20,7 @@ const ListItem = styled.li`
   }
 `
 
-const Card = styled.a<{ icon?: string }>`
+const Card = styled.a<{ icon?: string | null }>`
   display: grid;
   grid-template-columns: 100%;
   grid-gap: 0 var(--spaces-5);
@@ -48,6 +48,16 @@ const Card = styled.a<{ icon?: string }>`
   @media (min-width: 768px) {
     ${({ icon }) => (icon ? 'grid-template-columns: auto 1fr;' : 'grid-template-columns: 100%;')}
   }
+`
+
+const Thumbnail = styled.div<{ src: string }>`
+  background-image: url(${({ src }) => src});
+  height: 100%;
+  width: 150px;
+  background-size: contain;
+  background-position: 0 center;
+  background-repeat: no-repeat;
+  min-height: 50px;
 `
 
 const CardIcon = styled(IconRound)`
@@ -91,6 +101,7 @@ export interface Item {
   title: string
   subtitle?: string | null
   description?: string | null
+  thumbnail?: string | null
   icon?: string
   iconColor?: string
   metadata?: string[]
@@ -109,7 +120,8 @@ const CardList: React.FC<CardListProps> = ({ items }) => {
         return (
           <ListItem key={item.title}>
             <Link href={item.link} passHref>
-              <Card icon={item.icon}>
+              <Card icon={item.icon || item.thumbnail}>
+                {item.thumbnail && <Thumbnail src={item.thumbnail} />}
                 {item.icon && <CardIcon color={item.iconColor} icon={item.icon} />}
                 <Content>
                   <Text tag="h3" type="h3">
