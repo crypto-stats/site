@@ -8,7 +8,7 @@ interface BlogProps {
   posts: BlogPost[]
 }
 
-export const Blog: NextPage<BlogProps> = ({ posts }) => {
+export const Blog: NextPage<BlogProps> = ({ posts }: { posts: BlogPost[] }) => {
   return (
     <main>
       <MetaTags
@@ -35,7 +35,7 @@ export const Blog: NextPage<BlogProps> = ({ posts }) => {
                 <div className="link-title">{post.title}</div>
                 <div className="link-tagline">{post.metadata.tagline}</div>
                 <div className="link-date">
-                  {new Date(post.date).toLocaleDateString('en-US', {
+                  {post.date && new Date(post.date).toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',

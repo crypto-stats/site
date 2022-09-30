@@ -35,7 +35,7 @@ const components = {
   Tweet: dynamic(() => import('react-twitter-embed').then(pkg => pkg.TwitterTweetEmbed)),
 }
 
-export const Blog: NextPage<BlogProps> = ({ post }) => {
+export const Blog: NextPage<BlogProps> = ({ post }: { post: BlogPostWithSource }) => {
   return (
     <TranquilLayout
       hero={
