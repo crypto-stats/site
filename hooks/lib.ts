@@ -28,7 +28,7 @@ export class UpdateListener {
   }
 }
 
-function objEquals<T>(a: T, b: T) {
+function objEquals<T extends object>(a: T, b: T) {
   if (Object.keys(a).length !== Object.keys(b).length) {
     return false
   }

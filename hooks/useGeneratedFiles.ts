@@ -29,7 +29,7 @@ export const useGeneratedFiles = (subgraph: SubgraphData | null) => {
           const template = await generateTemplateFile(contract.name)
           _files.push({ content: template, filePath: `file:///templates/${contract.name}.ts` })
         }
-      } catch (e) {
+      } catch (e: any) {
         console.error(`Error generating file for ${contract.name}: ${e.message}`)
       }
     }

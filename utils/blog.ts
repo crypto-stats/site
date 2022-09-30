@@ -31,7 +31,7 @@ export async function getBlogPostList(): Promise<BlogPost[]> {
   yaml.safeLoad = yaml.load
 
   const entries = await Promise.all(
-    blogList.map(async (file): Promise<BlogPost> => {
+    blogList.map(async (file: any): Promise<BlogPost> => {
       const res = await fetch(file.download_url)
       const fileSource = await res.text()
       const {
