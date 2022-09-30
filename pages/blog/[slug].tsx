@@ -6,6 +6,19 @@ import dynamic from 'next/dynamic'
 import MetaTags from 'components/MetaTags'
 import { BlogPostWithSource, getBlogPost, getBlogPostList } from 'utils/blog'
 import TranquilLayout from 'components/layouts/TranquilLayout'
+import styled from 'styled-components'
+
+const HeroImage = styled.div<{ img: string }>`
+  background-image: url(${({ img }) => img});
+  background-size: cover;
+  padding-bottom: 50%;
+  background-position: center;
+  margin-top: 12px;
+`
+
+const Title = styled.h1`
+  font-size: 36px;
+`
 
 interface BlogProps {
   post: BlogPostWithSource
@@ -16,12 +29,14 @@ const components = {
   h2: ({ children }: { children: string }) => (
     <h2 id={children.toLowerCase().replace(/\W+/g, '-')}>{children}</h2>
   ),
-  a: ({ children, href }: { children: string, href: string }) => href.charAt(0) === '/'
-    ? (
+  a: ({ children, href }: { children: string; href: string }) =>
+    href.charAt(0) === '/' ? (
       <Link href={href}>
         <a>{children}</a>
       </Link>
-    ) : <a href={href}>{children}</a>,
+    ) : (
+      <a href={href}>{children}</a>
+    ),
   Img: ({ src }: { src: string }) => (
     <>
       <img className="blog-img" src={`https://blog-assets.cryptofees.info/${src}`} />
@@ -38,15 +53,18 @@ const components = {
 export const Blog: NextPage<BlogProps> = ({ post }: { post: BlogPostWithSource }) => {
   return (
     <TranquilLayout
+      page="blog"
       hero={
         <div>
-          <h1>{post.title}</h1>
+          {post.metadata.image && <HeroImage img={post.metadata.image} />}
+          <Title>{post.title}</Title>
           <div className="date">
-            {post.date && new Date(post.date).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            })}
+            {post.date &&
+              new Date(post.date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
           </div>
 
           {post.metadata.author && (

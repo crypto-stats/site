@@ -102,6 +102,14 @@ const TranquilLayout: React.FC<TranquilLayoutProps> = ({
       PageColumns.SidebarColumns.from = '10'
       PageColumns.SidebarColumns.to = '13'
       break
+
+    case 'blog':
+      PageColumns.page = 'discover'
+      PageColumns.HeroColumns.from = '3'
+      PageColumns.HeroColumns.to = '11'
+      PageColumns.BodyColumns.from = '3'
+      PageColumns.BodyColumns.to = '11'
+      break
   }
 
   return (

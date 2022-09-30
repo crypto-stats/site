@@ -2,20 +2,19 @@ import Head from 'next/head'
 import React from 'react'
 
 interface ArticleProps {
-  publishedTime?: Date;
-  modifiedTime?: Date;
-  author?: string;
-  section?: string;
-  tag?: string[];
+  publishedTime?: Date
+  modifiedTime?: Date
+  author?: string
+  section?: string
+  tag?: string[]
 }
 
 interface MetaTagsProps {
-  title?: string;
-  description?: string;
-  image?: string;
-  article?: ArticleProps;
+  title?: string
+  description?: string
+  image?: string
+  article?: ArticleProps
 }
-
 
 const MetaTags: React.FC<MetaTagsProps> = ({ title, description, image, article }) => {
   const fullTitle = `${title} - CryptoStats`
@@ -56,7 +55,7 @@ const MetaTags: React.FC<MetaTagsProps> = ({ title, description, image, article 
           {article.author && <meta name="article:author" content={article.author} />}
           {article.section && <meta name="article:section" content={article.section} />}
           {article.tag &&
-            article.tag.map((tag) => <meta name="article:tag" content={tag} key={tag} />)}
+            article.tag.map(tag => <meta name="article:tag" content={tag} key={tag} />)}
         </>
       )}
     </Head>

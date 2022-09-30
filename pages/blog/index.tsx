@@ -35,11 +35,12 @@ export const Blog: NextPage<BlogProps> = ({ posts }: { posts: BlogPost[] }) => {
                 <div className="link-title">{post.title}</div>
                 <div className="link-tagline">{post.metadata.tagline}</div>
                 <div className="link-date">
-                  {post.date && new Date(post.date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
+                  {post.date &&
+                    new Date(post.date).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
                 </div>
               </a>
             </Link>
