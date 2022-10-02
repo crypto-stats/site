@@ -1,0 +1,5 @@
+packages:
+  - name: ts-compiler
+    actions:
+      - name: compile 
+        runtime: nodejs:default
