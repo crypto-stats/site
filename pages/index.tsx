@@ -82,9 +82,9 @@ export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
     treasuryList.fetchAdapters(),
   ])
 
-  const arbitrum = feesList.getAdapter('arbitrum-one')
-  const yearn = apyList.getAdapter('yearn-vaults')
-  const gitcoin = treasuryList.getAdapter('gitcoin')
+  const arbitrum = feesList.getAdapter('arbitrum-one')!
+  const yearn = apyList.getAdapter('yearn-vaults')!
+  const gitcoin = treasuryList.getAdapter('gitcoin')!
 
   const dai = '0x6b175474e89094c44da98b954eedeac495271d0f'
 
