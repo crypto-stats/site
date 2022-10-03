@@ -10,7 +10,7 @@
     "prettier": "prettier --write ."
   },
   "dependencies": {
-    "@cryptostats/sdk": "^0.2.13",
+    "@cryptostats/sdk": "^0.2.14",
     "@graphprotocol/graph-cli": "^0.30.4",
     "@graphprotocol/graph-ts": "^0.27.0",
     "@monaco-editor/react": "^4.2.1",
@@ -50,7 +50,7 @@
     "use-ens-name": "^0.1.8"
   },
   "devDependencies": {
-    "@microsoft/api-extractor": "^7.18.9",
+    "@microsoft/api-extractor": "^7.32.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",
     "@types/js-yaml": "^4.0.5",

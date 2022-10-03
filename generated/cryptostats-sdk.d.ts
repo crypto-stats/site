@@ -31,9 +31,21 @@ declare interface AdapterProps {
   bundle?: string | null
 }
 
+declare interface BankExtension {
+  readonly bank: {
+      readonly balance: (address: string, denom: string) => Promise<Coin>;
+      readonly allBalances: (address: string) => Promise<Coin[]>;
+      readonly totalSupply: (paginationKey?: Uint8Array) => Promise<QueryTotalSupplyResponse>;
+      readonly supplyOf: (denom: string) => Promise<Coin>;
+      readonly denomMetadata: (denom: string) => Promise<Metadata>;
+      readonly denomsMetadata: () => Promise<Metadata[]>;
+  };
+}
+
 declare abstract class BaseCryptoStatsSDK {
   cache: ICache
   readonly coinGecko: CoinGecko
+  readonly cosmos: Cosmos
   readonly chainData: ChainData
   readonly date: DateLib
   readonly ethers: Ethers
@@ -85,6 +97,11 @@ declare interface ChainDataProps {
   log: Log
 }
 
+declare interface Coin {
+  denom: string;
+  amount: string;
+}
+
 declare class CoinGecko {
   private cache
   private http
@@ -122,6 +139,7 @@ declare class Etherscan {
 
 declare class Context {
   readonly coinGecko: CoinGecko
+  readonly cosmos: Cosmos
   readonly chainData: ChainData
   readonly date: DateLib
   readonly ethers: Ethers
@@ -133,6 +151,7 @@ declare class Context {
   readonly plugins: Plugins
   constructor({
     coinGecko,
+    cosmos,
     chainData,
     date,
     graph,
@@ -149,6 +168,7 @@ declare class Context {
 
 declare interface ContextProps {
   coinGecko: CoinGecko
+  cosmos: Cosmos
   chainData: ChainData
   date: DateLib
   ethers: Ethers
@@ -158,6 +178,12 @@ declare interface ContextProps {
   log: Log
   plugins: Plugins
   list: List
+}
+
+declare class Cosmos {q
+  addChain(name: string, url: string): void;
+  getStargateClient(chain: string): StargateClient;
+  getQueryClient(chain: string): QueryClient & BankExtension;
 }
 
 declare interface CryptoStatsOptions {
@@ -414,6 +440,12 @@ declare class Plugins {
   getPlugin<T = any>(name: string): T
 }
 
+declare class QueryClient {
+  queryVerified(store: string, key: Uint8Array, desiredHeight?: number): Promise<Uint8Array>;
+  queryRawProof(store: string, queryKey: Uint8Array, desiredHeight?: number): Promise<ProvenQuery>;
+  queryUnverified(path: string, request: Uint8Array, desiredHeight?: number): Promise<Uint8Array>;
+}
+
 declare type QueryFn<Output = any, Input = any> = (...params: Input[]) => Promise<Output>
 
 declare interface RegistrationData {
@@ -426,3 +458,44 @@ declare interface RegistrationData {
 }
 
 declare type SetupFn = (context: Context) => void
+
+declare class StargateClient {
+  static connect(endpoint: string | HttpEndpoint, options?: StargateClientOptions): Promise<StargateClient>;
+  protected constructor(tmClient: Tendermint34Client | undefined, options: StargateClientOptions);
+  protected getTmClient(): Tendermint34Client | undefined;
+  protected forceGetTmClient(): Tendermint34Client;
+  protected getQueryClient(): (QueryClient & AuthExtension & BankExtension & StakingExtension & TxExtension) | undefined;
+  protected forceGetQueryClient(): QueryClient & AuthExtension & BankExtension & StakingExtension & TxExtension;
+  getChainId(): Promise<string>;
+  getHeight(): Promise<number>;
+  getAccount(searchAddress: string): Promise<Account | null>;
+  getSequence(address: string): Promise<SequenceResponse>;
+  getBlock(height?: number): Promise<Block>;
+  getBalance(address: string, searchDenom: string): Promise<Coin>;
+  /**
+   * Queries all balances for all denoms that belong to this address.
+   *
+   * Uses the grpc queries (which iterates over the store internally), and we cannot get
+   * proofs from such a method.
+   */
+  getAllBalances(address: string): Promise<readonly Coin[]>;
+  getBalanceStaked(address: string): Promise<Coin | null>;
+  getDelegation(delegatorAddress: string, validatorAddress: string): Promise<Coin | null>;
+  getTx(id: string): Promise<IndexedTx | null>;
+  searchTx(query: SearchTxQuery, filter?: SearchTxFilter): Promise<readonly IndexedTx[]>;
+  disconnect(): void;
+  /**
+   * Broadcasts a signed transaction to the network and monitors its inclusion in a block.
+   *
+   * If broadcasting is rejected by the node for some reason (e.g. because of a CheckTx failure),
+   * an error is thrown.
+   *
+   * If the transaction is not included in a block before the provided timeout, this errors with a `Time
+outError`.
+   *
+   * If the transaction is included in a block, a `DeliverTxResponse` is returned. The caller then
+   * usually needs to check for execution success or failure.
+   */
+  broadcastTx(tx: Uint8Array, timeoutMs?: number, pollIntervalMs?: number): Promise<DeliverTxResponse>;
+  private txsQuery;
+}
