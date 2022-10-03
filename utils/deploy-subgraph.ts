@@ -304,7 +304,7 @@ export async function deployPreparedSubgraph(
     options.subgraphName,
     manifestCid,
     options.deployKey,
-    options.hideVersion ? null : subgraph.version,
+    options.hideVersion ? null : subgraph.version
   )
   return { version: subgraph.version, manifestCid, result: deployResult }
 }

@@ -34,6 +34,7 @@ export function getSDK(options?: any) {
   if (process.env.NEXT_PUBLIC_OPTIMISM_RPC) {
     sdk.ethers.addProvider('optimism', process.env.NEXT_PUBLIC_OPTIMISM_RPC, { archive: true })
   }
+  sdk.ethers.addProvider('bsc', 'https://bscrpc.com')
 
   sdk.cosmos.addChain('cosmoshub', 'https://cosmos-mainnet-rpc.allthatnode.com:26657/')
   sdk.cosmos.addChain('osmosis', 'https://osmosis-mainnet-rpc.allthatnode.com:26657')
