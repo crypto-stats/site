@@ -35,10 +35,10 @@ declare interface BankExtension {
   readonly bank: {
       readonly balance: (address: string, denom: string) => Promise<Coin>;
       readonly allBalances: (address: string) => Promise<Coin[]>;
-      readonly totalSupply: (paginationKey?: Uint8Array) => Promise<QueryTotalSupplyResponse>;
+      readonly totalSupply: (paginationKey?: Uint8Array) => Promise<any/*QueryTotalSupplyResponse*/>;
       readonly supplyOf: (denom: string) => Promise<Coin>;
-      readonly denomMetadata: (denom: string) => Promise<Metadata>;
-      readonly denomsMetadata: () => Promise<Metadata[]>;
+      readonly denomMetadata: (denom: string) => Promise</* Metadata */ any>;
+      readonly denomsMetadata: () => Promise</* Metadata */ any[]>;
   };
 }
 
@@ -180,7 +180,7 @@ declare interface ContextProps {
   list: List
 }
 
-declare class Cosmos {q
+declare class Cosmos {
   addChain(name: string, url: string): void;
   getStargateClient(chain: string): StargateClient;
   getQueryClient(chain: string): QueryClient & BankExtension;
@@ -442,7 +442,7 @@ declare class Plugins {
 
 declare class QueryClient {
   queryVerified(store: string, key: Uint8Array, desiredHeight?: number): Promise<Uint8Array>;
-  queryRawProof(store: string, queryKey: Uint8Array, desiredHeight?: number): Promise<ProvenQuery>;
+  queryRawProof(store: string, queryKey: Uint8Array, desiredHeight?: number): Promise<any /* ProvenQuery*/>;
   queryUnverified(path: string, request: Uint8Array, desiredHeight?: number): Promise<Uint8Array>;
 }
 
@@ -460,17 +460,12 @@ declare interface RegistrationData {
 declare type SetupFn = (context: Context) => void
 
 declare class StargateClient {
-  static connect(endpoint: string | HttpEndpoint, options?: StargateClientOptions): Promise<StargateClient>;
-  protected constructor(tmClient: Tendermint34Client | undefined, options: StargateClientOptions);
-  protected getTmClient(): Tendermint34Client | undefined;
-  protected forceGetTmClient(): Tendermint34Client;
-  protected getQueryClient(): (QueryClient & AuthExtension & BankExtension & StakingExtension & TxExtension) | undefined;
-  protected forceGetQueryClient(): QueryClient & AuthExtension & BankExtension & StakingExtension & TxExtension;
+  static connect(endpoint: string, options?: any): Promise<StargateClient>;
   getChainId(): Promise<string>;
   getHeight(): Promise<number>;
-  getAccount(searchAddress: string): Promise<Account | null>;
-  getSequence(address: string): Promise<SequenceResponse>;
-  getBlock(height?: number): Promise<Block>;
+  getAccount(searchAddress: string): Promise<any/*Account*/ | null>;
+  getSequence(address: string): Promise<any /*SequenceResponse*/>;
+  getBlock(height?: number): Promise<any /*Block*/>;
   getBalance(address: string, searchDenom: string): Promise<Coin>;
   /**
    * Queries all balances for all denoms that belong to this address.
@@ -481,8 +476,8 @@ declare class StargateClient {
   getAllBalances(address: string): Promise<readonly Coin[]>;
   getBalanceStaked(address: string): Promise<Coin | null>;
   getDelegation(delegatorAddress: string, validatorAddress: string): Promise<Coin | null>;
-  getTx(id: string): Promise<IndexedTx | null>;
-  searchTx(query: SearchTxQuery, filter?: SearchTxFilter): Promise<readonly IndexedTx[]>;
+  getTx(id: string): Promise</*IndexedTx*/any | null>;
+  searchTx(query: any, filter?: any): Promise<readonly /*IndexedTx*/ any[]>;
   disconnect(): void;
   /**
    * Broadcasts a signed transaction to the network and monitors its inclusion in a block.
@@ -496,6 +491,5 @@ outError`.
    * If the transaction is included in a block, a `DeliverTxResponse` is returned. The caller then
    * usually needs to check for execution success or failure.
    */
-  broadcastTx(tx: Uint8Array, timeoutMs?: number, pollIntervalMs?: number): Promise<DeliverTxResponse>;
-  private txsQuery;
+  broadcastTx(tx: Uint8Array, timeoutMs?: number, pollIntervalMs?: number): Promise<any>;
 }
