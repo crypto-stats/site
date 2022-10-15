@@ -35,6 +35,10 @@ export function getSDK(options?: any) {
     sdk.ethers.addProvider('optimism', process.env.NEXT_PUBLIC_OPTIMISM_RPC, { archive: true })
   }
   sdk.ethers.addProvider('bsc', 'https://bscrpc.com')
+  sdk.ethers.addProvider('moonbeam', 'https://rpc.api.moonbeam.network')
+  sdk.ethers.addProvider('acala', 'https://eth-rpc-acala.aca-api.network')
+  sdk.ethers.addProvider('polygon', 'https://matic-mainnet-archive-rpc.bwarelabs.com', { archive: true })
+  sdk.ethers.addProvider('gnosis-chain', 'https://rpc.gnosischain.com')
 
   sdk.cosmos.addChain('cosmoshub', 'https://cosmos-mainnet-rpc.allthatnode.com:26657/')
   sdk.cosmos.addChain('osmosis', 'https://osmosis-mainnet-rpc.allthatnode.com:26657')
