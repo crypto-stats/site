@@ -36,6 +36,7 @@ const Users: React.FC = () => {
             <img src="clients/bloomberg.png" alt="Bloomberg" style={{ height: '26px' }} />
             <img src="clients/cryptofees.png" alt="CryptoFees" />
             <img src="clients/cryptotester.png" alt="CryptoTesters" />
+            <img src="clients/openbb.svg" alt="OpenBB" style={{ height: '' }} />
           </UsedByGrid>
         </ColumnSection>
       </RowSection>
