@@ -48,6 +48,7 @@ declare abstract class BaseCryptoStatsSDK {
   readonly cosmos: Cosmos
   readonly chainData: ChainData
   readonly date: DateLib
+  readonly defiLlama: DefiLlama;
   readonly ethers: Ethers
   readonly graph: Graph
   readonly http: HTTP
@@ -142,6 +143,7 @@ declare class Context {
   readonly cosmos: Cosmos
   readonly chainData: ChainData
   readonly date: DateLib
+  readonly defiLlama: DefiLlama;
   readonly ethers: Ethers
   readonly graph: Graph
   readonly http: HTTP
@@ -171,6 +173,7 @@ declare interface ContextProps {
   cosmos: Cosmos
   chainData: ChainData
   date: DateLib
+  defiLlama: DefiLlama;
   ethers: Ethers
   graph: Graph
   http: HTTP
@@ -217,6 +220,10 @@ declare class DateLib {
   isBefore(date?: string, comparrison?: string): boolean
   getDateRange(dateStart: string | Date, dateEnd: string | Date): string[]
   offsetDaysFormatted(date: string, numDays: number): string
+}
+
+declare class DefiLlama {
+  getCurrentPrice(context: string, asset: string): Promise<number>
 }
 
 declare class Ethers {

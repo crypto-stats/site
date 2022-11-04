@@ -39,6 +39,8 @@ export function getSDK(options?: any) {
   sdk.ethers.addProvider('acala', 'https://eth-rpc-acala.aca-api.network')
   sdk.ethers.addProvider('polygon', 'https://matic-mainnet-archive-rpc.bwarelabs.com', { archive: true })
   sdk.ethers.addProvider('gnosis-chain', 'https://rpc.gnosischain.com')
+  sdk.ethers.addProvider('avalanche', 'https://api.avax.network/ext/bc/C/rpc');
+  sdk.ethers.addProvider('fantom', 'https://rpc.ankr.com/fantom/');
 
   sdk.cosmos.addChain('cosmoshub', 'https://cosmos-mainnet-rpc.allthatnode.com:26657/')
   sdk.cosmos.addChain('osmosis', 'https://osmosis-mainnet-rpc.allthatnode.com:26657')
