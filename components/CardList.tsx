@@ -20,7 +20,7 @@ const ListItem = styled.li`
   }
 `
 
-const Card = styled.a<{ icon?: string | null }>`
+const Card = styled.div<{ icon?: string | null }>`
   display: grid;
   grid-template-columns: 100%;
   grid-gap: 0 var(--spaces-5);
@@ -119,14 +119,16 @@ const CardList: React.FC<CardListProps> = ({ items }) => {
       {items.map((item: Item) => {
         return (
           <ListItem key={item.title}>
-            <Link href={item.link} passHref>
+            <Link href={item.link}>
               <Card icon={item.icon || item.thumbnail}>
                 {item.thumbnail && <Thumbnail src={item.thumbnail} />}
                 {item.icon && <CardIcon color={item.iconColor} icon={item.icon} />}
                 <Content>
-                  <Text tag="h3" type="h3">
-                    {item.title}
-                  </Text>
+                  <Link href={item.link} passHref>
+                    <Text tag="a" type="h3">
+                      {item.title}
+                    </Text>
+                  </Link>
 
                   {item.description && (
                     <Text tag="p" type="description" mt="16" mb="16">

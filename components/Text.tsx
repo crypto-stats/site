@@ -15,6 +15,7 @@ const TagElement = styled.div<{
   font-weight: 400;
   margin-top: ${({ mt }) => (mt ? mt : '0')}px;
   margin-bottom: ${({ mb }) => (mb ? mb : '0')}px;
+  text-decoration: none;
 
   ${({ align }) => align && `text-align: ${align};`}
 
@@ -140,6 +141,7 @@ interface TextProps {
   color?: string
   weight?: string
   align?: string
+  href?: string
 }
 
 const Text: React.FC<TextProps> = ({
@@ -152,6 +154,7 @@ const Text: React.FC<TextProps> = ({
   color,
   weight,
   align,
+  href,
 }) => {
   return (
     <TagElement
@@ -163,6 +166,7 @@ const Text: React.FC<TextProps> = ({
       color={color}
       align={align}
       weight={weight}
+      href={href}
     >
       {children}
     </TagElement>
