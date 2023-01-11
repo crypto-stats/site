@@ -54,6 +54,7 @@ declare abstract class BaseCryptoStatsSDK {
   readonly http: HTTP
   readonly ipfs: IPFS
   readonly log: Log
+  readonly utils: Utils
   readonly plugins: Plugins
   readonly executionTimeout: number
   private lists
@@ -150,20 +151,9 @@ declare class Context {
   readonly ipfs: IPFS
   readonly etherscan: Etherscan
   readonly log: LogInterface
+  readonly utils: Utils
   readonly plugins: Plugins
-  constructor({
-    coinGecko,
-    cosmos,
-    chainData,
-    date,
-    graph,
-    http,
-    ipfs,
-    ethers,
-    log,
-    plugins,
-    list,
-  }: ContextProps)
+  constructor(props: ContextProps)
   register(registration: RegistrationData): void
   registerBundle(id: string, metadata?: any): void
 }
@@ -179,6 +169,7 @@ declare interface ContextProps {
   http: HTTP
   ipfs: IPFS
   log: Log
+  utils: Utils
   plugins: Plugins
   list: List
 }
@@ -499,4 +490,8 @@ outError`.
    * usually needs to check for execution success or failure.
    */
   broadcastTx(tx: Uint8Array, timeoutMs?: number, pollIntervalMs?: number): Promise<any>;
+}
+
+declare class Utils {
+  memoize<I extends unknown[] = any[], O = any>(fn: (...params: I) => O): (...params: I) => O;
 }

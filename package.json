@@ -10,7 +10,7 @@
     "prettier": "prettier --write ."
   },
   "dependencies": {
-    "@cryptostats/sdk": "^0.2.17",
+    "@cryptostats/sdk": "^0.2.20",
     "@graphprotocol/graph-cli": "^0.30.4",
     "@graphprotocol/graph-ts": "^0.27.0",
     "@monaco-editor/react": "^4.2.1",

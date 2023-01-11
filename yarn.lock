@@ -569,10 +569,10 @@
   resolved "https://registry.yarnpkg.com/@cosmjs/utils/-/utils-0.29.0.tgz#0a61e6d608e9f6f89a278cc71f4e7cee01199657"
   integrity sha512-NiJk3ISX+FU1cQcTTgmJcY84A8mV/p8L5CRewp/2jc/lUmo8j9lMGbX17U7NxVQ9RX5RmrwgdjYnBASzhRCVmA==
 
-"@cryptostats/sdk@^0.2.17":
-  version "0.2.17"
-  resolved "https://registry.yarnpkg.com/@cryptostats/sdk/-/sdk-0.2.17.tgz#a370e8c1ac4eb7a386f0bb3a170af1cfc48f1934"
-  integrity sha512-xgvGlwToRL7lBw8iiWi/FG8wiqid22jDxHErboInKJsM0TvAGjfq40oOYcKYP5Q1cIps25/TwLMFXPVv7F0QPg==
+"@cryptostats/sdk@^0.2.20":
+  version "0.2.20"
+  resolved "https://registry.yarnpkg.com/@cryptostats/sdk/-/sdk-0.2.20.tgz#429601b80c53f954308b17be192fb9183f738a4f"
+  integrity sha512-KRZMoIvMj2gzBuq4yTkkZ1s9c+vpbCkvavyc9Q1pjlpQhS6OPAB7jJ+egDFJpjnpwooBVp3kc3T7MRLGbgLWBA==
   dependencies:
     "@cosmjs/stargate" "^0.29.0"
     "@cosmjs/tendermint-rpc" "^0.29.0"
@@ -3544,9 +3544,14 @@ camelize@^1.0.0:
   integrity sha1-FkpUg+Yw+kMh5a8HAg5TGDGyYJs=
 
 caniuse-lite@^1.0.30001283, caniuse-lite@^1.0.30001332:
-  version "1.0.30001334"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001334.tgz#892e9965b35285033fc2b8a8eff499fe02f13d8b"
-  integrity sha512-kbaCEBRRVSoeNs74sCuq92MJyGrMtjWVfhltoHUCW4t4pXFvGjUBrfo47weBRViHkiV3eBYyIsfl956NtHGazw==
+  version "1.0.30001442"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001442.tgz"
+  integrity sha512-239m03Pqy0hwxYPYR5JwOIxRJfLTWtle9FV8zosfV5pHg+/51uD4nxcUlM8+mWWGfwKtt8lJNHnD3cWw9VZ6ow==
+
+caniuse-lite@^1.0.30001442:
+  version "1.0.30001442"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001442.tgz#40337f1cf3be7c637b061e2f78582dc1daec0614"
+  integrity sha512-239m03Pqy0hwxYPYR5JwOIxRJfLTWtle9FV8zosfV5pHg+/51uD4nxcUlM8+mWWGfwKtt8lJNHnD3cWw9VZ6ow==
 
 caseless@^0.12.0, caseless@~0.12.0:
   version "0.12.0"
