@@ -46,7 +46,7 @@ const Home: NextPage<HomePageProps> = ({ sampleData }) => {
       </Head>
       <HomeBackgroundHead>
         <RowSection>
-          <ColumnSection>
+          <ColumnSection from='2' to='12'>
             <Header />
           </ColumnSection>
         </RowSection>

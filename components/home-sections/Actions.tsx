@@ -95,9 +95,9 @@ const Actions: React.FC = () => {
 
   return (
     <>
-      <RowSection mt="120">
+      <RowSection mt="80">
         <ColumnSection from="1" to="6">
-          <Text tag="h3" type="title_highlight" mb="40" align="center">
+          <Text tag="h3" type="title_highlight" mb="40" mt='40' align="center">
             Create
           </Text>
           <Graphic src="/editor-thumbnail.png" alt="editor" />
@@ -112,7 +112,7 @@ const Actions: React.FC = () => {
           </Link>
         </ColumnSection>
         <ColumnSection from="8" to="13">
-          <Text tag="h3" type="title_highlight" mb="40" align="center">
+          <Text tag="h3" type="title_highlight" mb="40" mt='40' align="center">
             Discover
           </Text>
           <Graphic src="/image-collections.png" alt="Collections" />

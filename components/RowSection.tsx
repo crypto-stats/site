@@ -10,8 +10,6 @@ const Row = styled.section<{
 }>`
   display: grid;
   grid-template-columns: repeat(var(--grid-columns), [col-start] 1fr);
-
-  grid-gap: var(--grid-row-gap) var(--grid-column-gap);
   background-color: transparent;
   box-shadow: none;
   margin: 0 ${({ noMargin }) => (noMargin ? `0` : `auto`)};

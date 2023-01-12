@@ -12,7 +12,7 @@ const Block = styled(Text)`
   border: 1px solid var(--color-primary-800);
   flex: 1;
   padding: 24px;
-  margin: 0 7px;
+  margin: 20px 7px;
   overflow: hidden;
   min-height: 80px;
   opacity: 0.7;
