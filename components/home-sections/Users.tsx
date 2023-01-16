@@ -9,6 +9,7 @@ const UsedByGrid = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
+  flex-wrap:wrap;
 
   & > img {
     height: 40px;
